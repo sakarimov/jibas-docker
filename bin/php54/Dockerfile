@@ -54,16 +54,6 @@ RUN a2enmod ssl && a2enmod rewrite
 RUN a2enmod rewrite headers
 RUN a2enmod rewrite rpaf
 
-# download and install jibas 30 official
-#RUN wget 'http://www.jibas.net/res/jibas/jibas.src-30.0.7z' -O /home/jibas.7z
-#RUN 7z x /home/jibas.7z -o/var/www/html/
-#RUN mv /var/www/html/jibas-30.0 /var/www/html/jibas
-#RUN rm /var/www/html/jibas/index.php
-#RUN mv /var/www/html/jibas/jibas/* /var/www/html/jibas/
-#WORKDIR /var/www/html/jibas/include/
-#RUN patch -p1 < ../../patches/include.patch
-#RUN chmod -R 755 /var/www/html/jibas
-
 EXPOSE 80
 EXPOSE 443
 

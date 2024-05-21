@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,9 +49,9 @@ function ReadParams()
     if (isset($_REQUEST['komentar']))
         $komentar = CQ($_REQUEST['komentar']);
 
-    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$nis'";
+    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$nis."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nama = $row[0];
 }
 
@@ -74,7 +74,7 @@ function ShowUserInfo()
 
 function SafeText($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     return $text;
 }
 
@@ -98,7 +98,7 @@ function SimpanData()
         $param = "komentar$i";
         $komentar = SafeText($_REQUEST[$param]);
 
-        $sql = "UPDATE jbsakad.nap SET komentar = '$komentar' WHERE replid = '$idnap'";
+        $sql = "UPDATE jbsakad.nap SET komentar = '$komentar' WHERE replid = '".$idnap."'";
         //echo "$sql<br>";
         QueryDbTrans($sql, $success);
     }
@@ -115,7 +115,7 @@ function SimpanData()
 
 function ShowListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
 {
-    $select = GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no);
+    $select = GetListKomentar($idpelajaran, $idtingkat, $kdaspek);
     echo "<div id='divpilihkomentar$no'>$select</div>";
 }
 
@@ -127,11 +127,11 @@ function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
               FROM jbsakad.pilihkomenpel
              WHERE idpelajaran = '$idpelajaran'
                AND idtingkat = '$idtingkat'
-               AND dasarpenilaian = '$kdaspek'";
+               AND dasarpenilaian = '".$kdaspek."'";
     $res2 = QueryDb($sql);
-    $numlen = strlen(mysql_num_rows($res2));
+    $numlen = strlen(mysqli_num_rows($res2));
     $cnt = 0;
-    while($row2 = mysql_fetch_row($res2))
+    while($row2 = mysqli_fetch_row($res2))
     {
         $cnt += 1;
         $nocnt = str_pad($cnt, $numlen, "0", STR_PAD_LEFT);
@@ -139,7 +139,7 @@ function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
         $replid = $row2[0];
         $komentar = $row2[1];
 
-        $komentar = strip_tags($komentar);
+        $komentar = strip_tags((string) $komentar);
         if (strlen($komentar) > 50)
             $komentar = substr($komentar, 0, 50) . " ..";
 
@@ -153,9 +153,9 @@ function GetKomentar($replid)
 {
     $sql = "SELECT komentar
               FROM jbsakad.pilihkomenpel
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         return $row[0];
 
     return "";

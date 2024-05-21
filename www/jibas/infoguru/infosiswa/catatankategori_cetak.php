@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,7 +41,7 @@ require_once("../include/sessionchecker.php");
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? getHeader('yayasan') ?>
+<?php getHeader('yayasan') ?>
 
 <center><font size="4"><strong>DATA KATEGORI CATATAN KEJADIAN SISWA</strong></font><br /> </center><br /><br />
 
@@ -54,24 +54,24 @@ require_once("../include/sessionchecker.php");
         <td width="*" class="header" align="center">Keterangan</td>
         <td width="10%" class="header" align="center">Status</td>
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT * FROM jbsvcr.catatankategori ORDER BY replid";    
 	$result = QueryDB($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['kategori'] ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center">
-			<? if ($row['aktif'] == 1) 
+			<?php if ($row['aktif'] == 1) 
 					echo 'Aktif';
 				else
 					echo 'Tidak Aktif';
 			?>		
         </td> 
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>

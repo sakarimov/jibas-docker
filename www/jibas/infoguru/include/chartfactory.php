@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,23 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
+include_once '../../vendor/autoload.php';
 require_once("config.php");
 require_once("rupiah.php");
-require_once("class/jpgraph.php");
-require_once("class/jpgraph_pie.php");
-require_once("class/jpgraph_pie3d.php");
-require_once("class/jpgraph_bar.php");
-require_once("class/jpgraph_line.php");
 
 class ChartFactory {
-	var $bulan = array('Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nop','Des');
-	var $xdata;
-	var $ydata;
-	var $title;
-	var $xtitle;
-	var $ytitle;
+	public $bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nop', 'Des'];
+	public $xdata;
+	public $ydata;
+	public $title;
+	public $xtitle;
+	public $ytitle;
 	
-	var $color;
+	public $color;
 	
-	function ChartFactory() {
-		$this->color = array('#cd9b9b','#7d26cd','#8b1c62','#b03060','#faf0e6','#ff69b4','#d2d2d2','#7fff00','#00bfff','#ff1493','#6e8b3d','#b8860b','#00ffff','#dcdcdc','#00c5cd','#a52a2a');
+	function __construct() {
+		$this->color = ['#cd9b9b', '#7d26cd', '#8b1c62', '#b03060', '#faf0e6', '#ff69b4', '#d2d2d2', '#7fff00', '#00bfff', '#ff1493', '#6e8b3d', '#b8860b', '#00ffff', '#dcdcdc', '#00c5cd', '#a52a2a'];
 		//$this->color = array(136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430);
 	}
 	
@@ -55,7 +51,7 @@ class ChartFactory {
 	function SqlData($sql, $btit, $ptit, $xti, $yti) {
 		OpenDb();
 		$result = QueryDb($sql);
-		while ($row = mysql_fetch_row($result))
+		while ($row = mysqli_fetch_row($result))
 		{
 			$this->xdata[] = $row[0];
 			$this->ydata[] = $row[1];
@@ -69,10 +65,11 @@ class ChartFactory {
 	}
 
 	function DrawBarChart() {
-		if ( (count($this->xdata) == 0) || (count($this->ydata) == 0) ) return;
+		if ( (count($this->xdata ?? []) == 0) || (count($this->ydata ?? []) == 0) ) return;
 		
 		//Buat grafik
-		$graph = new Graph(550,300,"auto");
+		mitoteam\jpgraph\MtJpGraph::load(['bar']);
+$graph = new Graph(550,300,"auto");
 		$graph->SetScale("textlin");
 		
 		//setting kanvas
@@ -113,9 +110,10 @@ class ChartFactory {
 	
 	function DrawPieChart() {
 		
-		if ( (count($this->xdata) == 0) || (count($this->ydata) == 0) ) return;
+		if ( (count($this->xdata ?? []) == 0) || (count($this->ydata ?? []) == 0) ) return;
 		
 		//Buat grafik
+		mitoteam\jpgraph\MtJpGraph::load(['pie','pie3d']);
 		$graph = new PieGraph(550,350,"auto");
 		$graph->img->SetAntiAliasing();
 		$graph->SetShadow();
@@ -137,6 +135,7 @@ class ChartFactory {
 		
 		/*
 		//Buat grafik
+		mitoteam\jpgraph\MtJpGraph::load(['pie','pie3d']);
 		$graph = new PieGraph(500,300,"auto");
 		$graph->img->SetAntiAliasing();
 		$graph->SetShadow();

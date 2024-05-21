@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,10 +51,10 @@ function SimpanData()
 
     $sql = "SELECT replid 
               FROM jbssdm.tambahandata 
-             WHERE kolom = '$kolom'";
+             WHERE kolom = '".$kolom."'";
     $result = QueryDb($sql);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         CloseDb();
         $ERROR_MSG = "Nama kolom $kolom sudah digunakan!";
@@ -64,7 +64,7 @@ function SimpanData()
     {
         $sql = "INSERT INTO jbssdm.tambahandata 
                    SET kolom = '$kolom', urutan = '$urutan',
-                       jenis = '$jenis', aktif = 1, keterangan = '$keterangan'";
+                       jenis = '$jenis', aktif = 1, keterangan = '".$keterangan."'";
         $result = QueryDb($sql);
         if ($result)
         { 	?>
@@ -72,7 +72,7 @@ function SimpanData()
                 opener.refresh();
                 window.close();
             </script>
-        <?
+        <?php
         }
         CloseDb();
         exit();

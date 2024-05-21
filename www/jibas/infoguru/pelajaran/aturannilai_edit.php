@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/theme.php');
@@ -47,7 +47,7 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat FROM guru g, jbssd
 
 $result = QueryDb($sql);
 CloseDb();
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -56,7 +56,7 @@ $tingkat = $row[4];
 $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
 	OpenDb();	
-	$sql = "DELETE FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '$aspek'"; 
+	$sql = "DELETE FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '".$aspek."'"; 
 	
 	$result = QueryDb($sql);
 	CloseDb();
@@ -64,9 +64,9 @@ if (isset($_REQUEST['Simpan'])) {
 	for ($i=1;$i<=10;$i++) {
 		$nmin = $_REQUEST['nmin'.$i];
 		$nmax = $_REQUEST['nmax'.$i];
-		$grade = strtoupper($_REQUEST['grade'.$i]);
+		$grade = strtoupper((string) $_REQUEST['grade'.$i]);
 		
-		if (strlen($nmin)>0 && strlen($nmax)>0 && strlen($grade)>0) {	
+		if (strlen((string) $nmin)>0 && strlen((string) $nmax)>0 && strlen($grade)>0) {	
 			OpenDb();
 			$sql = "INSERT INTO aturangrading SET nipguru='$nip',idtingkat='$idtingkat',idpelajaran='$id',dasarpenilaian='$aspek',nmin='$nmin',nmax='$nmax',grade='$grade'";
 			QueryDb($sql);
@@ -77,7 +77,7 @@ if (isset($_REQUEST['Simpan'])) {
 		opener.document.location.href="aturannilai_content.php?id=<?=$id?>&nip=<?=$nip?>";
 		window.close();
 	</script>
-<?	}	
+<?php }	
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -91,7 +91,7 @@ if (isset($_REQUEST['Simpan'])) {
 <link href="../script/SpryAssets/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -239,14 +239,14 @@ function validate() {
 			<td class="header" align="center" width="70%" colspan="3"> Nilai Min &nbsp;&nbsp;&nbsp; Nilai Maks</td>         
             <td class="header" align="center" width="10%">Grade</td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
-		$sql = "SELECT nmin, nmax, grade FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '$aspek'"; 
+		$sql = "SELECT nmin, nmax, grade FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '".$aspek."'"; 
 		$result = QueryDb($sql);
 		CloseDb();
 		
 		$i = 1;
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 				$nmin[$i] = $row['nmin'];
 				$nmax[$i] = $row['nmax'];
 				$grade[$i] = $row['grade'];				
@@ -263,7 +263,7 @@ function validate() {
 			<td align="left"><input type="text" name=<?='nmax'.$cnt?> id=<?='nmax'.$cnt?> size="8" value=<?=$nmax[$cnt]?> > </td> 
 			<td align="center"><input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" value=<?=$grade[$cnt]?> > </td>
 		</tr>
-			<?
+			<?php
 			//$i++;
 			}		
 		?>			
@@ -291,11 +291,11 @@ function validate() {
 
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 

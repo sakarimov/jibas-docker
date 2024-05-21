@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -74,35 +74,35 @@ OpenDb();
         <td class="header" width="35%">Kode Rekening</td>
         <td class="header" width="*">Keterangan</td>
 	</tr>
-<?	$sql = "SELECT *
+<?php $sql = "SELECT *
               FROM datatabungan
              WHERE departemen = '$departemen'
              ORDER BY replid ";
 	$request = QueryDb($sql);
 	$cnt = 0;
 		
-	while ($row = mysql_fetch_array($request))
+	while ($row = mysqli_fetch_array($request))
     { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt?></td>
         <td><?=$row['nama'] ?></td>        
         <td>
-<?		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekkas]'";
+<?php 	$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekkas']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekkas = $row2[0];
 	
-		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekutang]'";
+		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekutang']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekutang = $row2[0];
 		?>
-		<strong>Kas:</strong> <?=$row[rekkas] . " " . $namarekkas ?><br />
-        <strong>Utang:</strong> <?=$row[rekutang] . " " . $namarekutang ?><br />
+		<strong>Kas:</strong> <?=$row['rekkas'] . " " . $namarekkas ?><br />
+        <strong>Utang:</strong> <?=$row['rekutang'] . " " . $namarekutang ?><br />
         </td>
         <td><?=$row['keterangan'] ?></td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); ?>
      <!-- END TABLE CONTENT -->
     </table>

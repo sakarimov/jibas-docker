@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@ function SimpanInfoBayar()
 
         if ($id == 0)
         {
-            $sql = "INSERT INTO jbsfina.infobayar SET departemen = '$dept', bagian = '$bagian', info = '$info'";
+            $sql = "INSERT INTO jbsfina.infobayar SET departemen = '$dept', bagian = '$bagian', info = '".$info."'";
             QueryDbEx($sql);
 
             $sql = "SELECT LAST_INSERT_ID()";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $id = $row[0];
         }
         else
@@ -46,7 +46,7 @@ function SimpanInfoBayar()
             QueryDbEx($sql);
         }
 
-        return createJsonReturn(1, "OK", $id);
+        return createJsonReturn(1, "OK");
     }
     catch (Exception $ex)
     {
@@ -57,7 +57,7 @@ function SimpanInfoBayar()
 
 function createJsonReturn($status, $message, $data)
 {
-    $ret = array($status, $message, $data);
-    return json_encode($ret);
+    $ret = [$status, $message, $data];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 ?>

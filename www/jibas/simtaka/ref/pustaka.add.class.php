@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CPustakaAdd
 {
 	function OnStart()
 	{
-		if (isset($_REQUEST[simpan]))
+		if (isset($_REQUEST['simpan']))
 		{
-			$sql = "SELECT nama FROM perpustakaan WHERE nama = '$_REQUEST[nama]' ";
+			$sql = "SELECT nama FROM perpustakaan WHERE nama = '".$_REQUEST['nama']."' ";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num > 0)
 			{
 				$this->exist('1');
@@ -57,14 +57,14 @@ class CPustakaAdd
 			alert('Nama perpustakaan sudah digunakan!');
 			document.location.href="pustaka.add.php";
 			</script>
-<?		}
+<?php 	}
 		else
 		{ ?>
 			<script language="javascript">
 			alert('Perpustakaan sudah digunakan pada departemen <?=$state?>!');
 			document.location.href="pustaka.add.php";
 			</script>
-<?		}
+<?php 	}
 	}
 	
 	function success()
@@ -73,7 +73,7 @@ class CPustakaAdd
 		parent.opener.getfresh();
 		window.close();
 		</script>
-<? }
+<?php }
 
 	function add()
 	{	?>
@@ -91,9 +91,9 @@ class CPustakaAdd
          <td>
          <select id="dep" name="dep" class="cmbfrm2">
 			<option value='--ALL--'>(Semua Departemen)</option>	
-<?			$sql = "SELECT departemen FROM jbsakad.departemen ORDER BY urutan ASC";
+<?php 		$sql = "SELECT departemen FROM jbsakad.departemen ORDER BY urutan ASC";
 			$res = QueryDb($sql);
-			while ($row = @mysql_fetch_row($res))
+			while ($row = @mysqli_fetch_row($res))
 				echo "<option value='".$row[0]."'>".$row[0]."</option>";	?>
          </select>
          </td>
@@ -111,7 +111,7 @@ class CPustakaAdd
       </tr>
       </table>
 		</form>
-<?	}
+<?php }
 
 }
 ?>

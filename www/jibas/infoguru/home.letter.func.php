@@ -1,4 +1,4 @@
-<?
+<?php
 function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
 {
     // Tujuan surat masuk AS USER
@@ -11,7 +11,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -22,7 +22,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
     
     // Tujuan surat masuk AS CC
@@ -35,7 +35,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";         
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -46,7 +46,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
     
     // Tujuan surat masuk AS GROUP
@@ -60,7 +60,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";         
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -71,7 +71,7 @@ function GetLetterListIn(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
 }
 
@@ -87,7 +87,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -98,7 +98,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
     
     // Sumber surat keluar AS USER
@@ -111,7 +111,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -122,7 +122,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
     
     // Tujuan surat masuk AS CC
@@ -135,7 +135,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -146,7 +146,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
     
     // Sumber surat keluar AS GROUP
@@ -160,7 +160,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
              LIMIT $limit2";
     //echo "$sql<br>";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $found = false;
         for($i = 0; !$found && $i < count($letterList); $i++)
@@ -171,7 +171,7 @@ function GetLetterListOut(&$letterList, $iduser, $limit2, $filterTs)
         if ($found)
             continue;
         
-        $letterList[] = array($row[0], $row[1]);
+        $letterList[] = [$row[0], $row[1]];
     }
 }
 
@@ -181,7 +181,7 @@ function GetNBerkas($idsurat)
               FROM jbsletter.berkassurat
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return $row[0];
 }
@@ -192,7 +192,7 @@ function GetNComment($idsurat)
               FROM jbsletter.comment
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return $row[0];
 }
@@ -204,7 +204,7 @@ function GetLastActive($idsurat)
               FROM jbsletter.surat
              WHERE replid = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return SecToAgeDate($row[0], $row[2]);
 }
@@ -238,7 +238,7 @@ function ShowLastLetter($jenis, $minListSuratTs)
                 "" :
                 "AND CONCAT(UNIX_TIMESTAMP(s.lastactive), LPAD(s.replid, 7, '0')) < '$minListSuratTs'";
     
-    $letterList = array();
+    $letterList = [];
     
     if ($jenis == "ALL")
     {
@@ -257,7 +257,7 @@ function ShowLastLetter($jenis, $minListSuratTs)
     //echo "<pre>";
     //print_r($letterList);
     //echo "</pre>";
-    
+    $html = '';
     if (count($letterList) == 0)
     {
         $html .= "<tr height='30'>";
@@ -320,7 +320,7 @@ function ShowLinkNextListSurat($jenis, $minListSuratTs)
                 "" :
                 "AND CONCAT(UNIX_TIMESTAMP(s.lastactive), LPAD(s.replid, 7, '0')) < '$minListSuratTs'";
     
-    $letterList = array();
+    $letterList = [];
     
     if ($jenis == "ALL")
     {
@@ -367,7 +367,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                  WHERE src.idsumber = si.replid
                    AND src.idsurat = $idsurat";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $sumber = $row[0];    
     }
     else
@@ -386,7 +386,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                 ) AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($sumber != "")
                 $sumber .= ", ";
@@ -399,7 +399,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                    AND idsurat = $idsurat
                  ORDER BY k.kelompok";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($sumber != "")
                 $sumber .= ", ";
@@ -430,7 +430,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                 ) AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -443,7 +443,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                    AND dst.idsurat = $idsurat
                  ORDER BY k.kelompok";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -477,7 +477,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                 AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -498,7 +498,7 @@ function ShowDetailSurat($idlist, $minListSuratTs)
     $res = QueryDb($sql);
     
     $html = "";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $idsurat = $row['idsurat'];
         
@@ -532,8 +532,8 @@ function ShowDetailSurat($idlist, $minListSuratTs)
         }
         
         $html .= "<tr style='background-color : $bgcolor'; >";
-        $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><font style='color: maroon;'><em>$row[tanggalsurat]</em></font><br>$row[nomor]<br>$jenis</td>";
-        $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><strong>$row[perihal]</strong><br>Kategori: $row[kategori]<br>Sifat: $sifat</td>";
+        $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><font style='color: maroon;'><em>".$row['tanggalsurat']."</em></font><br>".$row['nomor']."<br>$jenis</td>";
+        $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><strong>".$row['perihal']."</strong><br>Kategori: ".$row['kategori']."<br>Sifat: $sifat</td>";
         $html .= "<td align='center' style='font-size: 16px; border-color: #bbb; border-width: 1px;' valign='top'>$nberkas</td>";
         $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'>$sumber</td>";
         $html .= "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'>$tujuan</td>";

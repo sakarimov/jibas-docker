@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,27 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/common.php');
 require_once('../inc/config.php');
 require_once('../inc/rupiah.php');
 require_once('../inc/db_functions.php');
 require_once('../lib/GetHeaderCetak.php');
-$perpustakaan	= $_REQUEST[perpustakaan];
-$from			= $_REQUEST[from];
-$to				= $_REQUEST[to];
-$limit			= $_REQUEST[limit];
+$perpustakaan	= $_REQUEST['perpustakaan'];
+$from			= $_REQUEST['from'];
+$to				= $_REQUEST['to'];
+$limit			= $_REQUEST['limit'];
 OpenDb();
 if ($perpustakaan!='-1') {
 	$sql 	= "SELECT nama FROM perpustakaan WHERE replid='$perpustakaan'";
 	$result = QueryDb($sql);
-	$row 	= @mysql_fetch_row($result);
+	$row 	= @mysqli_fetch_row($result);
 	$nama	= $row[0];
 } else {
 	$nama = "<i>Semua</i>";
 }
-$from	= split('-',$from);
-$to		= split('-',$to);
+$from	= explode('-',(string) $from);
+$to		= explode('-',(string) $to);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -55,7 +55,7 @@ $to		= split('-',$to);
 <table border="0" cellpadding="10" cellspacing="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? GetHeader($perpustakaan) ?>
+<?php GetHeader($perpustakaan) ?>
 
 <center>
   <strong><font size="4">STATISTIK PEMINJAM YANG PALING SERING MEMINJAM</font></strong>
@@ -84,20 +84,20 @@ $to		= split('-',$to);
   </tr>
   <tr>
     <td align="center" valign="top">
-    	<?
+    	<?php
 		$filter="";
 		if ($perpustakaan!='-1')
 			$filter=" AND d.perpustakaan=".$perpustakaan;
-		$sql = "SELECT count(*) as num, p.idanggota FROM pinjam p, daftarpustaka d WHERE p.tglpinjam BETWEEN '$_REQUEST[from]' AND '$_REQUEST[to]' AND d.kodepustaka=p.kodepustaka $filter GROUP BY p.idanggota ORDER BY num DESC LIMIT $limit";			
+		$sql = "SELECT count(*) as num, p.idanggota FROM pinjam p, daftarpustaka d WHERE p.tglpinjam BETWEEN '".$_REQUEST['from']."' AND '".$_REQUEST['to']."' AND d.kodepustaka=p.kodepustaka $filter GROUP BY p.idanggota ORDER BY num DESC LIMIT $limit";			
 		$result = QueryDb($sql);
 		//echo $sql;
 		?>
-        <img src="<?="statimage.php?type=bar&key=$_REQUEST[from],$_REQUEST[to]&Limit=$limit&krit=1&perpustakaan=$perpustakaan" ?>" />
+        <img src="<?="statimage.php?type=bar&key={$_REQUEST['from']},{$_REQUEST['to']}&Limit=$limit&krit=1&perpustakaan=$perpustakaan" ?>" />
     </td>
   </tr>
   <tr>
     <td align="center" valign="top">
-    	<img src="<?="statimage.php?type=pie&key=$_REQUEST[from],$_REQUEST[to]&Limit=$limit&krit=1&perpustakaan=$perpustakaan" ?>" />
+    	<img src="<?="statimage.php?type=pie&key={$_REQUEST['from']},{$_REQUEST['to']}&Limit=$limit&krit=1&perpustakaan=$perpustakaan" ?>" />
     </td>
   </tr>
   <tr>
@@ -108,10 +108,10 @@ $to		= split('-',$to);
             <td height="25" align="center" class="header">Anggota</td>
             <td height="25" align="center" class="header">Jumlah</td>
           </tr>
-          <? if (@mysql_num_rows($result)>0) { ?>
-          <? $cnt=1; ?>
-          <? while ($row = @mysql_fetch_row($result)) { ?>
-          <? 
+          <?php if (@mysqli_num_rows($result)>0) { ?>
+          <?php $cnt=1; ?>
+          <?php while ($row = @mysqli_fetch_row($result)) { ?>
+          <?php 
             $idanggota = $row[1];
             $NamaAnggota = GetMemberName($idanggota);
           ?>
@@ -120,13 +120,13 @@ $to		= split('-',$to);
             <td height="20">&nbsp;<?=$idanggota?> - <?=$NamaAnggota?></td>
             <td height="20" align="center"><?=$row[0]?></td>
           </tr>
-          <? $cnt++; ?>
-          <? } ?>
-          <? } else { ?>
+          <?php $cnt++; ?>
+          <?php } ?>
+          <?php } else { ?>
           <tr>
             <td height="20" align="center" colspan="3" class="nodata">Tidak ada data</td>
           </tr>	
-          <? } ?>
+          <?php } ?>
       </table>
     </td>
   </tr>
@@ -137,25 +137,25 @@ $to		= split('-',$to);
 window.print();
 </script>
 </html>
-<?
+<?php
 function GetMemberName($idanggota){
 	$sql1 = "SELECT nama FROM ".get_db_name('akad').".siswa WHERE nis='$idanggota'";
 	$result1 = QueryDb($sql1);
-	if (@mysql_num_rows($result1)>0){
-		$row1 = @mysql_fetch_array($result1);
-		return $row1[nama];
+	if (@mysqli_num_rows($result1)>0){
+		$row1 = @mysqli_fetch_array($result1);
+		return $row1['nama'];
 	} else {
 		$sql2 = "SELECT nama FROM ".get_db_name('sdm').".pegawai WHERE nip='$idanggota'";
 		$result2 = QueryDb($sql2);
-		if (@mysql_num_rows($result2)>0){
-			$row2 = @mysql_fetch_array($result2);
-			return $row2[nama];
+		if (@mysqli_num_rows($result2)>0){
+			$row2 = @mysqli_fetch_array($result2);
+			return $row2['nama'];
 		} else {
 			$sql3 = "SELECT nama FROM anggota WHERE noregistrasi='$idanggota'";
 			$result3 = QueryDb($sql3);
-			if (@mysql_num_rows($result3)>0){
-				$row3 = @mysql_fetch_array($result3);
-				return $row3[nama];
+			if (@mysqli_num_rows($result3)>0){
+				$row3 = @mysqli_fetch_array($result3);
+				return $row3['nama'];
 			} else {
 				return "Tanpa Nama";
 			}

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/sessionchecker.php');
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
@@ -49,7 +49,7 @@ $departemen = "";
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
         <td width='100px' align='right'>Departemen:</td>
-        <td align='left' colspan='3'><? ShowCbDepartemen() ?></td>
+        <td align='left' colspan='3'><?php ShowCbDepartemen() ?></td>
     </tr>
     <tr>
         <td align='right'>Jenis:</td>
@@ -63,13 +63,13 @@ $departemen = "";
         <td width='100px' align='right'>Kategori:</td>
         <td align='left'>
             <span id='divCbKategori'>
-            <? ShowCbKategori($departemen) ?>
+            <?php ShowCbKategori($departemen) ?>
             </span>
         </td>
     </tr>
     <tr>
         <td width='100px' align='right'>Bulan:</td>
-        <td align='left' colspan='3'><? ShowCbDate90() ?></td>
+        <td align='left' colspan='3'><?php ShowCbDate90() ?></td>
     </tr>
     <tr>
         <td width='100px' align='right'>Pencarian:</td>
@@ -100,6 +100,6 @@ $departemen = "";
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

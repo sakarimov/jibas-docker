@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ function ShowSelectIuranWajib()
 
     echo "<select id='idpembayaran' class='inputbox' style='width: 250px' onchange='clearContent()'>";
     echo "<option value='0' selected>Semua Iuran Wajib</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -71,9 +71,9 @@ function ShowSelectIuranSukarela()
 
     echo "<select id='idpembayaran' class='inputbox' style='width: 250px' onchange='clearContent()'>";
     echo "<option value='0' selected>Semua Iuran Sukarela</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -91,9 +91,9 @@ function ShowSelectTabunganSiswa()
 
     echo "<select id='idpembayaran' class='inputbox' style='width: 250px' onchange='clearContent()'>";
     echo "<option value='0' selected>Semua Tabungan Siswa</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -111,9 +111,9 @@ function ShowSelectBank()
 
     echo "<select id='bankno' class='inputbox' style='width: 250px' onchange='clearContent()'>";
     echo "<option value='ALL' selected>Semua Bank</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1] $row[0]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]. $row[0]."</option>";
     }
     echo "</select>";
 }
@@ -131,9 +131,9 @@ function ShowSelectPetugas()
 
     echo "<select id='idpetugas' class='inputbox' style='width: 250px' onchange='clearContent()'>";
     echo "<option value='ALL' selected>Semua Petugas</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1] $row[0]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]. $row[0]."</option>";
     }
     echo "</select>";
 }

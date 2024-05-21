@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -66,7 +66,7 @@ if (isset($_REQUEST['hapus']))
 	for ($i = 1; $i <= $jum; $i++) 
 	{
 		$replid = $_REQUEST['replid'.$i];
-		$sql = "UPDATE jbsakad.komennap SET komentar='' WHERE replid = '$replid'";
+		$sql = "UPDATE jbsakad.komennap SET komentar='' WHERE replid = '".$replid."'";
 		//echo $sql;
 		$res=QueryDb($sql);
 	}
@@ -77,7 +77,7 @@ if (isset($_REQUEST['hapus']))
 		<script language="javascript" type="text/javascript">
 			alert ('Komentar sudah dihapus');
 		</script>
-		<?	
+		<?php 
 	}
 }
 		
@@ -87,7 +87,7 @@ $sql = "SELECT s.nis, s.nama
 		ORDER BY $urut $urutan";
 $result = QueryDb($sql);		
 $cnt = 1;
-$jum = @mysql_num_rows($result); ?>
+$jum = @mysqli_num_rows($result); ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/aTR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -96,7 +96,7 @@ $jum = @mysql_num_rows($result); ?>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Komentar Nilai Rapor</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -151,7 +151,7 @@ function change_urut(urut,urutan)
 	<th height="30" onMouseOver="background='../style/formbg2agreen.gif';height=30;"
         onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;"
         onClick="change_urut('nis','<?=$urutan?>');"><div align="center" class="style1"><strong><span class="style2">NIS&nbsp;</span>&nbsp;
-         <? if ($urut=="nis"){
+         <?php if ($urut=="nis"){
 				if ($urutan=="asc"){
 					echo "<img src='../images/ico/descending copy.png' />";
 				} else {
@@ -162,7 +162,7 @@ function change_urut(urut,urutan)
 			} ?>
 			</strong></div></td>
 		  <th height="30" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nama','<?=$urutan?>');"><div align="center" class="style1"><strong><span class="style2">Nama&nbsp;</span>&nbsp;
-	          <? if ($urut=="nama"){
+	          <?php if ($urut=="nama"){
 		if ($urutan=="asc"){
 			echo "<img src='../images/ico/descending copy.png' />";
 		} else {
@@ -175,8 +175,8 @@ function change_urut(urut,urutan)
           <th background="../style/formbg2.gif"><div align="center"><span class="style3">Komentar</span></div></td>
           <th background="../style/formbg2.gif">&nbsp;</td>
 		</tr>
-		 <? 	if ($jum > 0) { 
-		while ($row = @mysql_fetch_array($result)) {	?>
+		 <?php 	if ($jum > 0) { 
+		while ($row = @mysqli_fetch_array($result)) {	?>
 		<tr>        			
 			<td height="25" align="center"><?=$cnt?></td>
 			<td height="25" align="center">
@@ -185,16 +185,16 @@ function change_urut(urut,urutan)
          </td>
   			<td height="25"><div align="left"><?=$row['nama']?></div></td>
             <td height="25"><div align="left">
-<?				$sql = "SELECT k.komentar, k.replid 
+<?php 			$sql = "SELECT k.komentar, k.replid 
                        FROM jbsakad.komennap k, jbsakad.infonap i 
-							 WHERE k.nis = '$row[nis]' AND i.replid = k.idinfo 
-							   AND i.idpelajaran = '$pelajaran' AND i.idsemester = '$semester' AND i.idkelas = '$kelas'";
+							 WHERE k.nis = '".$row['nis']."' AND i.replid = k.idinfo 
+							   AND i.idpelajaran = '$pelajaran' AND i.idsemester = '$semester' AND i.idkelas = '".$kelas."'";
 				$res2 = QueryDb($sql);
-				$row2 = @mysql_fetch_row($res2);
+				$row2 = @mysqli_fetch_row($res2);
 				$ada_komentar = $row2[0];
             if ($ada_komentar <> "")
 				{
-				   echo "<input type='hidden' name='replid$cnt' value='$row2[1]'>";
+				   echo "<input type='hidden' name='replid$cnt' value='".$row2[1]."'>";
 				   echo $row2[0];
 				}
 			  	else 
@@ -205,24 +205,24 @@ function change_urut(urut,urutan)
 ?>
             </div></td>
             <td height="25"><div align="center">
-              <?
+              <?php
 			//if (SI_USER_LEVEL() != $SI_USER_STAFF) {
 			if ($ada_komentar<>"")
 			{ ?>
               <img src="../images/ico/ubah.png" border="0" onClick="ubah('<?=$row2[1]?>','1')" style="cursor:pointer" title="Ubah Komentar Siswa Ini"/>	
-<?		   } 
+<?php 	   } 
 			else
 			{ ?>
 				<img src="../images/ico/tambah.png" border="0" onClick="ubah('<?=$row2[1]?>','0')" style="cursor:pointer" title="Input Komentar Siswa Ini"/>
-<?			} ?>            	
+<?php 		} ?>            	
 		  </div></td>
         </tr>
-		<?		$cnt++;
+		<?php 	$cnt++;
 		}
 		} else { 
   ?> 
   <tr><td colspan="5" ><div align="center">Tidak ada siswa</div></td></tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <input type="hidden" name="jum" id="jum" value="<?=$cnt-1?>">
@@ -236,6 +236,6 @@ function change_urut(urut,urutan)
 </body>
 </html>  
 
-<?
+<?php
 CloseDb();
 ?>

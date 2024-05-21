@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,13 +50,11 @@ if (isset($_REQUEST['warna']))
 if (isset($_REQUEST['cari']))
 	$cari = $_REQUEST['cari'];
 
-switch ($cari) {
-	case 'tampil' : $input_awal = "onload=\"document.getElementById('kelompok').focus()\"";
-		break;
-	case 'cari' : $input_awal = "onload=\"document.getElementById('no').focus()\"";
-		break;
-	default	: $input_awal = "onload=\"document.getElementById('kelompok').focus()\"";
-}
+$input_awal = match ($cari) {
+    'tampil' => "onload=\"document.getElementById('kelompok').focus()\"",
+    'cari' => "onload=\"document.getElementById('no').focus()\"",
+    default => "onload=\"document.getElementById('kelompok').focus()\"",
+};
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -70,7 +68,7 @@ switch ($cari) {
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
@@ -191,22 +189,22 @@ function panggil(elem){
 
     <fieldset><legend>Tampilkan daftar calon siswa berdasarkan</legend>  
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr style="background-color:#<? if ($cari == 'tampil') echo $warna?>">
+    <tr style="background-color:#<?php if ($cari == 'tampil') echo $warna?>">
     	<td valign="middle" width="10"><img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
         <td width="22%"> Kelompok </td>
     	<td width="*">
         <select name="kelompok" id="kelompok" onchange="change_kelompok()" style="width:225px;" onKeyPress="return focusNext('cari', event)" onfocus="panggil('kelompok')">
-    <?	OpenDb();
+    <?php OpenDb();
 		$sql = "SELECT replid, kelompok FROM jbsakad.kelompokcalonsiswa WHERE idproses='$proses' ORDER BY kelompok ASC";	
 		$result = QueryDb($sql);
-		while($row = @mysql_fetch_array($result)) {
+		while($row = @mysqli_fetch_array($result)) {
 			if ($kelompok == "")
 				$kelompok = $row['replid'];
 	?>
     		<option value="<?=$row['replid']?>" <?=IntIsSelected($row['replid'], $kelompok) ?>>
               <?=$row['kelompok']?>
             </option>
-            <?
+            <?php
 	} //while
 	CloseDb();
 	?>
@@ -220,7 +218,7 @@ function panggil(elem){
     	<td valign="middle"><img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
         <td>Pencarian</td>
     </tr>
-    <tr style="background-color:#<? if ($cari == 'cari') echo $warna?>">    	
+    <tr style="background-color:#<?php if ($cari == 'cari') echo $warna?>">    	
     	<td></td>
         <td><b>No Pendaftaran</b></td>
         <td>
@@ -234,7 +232,7 @@ function panggil(elem){
         </td>
    	</tr>
    
-    <tr style="background-color:#<? if ($cari == 'lihat') echo $warna?>">
+    <tr style="background-color:#<?php if ($cari == 'lihat') echo $warna?>">
     	<td valign="middle"><img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
     	<td colspan="2">Semua calon siswa yang belum memiliki kelas</td>
     	<td>

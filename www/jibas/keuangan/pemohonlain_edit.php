@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -31,17 +31,17 @@ require_once('include/sessioninfo.php');
 
 $id = $_REQUEST['id'];
 
-$MYSQL_ERROR_MSG = "";
+$mysqli_ERROR_MSG = "";
 if (isset($_REQUEST['simpan'])) {
 	OpenDb();
 	$sql = "SELECT * FROM pemohonlain WHERE nama='".CQ($_REQUEST['nama'])."' AND replid <> '$id'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan!";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan!";
 	} else {
-		$sql = "UPDATE pemohonlain SET nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = '$id'";
+		$sql = "UPDATE pemohonlain SET nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = '".$id."'";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -50,7 +50,7 @@ if (isset($_REQUEST['simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 
@@ -59,7 +59,7 @@ $sql = "SELECT * FROM pemohonlain WHERE replid='$id'";
 $result = QueryDb($sql);
 CloseDb();
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nama = $row['nama'];
 $keterangan = $row['keterangan'];
 if (isset($_REQUEST['nama']))
@@ -141,11 +141,11 @@ function focusNext(elemName, evt) {
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen($mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

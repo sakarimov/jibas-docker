@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -70,12 +70,12 @@ $DPS = new DaftarPensiun();
 	<td width="45%" align="center" class="header">Keterangan</td>
 	<td width="10%" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT replid, DATE_FORMAT(tanggal,'%d %M %Y') AS ftmt, keterangan FROM jbssdm.jadwal WHERE nip='$DPS->nip' AND jenis='pensiun'";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
 	<tr height="25">
 		<td align="center"><?=++$cnt?></td>
 	    <td align="center"><?=$row['ftmt']?></td>
@@ -84,7 +84,7 @@ if (mysql_num_rows($result) > 0) {
 		    &nbsp;
 	    </td>
 	</tr>
-<?	} // while 
+<?php } // while 
 } else { ?>
 	<tr height="80">
     	<td colspan="4" align="center" valign="middle">
@@ -93,14 +93,14 @@ if (mysql_num_rows($result) > 0) {
                     
         </td>
     </tr>
-<? 
+<?php 
 } // end if
 ?>
 </table>
 
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>    
 

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ function DisplayModulSearchList($idList, $page)
     $startIndex = $page * $G_ROW_PER_PAGE;
     $stopIndex = (($page + 1) * $G_ROW_PER_PAGE) - 1;
 
-    $idArr = explode(",", $idList);
+    $idArr = explode(",", (string) $idList);
     if ($stopIndex < 0) $stopIndex = count($idArr);
 
     for($i = 0; $i < count($idArr); $i++)
@@ -53,17 +53,17 @@ function DisplayModulSearchList($idList, $page)
                    AND c.nip = g.nip 
                    AND m.id = $idModul";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_array($res))
+        if ($row = mysqli_fetch_array($res))
         {
             echo "<tr style='cursor: pointer; line-height: 18px;' onclick='sr_showModulView($idModul)'>";
             echo "<td align='left' valign='top' width='500px' style='line-height: 20px;'>";
-            echo "<span style='color: blue'>$row[pelajaran] | $row[channel] | $row[guru]</span><br>";
-            echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>$row[modul]</span><br>";
-            echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>$row[deskripsi]</span><br><br>";
+            echo "<span style='color: blue'>".$row['pelajaran'] | $row['channel'] | $row['guru']."</span><br>";
+            echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>".$row['modul']."</span><br>";
+            echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>".$row['deskripsi']."</span><br><br>";
             echo "</td>";
             echo "<td align='left' valign='top' width='100px'>";
             echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$nMedia Video</span><br>";
-            echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$row[nfollower] Follower</span><br>";
+            echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>{$row['nfollower'] }Follower</span><br>";
             echo "</td>";
             echo "</tr>";
         }
@@ -77,7 +77,7 @@ function DisplayChannelSearchList($idList, $page)
     $startIndex = $page * $G_ROW_PER_PAGE;
     $stopIndex = (($page + 1) * $G_ROW_PER_PAGE) - 1;
 
-    $idArr = explode(",", $idList);
+    $idArr = explode(",", (string) $idList);
     for($i = 0; $i < count($idArr); $i++)
     {
         if ($i < $startIndex)
@@ -99,17 +99,17 @@ function DisplayChannelSearchList($idList, $page)
                    AND c.nip = g.nip
                    AND c.id = $idChannel";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_array($res))
+        if ($row = mysqli_fetch_array($res))
         {
             echo "<tr style='cursor: pointer; line-height: 18px;' onclick='sr_showChannelView($idChannel)'>";
             echo "<td align='left' valign='top' width='500px' style='line-height: 20px;'>";
-            echo "<span style='color: blue'>$row[pelajaran] | $row[guru]</span><br>";
-            echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>$row[channel]</span><br>";
-            echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>$row[deskripsi]</span><br><br>";
+            echo "<span style='color: blue'>".$row['pelajaran'] | $row['guru']."</span><br>";
+            echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>".$row['channel']."</span><br>";
+            echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>".$row['deskripsi']."</span><br><br>";
             echo "</td>";
             echo "<td align='left' valign='top' width='100px'>";
             echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$nMedia Video</span><br>";
-            echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$row[nfollower] Follower</span><br>";
+            echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>{$row['nfollower'] }Follower</span><br>";
             echo "</td>";
             echo "</tr>";
         }

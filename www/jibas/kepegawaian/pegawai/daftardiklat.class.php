@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,37 +20,37 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class DaftarDiklat
 {    
     public $nip;
     public $nama;
-    
+
     public function __construct()
     {
         $this->nip = $_REQUEST['nip'];
 
         $sql = "SELECT TRIM(CONCAT(IFNULL(gelarawal,''), ' ' , nama, ' ', IFNULL(gelarakhir,''))) AS nama FROM pegawai WHERE nip='$this->nip'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $this->nama = $row[0];
-        
+
         $id = $_REQUEST['id'];
         $op = $_REQUEST['op'];
         if ($op == "mnrmd2re2dj2mx2x2x3d2s33") 
         {
             $success = true;            
             BeginTrans();
-            
+
             $sql = "DELETE FROM pegdiklat WHERE replid=$id";
             QueryDbTrans($sql, $success);
-            
+
             if ($success)
             {
                 $sql = "UPDATE peglastdata SET idpegdiklat=NULL WHERE idpegdiklat=$id AND nip='$this->nip'";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
                 CommitTrans();
             else
@@ -60,22 +60,22 @@ class DaftarDiklat
         {
             $success = true;            
             BeginTrans();
-            
+
             $sql = "UPDATE pegdiklat SET terakhir=0 WHERE nip='$this->nip'";
             QueryDbTrans($sql, $success);
-            
+
             if ($success)
             {
                 $sql = "UPDATE pegdiklat SET terakhir=1 WHERE replid=$id";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
             {
                 $sql = "UPDATE peglastdata SET idpegdiklat=$id WHERE nip='$this->nip'";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
                 CommitTrans();
             else

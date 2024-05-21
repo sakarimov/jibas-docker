@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -33,8 +33,8 @@ $idtingkat = $_REQUEST['idtingkat'];
 $idtahunajaran = $_REQUEST['idtahunajaran'];
 $idkelas = $_REQUEST['idkelas'];
 $jenis = $_REQUEST['jenis'];
-$nis = trim($_REQUEST['nis']);
-$nama = trim($_REQUEST['nama']);
+$nis = trim((string) $_REQUEST['nis']);
+$nama = trim((string) $_REQUEST['nama']);
 $pilihan = "";	
 if (isset($_REQUEST['pilihan']))
 	$pilihan = $_REQUEST['pilihan'];	
@@ -65,7 +65,7 @@ if ($jenis <> ""){
 			$string = "WHERE s.nis LIKE '%$nis%' AND s.nama LIKE '%$nama%'";
 	} else {
 		if ($jenis == "combo") 			
-			$string = "WHERE s.idkelas = '$idkelas'";
+			$string = "WHERE s.idkelas = '".$idkelas."'";
 	}
 }
 
@@ -77,11 +77,11 @@ if ($op == "x2378e23dkofh73n25ki9234") {
 	OpenDb();
 	$sql_cek_jumlah="SELECT COUNT(s.nis) FROM jbsakad.siswa s WHERE s.idkelas='$idkelastujuan' AND aktif = 1";	
 	$result_cek_jumlah=QueryDb($sql_cek_jumlah);
-	$row_cek_jumlah=@mysql_fetch_row($result_cek_jumlah);
+	$row_cek_jumlah=@mysqli_fetch_row($result_cek_jumlah);
 	
 	$sql_cek_kapasitas="SELECT kapasitas FROM jbsakad.kelas WHERE replid='$idkelastujuan'";
 	$result_cek_kapasitas=QueryDb($sql_cek_kapasitas);
-	$row_cek_kapasitas=@mysql_fetch_row($result_cek_kapasitas);
+	$row_cek_kapasitas=@mysqli_fetch_row($result_cek_kapasitas);
 		
 	if ((int)$row_cek_jumlah[0]<(int)$row_cek_kapasitas[0])
 		$bisapindah="bisa";
@@ -92,22 +92,22 @@ if ($op == "x2378e23dkofh73n25ki9234") {
 	
 	if ($bisapindah=="bisa"){
 		//Bisa Pindah
-		$datetgl=date(j);
-		$datebln=date(m);
-		$datethn=date(Y);
+		$datetgl=date('j');
+		$datebln=date('m');
+		$datethn=date('Y');
 		$tgl=$datethn."-".$datebln."-".$datetgl;
 		OpenDb();
 		BeginTrans();
 		$success=0;
-		$sql="UPDATE jbsakad.siswa SET idkelas='$idkelastujuan' WHERE nis='$_REQUEST[id]'";
+		$sql="UPDATE jbsakad.siswa SET idkelas='$idkelastujuan' WHERE nis='".$_REQUEST['id']."'";
 		QueryDbTrans($sql,$success);
 		if ($success){
-			$sql="UPDATE jbsakad.riwayatkelassiswa SET aktif=0 WHERE nis='$_REQUEST[id]'";	
+			$sql="UPDATE jbsakad.riwayatkelassiswa SET aktif=0 WHERE nis='".$_REQUEST['id']."'";	
 			QueryDbTrans($sql,$success);
 		}
 		
 		if ($success){
-			$sql="INSERT INTO jbsakad.riwayatkelassiswa SET nis='$_REQUEST[id]', idkelas='$idkelastujuan', mulai='$tgl', aktif=1, status=3";	
+			$sql="INSERT INTO jbsakad.riwayatkelassiswa SET nis='".$_REQUEST['id']."', idkelas='$idkelastujuan', mulai='$tgl', aktif=1, status=3";	
 			QueryDbTrans($sql,$success);
 		}
 		
@@ -117,7 +117,7 @@ if ($op == "x2378e23dkofh73n25ki9234") {
 			<script language="javascript">
 			parent.siswa_pindah_content.location.href = "siswa_pindah_content.php?idkelas=<?=$idkelastujuan?>&departemen=<?=$departemen?>&idtingkat=<?=$idtingkat?>&idtahunajaran=<?=$idtahunajaran?>";
 			</script> 
-		<?
+		<?php
 			CommitTrans();
 		} else {
 			RollbackTrans();
@@ -251,20 +251,20 @@ function change_baris() {
 <input type="hidden" name="nama" id="nama" value="<?=$nama; ?>">
 <input type="hidden" name="idkelas" id="idkelas" value="<?=$idkelas; ?>">
 
-<? 	if ($jenis <> ""){ 
+<?php 	if ($jenis <> ""){ 
 		OpenDb();
 		$sql_tot = "SELECT s.nis,s.nama,s.idkelas,k.kelas,s.replid from jbsakad.siswa s, kelas k $string AND k.idtingkat = '$idtingkat' AND s.idkelas = k.replid AND k.idtahunajaran = '$idtahunajaran' AND s.aktif=1 ORDER BY $urut $urutan";  
 		
 		$result_tot = QueryDb($sql_tot);
-		$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 		$akhir = ceil($jumlah/5)*5;	
 		
 		$sql_siswa = "SELECT s.nis,s.nama,s.idkelas,k.kelas,s.replid from jbsakad.siswa s, kelas k $string AND k.idtingkat = '$idtingkat' AND s.idkelas = k.replid AND k.idtahunajaran = '$idtahunajaran' AND s.aktif=1 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		//echo $sql_siswa;
 		$result_siswa = QueryDb($sql_siswa);
 		
-		if (@mysql_num_rows($result_siswa)>0) {
+		if (@mysqli_num_rows($result_siswa)>0) {
 ?>	
 <table border="0" width="100%" align="center">
 <!-- TABLE CENTER -->
@@ -279,12 +279,12 @@ function change_baris() {
     	<td width="8%"></td>
   	</tr>
 
-<?		if ($page==0)
+<?php 	if ($page==0)
 			$cnt_siswa = 0;
 		else 
 			$cnt_siswa = (int)$page*(int)$varbaris;
 			
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {
 			$nis=$row_siswa['nis'];
 			$nama=$row_siswa['nama'];
 			$idkelas=$row_siswa['idkelas'];
@@ -297,14 +297,14 @@ function change_baris() {
     	<td align="center"><?=$kelas?><input type="hidden" name="idkelas<?=$nis?>" id="idkelas<?=$nis?>" value="<?=$idkelas; ?>"></td>
     	<td align="center"><input type="button" value=" > " class="but" onClick="mulai_pindah('<?=$nis?>')" onMouseOver="showhint('Klik untuk pindah kelas!', this, event, '80px')"/></td>
   	</tr>
-<?
+<?php
 				
 		} CloseDb();
 ?>	</table>
 	<script language='JavaScript'>
 		Tables('table', 1, 0);
  	</script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -329,19 +329,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--<td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -355,14 +355,14 @@ function change_baris() {
  		</td>-->
         <td width="30%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>		
-<?			
+<?php 		
 		} else {
 ?>
 	<table width="100%" border="0" align="center">          
@@ -376,7 +376,7 @@ function change_baris() {
 		</td>
 	</tr>
 	</table>
-<? 		} 
+<?php 		} 
 	} else {	
 ?>
 	<table width="100%" border="0" align="center">          
@@ -387,16 +387,16 @@ function change_baris() {
  	</td>
 	</tr>
 	</table>
-<? 	} ?>
+<?php 	} ?>
 </td>
 </tr>
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

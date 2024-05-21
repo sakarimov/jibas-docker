@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -47,7 +47,7 @@ $suku_kiriman=$_REQUEST['suku'];
 $aktif = $_GET['aktif'];
 $isnew = $_GET['isnew'];
 
-if (($op == "del") && (strlen($nama_suku) > 0)) {
+if (($op == "del") && (strlen((string) $nama_suku) > 0)) {
 	OpenDb();
 	$sql = "DELETE FROM jbsumum.suku WHERE suku = '$nama_suku'";
 	$result = QueryDb($sql);
@@ -64,10 +64,10 @@ $hal=0;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript" src="../script/ajax.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/ajax.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
 <script language="javascript">
 
 function refresh(suku) {
@@ -147,18 +147,18 @@ windowIMA=parent.opener.refresh_delete();
 <table border="0" width="100%" align="center">
 <tr>
     <td align="center" valign="top">
-    <?
+    <?php
     OpenDb();
 	
 	$sql_tot = "SELECT * FROM jbsumum.suku";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 						
 	$sql = "SELECT suku,replid FROM jbsumum.suku ORDER BY suku LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 						
 	$akhir = ceil($jumlah/5)*5;
 	$result = QueryDb($sql);	
-	if (@mysql_num_rows($result) > 0) {
+	if (@mysqli_num_rows($result) > 0) {
     ?>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- TABLE LINK -->
@@ -179,14 +179,14 @@ windowIMA=parent.opener.refresh_delete();
         <td width="*">Suku</td>
         <td width="15%">&nbsp;</td>
 	</tr>
-    <?
+    <?php
 	
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row = @mysql_fetch_array($result)) {
+	while ($row = @mysqli_fetch_array($result)) {
 		//$suku=$row['suku'];
 		$replid=$row['replid'];
 	?>
@@ -198,7 +198,7 @@ windowIMA=parent.opener.refresh_delete();
         'UbahSuku','400','240','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Suku!', this, event, '50px')"></a>&nbsp;<a href="#" onClick="del('<?=$row['suku']?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Suku!', this, event, '50px')"></a>        </td>
 	</tr> 
      
-    <?
+    <?php
 	$cnt++;	
 	} //while
 	CloseDb();
@@ -210,7 +210,7 @@ windowIMA=parent.opener.refresh_delete();
 	<script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-  	<?	if ($page==0){ 
+  	<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -235,19 +235,19 @@ windowIMA=parent.opener.refresh_delete();
     <tr>
        	<td width="35%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -261,15 +261,15 @@ windowIMA=parent.opener.refresh_delete();
  		</td-->
         <td width="35%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
     
-<?	} else { ?>
+<?php } else { ?>
 
 	<table width="100%" border="0" align="center">
    	<tr>
@@ -279,14 +279,14 @@ windowIMA=parent.opener.refresh_delete();
 	<tr>
 		<td align="center" valign="middle" height="200">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? } ?>
+        <?php } ?>
         </b></font>
         </td>
    	</tr>
    	</table>
-<? } ?> 
+<?php } ?> 
 	</td>
 </tr>
 <tr height="35">

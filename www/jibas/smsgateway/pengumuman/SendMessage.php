@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
 
 OpenDb();
 $Sender		= CQ($_REQUEST['Sender']);// => Ellyf TS
-$Message	= stripslashes($_REQUEST['Message']);// => Pesannnya
+$Message	= stripslashes((string) $_REQUEST['Message']);// => Pesannnya
 $Message	= str_replace("^","&",$Message);
 $NoPe		= $_REQUEST['NoPe'];// =>; 085624084062,085624084062
 $SendTime	= $_REQUEST['SendTime'];// => 2010-2-2 16:37:00
@@ -35,18 +35,18 @@ $NoIn		= $_REQUEST['NoIn'];
 $pin1		= $_REQUEST['Pin1'];
 $pin2		= $_REQUEST['Pin2'];
 $Nama		= $_REQUEST['Nama'];
-$X			= split(' ',$SendTime);
+$X			= explode(' ',(string) $SendTime);
 $smsgeninfo	  = "Pengumuman";	
 
 $idsmsgeninfo = GetLastId('replid','smsgeninfo');	
-$sql = "INSERT INTO smsgeninfo SET replid='$idsmsgeninfo',tanggal='$X[0]',tipe='2',info='$smsgeninfo',pengirim='$Sender'";
+$sql = "INSERT INTO smsgeninfo SET replid='$idsmsgeninfo',tanggal='".$X[0]."',tipe='2',info='$smsgeninfo',pengirim='$Sender'";
 $res = QueryDb($sql);
 
-$No		= split('>',$NoPe);
-$Nama	= split('>',$Nama);
-$NoID	= split('>',$NoIn);
-$PIN1	= split('>',$pin1);
-$PIN2	= split('>',$pin2);
+$No		= explode('>',(string) $NoPe);
+$Nama	= explode('>',(string) $Nama);
+$NoID	= explode('>',(string) $NoIn);
+$PIN1	= explode('>',(string) $pin1);
+$PIN2	= explode('>',(string) $pin2);
 
 $Receiver = 0;
 for ($i=0; $i<count($No);$i++)
@@ -73,7 +73,7 @@ for ($i=0; $i<count($No);$i++)
 
 			$TextMsg = CQ($newformat);
 			//echo $PIN1[$i].",".$PIN2[$i]."#".$No[$i]."->".$TextMsg."<br>";
-			//$sql_insert = "INSERT INTO smsd.outbox SET InsertIntoDB=now(),SendingDateTime=now(),Text='$Message',DestinationNumber='$No[$i]',SenderID='$Sender'";
+			//$sql_insert = "INSERT INTO smsd.outbox SET InsertIntoDB=now(),SendingDateTime=now(),Text='$Message',DestinationNumber='".$No[$i]."',SenderID='$Sender'";
 			$sql_insert = "INSERT INTO outbox SET InsertIntoDB=now(), SendingDateTime='$SendTime', Text='$TextMsg', DestinationNumber='$nohp', SenderID='$Sender', CreatorID='$Sender',idsmsgeninfo=$idsmsgeninfo";
 			QueryDb($sql_insert);
 

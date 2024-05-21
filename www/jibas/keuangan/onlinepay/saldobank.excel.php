@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,14 +61,14 @@ $sql = "SELECT DISTINCT b.bank, bs.bankno
           FROM jbsfina.bank b, jbsfina.banksaldo bs
          WHERE b.bankno = bs.bankno";
 if ($departemen != "ALL")
-    $sql .= " AND bs.departemen = '$departemen'";
+    $sql .= " AND bs.departemen = '".$departemen."'";
 $sql .= " ORDER BY b.bank";
 
-$lsBank = array();
+$lsBank = [];
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $lsBank[] = array($row[0], $row[1]);
+    $lsBank[] = [$row[0], $row[1]];
 }
 
 $no = 0;
@@ -80,14 +80,14 @@ for($i = 0; $i < count($lsBank); $i++)
 
     $sql = "SELECT SUM(saldo)
               FROM jbsfina.banksaldo
-             WHERE bankno = '$bankNo'";
+             WHERE bankno = '".$bankNo."'";
     if ($departemen != "ALL")
-        $sql .= " AND departemen = '$departemen'";
+        $sql .= " AND departemen = '".$departemen."'";
     $res = QueryDb($sql);
     $saldo = 0;
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $saldo = $row[0];
     }
 

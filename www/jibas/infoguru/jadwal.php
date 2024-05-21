@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 include('sessionchecker.php');
 require_once('include/sessioninfo.php');
 $middle="0";
@@ -78,7 +78,7 @@ function scrollMiddle() {
    }
 </script>
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <? if ($middle=="1") { ?>onload="scrollMiddle()" <? } else { ?> onLoad="scrollTop()"  <? } ?>>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <?php if ($middle=="1") { ?>onload="scrollMiddle()" <?php } else { ?> onLoad="scrollTop()"  <?php } ?>>
 <!-- ImageReady Slices (Untitled-2) -->
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -96,12 +96,12 @@ function scrollMiddle() {
     <td width="81">&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
-  <? if (SI_USER_LEVEL()!=0){ ?>
+  <?php if (SI_USER_LEVEL()!=0){ ?>
   <tr>
     <td width="81" align="right"><a href="jadwal/jadwal_guru_main.php" onMouseOver="showhint('Penyusunan Jadwal Setiap Guru', this, event, '100px')"><img src="images/jadwal_02.jpg" alt="" border="0"></a></td>
     <td align="left"><a href="jadwal/jadwal_guru_main.php" onMouseOver="showhint('Penyusunan Jadwal Setiap Guru', this, event, '100px')">Jadwal Setiap Guru</a></td>
   </tr>
-  <? } ?>
+  <?php } ?>
 </table>
 </td>
   </tr>

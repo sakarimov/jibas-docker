@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 //require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -35,7 +35,7 @@ if (getLevel() == 2 || getLevel() == 3) { ?>
         alert('Maaf, anda tidak berhak mengakses halaman ini!');
         document.location.href = "usermenu.php";
     </script>
-<?  exit();
+<?php  exit();
 }
 
 $varbaris=10;
@@ -64,7 +64,7 @@ if (isset($_REQUEST['op']))
 	
 if ($op == "12134892y428442323x423") {
 	OpenDb();
-	$sql = "DELETE FROM jbsuser.hakakses WHERE replid = $_REQUEST[replid]";
+	$sql = "DELETE FROM jbsuser.hakakses WHERE replid = {$_REQUEST['replid']}";
 	QueryDb($sql);
 	CloseDb();
 }
@@ -164,21 +164,21 @@ function change_baris() {
     </tr>
 	</table>
 	<br /><br />
-<?  
+<?php  
 	OpenDb();
 	//$sql="SELECT p.nama,p.nip,h.tingkat,h.departemen,date_format(l.lastlogin, '%d-%b-%Y %h:%i:%s') AS lastlogin,h.keterangan,l.replid as replid FROM jbsuser.hakakses h, jbsuser.login l, jbssdm.pegawai p WHERE h.modul='KEUANGAN' AND h.login=p.nip AND p.nip=l.login AND l.login=h.login ORDER BY lastlogin";
 //$sql = "SELECT p.id, p.nip, pw.nama, p.tingkat, p.keterangan, p.departemen, date_format(p.lastlogin, '%d-%b-%Y %h:%i:%s') AS lastlogin FROM pengguna p, sistosdm.pegawai pw WHERE p.nip = pw.nip ORDER BY nama";    
 	$sql_tot = "SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,  DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='KEUANGAN' AND h.login = l.login AND l.login = p.nip ";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 					
 	$sql="SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,  DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='KEUANGAN' AND h.login = l.login AND l.login = p.nip ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	
 	$result = QueryDB($sql);
 	$akhir = ceil($jumlah/5)*5;
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
 	<input type="hidden" name="total" id="total" value="<?=$total?>"/>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
@@ -202,22 +202,22 @@ function change_baris() {
         <td width="*">Keterangan</td>
         <td width="15%"  onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" onClick="change_urut('tanggal','<?=$urutan?>')" style="cursor:pointer;">Login Terakhir <?=change_urut('tanggal',$urut,$urutan)?></td>
         
-<?	if (getLevel() == 0) { ?>
+<?php if (getLevel() == 0) { ?>
         <td width="8%">&nbsp;</td>
-<?	} ?>
+<?php } ?>
 	</tr>
-<?	
+<?php 
 	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 	?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['login'] ?></td>
         <td><?=$row['nama'] ?></td>
-         <td align="center"><?	if ($row['tingkat']==1){
+         <td align="center"><?php if ($row['tingkat']==1){
 					echo  "Semua Departemen";
 				} else {
 					echo  $row['departemen'];
@@ -225,7 +225,7 @@ function change_baris() {
 			?>
        	</td>
         <td align="center">
-			<?	switch ($row['tingkat']){
+			<?php switch ($row['tingkat']){
 					case 0: echo  "Landlord";
 						break;
 					case 1: echo  "Manajer Keuangan";
@@ -237,30 +237,30 @@ function change_baris() {
         </td>
         
         <!--<td align="center">
-			<? if ($row['tingkat'] == 1)
+			<?php if ($row['tingkat'] == 1)
 					echo  "Manajer Keuangan";
 				else
 					echo  "Staf Keuangan"; ?>  </td>-->
-        <td align="center"><? if ($row['aktif'] == 1) echo  'Aktif'; else echo  'Tidak Aktif'; ?></td>
+        <td align="center"><?php if ($row['aktif'] == 1) echo  'Aktif'; else echo  'Tidak Aktif'; ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center"><?=LongDateFormat($row['tanggal'])?> <?=$row['jam']?></td>
         <!--<td><?=$row['lastlogin'] ?></td>-->
-	<?	if (getLevel() == 0) { ?>
+	<?php if (getLevel() == 0) { ?>
         <td align="center">
 		<a href="JavaScript:edit('<?=$row['replid'] ?>')"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pengguna!', this, event, '75px')" /></a>&nbsp;
         <!--<a href="JavaScript:ganti('<?=$row['replid'] ?>')" title="ganti password"><img src="images/ico/ujian.png" border="0"/></a>&nbsp;&nbsp;-->
         <a href="JavaScript:hapus('<?=$row['replid'] ?>')"><img src="images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Pengguna!', this, event, '75px')"/></a>
         </td>
-	<?	} ?>
+	<?php } ?>
     </tr>
-<?	} 
+<?php } 
 	CloseDb();
 ?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-	<?	if ($page==0){ 
+	<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -285,19 +285,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<td align="center">
     <!--input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -311,9 +311,9 @@ function change_baris() {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -321,18 +321,18 @@ function change_baris() {
     </td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
        	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? //if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? //} ?>
+        <?php //} ?>
 	</td>
 </tr>
 </table>  
-<? } ?>    
+<?php } ?>    
     
 <!-- EOF CONTENT -->
 </td></tr>

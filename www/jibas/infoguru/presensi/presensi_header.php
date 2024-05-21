@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -54,16 +54,16 @@ $menit = "";
 if (isset($_REQUEST['menit']))
 	$menit = $_REQUEST['menit'];
 
-$tgl = date(d)."-".date(m)."-".date(Y);
+$tgl = date('d')."-".date('m')."-".date('Y');
 if (isset($_REQUEST['tanggal']))
 	$tgl= $_REQUEST['tanggal'];
 
 if ($_REQUEST['replid']<> "") {	
 	OpenDb();
-	$sql = "SELECT p.replid, p.idkelas, p.idsemester, p.idpelajaran, p.tanggal, p.jam, k.idtahunajaran, a.departemen, k.idtingkat FROM presensipelajaran p, tahunajaran a, kelas k WHERE p.replid = '$_REQUEST[replid]' AND k.replid = p.idkelas AND a.replid = k.idtahunajaran";
+	$sql = "SELECT p.replid, p.idkelas, p.idsemester, p.idpelajaran, p.tanggal, p.jam, k.idtahunajaran, a.departemen, k.idtingkat FROM presensipelajaran p, tahunajaran a, kelas k WHERE p.replid = '".$_REQUEST['replid']."' AND k.replid = p.idkelas AND a.replid = k.idtahunajaran";
 	$result = QueryDb($sql);
 	CloseDb();
-	$row = @mysql_fetch_array($result);
+	$row = @mysqli_fetch_array($result);
 	$departemen = $row['departemen'];
 	$tahunajaran = $row['idtahunajaran'];
 	$tingkat = $row['idtingkat'];
@@ -71,8 +71,8 @@ if ($_REQUEST['replid']<> "") {
 	$semester=$row['idsemester'];
 	$pelajaran=$row['idpelajaran'];
 	$tgl=TglText($row['tanggal']);
-	$jam=substr($row['jam'],0,2);
-	$menit=substr($row['jam'],3,2);
+	$jam=substr((string) $row['jam'],0,2);
+	$menit=substr((string) $row['jam'],3,2);
 }	
 	
 
@@ -83,7 +83,7 @@ if (isset($_REQUEST['tampil'])) {
 	$sql = "SELECT * FROM tahunajaran WHERE replid = '$tahunajaran' AND '$date' BETWEEN tglmulai AND tglakhir";
 	
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		if ($result) { ?>        	
 			<script language="javascript">
 			
@@ -91,7 +91,7 @@ if (isset($_REQUEST['tampil'])) {
 			parent.footer.location.href = "presensi_footer.php?departemen=<?=$departemen?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&jam=<?=$jam?>&menit=<?=$menit?>&tanggal=<?=$tgl?>";
 								
 			</script> 
-<?		}
+<?php 	}
 	} else {
 		CloseDb();			
 		$ERROR_MSG = " Waktu data presensi tidak boleh melebihi batas tahun ajaran!";
@@ -114,7 +114,7 @@ OpenDb();
 <script language="javascript" src="../script/cal2.js"></script>
 <script language="javascript" src="../script/cal_conf2.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript">
 var win = null;
@@ -256,20 +256,20 @@ function focusNext(elemName, evt) {
     	<td width="14%"><strong>Departemen </strong></td>
     	<td> 
     	<select name="departemen" id="departemen" onChange="change_dep()" style="width:250px;" onKeyPress="return focusNext('departemen', event)">
-		<?	$dep = getDepartemen(SI_USER_ACCESS());    
+		<?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
 		<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-<?	} ?>
+<?php } ?>
 		</select>        </td>
         <td><strong>Tahun Ajaran</strong></td>
       	<td>
-        <?  OpenDb();
+        <?php  OpenDb();
 			$sql = "SELECT replid,tahunajaran, tglmulai, tglakhir FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			$row = @mysql_fetch_array($result);	
+			$row = @mysqli_fetch_array($result);	
 			$tahunajaran = $row['replid'];				
 		?>
         <input type="text" name="tahun" id="tahun" class="disabled" readonly style="width:140px;" value="<?=$row['tahunajaran']?>" />
@@ -280,29 +280,29 @@ function focusNext(elemName, evt) {
     	<td><strong>Tingkat </strong></td>
     	<td>
 		<select name="tingkat" id="tingkat" onChange="change_tingkat()" style="width:250px;" onKeyPress="return focusNext('kelas', event)">
-          <?	OpenDb();
+          <?php OpenDb();
 			$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($tingkat == "")
 				$tingkat = $row['replid'];				
 			?>
-          <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+          <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
             <?=$row['tingkat']?>
             </option>
-          <?
+          <?php
 			} //while
 			?>
         </select></td>
        <td><strong>Semester </strong></td>
         <td>
-         <?	OpenDb();
+         <?php OpenDb();
             $sql = "SELECT replid,semester FROM semester where departemen='$departemen' AND aktif = 1 ORDER BY replid DESC";
             $result = QueryDb($sql);
             CloseDb();
-            $row = @mysql_fetch_array($result);			
+            $row = @mysqli_fetch_array($result);			
         ?>
             <input type="text" name="sem" id="sem" class="disabled" style="width:140px" readonly value="<?=$row['semester']?>" />
             <input type="hidden" name="semester" id="semester" value="<?=$row['replid']?>">      	</td>
@@ -311,18 +311,18 @@ function focusNext(elemName, evt) {
    		<td><strong>Kelas </strong></td>
     	<td>
         	<select name="kelas" id="kelas" onChange="change()" style="width:250px;" onKeyPress="return focusNext('pelajaran', event)">
-			<?	OpenDb();
+			<?php OpenDb();
 			$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($kelas == "")
 				$kelas = $row['replid'];				 
 			?>
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
              
-    		<?
+    		<?php
 			} //while
 			?>
     		</select>        </td>
@@ -338,19 +338,19 @@ function focusNext(elemName, evt) {
         <td align="left"><strong>Pelajaran</strong></td>
       	<td>
         	<select name="pelajaran" id="pelajaran" onChange="change()" style="width:250px;" onKeyPress="return focusNext('jam', event)">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];			
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
                   
-    		<?
+    		<?php
 			}
     		?>
     		</select>		</td> 
@@ -374,11 +374,11 @@ function focusNext(elemName, evt) {
 </table>
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

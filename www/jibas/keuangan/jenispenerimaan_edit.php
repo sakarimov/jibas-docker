@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -36,12 +36,12 @@ $departemen = $_REQUEST['departemen'];
 if (isset($_REQUEST['simpan']))
 {
 	OpenDb();
-	$sql = "SELECT replid FROM datapenerimaan WHERE nama = '$_REQUEST[nama]' AND replid <> '$id'";
+	$sql = "SELECT replid FROM datapenerimaan WHERE nama = '".$_REQUEST['nama']."' AND replid <> '$id'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan!";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan!";
 	}
 	else
 	{
@@ -50,10 +50,10 @@ if (isset($_REQUEST['simpan']))
 		$smsinfo = isset($_REQUEST['smsinfo']) ? 1 : 0;
 		$sql = "UPDATE datapenerimaan
 				   SET nama='".CQ($_REQUEST['nama'])."',
-					   rekkas='$_REQUEST[norekkas]',
-					   rekpendapatan='$_REQUEST[norekpendapatan]',
-					   rekpiutang='$_REQUEST[norekpiutang]',
-					   info1='$_REQUEST[norekdiskon]',
+					   rekkas='".$_REQUEST['norekkas']."',
+					   rekpendapatan='".$_REQUEST['norekpendapatan']."',
+					   rekpiutang='".$_REQUEST['norekpiutang']."',
+					   info1='".$_REQUEST['norekdiskon']."',
 					   keterangan='".CQ($_REQUEST['keterangan'])."',
 					   info2='$smsinfo'
 				 WHERE replid=$id";
@@ -66,7 +66,7 @@ if (isset($_REQUEST['simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 } 
 
@@ -74,12 +74,12 @@ OpenDb();
 
 $sql = "SELECT kategori FROM kategoripenerimaan WHERE kode='$idkategori'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $kategori = $row[0];
 
-$sql = "SELECT * FROM datapenerimaan WHERE replid = '$id'";
+$sql = "SELECT * FROM datapenerimaan WHERE replid = '".$id."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nama = $row['nama'];
 $besar = FormatRupiah($row['besar']);
 $rekkas = $row['rekkas'];
@@ -95,24 +95,24 @@ if (isset($_REQUEST['nama']))
 if (isset($_REQUEST['keterangan']))
 	$keterangan = $_REQUEST['keterangan'];	
 
-$sql = "SELECT nama FROM rekakun WHERE kode = '$rekkas'";
+$sql = "SELECT nama FROM rekakun WHERE kode = '".$rekkas."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekkas = $row[0];
 
-$sql = "SELECT nama FROM rekakun WHERE kode = '$rekpendapatan'";
+$sql = "SELECT nama FROM rekakun WHERE kode = '".$rekpendapatan."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekpendapatan = $row[0];
 
-$sql = "SELECT nama FROM rekakun WHERE kode = '$rekpiutang'";
+$sql = "SELECT nama FROM rekakun WHERE kode = '".$rekpiutang."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekpiutang = $row[0];
 
-$sql = "SELECT nama FROM rekakun WHERE kode = '$rekdiskon'";
+$sql = "SELECT nama FROM rekakun WHERE kode = '".$rekdiskon."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekdiskon = $row[0];
 
 // ========================================================
@@ -157,7 +157,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS KEU [Ubah Jenis Penerimaan]</title>
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript" src="script/tools.js"></script>
 <script language="javascript" src="script/rupiah.js"></script>
@@ -270,9 +270,9 @@ function panggil(elem)
         <td align="left"><strong>Rek. Kas</strong></td>
         <td align="left">
 			<input type="text" name="rekkas" id="rekkas" value="<?=$rekkas . " " . $namarekkas ?>" readonly style="background-color:#CCCC99" maxlength="100" size="30" onFocus="panggil('rekkas')">&nbsp;
-<?			if (!$idIsUsed) { ?>			
+<?php 		if (!$idIsUsed) { ?>			
 				<a href="#" onClick="JavaScript:cari_rek(1,'HARTA')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>						
 			<input type="hidden" name="norekkas" id="norekkas"  value="<?=$rekkas ?>" />
@@ -282,9 +282,9 @@ function panggil(elem)
         <td align="left"><strong>Rek. Pendapatan</strong></td>
         <td align="left">
 			<input type="text" name="rekpendapatan" id="rekpendapatan" value="<?=$rekpendapatan  . " " . $namarekpendapatan ?>" readonly style="background-color:#CCCC99" maxlength="100" size="30"  onFocus="panggil('rekpendapatan')">&nbsp;
-<?			if (!$idIsUsed) { ?>						
+<?php 		if (!$idIsUsed) { ?>						
 				<a href="#" onClick="JavaScript:cari_rek(2,'PENDAPATAN')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>						
 			<input type="hidden" name="norekpendapatan" id="norekpendapatan" value="<?=$rekpendapatan ?>" />
@@ -294,9 +294,9 @@ function panggil(elem)
         <td align="left"><strong>Rek. Piutang</strong></td>
         <td align="left">
 			<input type="text" name="rekpiutang" id="rekpiutang" value="<?=$rekpiutang . " " . $namarekpiutang ?>" readonly style="background-color:#CCCC99" maxlength="100" size="30" onFocus="panggil('rekpiutang')">&nbsp;
-<?			if (!$idIsUsed) { ?>						
+<?php 		if (!$idIsUsed) { ?>						
 				<a href="#" onClick="JavaScript:cari_rek(3,'PIUTANG')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>						
 			<input type="hidden" name="norekpiutang" id="norekpiutang" value="<?=$rekpiutang ?>" />
@@ -306,9 +306,9 @@ function panggil(elem)
         <td align="left"><strong>Rek. Diskon</strong></td>
         <td align="left">
 			<input type="text" name="rekdiskon" id="rekdiskon" value="<?=$rekdiskon  . " " . $namarekdiskon ?>" readonly style="background-color:#CCCC99" maxlength="100" size="30"  onFocus="panggil('rekdiskon')">&nbsp;
-<?			if (!$idIsUsed) { ?>						
+<?php 		if (!$idIsUsed) { ?>						
 				<a href="#" onClick="JavaScript:cari_rek(4,'PENDAPATAN')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>						
 			<input type="hidden" name="norekdiskon" id="norekdiskon" value="<?=$rekdiskon ?>" />
@@ -321,14 +321,14 @@ function panggil(elem)
 	<tr>
         <td align="left" valign="top">&nbsp;</td>
         <td align="left">
-			<input type='checkbox' id='smsinfo' name='smsinfo' <? if ($smsinfo == 1) echo "checked"; ?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
+			<input type='checkbox' id='smsinfo' name='smsinfo' <?php if ($smsinfo == 1) echo "checked"; ?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
 		</td>
     </tr>
     <tr>
         <td colspan="2" align="center">
         	<input class="but" type="submit" value="Simpan" name="simpan" id="simpan" onFocus="panggil('simpan')" >
             <input class="but" type="button" value="Tutup" onClick="window.close();"><br>
-<?			if ($idIsUsed) {
+<?php 		if ($idIsUsed) {
 				echo "<font style='color:#666'>* Kode rekening Jenis Penerimaan ini tidak dapat diubah karena telah digunakan dalam transaksi</font>";
 			} ?>						
         </td>
@@ -344,11 +344,11 @@ function panggil(elem)
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

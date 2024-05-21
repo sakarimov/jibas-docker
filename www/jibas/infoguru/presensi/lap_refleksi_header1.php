@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -67,7 +67,7 @@ else
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript">
@@ -219,34 +219,34 @@ function validate() {
     	<td><strong>Tgl</strong></td>
         <td>
         	<select name="tgl1" id = "tgl1Info" onchange="change_tgl1()" onfocus = "panggil()">
-		<? 	for($i=1;$i<=$n;$i++){   ?>      
+		<?php 	for($i=1;$i<=$n;$i++){   ?>      
 		    <option value="<?=$i?>" <?=IntIsSelected($tgl1, $i)?>><?=$i?></option>
-		<?	} ?>
+		<?php } ?>
 		    </select>
           	<select name="bln1" id ="bln1" onchange="change_tgl1()" onfocus = "panggil()" >
-        <? 	for ($i=1;$i<=12;$i++) { ?>
+        <?php 	for ($i=1;$i<=12;$i++) { ?>
           	<option value="<?=$i?>" <?=IntIsSelected($bln1, $i)?>><?=$bulan[$i]?></option>	
-       	<?	}	?>	
+       	<?php }	?>	
         	</select>
        		<select name="th1" id = "th1" onchange="change_tgl1()" onfocus = "panggil()" >
-        <?  for($i=$th1-10;$i<=$th1;$i++){ ?>
+        <?php  for($i=$th1-10;$i<=$th1;$i++){ ?>
           	<option value="<?=$i?>" <?=IntIsSelected($th1, $i)?>><?=$i?></option>	   
-       	<?	} ?>	
+       	<?php } ?>	
         	</select> s/d 
     		<select name="tgl2" id = "tgl2Info" onchange="change_tgl2()" onfocus = "panggil()">
-		<? 	for($i=1;$i<=$n;$i++){   ?>      
+		<?php 	for($i=1;$i<=$n;$i++){   ?>      
 		    <option value="<?=$i?>" <?=IntIsSelected($tgl2, $i)?>><?=$i?></option>
-		      <?	} ?>
+		      <?php } ?>
 			</select>
         	<select name="bln2" id ="bln2" onchange="change_tgl2()" onfocus = "panggil()" >
-        <? 	for ($i=1;$i<=12;$i++) { ?>
+        <?php 	for ($i=1;$i<=12;$i++) { ?>
         	<option value="<?=$i?>" <?=IntIsSelected($bln2, $i)?>><?=$bulan[$i]?></option>	
-        <?	}	?>	
+        <?php }	?>	
         	</select>
        	 	<select name="th2" id = "th2" onchange="change_tgl2()" onfocus = "panggil()" >
-       	<?  for($i=$th2-10;$i<=$th2;$i++){ ?>
+       	<?php  for($i=$th2-10;$i<=$th2;$i++){ ?>
         	<option value="<?=$i?>" <?=IntIsSelected($th2, $i)?>><?=$i?></option>	   
-    	<?	} ?>	
+    	<?php } ?>	
         	</select>        </td>  
     	<td align="right" ></td>      
     </tr>

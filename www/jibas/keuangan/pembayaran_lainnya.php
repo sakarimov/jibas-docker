@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -42,7 +42,7 @@ $errmsg = $_REQUEST['errmsg'];
 OpenDb();
 
 // -- ambil nama penerimaan -------------------------------
-$sql = "SELECT nama, rekkas FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama, rekkas FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $row = FetchSingleRow($sql);
 $namapenerimaan = $row[0];
 $defrekkas = $row[1];
@@ -66,14 +66,14 @@ if (1 == (int)$_REQUEST['issubmit'])
 	$rekpiutang = "";
 	$sql = "SELECT nama, rekkas, rekpendapatan, rekpiutang FROM datapenerimaan WHERE replid='$idpenerimaan'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		CloseDb();
 		trigger_error("Tidak ditemukan data penerimaan!", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namapenerimaan = $row[0];
 		$rekkas = $row[1];
 		$rekpendapatan = $row[2];
@@ -81,20 +81,20 @@ if (1 == (int)$_REQUEST['issubmit'])
 	}
 	
 	// rek kas from selected value
-	if (isset($_REQUEST['rekkas']) && strlen(trim($_REQUEST['rekkas'])) > 0)
-		$rekkas = trim($_REQUEST['rekkas']);
+	if (isset($_REQUEST['rekkas']) && strlen(trim((string) $_REQUEST['rekkas'])) > 0)
+		$rekkas = trim((string) $_REQUEST['rekkas']);
 	
 	//Ambil awalan dan cacah tahunbuku untuk bikin nokas;
-	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '$idtahunbuku'";
+	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		CloseDb();
 		trigger_error("Tidak ditemukan data tahun buku!", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$awalan = $row[0];
 		$cacah = $row[1];
 	}
@@ -105,7 +105,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 	BeginTrans();
 
 	//Simpan ke jurnal
-	$ketjurnal = "Dana $namapenerimaan tanggal $_REQUEST[tcicilan] dari $sumber";
+	$ketjurnal = "Dana $namapenerimaan tanggal {$_REQUEST['tcicilan']} dari $sumber";
 	$idjurnal = 0;
 	$success = SimpanJurnal($idtahunbuku, $tbayar, $ketjurnal, $nokas, "", $idpetugas, $petugas, "penerimaanlain", $idjurnal);
 	
@@ -135,16 +135,16 @@ if (1 == (int)$_REQUEST['issubmit'])
 
 	CloseDb();
 	
-	$r = rand(10000, 99999);
+	$r = random_int(10000, 99999);
 	header("Location: pembayaran_lainnya.php?r=$r&idkategori=$idkategori&idpenerimaan=$idpenerimaan&idtahunbuku=$idtahunbuku");
 	
 	exit();
 }
 
 //Muncul pertama kali
-$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -305,16 +305,16 @@ function panggil(elem){
 				<td><strong>Rek. Kas</strong></td>
 				<td colspan="2">
 					<select name="rekkas" id="rekkas" style="width: 200px">
-		<?				OpenDb();
+		<?php 			OpenDb();
 						$sql = "SELECT kode, nama
 								  FROM jbsfina.rekakun
 								 WHERE kategori = 'HARTA'
 								 ORDER BY nama";        
 						$res = QueryDb($sql);
-						while($row = mysql_fetch_row($res))
+						while($row = mysqli_fetch_row($res))
 						{
 							$sel = $row[0] == $defrekkas ? "selected" : "";
-							echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+							echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
 						} ?>                
 					</select>
 				</td>
@@ -342,7 +342,7 @@ function panggil(elem){
         	</fieldset>
  		</td>
      	<td valign="top">
-<?      $sql = "SELECT p.replid AS id, j.nokas, p.sumber,  date_format(p.tanggal, '%d-%b-%Y') as tanggal, 
+<?php      $sql = "SELECT p.replid AS id, j.nokas, p.sumber,  date_format(p.tanggal, '%d-%b-%Y') as tanggal, 
 					   p.keterangan, p.jumlah, p.petugas, jd.koderek AS rekkas, ra.nama AS namakas 
 				  FROM penerimaanlain p, jurnal j, jurnaldetail jd, rekakun ra   
 				 WHERE j.replid = p.idjurnal
@@ -352,7 +352,7 @@ function panggil(elem){
 				   AND ra.kategori = 'HARTA'
 				 ORDER BY p.tanggal, p.replid DESC";
         $result = QueryDb($sql);
-        if (mysql_num_rows($result) > 0) 
+        if (mysqli_num_rows($result) > 0) 
 		{ ?>            
             <table class="tab" id="table" width="100%" cellpadding="5" cellspacing="0">
             <tr height="30" align="center">
@@ -365,9 +365,9 @@ function panggil(elem){
                 <td class="header" width="8%">Petugas</td>
                 <td class="header">&nbsp;</td>
             </tr>
-<?          $cnt = 0;
+<?php          $cnt = 0;
             $total = 0;
-            while ($row = mysql_fetch_array($result)) 
+            while ($row = mysqli_fetch_array($result)) 
 			{
                 $total += $row['jumlah']; ?>
             <tr>
@@ -380,12 +380,12 @@ function panggil(elem){
                 <td><?=$row['petugas'] ?></td>
                 <td align="center">
                 <a href="javascript:cetakkuitansi(<?=$row['id'] ?>)" ><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Kuitansi Pembayaran!', this, event, '100px')" /></a>&nbsp;
-            <?  if (getLevel() != 2) { ?>       
+            <?php  if (getLevel() != 2) { ?>       
                 <a href="javascript:editpembayaran(<?=$row['id'] ?>)"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pembayaran Cicilan!', this, event, '120px')"/></a>
-            <?	} ?>  
+            <?php } ?>  
                 </td>
             </tr>
-            <?
+            <?php
             }
             ?>
             <tr height="35">
@@ -397,7 +397,7 @@ function panggil(elem){
             <script language='JavaScript'>
             Tables('table', 1, 0);
             </script>
-     	<? } ?>
+     	<?php } ?>
 		</td>
 	</tr>
 	</table>

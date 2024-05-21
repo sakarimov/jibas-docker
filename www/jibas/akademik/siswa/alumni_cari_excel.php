@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -102,7 +102,7 @@ OpenDb();
 	}
 $result=QueryDb($sql);
 
-if (@mysql_num_rows($result)<>0){
+if (@mysqli_num_rows($result)<>0){
 ?>
 <html>
 <head>
@@ -165,19 +165,19 @@ Data Alumni
 <td valign="middle" bgcolor="#999999" class="header"><div align="center" class="style4">Tingkat Terakhir</div></td>
 <td valign="middle" bgcolor="#999999" class="header"><div align="center" class="style4">Tanggal Lulus</div></td>
 </tr>
-<?
+<?php
 	$cnt=1;
-	while ($row=@mysql_fetch_array($result)){
+	while ($row=@mysqli_fetch_array($result)){
 	?>
 	<tr height="25" bordercolor="#000000">
 	<td width="3" align="center"><?=$cnt?></td>
-	<td align="left"><?=$row[nis]?></td>
-	<td align="left"><?=$row[nama]?></td>
-	<td align="left"><?=$row[kelas]?></td>
-	<td align="left"><?=$row[tingkat]?></td>
-	<td align="left"><?=$row[tgllulus]?></td>
+	<td align="left"><?=$row['nis']?></td>
+	<td align="left"><?=$row['nama']?></td>
+	<td align="left"><?=$row['kelas']?></td>
+	<td align="left"><?=$row['tingkat']?></td>
+	<td align="left"><?=$row['tgllulus']?></td>
 	</tr>
-	<?
+	<?php
 		$cnt++;
 }
 	?>
@@ -188,7 +188,7 @@ Data Alumni
 
 </body>
 </html>
-<?
+<?php
 }
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -31,16 +31,16 @@ $departemen = $_REQUEST['departemen'];
 $pelajaran = $_REQUEST['pelajaran'];
 ?>
 <select name="pelajaran" id="pelajaran" onKeyPress="return focusNext('jam2', event)">
-   	<?	OpenDb();
+   	<?php OpenDb();
 		$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
 		$result = QueryDb($sql);
 		CloseDb();
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];			
 		?>
         
-    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
+    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
                   
-    <?	} ?>
+    <?php } ?>
 </select>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/common.php');
 require_once('../include/db_functions.php');
@@ -28,12 +28,12 @@ require_once('../include/sessioninfo.php');
 require_once('departemen.php');
 OpenDb();
 $kode="";
-if (isset($_REQUEST[kode]))
-	$kode=$_REQUEST[kode];
+if (isset($_REQUEST['kode']))
+	$kode=$_REQUEST['kode'];
 
 $departemen="-1";
-if (isset($_REQUEST[departemen]))
-	$departemen=$_REQUEST[departemen];
+if (isset($_REQUEST['departemen']))
+	$departemen=$_REQUEST['departemen'];
 
 $key="-1";
 if (isset($_REQUEST['key']))
@@ -107,38 +107,38 @@ function change_keyword() {
     <select name="departemen" id="departemen" onChange="change_dep()">
     	 <option value="-1" <?=StringIsSelected("-1", $departemen) ?> > 
                 Semua Departemen                </option>
-    	 <?	$dep = getDepartemen(SI_USER_ACCESS());    
+    	 <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 				if ($departemen == "")
 					$departemen = $value; ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                 <?=$value ?> 
                 </option>
-         <?	} ?>
+         <?php } ?>
     </select>    </td>
     <td rowspan="3" align="center" valign="middle">
     	<a href="JavaScript:Show()"><img src="../images/ico/view_x.png" border="0" /></a>    </td>
 </tr>
 <tr>
-  <td align="left"><? if ($kode==0) { echo "Angkatan"; } else if ($kode==1) { echo "Proses Penerimaan"; } ?></td>
+  <td align="left"><?php if ($kode==0) { echo "Angkatan"; } else if ($kode==1) { echo "Proses Penerimaan"; } ?></td>
   <td align="left">
   <select name="key" id="key" onchange="change_key()" <?=$dis?>>
-  <?  	if ($kode==0){
+  <?php  	if ($kode==0){
 		?>
 			<option value="-1" <?=StringIsSelected("-1", $key) ?> >Semua Angkatan</option>
-		<?
+		<?php
   		$sql="SELECT replid,angkatan FROM jbsakad.angkatan $dep ORDER BY aktif,replid ";
   		} else if ($kode==1) {
 		?>
 			<option value="-1" <?=StringIsSelected("-1", $key) ?> >Semua Penerimaan</option>
-		<?
+		<?php
   		$sql="SELECT replid,proses FROM jbsakad.prosespenerimaansiswa $dep ORDER BY aktif,replid ";
 		}
 		$result=QueryDb($sql);
-		while ($row=@mysql_fetch_array($result)){
+		while ($row=@mysqli_fetch_array($result)){
 		?>
         <option value="<?=$i?>" <?=StringIsSelected($i, $key) ?>><?=$row[1]?></option>
-        <?
+        <?php
 		}
   ?>
   </select>
@@ -172,17 +172,17 @@ function change_keyword() {
 
 </td>
     <td align="right"  valign="top" width="30%">
-	<? if ($kode==0){ ?>
+	<?php if ($kode==0){ ?>
 	<font size="4" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="4" color="Gray">Statistik
 	Kesiswaan</font><br />
 	<a href="../siswa.php" target="_parent" style="color:#0000FF">Kesiswaan</a> > <strong>Statistik
 	Kesiswaan</strong>    
-    <? } else if ($kode==1){ ?>
+    <?php } else if ($kode==1){ ?>
     <font size="4" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="4" color="Gray">Statistik
 	Calon Siswa</font><br />
 	<a href="../siswa_baru.php" target="_parent" style="color:#0000FF">P S B</a> > <strong>Statistik
 	Calon Siswa</strong>    
-	<? } ?>
+	<?php } ?>
     </td>
 </tr>
 </table>

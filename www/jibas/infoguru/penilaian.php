@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 include('sessionchecker.php');
 require_once('include/sessioninfo.php');
 $middle="0";
@@ -78,14 +78,14 @@ function scrollMiddle() {
 </script>
 <link href="style/style.css" rel="stylesheet" type="text/css">
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <? if ($middle=="1") { ?>onload="scrollMiddle()" <? } else { ?> onLoad="scrollTop()"  <? } ?>>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <?php if ($middle=="1") { ?>onload="scrollMiddle()" <?php } else { ?> onLoad="scrollTop()"  <?php } ?>>
 <table width="100%" border="0">
   <tr>
     <td><p align="left">&nbsp;&nbsp;<font size="5" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="3" face="Arial" color="Gray"><strong>PENILAIAN</strong></font></p></td>
   </tr>
   <tr>
     <td>
-    <? if (SI_USER_LEVEL()!=0) { ?>
+    <?php if (SI_USER_LEVEL()!=0) { ?>
 	<table id="Table_01" width="601" height="601" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td colspan="12">
@@ -259,7 +259,7 @@ function scrollMiddle() {
 		<td></td>
 	</tr>
 </table>
-<? } else { ?>
+<?php } else { ?>
 <table width="256" border="0" cellpadding="5" cellspacing="20">
   <tr>
     <td width="47%" align="center"><a href="penilaian/lap_pelajaran_main.php"><img src="images/penilaian_11a.jpg" width="67" height="88" border="0"><br>
@@ -269,7 +269,7 @@ function scrollMiddle() {
   </tr>
 </table>
 
-<? } ?>
+<?php } ?>
     </td>
   </tr>
 </table>

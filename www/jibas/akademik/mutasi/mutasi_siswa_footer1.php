@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -54,7 +54,7 @@ $result_mutasi=QueryDb($query_mutasi);
 if (isset($_REQUEST['op']))
 $op=$_REQUEST['op'];
 if ($op=="gu7jkds894h98uj32uhi9d8"){
-	$sql_hapus="DELETE FROM jbsakad.jenismutasi WHERE replid='$_REQUEST[replid]'";
+	$sql_hapus="DELETE FROM jbsakad.jenismutasi WHERE replid='".$_REQUEST['replid']."'";
 	$result_hapus=QueryDb($sql_hapus);
 	if ($result_hapus){
 		
@@ -78,7 +78,7 @@ if ($op=="gu7jkds894h98uj32uhi9d8"){
 <head>
 <title>Daftar Siswa</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<SCRIPT type="text/javascript" language="JavaScript" src="../script/tables.js"></SCRIPT>
+<SCRIPT type="text/javascript" language="text/javascript" src="../script/tables.js"></SCRIPT>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/common.js"></script>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/tools.js"></script>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/tooltips.js"></script>
@@ -132,10 +132,10 @@ function refresh(){
     <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" bordercolor="#666666">
       <tr>
         <td colspan="2"><div align="right">
-          <input name="action" type="hidden" id="action2" value="<? if(!empty($_GET['action'])) echo $_GET['action'] ; else echo "tambahJenisMutasi" ;?>">
-          <input name="state" type="hidden" id="state2" value="jenis"><? if (mysql_num_rows($result_mutasi)<>0) {
+          <input name="action" type="hidden" id="action2" value="<?php if(!empty($_GET['action'])) echo $_GET['action'] ; else echo "tambahJenisMutasi" ;?>">
+          <input name="state" type="hidden" id="state2" value="jenis"><?php if (mysqli_num_rows($result_mutasi)<>0) {
 		  ?>
-          <a href="#" onclick="cetak()"  onMouseOver="showhint('Cetak Daftar Siswa', this, event, '120px')">Cetak<img src="../images/ico/print.png" border="0"></a><? } ?><br>
+          <a href="#" onclick="cetak()"  onMouseOver="showhint('Cetak Daftar Siswa', this, event, '120px')">Cetak<img src="../images/ico/print.png" border="0"></a><?php } ?><br>
           <br></div></td>
         </tr>
       <tr>
@@ -148,11 +148,11 @@ function refresh(){
             <td width="159" height="30"><div align="center">Kelas</div></td>
             <td width="68" height="30">&nbsp;</td>
           </tr>
-		  <? 
+		  <?php 
 		
 	
 		  $a=0;
-		  while($row_mutasi=mysql_fetch_row($result_mutasi)){$a++;
+		  while($row_mutasi=mysqli_fetch_row($result_mutasi)){$a++;
 		  ?>
           <tr>
             <td height="25"><?=$a; ?></td>
@@ -161,21 +161,21 @@ function refresh(){
             <td height="25"><?=$row_mutasi[2]?></td>
             <td height="25"><?=$row_mutasi[3]?></td>
             <td height="25"><img src="../images/ico/lihat.png" width="16" height="16" onclick="lihat('<?=$row_mutasi[0]?>')"  onMouseOver="showhint('Lihat Siswa', this, event, '120px')">&nbsp;
-            <? if ($row_mutasi[4]==0){ ?>
+            <?php if ($row_mutasi[4]==0){ ?>
             <img src="../images/ico/mutasi.png" width="16" height="16" onclick="mutasi('<?=$row_mutasi[0]?>')"  onMouseOver="showhint('Mutasikan siswa ini', this, event, '120px')">
-			<? } else { ?>
+			<?php } else { ?>
             <img src="../images/ico/refresh.png" width="16" height="16" onclick="batalkan_mutasi('<?=$row_mutasi[0]?>')"  onMouseOver="showhint('Batalkan mutasi', this, event, '120px')">
-            <? } ?></td>
+            <?php } ?></td>
           </tr>
-		  <?
+		  <?php
 		  }
-		  if(mysql_num_rows($result_mutasi)==0)
+		  if(mysqli_num_rows($result_mutasi)==0)
 		  	{
 		?>
 		<tr>
 			<td height="25" colspan="6" align="center"> "Data Belum Ada"</td>
 		</tr>	
-		<?	
+		<?php 
 			}
 		  ?>
         </table>  
@@ -200,6 +200,6 @@ function refresh(){
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

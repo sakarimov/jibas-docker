@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,29 +20,29 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 
 function SimpanData()
 {
-    global $id, $MYSQL_ERROR_MSG;
+    global $id, $mysqli_ERROR_MSG;
     
     $sql = "SELECT replid
               FROM datatabungan
-             WHERE nama = '$_REQUEST[nama]'
+             WHERE nama = '".$_REQUEST['nama']."'
                AND replid <> '$id'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan!";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan!";
 	}
 	else
 	{
 		$smsinfo = isset($_REQUEST['smsinfo']) ? 1 : 0;
 		$sql = "UPDATE datatabungan
 				   SET nama='".CQ($_REQUEST['nama'])."',
-					   rekkas='$_REQUEST[norekkas]',
-					   rekutang='$_REQUEST[norekutang]',
+					   rekkas='".$_REQUEST['norekkas']."',
+					   rekutang='".$_REQUEST['norekutang']."',
 					   keterangan='".CQ($_REQUEST['keterangan'])."',
 					   info2='$smsinfo'
 				 WHERE replid=$id";
@@ -55,7 +55,7 @@ function SimpanData()
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
         exit();
     }
 }
@@ -67,10 +67,10 @@ function LoadData()
     global $nama, $rekkas, $rekutang, $keterangan, $smsinfo;
     global $namarekkas, $namarekutang;
     
-    $sql = "SELECT * FROM datatabungan WHERE replid = '$id'";
+    $sql = "SELECT * FROM datatabungan WHERE replid = '".$id."'";
     $result = QueryDb($sql);
     
-    $row = mysql_fetch_array($result);
+    $row = mysqli_fetch_array($result);
     $nama = $row['nama'];
     $rekkas = $row['rekkas'];
     $rekutang = $row['rekutang'];
@@ -83,14 +83,14 @@ function LoadData()
     if (isset($_REQUEST['keterangan']))
         $keterangan = $_REQUEST['keterangan'];	
     
-    $sql = "SELECT nama FROM rekakun WHERE kode = '$rekkas'";
+    $sql = "SELECT nama FROM rekakun WHERE kode = '".$rekkas."'";
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
     $namarekkas = $row[0];
         
-    $sql = "SELECT nama FROM rekakun WHERE kode = '$rekutang'";
+    $sql = "SELECT nama FROM rekakun WHERE kode = '".$rekutang."'";
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
     $namarekutang = $row[0];
 }
 

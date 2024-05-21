@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -33,10 +33,10 @@ require_once("impnilai.process.func.php");
 OpenDb();
 
 /** READ EXCEL */
-set_include_path('../library/excel/');
-include 'PHPExcel/IOFactory.php';
+include_once '../../vendor/autoload.php';
+
 $fexcel = $_REQUEST['fexcel'];
-$objReader = new PHPExcel_Reader_Excel2007();
+$objReader = new PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 $objPHPExcel = $objReader->load($fexcel);
 $sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 unlink($fexcel);
@@ -61,7 +61,7 @@ require_once("impnilai.process.validate.php");
     <td width="120">F</td>
     <td width="150">G</td>
 </tr>
-<?
+<?php
 $nilaiCnt = 0;
 $nrow = count($sheetData);
 for($i = 1; $i <= $nrow; $i++)
@@ -157,7 +157,7 @@ if (count($errmsg) == 0) {
     </table>
     <br>
     <input type="button" value="Simpan" class="but" onclick="simpanData()" style="height: 40px; width: 100px;">
-<?
+<?php
 } else {
     echo "<font style='color:red'><strong>PESAN KESALAHAN:</strong></font><br>";
     for($i = 0; $i < count($errmsg); $i++)

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -64,8 +64,8 @@ $result_jam=QueryDb($sql_jam);
 		<td width="20%">Jam ke</td>
 	  	<td width="*">Waktu</td>
 	</tr>
-	<? 
-		while ($row_jam=@mysql_fetch_row($result_jam)){
+	<?php 
+		while ($row_jam=@mysqli_fetch_row($result_jam)){
 			if ((int)$row_jam[2]<10) 
 				$jammulai="0".$row_jam[2]; 
 			else  
@@ -92,7 +92,7 @@ $result_jam=QueryDb($sql_jam);
 		<td align="center"><?=$row_jam[1] ?> </td>
 		<td><?=$jammulai.":".$menitmulai ?> - <?=$jamakhir.":".$menitakhir ?></td>
 	</tr>
-	<?	}	CloseDb();	?> 
+	<?php }	CloseDb();	?> 
 	</table>  
 
 </td></tr></table>

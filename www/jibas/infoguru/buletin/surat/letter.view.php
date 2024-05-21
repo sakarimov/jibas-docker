@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 

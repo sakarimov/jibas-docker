@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -29,23 +29,23 @@ $kapasitas = 0;
 $isi = 0;
 if ($_REQUEST['kelompok'] <> "") {
 OpenDb();
-			  $sql_cek_kap="SELECT kapasitas FROM jbsakad.kelompokcalonsiswa WHERE replid = '$_REQUEST[kelompok]'";
+			  $sql_cek_kap="SELECT kapasitas FROM jbsakad.kelompokcalonsiswa WHERE replid = '".$_REQUEST['kelompok']."'";
 			  $res_cek_kap=QueryDb($sql_cek_kap);
-			  $row_cek_kap=@mysql_fetch_array($res_cek_kap);
+			  $row_cek_kap=@mysqli_fetch_array($res_cek_kap);
 			  
-			  $sql_cek_jum = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = '$_REQUEST[kelompok]' AND aktif = 1";
+			  $sql_cek_jum = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = '".$_REQUEST['kelompok']."' AND aktif = 1";
 			  $res_cek_jum = QueryDb($sql_cek_jum);				
-			  $row_cek_jum = mysql_fetch_row($res_cek_jum);
+			  $row_cek_jum = mysqli_fetch_row($res_cek_jum);
 			  CloseDb();
 
 OpenDb();
-$sql = "SELECT keterangan FROM kelompokcalonsiswa WHERE replid = '$_REQUEST[kelompok]'";
+$sql = "SELECT keterangan FROM kelompokcalonsiswa WHERE replid = '".$_REQUEST['kelompok']."'";
 $result = QueryDb($sql);
 CloseDb();
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 }			
 ?>
 <textarea name="keterangan" id="keterangan" rows="2" cols="60" readonly style="background-color:#E5F7FF" ><?=$row['keterangan'] ?>
 </textarea>
-<input type="hidden" name="kapasitas" id="kapasitas" value="<?=$row_cek_kap[kapasitas]?>" />
+<input type="hidden" name="kapasitas" id="kapasitas" value="<?=$row_cek_kap['kapasitas']?>" />
 <input type="hidden" name="isi" id="isi" value="<?=$row_cek_jum[0]?>" />

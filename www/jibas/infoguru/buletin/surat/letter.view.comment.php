@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 require_once("../../include/config.php");
@@ -38,12 +38,12 @@ OpenDb();
         <input type='hidden' id='maxCommentId' value='<?= GetMaxCommentId() ?>'>
         <table id='cmtList' border='0' cellpadding='2' cellspacing='0' width='100%'>
         <thead>
-<?
+<?php
         ShowPrevCommentLink();
 ?>
         </thead>              
         <tbody>
-<?
+<?php
         $maxcommentid = 0;
         ShowComment();
 ?>             
@@ -53,7 +53,7 @@ OpenDb();
                 <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
                 <td style='background-color: #fff' width='*' align='left' valign='top' colspan='2'>
                     <div id='divAddComment'>
-<?
+<?php
                     ShowCommentBox();
 ?>    
                     </div>
@@ -66,6 +66,6 @@ OpenDb();
 </div>    
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/errorhandler.php');
 require_once('include/sessioninfo.php');
@@ -37,7 +37,7 @@ if (getLevel() == 2)
 	alert('Maaf, anda tidak berhak mengakses halaman ini!');
 	window.history.go(-1);
 </script>
-<? 	exit();
+<?php 	exit();
 } // end if
 
 $dept = $_REQUEST['dept'];
@@ -95,7 +95,7 @@ if (isset($_REQUEST['lanjut']))
 				GROUP BY jd.koderek, ra.nama ORDER BY jd.koderek";
 		//echo  "$sql<br>";				
 		$result = QueryDb($sql); 
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
 			$aktiva[$n_aktiva]["kode"] = $row[0];
 			$aktiva[$n_aktiva]["jumlah"] = (float)$row[1];
@@ -109,7 +109,7 @@ if (isset($_REQUEST['lanjut']))
 				GROUP BY jd.koderek, ra.nama ORDER BY jd.koderek";
 		//echo  "$sql<br>";				
 		$result = QueryDb($sql); 
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
 			$pasiva[$n_pasiva]["kode"] = $row[0];
 			$pasiva[$n_pasiva]["jumlah"] = (float)$row[1];
@@ -319,7 +319,7 @@ function validasi()
 }
 </script>
 </head>
-<?
+<?php
 OpenDb();
 ?>
 <body onLoad="document.getElementById('kategori').focus();">
@@ -398,13 +398,13 @@ OpenDb();
             <td align="left" valign="top"><strong>Kode Akun Laba Ditahan (Retained Earning)</strong></td>
             <td align="left">
             <select name="rekre" id="rekre"  style="width:220px" onKeyPress="return focusNext('keterangan', event)">
-            <?
+            <?php
             $sql = "SELECT kode, nama FROM rekakun WHERE kategori='MODAL' ORDER BY kode";
             $result = QueryDb($sql);
-            while ($row = mysql_fetch_row($result)) {
+            while ($row = mysqli_fetch_row($result)) {
             ?>
                 <option value="<?=$row[0]?>"><?=$row[0] . "  " . $row[1]?></option>
-            <?
+            <?php
             }
             ?>
             </select><br />
@@ -425,7 +425,7 @@ OpenDb();
         </table>
         </form>
         
-<?		if (strlen($errmsg) > 0) { ?>
+<?php 	if (strlen($errmsg) > 0) { ?>
             <br /><br /><br /><br />
             <table style="background-color:#FCF; border-color:#900;" width="80%" align="center">
             <tr>
@@ -434,7 +434,7 @@ OpenDb();
                 </td>
             </tr>
             </table>
-<?		} ?>        
+<?php 	} ?>        
         </td>
     </tr>
     </table>
@@ -442,7 +442,7 @@ OpenDb();
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 
-<?
+<?php
 CloseDb();
 ?>
 </body>

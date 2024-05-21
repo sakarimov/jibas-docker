@@ -5,10 +5,10 @@ require_once('../include/common.php');
 new Pegawai();
 class Pegawai{
 	public function __construct(){
-		$op = (isset($_REQUEST['op']))?$_REQUEST['op']:'';
-		$this->bag = (isset($_REQUEST['bagian']))?$_REQUEST['bagian']:"";
-		$this->nip = (isset($_REQUEST['nip']))?$_REQUEST['nip']:"";
-		$this->nama = (isset($_REQUEST['nama']))?$_REQUEST['nama']:"";
+		$op = $_REQUEST['op'] ?? '';
+		$this->bag = $_REQUEST['bagian'] ?? "";
+		$this->nip = $_REQUEST['nip'] ?? "";
+		$this->nama = $_REQUEST['nama'] ?? "";
 		$this->filter = ""; 
 		switch($op){
 			case 'pilih':$this->headerPilih();break;
@@ -22,8 +22,8 @@ class Pegawai{
 			OpenDb();
 			$sql = "SELECT replid,bagian FROM $db_name_sdm.bagianpegawai ORDER BY urutan ASC";
 			$res = QueryDb($sql);
-			$bag = array();
-			while($row = @mysql_fetch_row($res))
+			$bag = [];
+			while($row = @mysqli_fetch_row($res))
 				array_push($bag,$row[1]);
 			?>
 			<table border='0'>
@@ -37,7 +37,7 @@ class Pegawai{
 								echo "<option value='$bagian' ";
 								if ($bagian==$this->bag)
 									echo "selected";
-								echo ">$bagian</option>";
+								echo ">".$bagian."</option>";
 							}
 							?>
 						</select>
@@ -83,7 +83,7 @@ class Pegawai{
 			OpenDb();
 			$sql = "SELECT nip,nama FROM $db_name_sdm.pegawai WHERE 1 $this->filter";
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0){
 				$cnt = 1;
 				?>
@@ -95,10 +95,10 @@ class Pegawai{
 					<td>&nbsp;</td>
 				</tr>
 				<?php
-				while ($row = @mysql_fetch_row($res)){
-				$sqlpass = "SELECT count(replid) FROM $db_name_user.login WHERE login='$row[0]'";
+				while ($row = @mysqli_fetch_row($res)){
+				$sqlpass = "SELECT count(replid) FROM $db_name_user.login WHERE login='".$row[0]."'";
 				$respass = QueryDb($sqlpass);
-				$rowpass = @mysql_fetch_row($respass);
+				$rowpass = @mysqli_fetch_row($respass);
 				$hp		 = ($rowpass[0]==0)?'false':'true';
 				?>
 				<tr height="20">

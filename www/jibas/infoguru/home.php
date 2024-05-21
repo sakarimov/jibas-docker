@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("include/sessionchecker.php");
 require_once("include/sessioninfo.php");
 require_once("include/config.php");
@@ -40,7 +40,7 @@ OpenDb();
 	<tr>
 		<td width='5'>&nbsp;</td>
 		<td align='left'>
-<?			ShowImageUser() ?>				
+<?php 		ShowImageUser() ?>				
 		</td>
 		<td align='left'>
 			<font style='color: #444; font-size: 12px'>Selamat <?= GetTimeState() ?></font><br>
@@ -257,8 +257,8 @@ OpenDb();
 		<td align='left' valign='top'>
 			<div id='divSecInfo3' style='overflow: auto;'>
 				<input type='hidden' id='minListNotesId' value='0'>
-<?				echo "Departemen: ";
-				ShowCbDepartemen("departemen", "changeDepartemen()"); ?>					
+<?php 			echo "Departemen: ";
+				ShowCbDepartemen(); ?>					
 				<table id='tabListNotes' width='100%' cellspacing='7' cellpadding='0'>
 				<tbody>
 					
@@ -284,9 +284,9 @@ OpenDb();
 				<table id='tabListBirthday' width='100%' cellspacing='7' cellpadding='0'>
 				<thead>
 					Tanggal:
-					<span id='divCbTahun'><? ShowCbTahun(); ?></span>
-					<span id='divCbBulan'><? ShowCbBulan(); ?></span>
-					<span id='divCbTanggal'><? ShowCbTanggal(); ?></span><br>
+					<span id='divCbTahun'><?php ShowCbTahun(); ?></span>
+					<span id='divCbBulan'><?php ShowCbBulan(); ?></span>
+					<span id='divCbTanggal'><?php ShowCbTanggal(); ?></span><br>
 					<span id='debug'></span>
 				</thead>	
 				<tbody>
@@ -305,6 +305,6 @@ OpenDb();
 </table>	
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

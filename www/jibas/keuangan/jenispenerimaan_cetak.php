@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -68,10 +68,10 @@ if (isset($_REQUEST['departemen']))
 <tr>
 	<td width="90"><strong>Kategori</strong></td>
     <td><strong>:
-<?	OpenDb();	
+<?php OpenDb();	
 	$sql = "SELECT kategori FROM kategoripenerimaan WHERE kode='$idkategori' ORDER BY urutan";
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
@@ -85,7 +85,7 @@ if (isset($_REQUEST['departemen']))
         <td class="header" width="35%">Kode Rekening</td>
         <td class="header" width="*">Keterangan</td>
 	</tr>
-<?	OpenDb();
+<?php OpenDb();
 	$sql = "SELECT * FROM datapenerimaan WHERE idkategori = '$idkategori' AND departemen = '$departemen' ORDER BY replid ";//LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$request = QueryDb($sql);
 	
@@ -94,39 +94,39 @@ if (isset($_REQUEST['departemen']))
 	//else
 		//$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($request)) { ?>
+	while ($row = mysqli_fetch_array($request)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt?></td>
         <td><?=$row['nama'] ?></td>        
         <td>
-<?		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekkas]'";
+<?php 	$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekkas']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekkas = $row2[0];
 	
-		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekpendapatan]'";
+		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekpendapatan']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekpendapatan = $row2[0];
 	
-		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekpiutang]'";
+		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekpiutang']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekpiutang = $row2[0];
 		
-		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[info1]'";
+		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['info1']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekdiskon = $row2[0];
 		?>
-		<strong>Kas:</strong> <?=$row[rekkas] . " " . $namarekkas ?><br />
-        <strong>Pendapatan:</strong> <?=$row[rekpendapatan] . " " . $namarekpendapatan ?><br />
-        <strong>Piutang:</strong> <?=$row[rekpiutang] . " " . $namarekpiutang ?><br />
-		<strong>Diskon:</strong> <?=$row[info1] . " " . $namarekdiskon ?><br />
+		<strong>Kas:</strong> <?=$row['rekkas'] . " " . $namarekkas ?><br />
+        <strong>Pendapatan:</strong> <?=$row['rekpendapatan'] . " " . $namarekpendapatan ?><br />
+        <strong>Piutang:</strong> <?=$row['rekpiutang'] . " " . $namarekpiutang ?><br />
+		<strong>Diskon:</strong> <?=$row['info1'] . " " . $namarekdiskon ?><br />
         </td>
         <td><?=$row['keterangan'] ?></td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); ?>
      <!-- END TABLE CONTENT -->
     </table>

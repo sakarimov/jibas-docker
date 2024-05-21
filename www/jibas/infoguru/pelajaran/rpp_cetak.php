@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -47,11 +47,11 @@ if (isset($_REQUEST['urutan'])){
 	}
 
 OpenDb();
-$sql = "SELECT t.departemen, t.tingkat, s.semester, p.nama FROM tingkat t, semester s, pelajaran p WHERE t.replid = '$tingkat' AND s.replid = '$semester' AND p.replid = '$pelajaran'";
+$sql = "SELECT t.departemen, t.tingkat, s.semester, p.nama FROM tingkat t, semester s, pelajaran p WHERE t.replid = '$tingkat' AND s.replid = '$semester' AND p.replid = '".$pelajaran."'";
 //echo $sql;
 $result = QueryDb($sql);
 CloseDb();
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $departemen = $row['departemen'];
 $namatingkat = $row['tingkat'];
 $namasemester = $row['semester'];
@@ -106,25 +106,25 @@ $namapelajaran = $row['nama'];
         <td width="10%" class="header" align="center">Status</td>        
         
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT replid, koderpp, rpp, deskripsi, aktif FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' ORDER BY $urut $urutan"; 
 	$result = QueryDb($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">    	
     	<td align="center" ><?=++$cnt ?></td>
         <td><?=$row['koderpp'] ?></td>        
         <td><?=$row['rpp'] ?></td>        
         <td><?=$row['deskripsi'] ?></td>
         <td align="center">
-			<? if ($row['aktif'] == 1) 
+			<?php if ($row['aktif'] == 1) 
 					echo 'Aktif';
 				else
 					echo 'Tidak Aktif';
 			?>		
         </td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>

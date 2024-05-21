@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/theme.php');
@@ -48,15 +48,15 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat
 		 WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen 
 		   AND t.replid = '$idtingkat' AND j.replid = $id AND g.nip = '$nip' ";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
 $tingkat = $row[4];
 
-$sql = "SELECT keterangan FROM dasarpenilaian WHERE dasarpenilaian = '$aspek'";
+$sql = "SELECT keterangan FROM dasarpenilaian WHERE dasarpenilaian = '".$aspek."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $aspekket = $row[0];
 CloseDb();
 
@@ -72,7 +72,7 @@ CloseDb();
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -265,7 +265,7 @@ function focusNext(elemName, evt) {
 			<td class="header" align="center" width="70%" colspan="3"> Nilai Min &nbsp;&nbsp;&nbsp; Nilai Maks</td>         
             <td class="header" align="center" width="10%">Grade</td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
 		$sql = "SELECT nmin, nmax, grade FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '$aspek' ORDER BY grade";
 		//echo "Sql = ".$sql;
@@ -273,7 +273,7 @@ function focusNext(elemName, evt) {
 		CloseDb();
 		
 		$i = 1;
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 				$nmin[$i] = $row['nmin'];
 				$nmax[$i] = $row['nmax'];
 				$grade[$i] = $row['grade'];				
@@ -289,9 +289,9 @@ function focusNext(elemName, evt) {
             <td align="center" ><strong> - </strong></td>
 			<td align="left"><input type="text" name=<?='nmax'.$cnt?> id=<?='nmax'.$cnt?> size="8" maxlength="5" value="<?=$nmax[$cnt]?>" onKeyPress="focusNext('grade<?=$cnt?>',event)"> </td> 
 			<td align="center">            
-            <input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" maxlength="2" <? if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" value="<?=$grade[$cnt]?>" <? } else { ?> onkeypress="focusNext('Simpan',event)" <? } ?> style="text-transform:uppercase"/></td>
+            <input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" maxlength="2" <?php if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" value="<?=$grade[$cnt]?>" <?php } else { ?> onkeypress="focusNext('Simpan',event)" <?php } ?> style="text-transform:uppercase"/></td>
 		</tr>
-			<?
+			<?php
 			//$i++;
 			}		
 		?>			
@@ -330,11 +330,11 @@ function focusNext(elemName, evt) {
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions_2.php");
 require_once("../include/common.php");
@@ -61,7 +61,7 @@ function Cetak() {
 	<table width="100%" border="0" align="center">
     <tr><td>
     	<div align="center">
-<?
+<?php
 		$sql = "SELECT j.satker, SUM(IF(p.kelamin = 'L', 1, 0)) AS Pria, SUM(IF(p.kelamin = 'P', 1, 0)) AS Wanita
 				  FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
 				  WHERE p.aktif = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid
@@ -69,13 +69,13 @@ function Cetak() {
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result)) {
-			$data[] = array($row[1], $row[2]);
+		while($row = mysqli_fetch_row($result)) {
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Pria", "Wanita");
+		$legend_y = ["Pria", "Wanita"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Banyaknya Pegawai Berdasarkan Jenis Kelamin</font>"; // title for the diagram
 		

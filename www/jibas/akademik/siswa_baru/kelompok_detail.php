@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,7 +36,7 @@ $replid = $_REQUEST['replid'];
 OpenDb();
 $sql = "SELECT proses, kelompok FROM prosespenerimaansiswa p, kelompokcalonsiswa k WHERE p.replid = '$proses' AND k.replid = '$replid' AND k.idproses = p.replid";
 $result=QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 
 CloseDb();
 ?>
@@ -53,7 +53,7 @@ CloseDb();
 <tr><td align="left" valign="top">
 
 <?=getHeader($departemen)?>
-<? OpenDb(); ?>
+<?php OpenDb(); ?>
 <center>
   <font size="4"><strong>DAFTAR CALON SISWA</strong></font><br />
  </center><br /><br />
@@ -80,18 +80,18 @@ CloseDb();
         <td width="30%" class="header" align="center">Nama</td>
         <td width="*" class="header" align="center">Keterangan</td>
     </tr>
-<? 	
+<?php 	
 	OpenDb();
     $sql = "SELECT nopendaftaran, nama, keterangan FROM calonsiswa WHERE idkelompok = '$replid' ";  
 	$result = QueryDB($sql);
 	$cnt = 0;
-	while ($row = @mysql_fetch_array($result)) { ?>
+	while ($row = @mysqli_fetch_array($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['nopendaftaran'] ?></td>        
         <td><?=$row['nama'] ?></td>
         <td><?=$row['keterangan']?></td>
-<?	}
+<?php }
 	CloseDb(); ?>
     <!-- END TABLE CONTENT -->
     </table>

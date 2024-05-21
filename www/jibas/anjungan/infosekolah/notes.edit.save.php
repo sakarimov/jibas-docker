@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -90,9 +90,9 @@ try
     OpenDb();
     $sql = "SELECT IF(nis IS NULL, 'P', 'S') AS ownertype
               FROM jbsvcr.notes
-             WHERE replid = '$notesid'";
+             WHERE replid = '".$notesid."'";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         CloseDb();
         
@@ -101,7 +101,7 @@ try
         
         exit();
     }
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ownertype = $row[0];
     
     // Validate File Size
@@ -160,24 +160,24 @@ try
         mkdir($uploadPath, 0755);
     
     
-    $text = trim($_REQUEST['judul']);
+    $text = trim((string) $_REQUEST['judul']);
     $judul = $text;
     $fjudul = FormattedText($text);
     
     $kepada = SafeInput($_REQUEST['kepada']);
     
-    $text = trim($_REQUEST['pesan']);
+    $text = trim((string) $_REQUEST['pesan']);
     $pesan = RecodeNewLine($text);
     $fpesan = FormattedText($text);
     $fprevpesan = FormattedPreviewText($text, $previewTextLength);
     
-    $tautan = trim($_REQUEST['tautan']);
+    $tautan = trim((string) $_REQUEST['tautan']);
     
     $sql = "UPDATE jbsvcr.notes
                SET judul = '$judul', fjudul = '$fjudul', kepada = '$kepada',
                    pesan = '$pesan', fpesan = '$fpesan', fprevpesan = '$fprevpesan',
                    tautan = '$tautan', lastactive = NOW(), lastread = NOW()
-             WHERE replid = '$notesid'";
+             WHERE replid = '".$notesid."'";
     echo "$sql<br>";
     QueryDbEx($sql);
     
@@ -199,11 +199,11 @@ try
         {
             $sql = "SELECT location, filename
                       FROM jbsvcr.notesfile
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             $res = QueryDbEx($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 
                 $location = $row[0];
                 $filename = $row[1];
@@ -215,7 +215,7 @@ try
                     unlink($location);
                 
                 $sql = "DELETE FROM jbsvcr.notesfile
-                         WHERE replid = '$replid'";
+                         WHERE replid = '".$replid."'";
                 echo "$sql<br>";
                 QueryDbEx($sql);
             }
@@ -224,7 +224,7 @@ try
         {
             $sql = "UPDATE jbsvcr.notesfile
                        SET fileinfo = '$info', ffileinfo = '$finfo'
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             echo "$sql<br>";
             QueryDbEx($sql);
         }
@@ -237,14 +237,14 @@ try
         $file = $_FILES[$doc];
         
         $info = "gambar_info_$i";
-        $text = trim($_REQUEST[$info]);
+        $text = trim((string) $_REQUEST[$info]);
         $info = $text;
         $finfo = FormattedText($text);
         
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         
         $name = $file['name'];
-        $name = $notesid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $name = $notesid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $type = $file['type'];
         $size = $file['size'];
         $location = "anjungan/notes/" . date('Y');
@@ -256,7 +256,7 @@ try
         
         $sql = "INSERT INTO jbsvcr.notesfile
                    SET notesid = $notesid, filecate = 'pict', filename = '$name', filesize = '$size',
-                       filetype = '$type', fileinfo = '$info', ffileinfo = '$finfo', location = '$location'";
+                       filetype = '$type', fileinfo = '$info', ffileinfo = '$finfo', location = '".$location."'";
         echo "$sql<br>";
         QueryDbEx($sql);
     }
@@ -271,7 +271,7 @@ try
         $isdel = $_REQUEST[$parm];
         
         $parm = "edit_file_info_$i";
-        $text = trim($_REQUEST[$parm]);
+        $text = trim((string) $_REQUEST[$parm]);
         $info = $text;
         $finfo = FormattedText($info);
                 
@@ -279,11 +279,11 @@ try
         {
             $sql = "SELECT location, filename
                       FROM jbsvcr.notesfile
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             $res = QueryDbEx($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 
                 $location = $row[0];
                 $filename = $row[1];
@@ -295,7 +295,7 @@ try
                     unlink($location);
                 
                 $sql = "DELETE FROM jbsvcr.notesfile
-                         WHERE replid = '$replid'";
+                         WHERE replid = '".$replid."'";
                 echo "$sql<br>";
                 QueryDbEx($sql);
             }
@@ -304,7 +304,7 @@ try
         {
             $sql = "UPDATE jbsvcr.notesfile
                        SET fileinfo = '$info', ffileinfo = '$finfo'
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             echo "$sql<br>";
             QueryDbEx($sql);
         }
@@ -317,14 +317,14 @@ try
         $file = $_FILES[$doc];
         
         $info = "file_info_$i";
-        $text = trim($_REQUEST[$info]);
+        $text = trim((string) $_REQUEST[$info]);
         $info = $text;
         $finfo = FormattedText($text);
                 
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         
         $name = $file['name'];
-        $name = $notesid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $name = $notesid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $type = $file['type'];
         $size = $file['size'];
         $location = "anjungan/notes/" . date('Y');
@@ -335,7 +335,7 @@ try
         
         $sql = "INSERT INTO jbsvcr.notesfile
                    SET notesid = $notesid, filecate = 'doc', filename = '$name', filesize = '$size',
-                       filetype = '$type', fileinfo = '$info', ffileinfo = '$finfo', location = '$location'";
+                       filetype = '$type', fileinfo = '$info', ffileinfo = '$finfo', location = '".$location."'";
         echo "$sql<br>";
         QueryDbEx($sql);
     }

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ function getDepartemen()
         OpenDb();
         $res = QueryDb($sql);
         $select = "<select id='bs_cbDept' class='inputbox' style='width: 220px' onchange='bs_changeCbDept()'>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $select .= "<option value='$row[0]'>$row[0]</option>";
+            $select .= "<option value='".$row[0]."'>".$row[0]."</option>";
         }
         $select .= "</select>";
         CloseDb();
@@ -79,9 +79,9 @@ function getPelajaran($dept)
         OpenDb();
         $res = QueryDb($sql);
         $select = "<select id='bs_cbPelajaran' class='inputbox' style='width: 220px' onchange='bs_changeCbPelajaran()'>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $select .= "<option value='$row[0]'>$row[1]</option>";
+            $select .= "<option value='".$row[0]."'>".$row[1]."</option>";
         }
         $select .= "</select>";
         CloseDb();
@@ -110,9 +110,9 @@ function getTingkat($dept, $idPelajaran)
         OpenDb();
         $res = QueryDb($sql);
         $select = "<select id='bs_cbTingkat' class='inputbox' style='width: 220px' onchange='bs_changeCbTingkat()'>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $select .= "<option value='$row[0]'>$row[1]</option>";
+            $select .= "<option value='".$row[0]."'>".$row[1]."</option>";
         }
         $select .= "<option value='0'>(semua)</option>";
         $select .= "</select>";
@@ -142,9 +142,9 @@ function getSemester($dept, $idPelajaran)
         OpenDb();
         $res = QueryDb($sql);
         $select = "<select id='bs_cbSemester' class='inputbox' style='width: 220px' onchange='bs_changeCbSemester()'>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $select .= "<option value='$row[0]'>$row[1]</option>";
+            $select .= "<option value='".$row[0]."'>".$row[1]."</option>";
         }
         $select .= "<option value='0'>(semua)</option>";
         $select .= "</select>";
@@ -212,7 +212,7 @@ function showBankSoal($dept, $idPelajaran, $idTingkat, $idSemester)
 <?php
     $no = 0;
     $res = QueryDb($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -238,9 +238,9 @@ function showBankSoal($dept, $idPelajaran, $idTingkat, $idSemester)
                  WHERE u.id = us.idujian
                    AND us.id = $idUjianSerta";
         $res2 = QueryDb($sql);
-        if (mysql_num_rows($res2) > 0)
+        if (mysqli_num_rows($res2) > 0)
         {
-            $row2 = mysql_fetch_array($res2);
+            $row2 = mysqli_fetch_array($res2);
             $dateDiff = $row2["diff"];
             $viewExp = $row2["viewexp"];
             $viewKey = $row2["viewkey"];
@@ -268,7 +268,7 @@ function showBankSoal($dept, $idPelajaran, $idTingkat, $idSemester)
         $tag->TipeDataJawaban = 0;
 
         $jsonTag = $tag->toJson();
-        $jsonTag = str_replace("\"", "`", $jsonTag);
+        $jsonTag = str_replace("\"", "`", (string) $jsonTag);
         ?>
 
         <tr style='height: 100px;'>
@@ -305,17 +305,17 @@ function getSoalPenjelasan($idSoal, $idUjianSerta, $viewExp)
                   FROM jbscbe.webusersoal
                  WHERE userid = '$userId'
                    AND idujianserta = '$idUjianSerta'
-                   AND idsoal = '$idSoal'";
+                   AND idsoal = '".$idSoal."'";
 
         OpenDb();
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) == 0)
+        if (mysqli_num_rows($res) == 0)
         {
             CloseDb();
             return GenericReturn::createJson(-99, "Soal tidak ditemukan!", "");
         }
 
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $idRes = $row[0];
         $resDir = $row[1];
 
@@ -328,11 +328,11 @@ function getSoalPenjelasan($idSoal, $idUjianSerta, $viewExp)
         $sql = "SELECT jawaban
                   FROM jbscbe.ujiandata
                  WHERE idserta = '$idUjianSerta'
-                   AND idsoal = '$idSoal'";
+                   AND idsoal = '".$idSoal."'";
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) > 0)
+        if (mysqli_num_rows($res) > 0)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $jawaban = $row[0];
             $jenisJawaban = 0;
         }
@@ -341,15 +341,15 @@ function getSoalPenjelasan($idSoal, $idUjianSerta, $viewExp)
             $sql = "SELECT jenis, jawaban, jawabanim
                       FROM jbscbe.ujiandataesai
                      WHERE idserta = '$idUjianSerta'
-                       AND idsoal = '$idSoal'";
+                       AND idsoal = '".$idSoal."'";
             $res = QueryDb($sql);
             $no = 0;
-            while ($row = mysql_fetch_row($res))
+            while ($row = mysqli_fetch_row($res))
             {
                 $jenis = (int) $row[0];
                 if ($jenis == 1)
                 {
-                    $jawaban = base64_encode($row[2]);
+                    $jawaban = base64_encode((string) $row[2]);
                     $jenisJawaban = 2;
                     break;
                 }

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -47,7 +47,7 @@ $sql_get_nhb =
 	  WHERE a.replid='$idaturan' AND k.idtingkat = t.replid AND k.replid = '$kelas' AND s.replid = '$semester' 
 	    AND p.replid = a.idpelajaran AND j.replid = a.idjenisujian AND ta.replid = k.idtahunajaran";
 $result_get_nhb = QueryDb($sql_get_nhb);
-$row = @mysql_fetch_array($result_get_nhb);
+$row = @mysqli_fetch_array($result_get_nhb);
 $departemen = $row['departemen'];
 $namakelas = $row['kelas'];
 $namatingkat = $row['tingkat'];
@@ -69,15 +69,15 @@ $jenis = $row['idjenis'];
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
-<script language="JavaScript" src="../script/validasi.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/validasi.js"></script>
 <script type="text/javascript" src="../script/calendar.js"></script>
 <script type="text/javascript" src="../script/lang/calendar-en.js"></script>
 <script type="text/javascript" src="../script/calendar-setup.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 
 function refresh() {
 	opener.refresh();
@@ -274,15 +274,15 @@ function simpan(evt) {
       	<td><div id="rpp_info">
         	<select name="idrpp" id="idrpp" style="width:170px;" onkeypress="return focusNext('deskripsi', event)">
       		<option value="" <?=IntIsSelected("", $idrpp) ?> >Tanpa RPP</option>
-		<? $sql_rpp="SELECT * FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' AND aktif=1 ORDER BY rpp";
+		<?php $sql_rpp="SELECT * FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' AND aktif=1 ORDER BY rpp";
       		$result_rpp=QueryDb($sql_rpp);
-      		while ($row_rpp=@mysql_fetch_array($result_rpp)){
+      		while ($row_rpp=@mysqli_fetch_array($result_rpp)){
 				if ($idrpp == "")
 					$idrpp = $row_rpp['replid'];
       	?>
       			<option value="<?=$row_rpp['replid'] ?>" <?=IntIsSelected($row_rpp['replid'], $idrpp) ?> ><?=$row_rpp['rpp'] ?>
           		</option>
-      	<? } ?>
+      	<?php } ?>
      
       		</select>
             <img src="../images/ico/tambah.png" onClick="get_rpp('<?=$tingkat?>','<?=$pelajaran?>','<?=$semester?>')" onMouseOver="showhint('Tambah RPP!', this, event, '80px')">
@@ -304,22 +304,22 @@ function simpan(evt) {
         <td class="header" width="10%">Nilai</td>
         <td class="header" width="20%">Keterangan</td>
     </tr>
-<?  $sql_siswa="SELECT * FROM siswa WHERE idkelas='$kelas' AND aktif=1 AND alumni=0 ORDER BY nama ASC";
+<?php  $sql_siswa="SELECT * FROM siswa WHERE idkelas='$kelas' AND aktif=1 AND alumni=0 ORDER BY nama ASC";
     $result_siswa=QueryDb($sql_siswa);
-    $numsiswa=@mysql_num_rows($result_siswa);
-    while ($row_siswa=@mysql_fetch_array($result_siswa)){
+    $numsiswa=@mysqli_num_rows($result_siswa);
+    while ($row_siswa=@mysqli_fetch_array($result_siswa)){
 
 ?>
     <tr height="25">
         <td align="center"><?=++$i ?></td>
         <td align="center"><?=$row_siswa['nis'] ?></td>
-        <td><?=$row_siswa[nama] ?></td>
+        <td><?=$row_siswa['nama'] ?></td>
         <td align="center">
             <input type="text" name="nilaiujian[<?=$row_siswa['nis']?>][0]" id="nilaiujian<?=$i?>" size="5" maxlength="5" onKeyPress="return focusNext('keterangan<?=$i?>', event);" ></td>
         <td align="center">
-            <input type="text" name="nilaiujian[<?=$row_siswa['nis']?>][1]" id="keterangan<?=$i?>" <? if ($i==$numsiswa){ ?> onKeyPress="focusNext('Simpan',event);" <? } else { ?> onKeyPress="return focusNext('nilaiujian<?=(int)$i+1?>',event);" <? } ?> ></td>
+            <input type="text" name="nilaiujian[<?=$row_siswa['nis']?>][1]" id="keterangan<?=$i?>" <?php if ($i==$numsiswa){ ?> onKeyPress="focusNext('Simpan',event);" <?php } else { ?> onKeyPress="return focusNext('nilaiujian<?=(int)$i+1?>',event);" <?php } ?> ></td>
     </tr>
-<?  } ?>								
+<?php  } ?>								
     <input type="hidden" name="jumlah" id="jumlah" value="<?=$numsiswa?>">
     </table>
     <script language='JavaScript'>
@@ -329,17 +329,17 @@ function simpan(evt) {
     </fieldset>
     </td>
 </tr>
-<? if ($numsiswa==0){ ?>
+<?php if ($numsiswa==0){ ?>
 <tr>
     <td align="center" colspan="4">
     	<span class="style1">Tidak ada siswa yang terdaftar, pengisian nilai tidak dapat dilakukan!        </span></td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
     <td align="center" colspan="4">
-    <? if ($numsiswa!=0){ ?>
+    <?php if ($numsiswa!=0){ ?>
     <input type="Button" value="Simpan" id="Simpan" name="Simpan" class="but" onClick="return cek_form();document.getElementById('tambah_nilai_pelajaran').submit();">&nbsp;
-    <? } ?>
+    <?php } ?>
     <input type="button" name="tutup" value="Tutup" class="but" onClick="window.close()" >
     </td>
 </tr>

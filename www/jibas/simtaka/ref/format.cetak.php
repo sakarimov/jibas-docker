@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/sessioninfo.php');
 require_once('../inc/common.php');
 require_once('../inc/config.php');
@@ -54,30 +54,30 @@ $departemen='yayasan';
 		<td height="30" align="center" class="header">Jumlah Pustaka</td>
 		<td height="30" align="center" class="header">Keterangan</td>
 	  </tr>
-	  <?
+	  <?php
 	  $sql = "SELECT * FROM format ORDER BY kode";
 	  $result = QueryDb($sql);
-	  $num = @mysql_num_rows($result);
+	  $num = @mysqli_num_rows($result);
 	  if ($num>0){
-		  while ($row=@mysql_fetch_array($result)){
-		  $num_judul = @mysql_num_rows(QueryDb("SELECT * FROM pustaka WHERE format='$row[replid]'"));
-		  $num_pustaka = @mysql_fetch_row(QueryDb("SELECT COUNT(d.replid) FROM pustaka p, daftarpustaka d WHERE d.pustaka=p.replid AND p.format='$row[replid]'"));
+		  while ($row=@mysqli_fetch_array($result)){
+		  $num_judul = @mysqli_num_rows(QueryDb("SELECT * FROM pustaka WHERE format='".$row['replid']."'"));
+		  $num_pustaka = @mysqli_fetch_row(QueryDb("SELECT COUNT(d.replid) FROM pustaka p, daftarpustaka d WHERE d.pustaka=p.replid AND p.format='".$row['replid']."'"));
 		  ?>
 		  <tr>
-			<td height="25" align="center"><?=$row[kode]?></td>
-			<td height="25" align="center">&nbsp;<?=$row[nama]?></td>
+			<td height="25" align="center"><?=$row['kode']?></td>
+			<td height="25" align="center">&nbsp;<?=$row['nama']?></td>
 			<td height="25" align="center">&nbsp;<?=$num_judul?></td>
 			<td height="25" align="center">&nbsp;<?=(int)$num_pustaka[0]?></td>
-			<td height="25" align="center">&nbsp;<?=$row[keterangan]?></td>
+			<td height="25" align="center">&nbsp;<?=$row['keterangan']?></td>
 		  </tr>
-		  <?
+		  <?php
 		  }
 	  } else {
 	  ?>
 	  <tr>
 		<td height="25" colspan="5" align="center" class="nodata">Tidak ada data</td>
 	  </tr>
-	  <?
+	  <?php
 	  }
 	  ?>	
 	</table>

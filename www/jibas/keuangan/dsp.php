@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ function show_input(no) {
         <td style="background-color:#33CCCC" align="center"><input type="text" name="pbayar1" id="pbayar1" onblur="formatRupiah('pbayar1')" onfocus="unformatRupiah('pbayar1')" size="12" /></td>
         <td style="background-color:#33CCCC" align="center"><input type="text" name="tglbyr1" id="tglbyr1" size="8" /></td>
     </tr>
-    <? for($i = 2; $i <= 10; $i++) { ?>
+    <?php for($i = 2; $i <= 10; $i++) { ?>
     <tr>
         <td align="center"><?=$i?></td>
         <td align="center"><input type="text" name="besar<?=$i?>" id="besar<?=$i?>" size="12" onblur="formatRupiah('besar<?=$i?>')" onfocus="unformatRupiah('besar<?=$i?>')" /></td>
@@ -88,7 +88,7 @@ function show_input(no) {
         <td align="center"><input type="text" name="pbayar<?=$i?>" id="pbayar<?=$i?>" size="12" onblur="formatRupiah('pbayar<?=$i?>')" onfocus="unformatRupiah('pbayar<?=$i?>')" /></td>
         <td align="center"><input type="text" name="tglbyr<?=$i?>" id="tglbyr<?=$i?>" size="8" /></td>
     </tr>
-    <? } ?> 
+    <?php } ?> 
     <tr height="40">
     	<td style="background-color:#999966" align="center"><strong>T O T A L</strong></td>
         <td style="background-color:#999966" align="center"><input type="text" readonly name="totalbesar" id="totalbesar" size="12"/></td>

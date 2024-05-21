@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,7 +40,7 @@ $sql = "SELECT departemen
           FROM jbssat.frkegiatan
          WHERE replid = $idkegiatan";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $departemen = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -73,7 +73,7 @@ $departemen = $row[0];
                 <strong>Departemen :</strong>
             </td>
             <td align='left'>
-        <?      $json = json_decode(GetCbDepartemen($departemen));
+        <?php      $json = json_decode((string) GetCbDepartemen($departemen), null, 512, JSON_THROW_ON_ERROR);
                 $departemen = $json->value;
                 echo $json->selection;  ?>
             </td>
@@ -84,7 +84,7 @@ $departemen = $row[0];
             </td>
             <td align='left'>
                 <span id='divCbTingkat'>
-        <?      $json = json_decode(GetCbTingkat($departemen, 0));
+        <?php      $json = json_decode((string) GetCbTingkat($departemen, 0), null, 512, JSON_THROW_ON_ERROR);
                 $idtingkat = $json->value;
                 echo $json->selection;   ?>
                 </span>
@@ -96,7 +96,7 @@ $departemen = $row[0];
             </td>
             <td align='left'>
                 <span id='divCbKelas'>
-        <?      $json = json_decode(GetCbKelas($idtingkat, 0));
+        <?php      $json = json_decode((string) GetCbKelas($idtingkat, 0), null, 512, JSON_THROW_ON_ERROR);
                 $idkelas = $json->value;
                 echo $json->selection; ?>
                 </span>
@@ -105,7 +105,7 @@ $departemen = $row[0];
         <tr>
             <td colspan='2' align='left'>
             <span id='divSiswa'>
-        <?      echo GetSiswa($idkegiatan, $bulan, $tahun, $idkelas); ?>        
+        <?php      echo GetSiswa($idkegiatan, $bulan, $tahun); ?>        
             </span>    
             </td>
         </tr>
@@ -118,7 +118,7 @@ $departemen = $row[0];
                 <strong>Departemen :</strong>
             </td>
             <td align='left'>
-        <?      $json = json_decode(GetCbDepartemen($departemen, "cbDepartemen2"));
+        <?php      $json = json_decode((string) GetCbDepartemen($departemen, "cbDepartemen2"), null, 512, JSON_THROW_ON_ERROR);
                 $departemen = $json->value;
                 echo $json->selection;  ?>
             </td>
@@ -156,7 +156,7 @@ $departemen = $row[0];
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>
 <script language='JavaScript'>

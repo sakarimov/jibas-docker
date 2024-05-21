@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -80,7 +80,7 @@ if (isset($_REQUEST['idtahunbuku']))
 <tr height="30">
 	<td colspan="6"><strong><font size="2">PENDAPATAN</font></strong></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT nama, kode, SUM(debet) AS debet, SUM(kredit) As kredit FROM (( 
 SELECT DISTINCT j.replid, ra.nama, ra.kode, jd.debet, jd.kredit FROM rekakun ra, katerekakun k,
@@ -92,8 +92,8 @@ $result = QueryDb($sql);
 $cnt = 0;
 $totalpendapatan = 0;
 
-if (mysql_num_rows($result) >0) {
-	while($row = mysql_fetch_array($result)) {
+if (mysqli_num_rows($result) >0) {
+	while($row = mysqli_fetch_array($result)) {
 		$debet = $row['kredit'] - $row['debet'];
 		$debet = FormatRupiah($debet);
 		$kredit = "$nbsp";
@@ -108,7 +108,7 @@ if (mysql_num_rows($result) >0) {
     <td align="right" width="18%" valign="top"><?=$kredit ?></td>
     <td width="20%">&nbsp;</td>
 </tr>
-<? } //end while  
+<?php } //end while  
 }
 ?>
 <tr height="30">
@@ -122,7 +122,7 @@ if (mysql_num_rows($result) >0) {
 <tr height="30">
 	<td colspan="6"><strong><font size="2">BIAYA</font></strong></td>
 </tr>
-<?
+<?php
 $sql = "SELECT nama, kode, SUM(debet) AS debet, SUM(kredit) As kredit FROM (( 
 SELECT DISTINCT j.replid, ra.nama, ra.kode, jd.debet, jd.kredit FROM rekakun ra, katerekakun k,
 jurnal j, jurnaldetail jd WHERE jd.idjurnal = j.replid AND jd.koderek = ra.kode 
@@ -131,8 +131,8 @@ GROUP BY j.replid, ra.nama, ra.kode ORDER BY ra.kode) AS X) GROUP BY nama, kode"
 $result = QueryDb($sql);
 $cnt = 0;
 $totalbiaya = 0;
-if (mysql_num_rows($result) >0) {
-	while($row = mysql_fetch_array($result)) {
+if (mysqli_num_rows($result) >0) {
+	while($row = mysqli_fetch_array($result)) {
 		$kredit = $row['debet'] - $row['kredit'];
 		$kredit = FormatRupiah($kredit);
 		$debet = "$nbsp";
@@ -147,7 +147,7 @@ if (mysql_num_rows($result) >0) {
     <td align="right" width="18%" valign="top"><?=$kredit ?></td>
     <td width="20%">&nbsp;</td>
 </tr>
-<? } //end while  
+<?php } //end while  
 }
 ?>
 
@@ -163,7 +163,7 @@ if (mysql_num_rows($result) >0) {
 <tr>
 	<td colspan="4">
     	<strong><font size="4"><strong>
-		<? if ($totalpendapatan < $totalbiaya) echo  "RUGI"; else echo  "LABA"; ?></strong></font></strong></td>
+		<?php if ($totalpendapatan < $totalbiaya) echo  "RUGI"; else echo  "LABA"; ?></strong></font></strong></td>
     <td colspan="2" align="right"><strong><font size="4"><?=FormatRupiah($totalpendapatan - $totalbiaya) ?></font></strong></td>
 </tr>
 

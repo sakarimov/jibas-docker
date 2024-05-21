@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,10 @@
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
 <?php
-$arrjenis = array('SPI', 'SOS');
-$arrnmjenis = array('Spiritual', 'Sosial');
-for($i = 0; $i < count($arrjenis); $i++)
+$arrjenis = ['SPI', 'SOS'];
+$arrnmjenis = ['Spiritual', 'Sosial'];
+$counter = count($arrjenis);
+for($i = 0; $i < $counter; $i++)
 {
     $jenis = $arrjenis[$i];
     $nmjenis = $arrnmjenis[$i];
@@ -33,12 +34,12 @@ for($i = 0; $i < count($arrjenis); $i++)
              WHERE k.nis = '$nis' 
                AND k.idsemester = '$semester' 
                AND k.idkelas = '$kelas'
-               AND k.jenis = '$jenis'";
+               AND k.jenis = '".$jenis."'";
     $res2 = QueryDb($sql);
     $komentar = "";
     $predikat = "";
     $nilaiExist = false;
-    if ($row2 = mysql_fetch_row($res2))
+    if ($row2 = mysqli_fetch_row($res2))
     {
         $nilaiExist = true;
         $komentar = $row2[0];

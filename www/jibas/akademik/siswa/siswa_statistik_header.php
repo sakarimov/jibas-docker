@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,7 +50,7 @@ if (isset($_REQUEST['iddasar']))
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/ajax.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 function change_departemen() {
 
@@ -100,29 +100,29 @@ function focusNext(elemName, evt) {
     <tr>
     	<td width="25%"><strong>Departemen</strong>
       	<td width="*">
-			<? if (SI_USER_LEVEL() != $SI_USER_STAFF) {	?>
+			<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {	?>
 		   	<select name="departemen" id="departemen" onchange="change_departemen()" style="width:240px;" onKeyPress="return focusNext('iddasar', event)">
         		<option value="-1" >(Semua Departemen)</option>    
-			<?
+			<?php
 				$sql = "SELECT * FROM jbsakad.departemen where aktif=1 ORDER BY urutan";
 				OpenDb();
 				$result = QueryDb($sql);
 				CloseDb();
 			
 				//$departemen = "";	
-				while($row = mysql_fetch_array($result)) {
+				while($row = mysqli_fetch_array($result)) {
 					if ($departemen == "")
 						$departemen = "-1";
 						//$departemen = $row['departemen'];
 			?>
-            	<option value="<?=urlencode($row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?>><?=$row['departemen']?></option>
-            <?
+            	<option value="<?=urlencode((string) $row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?>><?=$row['departemen']?></option>
+<?php
 				} //while
 			?>
    	  		</select>
-	  		<? } else {	?>
+<?php } else {	?>
 			<select name="departemen" id="departemen" onchange="change_departemen()" style="width:240px;" onKeyPress="return focusNext('angkatan', event)">
-        	<?
+        	<?php
 				$dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
 				if ($departemen == "")
@@ -130,9 +130,9 @@ function focusNext(elemName, evt) {
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                   <?=$value ?> 
                   </option>
-            <?	} ?>
+            <?php } ?>
             </select>
-			<? }	
+			<?php }	
 			
 			if ($departemen == -1)  {
 				$disable = 'disabled="disabled"';
@@ -140,7 +140,7 @@ function focusNext(elemName, evt) {
 				$dep = "";
 			} else	{
 				$disable = "";
-				$dep = "AND departemen = '$departemen'";
+				$dep = "AND departemen = '".$departemen."'";
 			}
 			?>	  	</td>
     </tr>
@@ -149,13 +149,13 @@ function focusNext(elemName, evt) {
       	<td><div id="angkatanInfo">        	
            	<select name="angkatan" id="angkatan" onchange="blank()" <?=$disable?> style="width:240px;" onKeyPress="return focusNext('iddasar', event)">
         	<option value="-1" >(Semua Angkatan yang Aktif)</option>
-        	<? 	OpenDb();
+        	<?php 	OpenDb();
 				$sql_angkatan = "SELECT replid,angkatan FROM jbsakad.angkatan where aktif = 1 AND departemen = '$departemen' ORDER BY replid DESC";
 				$result_angkatan = QueryDb($sql_angkatan);
-				while ($row_angkatan = mysql_fetch_array($result_angkatan)) {
+				while ($row_angkatan = mysqli_fetch_array($result_angkatan)) {
 			?>
-        	<option value="<?=urlencode($row_angkatan[replid])?>" <?=IntIsSelected($row_angkatan['replid'], $angkatan) ?>><?=$row_angkatan['angkatan']?></option>
-        	<?
+        	<option value="<?=urlencode((string) $row_angkatan['replid'])?>" <?=IntIsSelected($row_angkatan['replid'], $angkatan) ?>><?=$row_angkatan['angkatan']?></option>
+        	<?php
   				} //while
 				CloseDb();
 			?>
@@ -166,9 +166,9 @@ function focusNext(elemName, evt) {
       	<td>
         <!--<div id="dasarInfo">-->
         <select name="iddasar" id="iddasar" onchange="blank()" style="width:240px;" onKeyPress="return focusNext('tabel', event)">
-        <? for ($i=1;$i<=17;$i++) { ?>
+        <?php for ($i=1;$i<=17;$i++) { ?>
         <option value ="<?=$i?>" <?=IntIsSelected($i, $iddasar) ?>><?=$kriteria[$i] ?></option>
-        <?  } ?>
+        <?php  } ?>
         </select>		</td> 
 	</tr>
 	</table>    

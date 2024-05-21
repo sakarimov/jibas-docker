@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -35,7 +35,7 @@ $nis = $_SESSION["infosiswa.nis"];
 $sql  =	"SELECT *, c.keterangan FROM siswa c, kelas k, tahunajaran t ".
 		"WHERE c.nis='".$nis."' AND k.replid = c.idkelas AND k.idtahunajaran = t.replid ";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 ?>
 <form name="paneldp">
 <input type="hidden" name="nis" id="nis" value="<?=$nis?>" />
@@ -75,7 +75,7 @@ $row = mysql_fetch_array($result);
     <td class="tab2" >3.</td>
     <td class="tab2">Jenis Kelamin</td>
     <td class="tab2" >:
-        <? 	if ($row['kelamin']=="l")
+        <?php 	if ($row['kelamin']=="l")
             echo "Laki-laki";
         if ($row['kelamin']=="p")
             echo "Perempuan";
@@ -109,13 +109,13 @@ $row = mysql_fetch_array($result);
     <td class="tab2">8.</td>
     <td class="tab2">Anak ke berapa</td>
     <td class="tab2">:
-        <? if ($row['anakke']!=0) { echo $row['anakke']; }?></td>
+        <?php if ($row['anakke']!=0) { echo $row['anakke']; }?></td>
 </tr>
 <tr height="20">
     <td class="tab2">9.</td>
     <td class="tab2">Jumlah Saudara</td>
     <td class="tab2">:
-        <? if ($row['jsaudara']!=0) { echo $row['jsaudara']; }?></td>
+        <?php if ($row['jsaudara']!=0) { echo $row['jsaudara']; }?></td>
 </tr>
 <tr height="20">
     <td class="tab2">10.</td>
@@ -179,13 +179,13 @@ $row = mysql_fetch_array($result);
     <td class="tab2">17.</td>
     <td class="tab2" >Berat Badan</td>
     <td colspan="2" class="tab2">:
-        <? if ($row['berat']!=0) { echo $row['berat']." Kg"; }?></td>
+        <?php if ($row['berat']!=0) { echo $row['berat']." Kg"; }?></td>
 </tr>
 <tr height="20">
     <td class="tab2">18.</td>
     <td class="tab2">Tinggi Badan</td>
     <td colspan="2" class="tab2">:
-        <? if ($row['tinggi']!=0) { echo $row['tinggi']." cm"; }?></td>
+        <?php if ($row['tinggi']!=0) { echo $row['tinggi']." cm"; }?></td>
 </tr>
 <tr height="20">
     <td class="tab2">19.</td>
@@ -238,12 +238,12 @@ $row = mysql_fetch_array($result);
     <td class="tab2" >Nama</td>
     <td bgcolor="#FFFFCC" class="tab2" >:
         <?=$row['namaayah']?>
-        <?
+        <?php
         if ($row['almayah']==1)
             echo "&nbsp;(alm)";
         ?></td>
     <td bgcolor="#FFCCFF" class="tab2"><?=$row['namaibu']?>
-        <?
+        <?php
         if ($row['almibu']==1)
             echo "&nbsp;(alm)";
         ?></td>
@@ -266,8 +266,8 @@ $row = mysql_fetch_array($result);
     <td class="tab2">26.</td>
     <td class="tab2" >Penghasilan</td>
     <td bgcolor="#FFFFCC" class="tab2" >:
-        <? if ($row['penghasilanayah']!=0){ echo FormatRupiah($row['penghasilanayah']) ; } ?></td>
-    <td bgcolor="#FFCCFF" class="tab2"><? if ($row['penghasilanibu']!=0){ echo FormatRupiah($row['penghasilanibu']) ; } ?></td>
+        <?php if ($row['penghasilanayah']!=0){ echo FormatRupiah($row['penghasilanayah']) ; } ?></td>
+    <td bgcolor="#FFCCFF" class="tab2"><?php if ($row['penghasilanibu']!=0){ echo FormatRupiah($row['penghasilanibu']) ; } ?></td>
 </tr>
 <tr height="20">
     <td class="tab2">27.</td>
@@ -328,7 +328,7 @@ $row = mysql_fetch_array($result);
                AND ds.nis = '$nis'
              ORDER BY td.urutan";
     $res = QueryDb($sql);
-    $ntambahandata = mysql_num_rows($res);
+    $ntambahandata = mysqli_num_rows($res);
 
     if ($ntambahandata > 0)
     {
@@ -347,7 +347,7 @@ $row = mysql_fetch_array($result);
         <?php
         $no = 33;
         $first = true;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             $replid = $row['replid'];
@@ -378,7 +378,7 @@ $row = mysql_fetch_array($result);
                 <td colspan="2">:
                     <?=$data?></td>
             </tr>
-        <?  }
+        <?php  }
     }
     ?>
 </table>

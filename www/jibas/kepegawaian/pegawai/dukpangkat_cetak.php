@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,12 +49,12 @@ if (isset($_REQUEST['satker']))
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr>
-  <td align="left" valign="top"><? include("../include/headercetak.php") ?>
+  <td align="left" valign="top"><?php include("../include/headercetak.php") ?>
     <center>
       <font size="4"><strong>Daftar Urut Kepangkatan</strong></font><br />
     </center><br />
   <br />
-  <?
+  <?php
 OpenDb();
 
 $arridpeg;
@@ -70,7 +70,7 @@ else
 {
 	$sql = "SELECT nama FROM satker WHERE satker='$satker'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$namasatker = $row[0];
 	
 	$sql = "SELECT p.replid FROM pegawai p, peglastdata pl, peggol pg, golongan g, pegjab pj, jabatan j 
@@ -80,10 +80,10 @@ else
 }	
 	
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) 
+while ($row = mysqli_fetch_row($result)) 
 	$arridpeg[] = $row[0];
 	
-$ndata = mysql_num_rows($result);
+$ndata = mysqli_num_rows($result);
 $npage = floor($ndata / $PAGING_SIZE);
 if (($ndata % $PAGING_SIZE) != 0) 
 	$npage++;
@@ -125,11 +125,11 @@ $maxrownum = $pagenum * $PAGING_SIZE;
     <td class="header"  width="30" align="center" valign="middle">Tk</td>
 </tr>
 
-<?
+<?php
 for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
 {
 	$idpeg = $arridpeg[$i];
-	if (strlen(trim($idpeg)) == 0)
+	if (strlen(trim((string) $idpeg)) == 0)
 		continue;
 	  
 	$cnt = $i;
@@ -158,7 +158,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
 			   AND p.aktif = 1 
 			 ORDER BY g.urutan DESC, p.nama ASC";
 	$result = QueryDb($sql);			
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 ?>
 <tr>
 	<td align="center" valign="middle"><?=++$cnt?></td>
@@ -169,7 +169,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="left" valign="middle"><?=$row['jenis'] . " " . $row['jabatan']?></td>
     <td align="center" valign="middle"><?=$row['tmtjab']?></td>
     <td align="center" valign="middle">
-    <?
+    <?php
     	$thn = floor($row['tmtgol'] / 365);
 		$bln = $row['tmtgol'] % 365;
 		$bln = floor($bln / 30);
@@ -177,20 +177,20 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
 	?>
     </td>
     <td align="center" valign="middle">
-	<?	$thn = floor($row['tglmulai'] / 365);
+	<?php $thn = floor($row['tglmulai'] / 365);
 		$bln = $row['tglmulai'] % 365;
 		$bln = floor($bln / 30);
 		echo "$thn-$bln";
 	?>
     </td>
-    <?
+    <?php
 	$diklat = "&nbsp;";
 	$thndiklat = "&nbsp;";
 	if ($row['idpegdiklat'] != NULL) {
 		$idpegdiklat = $row['idpegdiklat'];
 		$sql = "SELECT d.diklat, pd.tahun FROM pegdiklat pd, diklat d WHERE pd.replid=$idpegdiklat AND pd.iddiklat=d.replid";
 		$rs = QueryDb($sql);
-		$rw = mysql_fetch_row($rs);
+		$rw = mysqli_fetch_row($rs);
 		$diklat = $rw[0];
 		$thndiklat = $rw[1];
 	};
@@ -201,7 +201,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="center" valign="middle"><?=$row['lulus']?></td>
     <td align="center" valign="middle"><?=$row['tingkat']?></td>
     <td align="center" valign="middle">
-	<?	$thn = floor($row['difflahir'] / 365);
+	<?php $thn = floor($row['difflahir'] / 365);
 		$bln = $row['difflahir'] % 365;
 		$bln = floor($bln / 30);
 		echo "$thn,$bln";
@@ -210,7 +210,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="left" valign="middle"><?=$row['tmplahir'] . ", " . $row['tgllahir'] ?></td>
 	<td align="left" valign="middle"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>

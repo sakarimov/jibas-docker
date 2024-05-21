@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -71,41 +71,41 @@ $sql1 = "SELECT k.replid as replid, s.nis, s.nama, k.komentar FROM siswa s, kome
 $result1 = QueryDb($sql1);
 if ($op=="lihat")
 {
-    if (@mysql_num_rows($result1)>0)
+    if (@mysqli_num_rows($result1)>0)
     {
 ?>
         <script language="javascript">
         parent.header.location.href = "komentar_header.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>";
         parent.footer.location.href = "komentar.lihat.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>";
         </script>
-<?
+<?php
     } else {
 ?>
         <script language="javascript">
             parent.header.location.href = "komentar_header.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&error=1";
             parent.footer.location.href = "blank_komentar.php";
         </script>
-<?
+<?php
     }
 }
 
 if ($op=="show")
 {
-	if (@mysql_num_rows($result1)>0)
+	if (@mysqli_num_rows($result1)>0)
 	{
 	?>
 	<script language="javascript">
 	parent.header.location.href = "komentar_header.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>";
     parent.footer.location.href = "komentar_footer.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&jenis=<?=$jenis?>";
     </script>
-<?
+<?php
     }  else {
 ?>
     <script language="javascript">
 	parent.header.location.href = "komentar_header.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&error=1";
 	parent.footer.location.href = "blank_komentar.php";
     </script>
-<?
+<?php
     }
 }
 		
@@ -122,7 +122,7 @@ if ($op=="show")
 <script language="javascript" src="../script/cal2.js"></script>
 <script language="javascript" src="../script/cal_conf2.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript">
 function change() {
@@ -210,30 +210,30 @@ function lihat() {
       <tr>
         <td align="left" width="12%"><strong>Departemen </strong></td>
         <td width="20%"><select name="departemen" id="departemen" onChange="change_dep()" style="width:180px;">
-            <?	$dep = getDepartemen(SI_USER_ACCESS());    
+            <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
             <?=$value ?>
             </option>
-            <?	} ?>
+            <?php } ?>
           </select>        </td>
         <td align="left" width="10%"><strong>Tingkat </strong></td>
         <td width="20%"><select name="tingkat" id="tingkat" onChange="change_tingkat()" style="width:180px;">
-            <?
+            <?php
 			$sql2 = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result2 = QueryDb($sql2);
 			
 	
-			while($row2 = mysql_fetch_array($result2)) {
+			while($row2 = mysqli_fetch_array($result2)) {
 			if ($tingkat == "")
 				$tingkat = $row2['replid'];				
 			?>
-            <option value="<?=urlencode($row2['replid'])?>" <?=IntIsSelected($row2['replid'], $tingkat) ?>>
+            <option value="<?=urlencode((string) $row2['replid'])?>" <?=IntIsSelected($row2['replid'], $tingkat) ?>>
             <?=$row2['tingkat']?>
             </option>
-            <?
+            <?php
 			} //while
 			?>
         </select></td>
@@ -242,11 +242,11 @@ function lihat() {
       </tr>
       <tr>
         <td align="left"><strong>Tahun Ajaran</strong></td>
-        <td><?  
+        <td><?php  
 			$sql3 = "SELECT replid,tahunajaran FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
 			$result3 = QueryDb($sql3);
 			
-			$row3 = @mysql_fetch_array($result3);	
+			$row3 = @mysqli_fetch_array($result3);	
 			$tahunajaran = $row3['replid'];				
 		?>
             <input type="text" name="tahun" id="tahun" size="20" readonly class="disabled" value="<?=$row3['tahunajaran']?>"  style="width:170px;"/>
@@ -254,19 +254,19 @@ function lihat() {
             <!--<input type="hidden" name="ajaran" id="ajaran" value="<?=$row['tahunajaran']?>">-->        </td>
         <td><strong>Kelas </strong></td>
         <td><select name="kelas" id="kelas" onChange="change()" style="width:180px;">
-            <?	
+            <?php 
 			$sql4 = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
 			$result4 = QueryDb($sql4);
 			
 	
-			while($row4 = mysql_fetch_array($result4)) {
+			while($row4 = mysqli_fetch_array($result4)) {
 			if ($kelas == "")
 				$kelas = $row4['replid'];				 
 			?>
-            <option value="<?=urlencode($row4['replid'])?>" <?=IntIsSelected($row4['replid'], $kelas) ?>>
+            <option value="<?=urlencode((string) $row4['replid'])?>" <?=IntIsSelected($row4['replid'], $kelas) ?>>
             <?=$row4['kelas']?>
             </option>
-            <?
+            <?php
 			} //while
 			?>
         </select></td>
@@ -275,16 +275,16 @@ function lihat() {
         <td align="left"><strong>Pelajaran</strong></td>
         <td>
 		<select name="pelajaran" id="pelajaran" onChange="change()" style="width:180px" onKeyPress="return focusNext('nip', event)">
-<?			$sql = "SELECT p.replid,p.nama FROM pelajaran p, guru g 
+<?php 		$sql = "SELECT p.replid,p.nama FROM pelajaran p, guru g 
 					 WHERE p.departemen = '$departemen' AND g.idpelajaran=p.replid AND g.nip='".SI_USER_ID()."' AND p.aktif=1 ORDER BY p.nama";
 			$result = QueryDb($sql);
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($pelajaran == "") 				
 					$pelajaran = $row['replid'];			
 				$nama_pelajaran = $row['nama']; ?>
-         	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                  
-<?			} ?>
+         	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                  
+<?php 		} ?>
    		</select>        
         </td>
           <td colspan="3" rowspan="2">
@@ -306,18 +306,18 @@ function lihat() {
       <tr>
         <td align="left"><strong>Semester </strong></td>
         <td><select name="semester" id="semester" onChange="change()" style="width:180px;">
-            <?
+            <?php
 			$sql6 = "SELECT replid,semester FROM semester where departemen='$departemen' AND aktif = 1 ORDER BY replid DESC";
 			$result6 = QueryDb($sql6);
-			while ($row6 = @mysql_fetch_array($result6)) {
+			while ($row6 = @mysqli_fetch_array($result6)) {
 			if ($semester == "") 
 				$semester = $row6['replid'];
 						 
 			?>
-            <option value="<?=urlencode($row6['replid'])?>" <?=IntIsSelected($row6['replid'], $semester)?> >
+            <option value="<?=urlencode((string) $row6['replid'])?>" <?=IntIsSelected($row6['replid'], $semester)?> >
             <?=$row6['semester']?>
             </option>
-            <?
+            <?php
 			}
     		?>
         </select></td>
@@ -328,17 +328,17 @@ function lihat() {
 </form>
 <hr width="95%" align="left" style="border-style:dashed; border-width:1px" />
 </body>
-<?
+<?php
 if ($error>0){
 	?>
 	<script language="javascript">
 			alert ('Belum ada data rapor untuk kriteria-kriteria ini  \nSilakan hitung terlebih dahulu nilai rapor untuk kriteria-kriteria tersebut!');
 	</script>
-	<?
+	<?php
 }
 ?>
 </html>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

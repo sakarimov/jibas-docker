@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -35,7 +35,7 @@ $noid = $_REQUEST['noid'];
 $jenis = $_REQUEST['jenis'];
 $jumlah = $_REQUEST['jumlah'];
 $ktransaksi = $_REQUEST['ktransaksi'];
-$ktransaksi = str_replace("<", "&lt;", $ktransaksi);
+$ktransaksi = str_replace("<", "&lt;", (string) $ktransaksi);
 $ktransaksi = str_replace(">", "&gt;", $ktransaksi);
 $petugas = getUserName();
 
@@ -43,7 +43,7 @@ OpenDb();
 
 $sql = "SELECT replid, nama, alamat1 FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql); 
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $idHeader = $row['replid'];
 $namaHeader = $row['nama'];
 $alamatHeader = $row['alamat1'];
@@ -52,14 +52,14 @@ if ($jenis == "siswa")
     $sql = "SELECT s.nama, k.kelas, DATE_FORMAT(NOW(), '%d %M %Y') AS tanggal
               FROM jbsakad.siswa s, jbsakad.kelas k
              WHERE s.idkelas = k.replid
-               AND s.nis = '$noid'";
+               AND s.nis = '".$noid."'";
 else
     $sql = "SELECT c.nama, k.kelompok, DATE_FORMAT(NOW(), '%d %M %Y') AS tanggal
 			  FROM jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
              WHERE c.idkelompok = k.replid
-               AND c.nopendaftaran = '$noid'";
+               AND c.nopendaftaran = '".$noid."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nama = $row[0];
 $kelas = $row[1];
 $tanggal = $row[2];
@@ -104,7 +104,7 @@ CloseDb();
         <table border="0" cellpadding="2" cellspacing="0" width="100%">
         <tr>
         	<td width="20">&nbsp;</td>
-        	<td width="60"><? if ($jenis == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
+        	<td width="60"><?php if ($jenis == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
             <td>:&nbsp;<strong><?=$noid ?></strong></td>
         </tr>
         <tr>
@@ -114,7 +114,7 @@ CloseDb();
         </tr>
 		<tr>
         	<td>&nbsp;</td>
-        	<td><? if ($jenis == "calon") echo  "Kelompok"; else echo  "Kelas"; ?></td>
+        	<td><?php if ($jenis == "calon") echo  "Kelompok"; else echo  "Kelas"; ?></td>
             <td>:&nbsp;<strong><?=$kelas?></strong></td>
         </tr>
 		<tr>
@@ -149,9 +149,9 @@ CloseDb();
 			<tr>
 				<td valign="top">
 				<strong>Keterangan:</strong><br>
-<?              if (strlen(trim($ktransaksi)) > 0) { ?>                
+<?php              if (strlen(trim($ktransaksi)) > 0) { ?>                
                     &#149;&nbsp;<em><?=$ktransaksi?></em><br>
-<?              } ?>                
+<?php              } ?>                
 				&#149;&nbsp;<em>Tgl cetak: <?= date('d/m/Y H:i:s') ?></em><br>
 				&#149;&nbsp;<em>Petugas: <?= $petugas ?></em><br>
 				</td></tr>
@@ -183,7 +183,7 @@ CloseDb();
         <table border="0" cellpadding="2" cellspacing="0" width="100%">
         <tr>
         	<td width="20">&nbsp;</td>
-        	<td width="60"><? if ($jenis == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
+        	<td width="60"><?php if ($jenis == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
             <td>:&nbsp;<strong><?=$noid ?></strong></td>
         </tr>
         <tr>
@@ -193,7 +193,7 @@ CloseDb();
         </tr>
 		<tr>
         	<td>&nbsp;</td>
-        	<td><? if ($jenis == "calon") echo  "Kelompok"; else echo  "Kelas"; ?></td>
+        	<td><?php if ($jenis == "calon") echo  "Kelompok"; else echo  "Kelas"; ?></td>
             <td>:&nbsp;<strong><?=$kelas?></strong></td>
         </tr>
 		<tr>
@@ -228,9 +228,9 @@ CloseDb();
 			<tr>
 				<td valign="top">
 				<strong>Keterangan:</strong><br>
-<?              if (strlen(trim($ktransaksi)) > 0) { ?>                
+<?php              if (strlen(trim($ktransaksi)) > 0) { ?>                
                     &#149;&nbsp;<em><?=$ktransaksi?></em><br>
-<?              } ?>                                
+<?php              } ?>                                
 				&#149;&nbsp;<em>Tgl cetak: <?= date('d/m/Y H:i:s') ?></em><br>
 				&#149;&nbsp;<em>Petugas: <?= $petugas ?></em><br>
 				</td></tr>

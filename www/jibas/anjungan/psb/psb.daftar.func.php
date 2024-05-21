@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 $selDept = "";
 $selProses = "";
 
@@ -35,7 +35,7 @@ function ShowDepartemenCombo()
     $res = QueryDB($sql);
     
     echo "<select name='psb_departemen' id='psb_departemen' class='inputbox' onchange='psb_DaftarPsbChangeDepartemen()'>";
-	while ($row = mysql_fetch_row($res))
+	while ($row = mysqli_fetch_row($res))
     {
         if ($selDept == "")
             $selDept = $row[0];
@@ -55,7 +55,7 @@ function ShowPenerimaanCombo($selDept)
                AND departemen='$selDept'";
     $res = QueryDB($sql);
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<input type='hidden' name='psb_proses' id='psb_proses' value='-1'>";
         echo "<em>Belum ada data proses penerimaan</em>";
@@ -63,7 +63,7 @@ function ShowPenerimaanCombo($selDept)
     else
     {
         echo "<select name='psb_proses' id='psb_proses' class='inputbox' onchange='psb_DaftarPsbChangeProses()'>";
-        while ($row = mysql_fetch_row($res))
+        while ($row = mysqli_fetch_row($res))
         {
             if ($selProses == "")
                 $selProses = $row[0];
@@ -82,7 +82,7 @@ function ShowKelompokCombo($selProses)
              ORDER BY kelompok";
     $res = QueryDB($sql);
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<input type='hidden' name='psb_kelompok' id='psb_kelompok' value='-1'>";
         echo "<em>Belum ada data kelompok penerimaan</em>";
@@ -90,11 +90,11 @@ function ShowKelompokCombo($selProses)
     else
     {
         echo "<select name='psb_kelompok' id='psb_kelompok' class='inputbox' onchange='psb_DaftarPsbChangeKelompok()'>";
-        while ($row = mysql_fetch_row($res))
+        while ($row = mysqli_fetch_row($res))
         {
             $sql = "SELECT COUNT(replid)
                       FROM jbsakad.calonsiswa
-                     WHERE idkelompok = '$row[0]'
+                     WHERE idkelompok = '".$row[0]."'
                        AND aktif = 1";
             $ndata = FetchSingle($sql);           
             
@@ -126,9 +126,9 @@ function ShowDaftarPsb($idkelompok, $page)
         <input type="button" value=" < " class="but" style="height: 22px; width: 35px;" onclick="psb_DaftarPsbGotoPage(<?=$idkelompok?>, <?=$page-1?>, <?=$nPage?>)" >
         <input type="button" value=" > " class="but" style="height: 22px; width: 35px;" onclick="psb_DaftarPsbGotoPage(<?=$idkelompok?>, <?=$page+1?>, <?=$nPage?>)" >
         Halaman <select name="psb_DaftarPsbPage" id="psb_DaftarPsbPage" id="page" style="height: 22px; width: 40px;" onchange="psb_DaftarPsbChangePage(<?=$idkelompok?>)">
-<?      for($i = 1; $i <= $nPage; $i++)  { ?>
+<?php      for($i = 1; $i <= $nPage; $i++)  { ?>
             <option value="<?= $i ?>" <?= ($i == $page) ? "selected" : "" ?> ><?= $i ?></option>
-<?      } ?>
+<?php      } ?>
         </select> dari <?= $nPage ?>
     </td>    
     </tr>    
@@ -142,7 +142,7 @@ function ShowDaftarPsb($idkelompok, $page)
         <td width="24%" class="header">Asal Sekolah</td>
         <td width="5%" class="header">&nbsp;</td>
     </tr>
-<?
+<?php
     $sql = "SELECT nopendaftaran, nama, tmplahir, DATE_FORMAT(tgllahir, '%d %b %Y') AS tgllahir, asalsekolah
               FROM jbsakad.calonsiswa
              WHERE idkelompok = '$idkelompok'
@@ -151,7 +151,7 @@ function ShowDaftarPsb($idkelompok, $page)
              LIMIT $offset, $nRow";
     $res = QueryDb($sql);
     $cnt = $offset;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         ?>
         <tr height="24" style="background-color: #fff;">
@@ -161,17 +161,17 @@ function ShowDaftarPsb($idkelompok, $page)
             <td align="left"><?= $row['tmplahir'] . ", " . $row['tgllahir'] ?></td>
             <td align="left"><?= $row['asalsekolah'] ?></td>
             <td align="center">
-<?          if (PSB_ENABLE_INPUT == 1)
+<?php          if (PSB_ENABLE_INPUT == 1)
             { ?>                
                 <a href="#" onclick="psb_DaftarPsbUbah('<?= $row['nopendaftaran'] ?>', '<?= $row['nama'] ?>', <?= $idkelompok ?>, <?= $page ?>, <?= $nPage ?>)"><img src="images/ubah.png" title="Ubah" border="0"></a>
-<?          }
+<?php          }
             else
             {
                 echo "&nbsp;";
             } ?>
             </td>
         </tr>
-        <?
+        <?php
     }
     echo "</table>";
 }
@@ -225,7 +225,7 @@ function ShowFormUbahData($nocalon, $namacalon, $idkelompok, $page, $npage)
     <br>
     </fieldset>
     </center>
-<?        
+<?php        
 }
 
 function PinIsValid($nocalon, $pincalon)

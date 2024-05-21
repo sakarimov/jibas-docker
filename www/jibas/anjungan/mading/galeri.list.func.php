@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetOwnerName($ownerid, $ownertype)
 {
     $sql = $ownertype == "S" ?
            "SELECT nama FROM jbsakad.siswa WHERE nis = '$ownerid'" :
-           "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+           "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -60,7 +60,7 @@ function ShowGalleryList($dept, $start, $rowperpage)
     
     $lastactive = "1970-01-01 12:00:00";
     $lastid = -1;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $lastactive = $row['lastactive'];
         $lastid = $row['replid'];
@@ -78,7 +78,7 @@ function ShowGalleryList($dept, $start, $rowperpage)
                  WHERE galleryid = '$galleryid'
                    AND iscover = 1";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_array($res2);
+        $row2 = mysqli_fetch_array($res2);
         $coverfile = $row2['filename'];
         $coverloc = $row2['location'];
         $coverw = $row2['width'];
@@ -104,7 +104,7 @@ function ShowGalleryList($dept, $start, $rowperpage)
         
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.gallerycomment
-                 WHERE galleryid = '$galleryid'";
+                 WHERE galleryid = '".$galleryid."'";
         $ncomment = (int)FetchSingle($sql);  
         
         if ($colcnt == 0)
@@ -161,7 +161,7 @@ function ShowGalleryList($dept, $start, $rowperpage)
             </fieldset>
             
         </td>    
-<?
+<?php
         $colcnt += 1;
         if ($colcnt == 2)
         {
@@ -189,7 +189,7 @@ function ShowGalleryList($dept, $start, $rowperpage)
                AND kategori = 'mading'
              LIMIT 1";
     $res = QueryDb($sql);
-    $nnext = mysql_num_rows($res);
+    $nnext = mysqli_num_rows($res);
     
     if ($nnext > 0)
     {  ?>
@@ -204,6 +204,6 @@ function ShowGalleryList($dept, $start, $rowperpage)
                 </span>      
             </td>
         </tr>
-<?  }
+<?php  }
 }
 ?>

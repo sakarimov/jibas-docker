@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/sessioninfo.php');
@@ -95,21 +95,21 @@ function edit(id) {
 }
 
 function refresh() {	
-	document.location.href = "lappengeluaran_cari_content.php?departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode($keyword)?>";
+	document.location.href = "lappengeluaran_cari_content.php?departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode((string) $keyword)?>";
 	//document.location.reload();
 }
 
 function cetak() {
 	var total = document.getElementById("total").value;
 	
-	var addr = "lappengeluaran_cari_cetak.php?idtahunbuku=<?=$idtahunbuku?>&departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode($keyword)?>&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris=<?=$varbaris?>&page=<?=$page?>&total="+total;
+	var addr = "lappengeluaran_cari_cetak.php?idtahunbuku=<?=$idtahunbuku?>&departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode((string) $keyword)?>&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris=<?=$varbaris?>&page=<?=$page?>&total="+total;
 	newWindow(addr, 'CetakCariDetailLapPengeluaran','780','580','resizable=1,scrollbars=1,status=0,toolbar=0');
 }
 
 function excel() {
 	var total = document.getElementById("total").value;
 	
-	var addr = "lappengeluaran_cari_excel.php?idtahunbuku=<?=$idtahunbuku?>&departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode($keyword)?>&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris=<?=$varbaris?>&page=<?=$page?>&total="+total;
+	var addr = "lappengeluaran_cari_excel.php?idtahunbuku=<?=$idtahunbuku?>&departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&kriteria=<?=$kriteria?>&keyword=<?=urlencode((string) $keyword)?>&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris=<?=$varbaris?>&page=<?=$page?>&total="+total;
 	newWindow(addr, 'ExcelCariDetailLapPengeluaran','780','580','resizable=1,scrollbars=1,status=0,toolbar=0');
 }
 
@@ -122,7 +122,7 @@ function change_urut(urut,urutan) {
 		urutan="ASC"
 	}
 	
-	document.location.href = "lappengeluaran_cari_content.php?departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris="+varbaris+"&kriteria=<?=$kriteria?>&keyword=<?=urlencode($keyword)?>";
+	document.location.href = "lappengeluaran_cari_content.php?departemen=<?=$departemen?>&tanggal1=<?=$tanggal1?>&tanggal2=<?=$tanggal2?>&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris="+varbaris+"&kriteria=<?=$kriteria?>&keyword=<?=urlencode((string) $keyword)?>";
 }
 
 function change_page(page) {
@@ -151,7 +151,7 @@ function change_baris() {
 <!-- TABLE CENTER -->
 <tr>
 	<td>
-    <? 
+    <?php 
     if ($kriteria == 1)
         $sqlwhere = " AND p.namapemohon LIKE '%$keyword%'";
     else if ($kriteria == 2)
@@ -181,18 +181,18 @@ function change_baris() {
 		 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 
    	
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
     
     $result = QueryDb($sql);
 	
 	$totalbiayaB = 0;
-    while ($rowB = mysql_fetch_array($result_tot)) {
+    while ($rowB = mysqli_fetch_array($result_tot)) {
         $totalbiayaB += $rowB['jumlah'];
 	}
 
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 	?>
     <input type="hidden" name="total" id="total" value="<?=$total?>"/>
     <table border="0" width="100%" align="center">
@@ -217,30 +217,30 @@ function change_baris() {
         <td width="7%" height="30" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('petugas','<?=$urutan?>')">Petugas <?=change_urut('petugas',$urut,$urutan)?></td>
         <td width="7%">&nbsp;</td>
     </tr>
-    <?
+    <?php
     
   	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
     $totalbiaya = 0;
-    while ($row = mysql_fetch_array($result)) {
+    while ($row = mysqli_fetch_array($result)) {
         
         if ($row['jenispemohon'] == 1) {
             $idpemohon = $row['nip'];
-            $sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '$idpemohon'";
+            $sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$idpemohon."'";
             $jenisinfo = "pegawai";
         } else if ($row['jenispemohon'] == 2) {
             $idpemohon = $row['nis'];
-            $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$idpemohon'";
+            $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$idpemohon."'";
             $jenisinfo = "siswa";
         } else {
             $idpemohon = "";
-            $sql = "SELECT nama FROM pemohonlain WHERE replid = '$row[pemohonlain]'";
+            $sql = "SELECT nama FROM pemohonlain WHERE replid = '".$row['pemohonlain']."'";
             $jenisinfo = "pemohon lain";
         }
         $result2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($result2);
+        $row2 = mysqli_fetch_row($result2);
         $namapemohon = $row2[0];
         
         $totalbiaya += $row['jumlah'];
@@ -261,17 +261,17 @@ function change_baris() {
         <td valign="top" align="center"><?=$row['petugas'] ?></td>
         <td valign="top" align="center">
         <a href="JavaScript:cetakbukti(<?=$row['id'] ?>)"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Bukti Pengeluaran Kas!', this, event, '150px')"/></a>&nbsp;
-    <?  if (getLevel() != 2) { ?>        
+    <?php  if (getLevel() != 2) { ?>        
         <a href="JavaScript:edit(<?=$row['id'] ?>)"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pembayaran Pengeluaran!', this, event, '100px')"/></a>
    
-    <?  } ?>    
+    <?php  } ?>    
         </td>
     </tr>
-    <?
+    <?php
     }
     CloseDb();
     ?>
-    <? if ($page==$total-1){ ?>
+    <?php if ($page==$total-1){ ?>
 	<tr height="30">
         <td colspan="5" align="center" bgcolor="#999900">
         <font color="#FFFFFF"><strong>T O T A L</strong></font>
@@ -279,13 +279,13 @@ function change_baris() {
         <td align="right" bgcolor="#999900"><font color="#FFFFFF"><strong><?=FormatRupiah($totalbiayaB) ?></strong></font></td>
         <td colspan="3" bgcolor="#999900">&nbsp;</td>
     </tr>
-	<? } ?>
+	<?php } ?>
     </table>
     <script language='JavaScript'>
         Tables('table', 1, 0);
     </script>
-    <? CloseDb() ?>
-     <?	if ($page==0){ 
+    <?php CloseDb() ?>
+     <?php if ($page==0){ 
 		$disback="style='display:none;'";
 		$disnext="style=''";
 		}
@@ -311,9 +311,9 @@ function change_baris() {
        	<td width="30%" align="left" colspan="2">Halaman
 		<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 		<input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 	  	dari <?=$total?> halaman
@@ -321,14 +321,14 @@ function change_baris() {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
     <table width="100%" border="0" align="center">          
     <tr>
         <td align="center" valign="middle" height="250">
@@ -337,7 +337,7 @@ function change_baris() {
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
     </td>
 </tr>
 </table>

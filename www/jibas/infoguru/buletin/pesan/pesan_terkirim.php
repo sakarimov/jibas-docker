@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -38,43 +38,43 @@ if (isset($_REQUEST['page']))
 if ($op=="bzux834hx8x7x934983xihxf084"){
 	OpenDb();
 	//cek di tujuan yang belum dihapus sama penerima (aktif=1)
-	$sql_cek_tujuan="SELECT * FROM jbsvcr.tujuanpesan WHERE idpesan=(SELECT idpesan FROM jbsvcr.pesanterkirim WHERE replid='".$_REQUEST[replid]."') AND aktif=1";
+	$sql_cek_tujuan="SELECT * FROM jbsvcr.tujuanpesan WHERE idpesan=(SELECT idpesan FROM jbsvcr.pesanterkirim WHERE replid='".$_REQUEST['replid']."') AND aktif=1";
 	//echo "sql_cek_tujuan = ".$sql_cek_tujuan."<br>";
 	$res_cek_tujuan=QueryDb($sql_cek_tujuan);
-	$tujuanexist=@mysql_num_rows($res_cek_tujuan);
+	$tujuanexist=@mysqli_num_rows($res_cek_tujuan);
 	if ($tujuanexist==0){ //Kalo gak ada, lsg hapus aja semuanya...
-		$sql_get_idpesan="SELECT idpesan FROM jbsvcr.pesanterkirim WHERE replid='$_REQUEST[replid]'";
+		$sql_get_idpesan="SELECT idpesan FROM jbsvcr.pesanterkirim WHERE replid='".$_REQUEST['replid']."'";
 		$res_get_idpesan=QueryDb($sql_get_idpesan);
-		$row_get_idpesan=@mysql_fetch_array($res_get_idpesan);
-		$idpesan=$row_get_idpesan[idpesan];
+		$row_get_idpesan=@mysqli_fetch_array($res_get_idpesan);
+		$idpesan=$row_get_idpesan['idpesan'];
 		
 		$sql_del_tujuan="DELETE FROM jbsvcr.tujuanpesan WHERE idpesan='$idpesan'";
 		QueryDb($sql_del_tujuan);
 		
-		$sql_del_terkirim="DELETE FROM jbsvcr.pesanterkirim WHERE replid='$_REQUEST[replid]'";
+		$sql_del_terkirim="DELETE FROM jbsvcr.pesanterkirim WHERE replid='".$_REQUEST['replid']."'";
 		QueryDb($sql_del_terkirim);
 		
 		$sql_del_terkirim="DELETE FROM jbsvcr.pesan WHERE replid='$idpesan'";
 		QueryDb($sql_del_terkirim);
 
 	} else { //Kalo ada pesan yang belum dibaca
-		$sql_del_terkirim="DELETE FROM jbsvcr.pesanterkirim WHERE replid='$_REQUEST[replid]'";
+		$sql_del_terkirim="DELETE FROM jbsvcr.pesanterkirim WHERE replid='".$_REQUEST['replid']."'";
 		QueryDb($sql_del_terkirim);
 	}
 	CloseDb();
 }
 if ($op=="baca"){
 	OpenDb();
-	$sql="UPDATE jbsvcr.tujuanpesan SET baru=0 WHERE replid='$_REQUEST[replid]'";
+	$sql="UPDATE jbsvcr.tujuanpesan SET baru=0 WHERE replid='".$_REQUEST['replid']."'";
 	//echo $sql;
 	//exit;
 	$result=QueryDb($sql);
 	CloseDb();
 	?>
 	<script language="javascript">
-		document.location.href="pesangurubaca.php?replid=<?=$_REQUEST[replid]?>";
+		document.location.href="pesangurubaca.php?replid=<?=$_REQUEST['replid']?>";
 	</script>
-	<?
+	<?php
 	
 }
 $bulan="";
@@ -180,7 +180,7 @@ function delpesan(){
 </div><br />
 <table width="100%" border="0" cellspacing="0">
   <tr>
-  <? OpenDb();
+  <?php OpenDb();
   /*$sql_tot="SELECT pg.replid as replid, pg.judul as judul, DATE_FORMAT(pg.tanggalpesan, '%e %b %Y') as tanggal, TIME_FORMAT(pg.tanggalpesan, '%H:%i') as waktu, ".
   		"pg.pesan as pesan, p.nama as nama, p.nip as nip FROM jbsvcr.pesanguru pg, jbssdm.pegawai p, jbsvcr.tujuanpesanguru t ".
 		"WHERE pg.replid=t.idpesan AND p.nip=pg.idguru ORDER BY pg.tanggalpesan DESC ";
@@ -188,11 +188,11 @@ function delpesan(){
   $sql_tot="SELECT * FROM jbsvcr.pesanterkirim pt, jbsvcr.pesan p WHERE p.idguru='".SI_USER_ID()."' AND pt.idpesan=p.replid";
   //echo $sql_tot;
   $result_tot=QueryDb($sql_tot);
-  $total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
+  $total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
   CloseDb();
 	?>
 	<td scope="row" align="left">
-	<?
+	<?php
 	if ($total!=0){
 		if ($page==0){ 
 		$disback="style='visibility:hidden;position:absolute;'";
@@ -215,12 +215,12 @@ function delpesan(){
     Halaman : 
 	<input <?=$disback?> type="button" class="but" title="Sebelumnya" name="back" value="<" onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
 	<select name="page" id="page" onChange="chg_page()">
-	<? for ($p=1;$p<=$total;$p++){ ?>
+	<?php for ($p=1;$p<=$total;$p++){ ?>
 		<option value="<?=$p-1?>" <?=StringIsSelected($page,$p-1)?>><?=$p;?></option>
-	<? } ?>
+	<?php } ?>
 	</select>   
     <input <?=$disnext?> type="button" class="but" name="next" title="Selanjutnya" value=">" onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">&nbsp;dari&nbsp;<?=$total?> 
-	<? } ?><br><br>
+	<?php } ?><br><br>
     <table width="100%" border="1" cellspacing="0" class="tab" id="table">
   <tr>
     <th width="22" height="30" class="header" scope="row"><div align="center">No</div></th>
@@ -229,7 +229,7 @@ function delpesan(){
     <td width="428" height="30" class="header"><div align="center">Judul</div></td>
     <td width="70" height="30" class="header">&nbsp;</td>
   </tr>
-  <?
+  <?php
   OpenDb();
   
   $sql1="SELECT pt.replid as replid_tkrm, pg.replid as replid, pg.judul as judul, DATE_FORMAT(pg.tanggalpesan, '%e %b %Y') as tanggal, TIME_FORMAT(pg.tanggalpesan, '%H:%i') as waktu FROM jbsvcr.pesan pg, jbsvcr.pesanterkirim pt WHERE pg.idguru='".SI_USER_ID()."' AND pt.idpesan=pg.replid ORDER BY pg.tanggalpesan DESC, pg.replid DESC LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
@@ -237,14 +237,14 @@ function delpesan(){
   		"pg.pesan as pesan, p.nama as nama, p.nip as nip FROM jbsvcr.pesanguru pg, jbssdm.pegawai p, jbsvcr.tujuanpesanguru t ".
 		"WHERE pg.replid=t.idpesan AND p.nip=pg.idguru ORDER BY replid LIMIT ".(int)$page*(int)$varbaris.",$varbaris";*/
   $result1=QueryDb($sql1);
-  $numpesan=@mysql_num_rows($result1);
-  if (@mysql_num_rows($result1)>0){
+  $numpesan=@mysqli_num_rows($result1);
+  if (@mysqli_num_rows($result1)>0){
   if ($page==0){
   $cnt=1;
   } else {
   $cnt=(int)$page*(int)$varbaris+1;
   }
-  while ($row1=@mysql_fetch_array($result1)){
+  while ($row1=@mysqli_fetch_array($result1)){
   //$trstyle="style='background-color:#FFFFFF'";
   if ($cnt%2==0)
 	//  $trstyle="style='background-color:#FFFFCC'";
@@ -253,51 +253,51 @@ function delpesan(){
     <td scope="row"><div align="center"><?=$cnt;?></div></th>
     <td><div align="center"><?=$row1['tanggal']?></div></td>
     <td>
-	<?
-	  $sql3="SELECT t.baru as baru, t.idpenerima as penerima, p.nama as nama FROM jbsvcr.tujuanpesan t, jbssdm.pegawai p WHERE idpesan='$row1[replid]' AND t.idpenerima=p.nip ORDER BY p.nama";
+	<?php
+	  $sql3="SELECT t.baru as baru, t.idpenerima as penerima, p.nama as nama FROM jbsvcr.tujuanpesan t, jbssdm.pegawai p WHERE idpesan='".$row1['replid']."' AND t.idpenerima=p.nip ORDER BY p.nama";
 	  $result3=QueryDb($sql3);
-	  $num3=@mysql_num_rows($result3);
+	  $num3=@mysqli_num_rows($result3);
 	  if ($num3>0){
-	  while ($row3=@mysql_fetch_array($result3)){
+	  while ($row3=@mysqli_fetch_array($result3)){
 	  $img="<img src='../../images/ico/unread.png' />";
-	  if ($row3[baru]==1)
-		  $img="<img src='../../images/ico/unread.png' title='Belum dibaca oleh ".$row3[nama]."'/>";
-	  if ($row3[baru]==0)
-		  $img="<img src='../../images/ico/readen.png' title='Sudah dibaca oleh ".$row3[nama]."' />";
-	  echo $img.$row3[penerima]."-".$row3[nama]."<br>";
+	  if ($row3['baru']==1)
+		  $img="<img src='../../images/ico/unread.png' title='Belum dibaca oleh ".$row3['nama']."'/>";
+	  if ($row3['baru']==0)
+		  $img="<img src='../../images/ico/readen.png' title='Sudah dibaca oleh ".$row3['nama']."' />";
+	  echo $img.$row3['penerima']."-".$row3['nama']."<br>";
 	  }
 	} else {
-	$sql4="SELECT t.baru as baru, t.idpenerima as penerima, p.nama as nama FROM jbsvcr.tujuanpesan t, jbsakad.siswa p WHERE idpesan='$row1[replid]' AND t.idpenerima=p.nis ORDER BY p.nama";
+	$sql4="SELECT t.baru as baru, t.idpenerima as penerima, p.nama as nama FROM jbsvcr.tujuanpesan t, jbsakad.siswa p WHERE idpesan='".$row1['replid']."' AND t.idpenerima=p.nis ORDER BY p.nama";
 	$result4=QueryDb($sql4);
-		while ($row4=@mysql_fetch_array($result4)){
+		while ($row4=@mysqli_fetch_array($result4)){
 	  $img="<img src='../../images/ico/unread.png' />";
-	  if ($row4[baru]==1)
-		  $img="<img src='../../images/ico/unread.png' title='Belum dibaca oleh ".$row4[nama]."'/>";
-	  if ($row4[baru]==0)
-		  $img="<img src='../../images/ico/readen.png' title='Sudah dibaca oleh ".$row4[nama]."' />";
-	  echo $img.$row4[penerima]."-".$row4[nama]."<br>";
+	  if ($row4['baru']==1)
+		  $img="<img src='../../images/ico/unread.png' title='Belum dibaca oleh ".$row4['nama']."'/>";
+	  if ($row4['baru']==0)
+		  $img="<img src='../../images/ico/readen.png' title='Sudah dibaca oleh ".$row4['nama']."' />";
+	  echo $img.$row4['penerima']."-".$row4['nama']."<br>";
 	  }
 		}
 	 
 	?>
 	</td>
-    <td><? if ($row1['baru']==1) { ?><img src="../../images/ico/unread.gif" /><? } ?><a href="#" onClick="bacapesan('<?=$row1['replid']?>')">
-	<? 
+    <td><?php if ($row1['baru']==1) { ?><img src="../../images/ico/unread.gif" /><?php } ?><a href="#" onClick="bacapesan('<?=$row1['replid']?>')">
+	<?php 
 	echo $row1['judul'];
 	?></a>
     </td>
     <td><div align="center">
-    <img src="../../images/ico/hapus.png" border="0" onClick="hapus('<?=$row1[replid_tkrm]?>')" style="cursor:pointer;" title="Hapus Pesan ini !" />
+    <img src="../../images/ico/hapus.png" border="0" onClick="hapus('<?=$row1[\REPLID_TKRM]?>')" style="cursor:pointer;" title="Hapus Pesan ini !" />
    </div></td>
   </tr>
-  <? 
+  <?php 
   $cnt++;
   } 
   } else {?>
    <tr>
     <td scope="row" colspan="6"><div align="center"  class="divNotif">Tidak ada pesan</div></th>
    </tr>
-  <? } ?>
+  <?php } ?>
 </table>
 <input type="hidden" name="numpesan" id="numpesan" value="<?=$numpesan?>">
 	</td>

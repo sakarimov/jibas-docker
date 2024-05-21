@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -34,12 +34,12 @@ $nis = $_REQUEST['nis'];
 
 
 OpenDb();
-$sql = "SELECT s.replid, s.semester, p.nama FROM semester s, pelajaran p WHERE s.departemen = '$departemen' AND p.replid = $pelajaran AND p.departemen = '$departemen'"; 
+$sql = "SELECT s.replid, s.semester, p.nama FROM semester s, pelajaran p WHERE s.departemen = '$departemen' AND p.replid = $pelajaran AND p.departemen = '".$departemen."'"; 
 $result = QueryDb($sql);
 
 $i = 0;
-while ($row = @mysql_fetch_row($result)) {
-	$sem[$i]= array($row[0],$row[1]);
+while ($row = @mysqli_fetch_row($result)) {
+	$sem[$i]= [$row[0], $row[1]];
 	$pel = $row[2];
 	$i++;
 }
@@ -52,7 +52,7 @@ while ($row = @mysql_fetch_row($result)) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Laporan Penilaian Pelajaran </title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -88,9 +88,9 @@ function cetak() {
       	</td>
 	</tr>
     
-	<?	$sql = "SELECT j.replid, j.jenisujian FROM jenisujian j, ujian u WHERE j.idpelajaran = '$pelajaran' AND u.idjenis = j.replid GROUP BY j.jenisujian";
+	<?php $sql = "SELECT j.replid, j.jenisujian FROM jenisujian j, ujian u WHERE j.idpelajaran = '$pelajaran' AND u.idjenis = j.replid GROUP BY j.jenisujian";
 		$result = QueryDb($sql);
-		while($row = @mysql_fetch_array($result)){			
+		while($row = @mysqli_fetch_array($result)){			
 	?>
    	<tr>
         <td colspan="2">
@@ -103,12 +103,12 @@ function cetak() {
             <td class="header" align="center" height="30">Nilai</td>
 			<td class="header" align="center" height="30">Keterangan</td>
 		</tr>
-		<? 	OpenDb();		
-			$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = $kelas AND u.idpelajaran = $pelajaran AND u.idsemester = ".$sem[0][0]." AND u.idjenis = $row[replid] AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
+		<?php 	OpenDb();		
+			$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = $kelas AND u.idpelajaran = $pelajaran AND u.idsemester = ".$sem[0][0]." AND u.idjenis = ".$row['replid']." AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
 			
 			$result1 = QueryDb($sql1);
 			$cnt = 0;
-			while($row1 = @mysql_fetch_array($result1)){			
+			while($row1 = @mysqli_fetch_array($result1)){			
         ?>
         <tr>        			
 			<td align="center" height="25"><?=++$cnt?></td>
@@ -116,11 +116,11 @@ function cetak() {
             <td height="25"><?=$row1[1]?></td>
             <td height="25"><?=$row1[2]?></td>            
 		</tr>	
-        <? } ?>
+        <?php } ?>
 		</table>	
 		</td>	
 	</tr>
-    <? } ?> 
+    <?php } ?> 
     
     <!-- END TABLE CONTENT -->
     </table>

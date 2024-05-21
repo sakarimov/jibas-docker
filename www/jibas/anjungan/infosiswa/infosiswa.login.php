@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 3.11 (May 02, 2018)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@
 </tr>
 <tr>
     <td colspan="2" align="center">
-        <font style='color: red; font-size: 12px;'><?=$ERRMSG?></font>
+        <font style='color: red; font-size: 12px;'><?=$ERRMSG ?? ''?></font>
     </td>
 </tr>
 </table>

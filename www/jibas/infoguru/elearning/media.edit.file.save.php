@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ try
 
         $ofilename = SafeFileName($file["name"]);
         $filename = SafeFileName($file["name"]);
-        $filename = str_pad($idMedia, 7, "0", STR_PAD_LEFT) . "." . $filename;
+        $filename = str_pad((string) $idMedia, 7, "0", STR_PAD_LEFT) . "." . $filename;
         $filetype = $file["type"];
         $filesize = $file["size"];
         $fileloc = $mediaUrl;
@@ -78,7 +78,7 @@ try
 
         $sql = "INSERT INTO jbsel.mediafile
                    SET idmedia = '$idMedia', filename = '$filename', ofilename = '$ofilename', filesize = '$filesize',
-                       filetype = '$filetype', fileinfo = '$info', fileloc = '$fileloc'";
+                       filetype = '$filetype', fileinfo = '$info', fileloc = '".$fileloc."'";
         QueryDbEx($sql);
     }
 

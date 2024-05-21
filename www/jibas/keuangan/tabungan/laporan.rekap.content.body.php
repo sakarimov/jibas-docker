@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,19 +20,19 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 $sql = "SELECT DISTINCT t.idtabungan, dt.nama, 'siswa'
           FROM jbsfina.tabungan t, jbsfina.datatabungan dt
          WHERE t.idtabungan = dt.replid
            AND dt.departemen = '$departemen'
            AND t.tanggal BETWEEN '$datetime1' AND '$datetime2'";
 if ($petugas != "ALL")
-    $sql .= " AND t.petugas = '$petugas'";
+    $sql .= " AND t.petugas = '".$petugas."'";
     
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $lsTab[] = array($row[0], $row[1], $row[2]);
+    $lsTab[] = [$row[0], $row[1], $row[2]];
 }
 
 $sql = "SELECT DISTINCT t.idtabungan, dt.nama, 'pegawai'
@@ -41,12 +41,12 @@ $sql = "SELECT DISTINCT t.idtabungan, dt.nama, 'pegawai'
            AND dt.departemen = '$departemen'
            AND t.tanggal BETWEEN '$datetime1' AND '$datetime2'";
 if ($petugas != "ALL")
-    $sql .= " AND t.petugas = '$petugas'";
+    $sql .= " AND t.petugas = '".$petugas."'";
 
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $lsTab[] = array($row[0], $row[1], $row[2]);
+    $lsTab[] = [$row[0], $row[1], $row[2]];
 }
 
 if (count($lsTab) == 0)
@@ -64,7 +64,7 @@ else
     <td width="140">Jumlah Tarikan</td>
     <td width="140">Jumlah Saldo</td>
 </tr>
-<?
+<?php
 $totsetor = 0;
 $tottarik = 0;
 $totsaldo = 0;
@@ -87,10 +87,10 @@ for($i = 0; $i < count($lsTab); $i++)
              WHERE idtabungan = '$idTab'
                AND tanggal BETWEEN '$datetime1' AND '$datetime2' ";
     if ($petugas != "ALL")
-        $sql .= " AND petugas = '$petugas'";
+        $sql .= " AND petugas = '".$petugas."'";
  
     $res = QueryDb($sql);
-    if($row = mysql_fetch_row($res))
+    if($row = mysqli_fetch_row($res))
     {
         $jumtarik = $row[0];
         $jumsetor = $row[1];
@@ -125,7 +125,7 @@ for($i = 0; $i < count($lsTab); $i++)
         </td>
         <td align='right' style='background-color:#DBF4C1'><strong><?=FormatRupiah($jumsaldo)?></strong></td>
     </tr>
-<?
+<?php
 }
 ?>
 <tr height='40'>
@@ -135,6 +135,6 @@ for($i = 0; $i < count($lsTab); $i++)
     <td align='right' style='background-color:#DBF4C1'><strong><?=FormatRupiah($totsaldo)?></strong></td>
 </tr>
 </table>
-<?
+<?php
 }
 ?>

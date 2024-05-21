@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $sql = "SELECT p.replid, DATE_FORMAT(date_in, '%d %b %Y') AS date_in, time_in, D
          ORDER BY p.date_in DESC, k.kegiatan";
 $res = QueryDb($sql);
 
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     
@@ -69,7 +69,7 @@ if ($showbutton) {
     </td>
 </tr>    
 </table>
-<?
+<?php
 }
 ?>
 
@@ -85,15 +85,15 @@ if ($showbutton) {
     <td width="10%">Keter lambatan</td>
     <td width="*">Keterangan</td>
 </tr>
-<?
+<?php
 $cnt = 0;
-while($row = mysql_fetch_array($res))
+while($row = mysqli_fetch_array($res))
 {
     $cnt += 1;
     
     $idkegiatan = $row["idkegiatan"];
-    $ti = trim($row["time_in"]);
-    $to = trim($row["time_out"]);
+    $ti = trim((string) $row["time_in"]);
+    $to = trim((string) $row["time_out"]);
     $tomark = "";
     if (strlen($to) == 0)
     {
@@ -104,9 +104,9 @@ while($row = mysql_fetch_array($res))
                    AND hari = $wd";
 
         $res2 = QueryDb($sql);
-        if (mysql_num_rows($res2) > 0)
+        if (mysqli_num_rows($res2) > 0)
         {
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $to = $row2[0] . ":00";
             $tomark = "<font color='blue'>(std)</font>";
         }
@@ -140,9 +140,9 @@ while($row = mysql_fetch_array($res))
                    AND hari = $wd";
         
         $res2 = QueryDb($sql);
-        if (mysql_num_rows($res2) > 0)
+        if (mysqli_num_rows($res2) > 0)
         {
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $telatt = $row2[0];
             
             $telatm = DateArith::TimeToMinute($telatt);
@@ -170,7 +170,7 @@ while($row = mysql_fetch_array($res))
         <td align='left'><?=$row["description"]?></td>
     </tr>
 
-<?
+<?php
 }
 ?>
 </table>

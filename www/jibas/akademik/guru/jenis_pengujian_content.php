@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 $replid=$_REQUEST['replid'];
 $id=$_REQUEST['id'];
 	OpenDb();
-	$sql = "DELETE FROM jenisujian WHERE replid = '$replid'";
+	$sql = "DELETE FROM jenisujian WHERE replid = '".$replid."'";
 	QueryDb($sql);
 	$result=QueryDb($sql);
 	if ($result) { 
@@ -114,10 +114,10 @@ function cetak(id) {
     </td>
   </tr>
 </table>
-<?  OpenDb();
+<?php  OpenDb();
 	$sql = "SELECT j.replid,j.jenisujian,j.idpelajaran,j.keterangan,p.replid,p.nama,p.departemen,j.info1 FROM jenisujian j, pelajaran p WHERE j.idpelajaran = '$id' AND j.idpelajaran = p.replid ORDER BY j.jenisujian";   
 	$result = QueryDb($sql); 
-	if (@mysql_num_rows($result) > 0){ 
+	if (@mysqli_num_rows($result) > 0){ 
 ?>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
     <!-- TABLE LINK -->
@@ -141,10 +141,10 @@ function cetak(id) {
         <td width="8%" class="header" align="center">&nbsp;</td>
     </tr>
     
-     <?
+     <?php
 		
 		$cnt = 0;
-		while ($row = @mysql_fetch_row($result)) {
+		while ($row = @mysqli_fetch_row($result)) {
 		?>
     <tr height="25">   	
        	<td align="center"><?=++$cnt ?></td>
@@ -153,12 +153,12 @@ function cetak(id) {
         <td><?=$row[3]?></td>        
 		<td align="center">
             <a href="JavaScript:edit(<?=$row[0] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Jenis Pengujian!', this, event, '80px')" /></a>&nbsp;
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
             <a href="JavaScript:hapus(<?=$row[0] ?>,<?=$row[2] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Jenis Pengujian!', this, event, '80px')" /></a>
-<? } ?>
+<?php } ?>
         </td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); ?>	
     
     <!-- END TABLE CONTENT -->
@@ -166,7 +166,7 @@ function cetak(id) {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
@@ -177,7 +177,7 @@ function cetak(id) {
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 
 	</td></tr>
 <!-- END TABLE CENTER -->    

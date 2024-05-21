@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -36,13 +36,13 @@ if (isset($_REQUEST['btSimpan']))
 	$diklat = $_REQUEST['txDiklat'];
 	$sql = "UPDATE diklat SET diklat='$diklat' WHERE replid = $id";
 	QueryDb($sql);
-	CloseDb($sql);
+	CloseDb();
 	?>
 	<script language="javascript">
 		opener.RefreshPage(<?=$id?>);
 		window.close();
     </script>    
-    <?
+    <?php
 	exit();
 }
 ?>
@@ -56,12 +56,12 @@ if (isset($_REQUEST['btSimpan']))
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff">
 
-<?
+<?php
 OpenDb();
 
 $sql = "SELECT diklat FROM diklat WHERE replid=$id";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $diklat = $row[0];
 ?>
 <form name="main" method="post">
@@ -82,7 +82,7 @@ $diklat = $row[0];
 </tr>
 </table>
 </form>
-<?
+<?php
 CloseDb();
 ?>
 </body>

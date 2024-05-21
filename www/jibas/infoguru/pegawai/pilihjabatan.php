@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -47,12 +47,12 @@ function Pilih(id, jabatan) {
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff">
 
-<?
+<?php
 function getNSubDir($idroot) 
 {
 	$sql = "SELECT count(*) FROM jbssdm.jabatan WHERE rootid = $idroot";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	return $row[0];
 }
 
@@ -70,13 +70,13 @@ function traverse($idroot, $count)
 	$result = QueryDb($sql);
 	$space = spacing($count);
 	
-	while ($row = mysql_fetch_row($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 		$idjab = $row[0];
 		$sing  = $row[1];
 		$jab   = $row[2];
 		$nsubdir = getNSubDir($idjab);
 		
-		$sing = "<a href=\"#\" onclick=\"JavaScript:Pilih($idjab, '$jab')\">$sing</a>";
+		$sing = "<a href=\"#\" onclick=\"JavaScript:Pilih($idjab, '$jab')\"".$sing."</a>";
 				
 	
 		if ($nsubdir == 0) {
@@ -102,22 +102,22 @@ function traverse($idroot, $count)
 <tr><td>
 <a href="#" onclick="expandTree('tree1'); return false;">Expand All</a>&nbsp;|&nbsp;
 <a href="#" onclick="collapseTree('tree1'); return false;">Collapse All</a><br /><br />
-<?
+<?php
 $sql = "SELECT replid, singkatan, jabatan FROM jbssdm.jabatan WHERE rootid=0";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	echo "Belum ada data";
 } 
 else 
 {
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$idjab = $row[0];
 	$sing  = $row[1];
 	$jab   = $row[2]; 
 	$nsubdir = getNSubDir($idjab);
 	
-	$sing = "<a href=\"#\" onclick=\"JavaScript:Pilih($idjab, '$jab')\">$sing</a>";
+	$sing = "<a href=\"#\" onclick=\"JavaScript:Pilih($idjab, '$jab')\"".$sing."</a>";
 	
 	echo "<ul class='mktree' id='tree1'>\r\n";
 	if ($nsubdir == 0) {
@@ -134,7 +134,7 @@ else
 
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

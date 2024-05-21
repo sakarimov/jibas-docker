@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 if ($page==0)
 { 
 	$disback="style='display:none;'";
@@ -56,18 +56,18 @@ if ($ndata == 0)
 	<td width="30%" align="left" colspan="2">
 		Halaman	<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
 		<select name="hal" id="hal" onChange="change_hal()">
-		<?	for ($m=0; $m<$total; $m++) {?>
+		<?php for ($m=0; $m<$total; $m++) {?>
 			 <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-		<? } ?>
+		<?php } ?>
 		</select>
 		<input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 		dari <?=$total?> halaman, <?=$ndata?> data
 	</td>
 	<td width="*" align="right">Jumlah baris per halaman
 		<select name="varbaris" id="varbaris" onChange="change_baris()">
-	<? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+	<?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
 		<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-	<? 	} ?>
+	<?php 	} ?>
 		</select>
 	</td>
 </tr>

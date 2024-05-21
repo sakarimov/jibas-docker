@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -63,7 +63,7 @@ $urutan = $_REQUEST['urutan'];
         <td width="*" class="header" align="center">Keterangan</td>
         <td width="16%" class="header" align="center">Login Terakhir</td>
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,
 				   DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam
 			  FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l
@@ -77,13 +77,13 @@ $urutan = $_REQUEST['urutan'];
 	//else
 		//$cnt = (int)$page*(int)$varbaris;
 	
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['login'] ?></td>
         <td><?=$row['nama']; ?></td>
         <td align="center">
-			<?	switch ($row['tingkat']){
+			<?php switch ($row['tingkat']){
 					case 0: echo "Landlord";
 						break;
 					case 1: echo "Manajer Akademik";
@@ -94,11 +94,11 @@ $urutan = $_REQUEST['urutan'];
         	?>
         </td>
         
-        <td align="center"><? if ($row['aktif'] == 1) echo 'Aktif'; else echo 'Tidak Aktif'; ?></td>
+        <td align="center"><?php if ($row['aktif'] == 1) echo 'Aktif'; else echo 'Tidak Aktif'; ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center"><?=format_tgl($row['tanggal'])?> <?=$row['jam']?></td>
     </tr>
-<?	} CloseDb() ?>	
+<?php } CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>
 	</td>

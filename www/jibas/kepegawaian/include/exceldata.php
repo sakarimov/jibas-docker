@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,32 +20,24 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("include/config.php");
 require_once("include/db_functions.php");
 
 class ExcelHeader {
-	var $title;
-	var $width;
-	var $isno;
-	
-	function ExcelHeader($tit, $wid, $isn) {
-		$this->title  = $tit;
-		$this->width  = $wid;
-		$this->isno   = $isn;
-	}
+	function __construct(public $title, public $width, public $isno)
+ {
+ }
 }
 
 class ExcelData {
-	var $sql = "";
-	var $eheader;
-	var $title;
-	var $data;
-	var $subtitle;
+	public $sql = "";
+	public $eheader;
+	public $data;
+	public $subtitle;
 	
-	function ExcelData($tit) {
+	function __construct(public $title) {
 		$this->eheader[] = new ExcelHeader("No", 100, true);
-		$this->title = $tit;
 	}
 	
 	function AddHeader($tit, $wid) {
@@ -136,7 +128,7 @@ class ExcelData {
 		}
 		$html .= "</table></body></html>";
 		
-		$file = str_replace(" ", "_", $this->title);
+		$file = str_replace(" ", "_", (string) $this->title);
 		
 		header('Content-Type: application/vnd.ms-excel'); //IE and Opera  
 	    header('Content-Type: application/x-msexcel'); // Other browsers  
@@ -198,7 +190,7 @@ class ExcelData {
 		OpenDb();
 		$result = QueryDb($this->sql);
 		$cnt = 0;
-		while ($row = mysql_fetch_row($result)) {
+		while ($row = mysqli_fetch_row($result)) {
 			$cnt++;
 			$html .= "<tr height='25'>";
 			$html .= "<td align='center' valign='middle'>$cnt</td>";
@@ -212,7 +204,7 @@ class ExcelData {
 
 		$html .= "</table></body></html>";
 		
-		$file = str_replace(" ", "_", $this->title);
+		$file = str_replace(" ", "_", (string) $this->title);
 		
 		header('Content-Type: application/vnd.ms-excel'); //IE and Opera  
 	    header('Content-Type: application/x-msexcel'); // Other browsers  

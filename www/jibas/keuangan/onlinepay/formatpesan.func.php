@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,15 +34,15 @@ function SimpanPesanTagihan()
             $key = "pesan$i";
             $pesan = $_REQUEST[$key];
 
-            $sql = "UPDATE jbsfina.formatpesanpg SET pesan = '$pesan', kelompok = 'TAGIHAN', issync = 0 WHERE departemen = '$dept'";
+            $sql = "UPDATE jbsfina.formatpesanpg SET pesan = '$pesan', kelompok = 'TAGIHAN', issync = 0 WHERE departemen = '".$dept."'";
             QueryDbEx($sql);
         }
 
-        return createJsonReturn(1, "OK", "");
+        return createJsonReturn(1, "OK");
     }
     catch (Exception $ex)
     {
-        return createJsonReturn(-1, $ex->getMessage(), "");
+        return createJsonReturn(-1, $ex->getMessage());
     }
 }
 
@@ -59,22 +59,22 @@ function SimpanPesanPembayaran()
             $key = "pesan$i";
             $pesan = $_REQUEST[$key];
 
-            $sql = "UPDATE jbsfina.formatpesanpg SET pesan = '$pesan', kelompok = 'PEMBAYARAN', issync = 0 WHERE departemen = '$dept'";
+            $sql = "UPDATE jbsfina.formatpesanpg SET pesan = '$pesan', kelompok = 'PEMBAYARAN', issync = 0 WHERE departemen = '".$dept."'";
             QueryDb($sql);
         }
 
-        return createJsonReturn(1, "OK", "");
+        return createJsonReturn(1, "OK");
     }
     catch (Exception $ex)
     {
-        return createJsonReturn(-1, $ex->getMessage(), "");
+        return createJsonReturn(-1, $ex->getMessage());
     }
 
 }
 
 function createJsonReturn($status, $message, $data)
 {
-    $ret = array($status, $message, $data);
-    return json_encode($ret);
+    $ret = [$status, $message, $data];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,7 +45,7 @@ $urutan1 = $_REQUEST['urutan1'];
 OpenDb();
 $sql = "SELECT nama FROM siswa WHERE nis='$nis'";   
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -90,15 +90,15 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	OpenDb();
 	$sql = "SELECT k.kelas, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, pp.catatan, l.nama, g.nama, p.materi, pp.replid FROM presensipelajaran p, ppsiswa pp, jbssdm.pegawai g, kelas k, pelajaran l WHERE pp.idpp = p.replid AND p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = g.nip AND pp.nis = '$nis' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND pp.statushadir = 0 ORDER BY $urut $urutan" ;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	
 	$sql1 = "SELECT k.kelas, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, pp.catatan, l.nama, g.nama, p.materi, pp.replid FROM presensipelajaran p, ppsiswa pp, jbssdm.pegawai g, kelas k, pelajaran l WHERE pp.idpp = p.replid AND p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = g.nip AND pp.nis = '$nis' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND pp.statushadir <> 0 ORDER BY $urut $urutan" ;
 	$result1 = QueryDb($sql1);			 
-	$jum_absen = mysql_num_rows($result1);
+	$jum_absen = mysqli_num_rows($result1);
 
 	if ($jum_hadir > 0) { 
 	?>
@@ -115,26 +115,26 @@ $row = mysql_fetch_array($result);
       	<td width="15%" bgcolor="#CCCCCC" class="style6 style5 header"><strong>Guru</strong></td>
       	<td width="25%" bgcolor="#CCCCCC" class="style6 style5 header"><strong>Materi</strong></td>       
     </tr>
-	<? 
+	<?php 
     $cnt = 1;
-    while ($row = @mysql_fetch_row($result)) {					
+    while ($row = @mysqli_fetch_row($result)) {					
     ?>	
      <tr height="25" valign="middle">        			
         <td align="center" valign="middle"><span class="style7"><?=$cnt?></span></td>
       	<td align="center" valign="middle"><span class="style7">
-		<?=$row[1].'-'.$row[2].'-'.substr($row[3],2,2)?></span></td>
-      	<td align="center" valign="middle"><span class="style7"><?=substr($row[4],0,5)?></span></td>
+		<?=$row[1].'-'.$row[2].'-'.substr((string) $row[3],2,2)?></span></td>
+      	<td align="center" valign="middle"><span class="style7"><?=substr((string) $row[4],0,5)?></span></td>
         <td align="center" valign="middle"><span class="style7"><?=$row[0]?></span></td>
       	<td valign="middle"><span class="style7"><?=$row[5]?></span></td>
       	<td valign="middle"><span class="style7"><?=$row[6]?></span></td>
       	<td valign="middle"><span class="style7"><?=$row[7]?></span></td>
       	<td valign="middle"><span class="style7"><?=$row[8]?></span></td>    
     </tr>
-<?		$cnt++;
+<?php 	$cnt++;
     } 
     CloseDb();	?>
     </table>
-<? 	} 
+<?php 	} 
 	if ($jum_absen > 0) { 
 	?>
    	<br /><strong>Data Ketidakhadiran</strong>
@@ -150,26 +150,26 @@ $row = mysql_fetch_array($result);
    	  <td width="15%" bgcolor="#CCCCCC" class="style6 style5 header"><strong>Guru</strong></td>
       	<td width="25%" bgcolor="#CCCCCC" class="style6 style5 header"><strong>Materi</strong></td>      	
     </tr>
-	<? 
+	<?php 
     $cnt = 1;
-    while ($row1 = @mysql_fetch_row($result1)) {					
+    while ($row1 = @mysqli_fetch_row($result1)) {					
     ?>	
     <tr height="25">        			
         <td valign="middle" align="center"><span class="style7"><?=$cnt?></span></td>
         <td valign="middle" align="center"><span class="style7"><?=$row1[0]?></span></td>
         <td valign="middle" align="center"><span class="style7">
-		<?=$row1[1].'-'.$row1[2].'-'.substr($row1[3],2,2)?></span></td>
-        <td valign="middle" align="center"><span class="style7"><?=substr($row1[4],0,5)?></span></td>
+		<?=$row1[1].'-'.$row1[2].'-'.substr((string) $row1[3],2,2)?></span></td>
+        <td valign="middle" align="center"><span class="style7"><?=substr((string) $row1[4],0,5)?></span></td>
         <td valign="middle"><span class="style7"><?=$row1[5]?></span></td>
         <td valign="middle"><span class="style7"><?=$row1[6]?></span></td>
         <td valign="middle"><span class="style7"><?=$row1[7]?></span></td>
         <td valign="middle"><span class="style7"><?=$row1[8]?></span></td>        
     </tr>
-<?		$cnt++;
+<?php 	$cnt++;
     } 
     CloseDb();	?>
 	  </table>	 
-<? 	} ?> 
+<?php 	} ?> 
 	
 	<br />
     <table width="100%" border="0" align="center">
@@ -183,12 +183,12 @@ $row = mysql_fetch_array($result);
     </tr>
     <tr>
         <td><span class="style7"><b>Jumlah Seharusnya</b></span></td>
-        <td><span class="style7"><b>: <? $total = $jum_hadir+$jum_absen;
+        <td><span class="style7"><b>: <?php $total = $jum_hadir+$jum_absen;
                 echo $total ?></b></span></td>
     </tr>
     <tr>
         <td><span class="style7"><b>Presentase Kehadiran</b></span></td>
-        <td><span class="style7"><b>: <? 	if ($total == 0) 
+        <td><span class="style7"><b>: <?php 	if ($total == 0) 
                     $total = 1;
                 $prs = (( $jum_hadir/$total)*100) ;
                 echo (int)$prs ?>%</b></span></td>

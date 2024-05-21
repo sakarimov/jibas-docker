@@ -1,4 +1,4 @@
-<?
+<?php
 function ShowControl()
 {
     global $idsurat;
@@ -7,7 +7,7 @@ function ShowControl()
               FROM jbsletter.berkassurat
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ndata = $row[0];
     
     echo "<input onclick='movePrev()' class='inputbox' type='button' value=' < '>";
@@ -32,11 +32,11 @@ function ShowImage()
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
     $n = 1;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $deskripsi = str_replace("'", '"', $row[1]);
+        $deskripsi = str_replace("'", '"', (string) $row[1]);
         
-        echo "<img id='img$n' style='position: absolute; top: 0px; left: 0px; visibility: hidden;' src='data:image/jpeg;base64," . base64_encode($row[0]) . "'>\r\n";
+        echo "<img id='img$n' style='position: absolute; top: 0px; left: 0px; visibility: hidden;' src='data:image/jpeg;base64," . base64_encode((string) $row[0]) . "'>\r\n";
         echo "<input type='hidden' id='info$n' value='$deskripsi'>\r\n";
         $n += 1;
     }

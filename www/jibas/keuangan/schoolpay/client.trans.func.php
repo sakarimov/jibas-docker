@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ function ShowCbBulanTahun()
 
     $sql = "SELECT YEAR(NOW()), MONTH(NOW()), DAY(NOW())";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $yrNow = $row[0];
         $mnNow = $row[1];
@@ -82,7 +82,7 @@ function ShowClientTransReport($showMenu)
              ORDER BY p.waktu DESC, p.transactionid";
 
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
     if ($num == 0)
     {
         echo "belum ada data transaksi";
@@ -112,7 +112,7 @@ function ShowClientTransReport($showMenu)
         echo "<td align='left' class='header' width='40'>&nbsp;</td>";
     }
     echo "</tr>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -135,7 +135,7 @@ function ShowClientTransReport($showMenu)
 
         $keterangan = "";
         $ket = $row["keterangan"];
-        if (strlen($ket) != 0)
+        if (strlen((string) $ket) != 0)
             $keterangan = "Ket: " . $ket . "<br>";
         $keterangan .= "Id Trans: " . $row["transactionid"] . "<br>";
         if ($jenisTrans == 0)
@@ -145,12 +145,12 @@ function ShowClientTransReport($showMenu)
 
         echo "<tr>";
         echo "<td align='center'>$no</td>";
-        echo "<td align='left'>$row[waktu]</td>";
-        echo "<td align='left'>$row[namavendor]<br>$row[namauser]</td>";
+        echo "<td align='left'>".$row['waktu']."</td>";
+        echo "<td align='left'>".$row['namavendor']."<br>".$row['namauser']."</td>";
         echo "<td align='left'>$pelanggan</td>";
         echo "<td align='right'>$jumlah</td>";
         echo "<td align='left'>$pembayaran</td>";
-        echo "<td align='left'>$row[valmethod]</td>";
+        echo "<td align='left'>".$row['valmethod']."</td>";
         echo "<td align='left'>$keterangan</td>";
         if ($showMenu)
         {
@@ -173,9 +173,9 @@ function ShowClientTransReport($showMenu)
               FROM jbsfina.paymenttrans p
              WHERE YEAR(p.tanggal) = $tahun
                AND MONTH(p.tanggal) = $bulan
-               AND p.$clientCol = '$clientId'";
+               AND p.$clientCol = '".$clientId."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $count = $row[0];
 
     echo "<tr style='height: 50px'>";

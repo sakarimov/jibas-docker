@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -67,7 +67,7 @@ if (isset($_REQUEST['hal']))
 <head>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pencarian Siswa[Menu]</title>
+<title>Pencarian Siswa['Menu']</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
@@ -102,50 +102,50 @@ function change_urutan(urutan) {
   
  
  
-  <?
+  <?php
   
 	
 	?>
 		<input type="hidden" name="departemen" id="departemen" value="<?=$departemen; ?>">
 		<input type="hidden" name="cari" id="cari" value="<?=$cari; ?>">
 		<input type="hidden" name="jenis" id="jenis" value="<?=$jenis; ?>">
-	<?
+	<?php
     OpenDb();
 		$sql_siswa = "SELECT nis,nama,idkelas from jbsakad.siswa WHERE $jenis LIKE '%$cari%' ORDER BY $urutan ASC"; 
 		$result_siswa = QueryDb($sql_siswa);
 		$cnt_siswa = 1;
-		if ($jumlah = mysql_num_rows($result_siswa)>0) {
+		if ($jumlah = mysqli_num_rows($result_siswa)>0) {
 			?>
 			<tr>
     <td class="header">No</td>
     <td class="headerlink2" onclick="change_urutan('nis')" style="cursor:pointer" onmouseover="showhint('Urutkan berdasarkan NIS', this, event, '120px')">NIS
-	<? 
+	<?php 
 	if ($urutan=="nis")
 	echo "&nbsp;&nbsp;<img src='../images/ico/ascending copy.png' width='13' height='9' />";
 	?>
 	</td>
     <td class="headerlink2" onclick="change_urutan('nama')" style="cursor:pointer" onmouseover="showhint('Urutkan berdasarkan Nama', this, event, '120px')">Nama
-	<? 
+	<?php 
 	if ($urutan=="nama")
 	echo "&nbsp;&nbsp;<img src='../images/ico/ascending copy.png' width='13' height='9' />";
 	?>
 	</td>
     <td class="headerlink2" onclick="change_urutan('idkelas')" style="cursor:pointer;" onmouseover="showhint('Urutkan berdasarkan Kelas', this, event, '120px')"  >Kelas
-	<? 
+	<?php 
 	if ($urutan=="idkelas")
 	echo "&nbsp;&nbsp;<img src='../images/ico/ascending copy.png' width='13' height='9' />";
 	?>
 	</td>
     <td class="header">&nbsp;</td>
   </tr>
-			<? //onmouseover="showhint('Urutkan berdasarkan Kelas', this, event, '120px')"
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {
+			<?php //onmouseover="showhint('Urutkan berdasarkan Kelas', this, event, '120px')"
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {
 		$nis=$row_siswa['nis'];
 		$nama=$row_siswa['nama'];
-		$idkelas=$row_siswa[idkelas];
-				$sql_gabung = "SELECT t.replid,t.departemen,k.replid,k.kelas,k.idtingkat from jbsakad.tingkat t,jbsakad.kelas k WHERE k.replid='$idkelas' AND t.replid=k.idtingkat AND t.departemen = '$departemen'"; 
+		$idkelas=$row_siswa['idkelas'];
+				$sql_gabung = "SELECT t.replid,t.departemen,k.replid,k.kelas,k.idtingkat from jbsakad.tingkat t,jbsakad.kelas k WHERE k.replid='$idkelas' AND t.replid=k.idtingkat AND t.departemen = '".$departemen."'"; 
 				$result_gabung = QueryDb($sql_gabung);
-				if ($row_gabung = @mysql_fetch_row($result_gabung)) {
+				if ($row_gabung = @mysqli_fetch_row($result_gabung)) {
 				$kelas=$row_gabung[3];
 				
 		?>
@@ -156,14 +156,14 @@ function change_urutan(urutan) {
     <td><?=$kelas?></td>
     <td><a href="siswa_cari_detail.php?nis=<?=$nis?>&departemen=<?=$departemen?>" target="cari_siswa_content" ><img src="../images/ico/lihat.png" alt="Lihat Detail Siswa" border="0"/></a></td>
   </tr>
-  <?
+  <?php
 			}
 			$cnt_siswa++;
 		}
 		} else {
 			?>
 <tr><td align="center" class="header">Tidak ada data yang sesuai dengan pencarian</td></tr>
-<?
+<?php
 		
  }
 		CloseDb();

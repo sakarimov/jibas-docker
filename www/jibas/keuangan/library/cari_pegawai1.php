@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -53,19 +53,19 @@ $nip = $_REQUEST['nip'];
 <tr>
 	<td align="center">
     <div id = "caritabel">
-<?
+<?php
 if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) { 
 	OpenDb();
-	if ((strlen($nama) > 0) && (strlen($nip) > 0))
+	if ((strlen((string) $nama) > 0) && (strlen((string) $nip) > 0))
 		$sql = "SELECT nip, nama, bagian FROM jbssdm.pegawai WHERE nama LIKE '%$nama%' AND nip LIKE '%$nip%' ORDER BY nama"; 
-	else if (strlen($nama) > 0)
+	else if (strlen((string) $nama) > 0)
 		$sql = "SELECT nip, nama, bagian FROM jbssdm.pegawai WHERE nama LIKE '%$nama%' ORDER BY nama"; 
-	else if (strlen($nip) > 0)
+	else if (strlen((string) $nip) > 0)
 		$sql = "SELECT nip, nama, bagian FROM jbssdm.pegawai WHERE nip LIKE '%$nip%' ORDER BY nama"; 
 	//else if ((strlen($nama) == 0) || (strlen($nip) == 0))
 	//	$sql = "SELECT nip, nama FROM jbssdm.pegawai ORDER BY nama"; 
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result)>0){ ?>
+	if (@mysqli_num_rows($result)>0){ ?>
 <br />
     <table width="100%" class="tab" align="center" cellpadding="2" cellspacing="0" id="table1" border="1">
     <tr height="30">
@@ -75,8 +75,8 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
         <td class="header" align="center" >Bagian</td>       
         <td class="header" width="10%">&nbsp;</td>
     </tr>
-<?	$cnt = 0;
-	while($row = mysql_fetch_row($result)) { ?>
+<?php $cnt = 0;
+	while($row = mysqli_fetch_row($result)) { ?>
     <tr height="25"  onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer"> 
         <td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row[0] ?></td>
@@ -86,9 +86,9 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
         <input type="button" name="pilih" class="but" id="pilih" value="Pilih" onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" />
         </td>
     </tr>
-<? } CloseDb(); ?>
+<?php } CloseDb(); ?>
  	</table>
-<? } else { ?>    		
+<?php } else { ?>    		
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table1">
 	<tr height="30" align="center">
 		<td>   
@@ -100,7 +100,7 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
    		</td>
     </tr>
     </table>
-<? 	} 
+<?php 	} 
 }?>	
 	</div>
     </td>    

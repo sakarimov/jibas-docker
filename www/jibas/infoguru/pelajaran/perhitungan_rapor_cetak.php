@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama
 			 FROM guru g, jbssdm.pegawai p, pelajaran j 
 			WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND j.replid = '$id_pelajaran' AND g.nip = '".SI_USER_ID()."'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -72,19 +72,19 @@ $guru = $row[2].' - '.$row[3];
 	</tr>
     </table>
 
- <?
+ <?php
 	$sql = "SELECT tingkat,replid FROM tingkat WHERE departemen = '$departemen' ORDER BY urutan";
 	$result = QueryDb($sql);
-   while ($row_tkt = @mysql_fetch_array($result)) 
+   while ($row_tkt = @mysqli_fetch_array($result)) 
 	{
 		$query_at = "SELECT a.dasarpenilaian, dp.keterangan
 		               FROM aturannhb a, tingkat t, dasarpenilaian dp
-		 		  	 	  WHERE a.idtingkat='$row_tkt[replid]' AND a.idpelajaran = '$id_pelajaran' AND t.departemen='$departemen' 
+		 		  	 	  WHERE a.idtingkat='".$row_tkt['replid']."' AND a.idpelajaran = '$id_pelajaran' AND t.departemen='$departemen' 
 	  				       AND t.replid = a.idtingkat AND a.nipguru = '".SI_USER_ID()."'
 							 AND a.dasarpenilaian = dp.dasarpenilaian AND dp.aktif = 1
 					  GROUP BY a.dasarpenilaian";
 		$result_at = QueryDb($query_at);
-      if (@mysql_num_rows($result_at)>0)
+      if (@mysqli_num_rows($result_at)>0)
 		{ ?>
   <br>
   <b>Tingkat <?=$row_tkt['tingkat'] ?></b><br /><br />
@@ -94,32 +94,32 @@ $guru = $row[2].' - '.$row[3];
 		<td height="30" align="center" class="header">Aspek Penilaian</td>
 		<td height="30" align="center" class="header">Bobot Perhitungan Nilai Rapor </td>
 	</tr>
-	<?	
+	<?php 
 	$i=1;
-	while($row_at = mysql_fetch_row($result_at))
+	while($row_at = mysqli_fetch_row($result_at))
 	{	?>
 	<tr>
 		<td height="25" align="center"><?=$i ?></td>
 		<td height="25"><?=$row_at[1] ?></td>
 		<td height="25">
-		<?
+		<?php
 		$query_ju = "SELECT j.jenisujian, a.bobot, a.aktif, a.replid 
 		               FROM aturannhb a, tingkat t, jenisujian j 
-				 		  WHERE a.idtingkat = '$row_tkt[replid]' AND a.idpelajaran = '$id_pelajaran' AND j.replid = a.idjenisujian 
-							 AND t.departemen = '$departemen' AND a.dasarpenilaian = '$row_at[0]' AND t.replid = a.idtingkat 
+				 		  WHERE a.idtingkat = '".$row_tkt['replid']."' AND a.idpelajaran = '$id_pelajaran' AND j.replid = a.idjenisujian 
+							 AND t.departemen = '$departemen' AND a.dasarpenilaian = '".$row_at[0]."' AND t.replid = a.idtingkat 
 							 AND a.nipguru = '".SI_USER_ID()."'";
 		$result_ju = QueryDb($query_ju);
-		while($row_ju = mysql_fetch_row($result_ju))
+		while($row_ju = mysqli_fetch_row($result_ju))
 		{
 					echo $row_ju[0]." = ".$row_ju[1]."<br>";
 		} ?>		
       </td>
 </tr>
-<?		$i++;
+<?php 	$i++;
 	}	?>
 	
   </table>
-<? }
+<?php }
 }
 ?>
 
@@ -132,6 +132,6 @@ window.print();
 </center>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -81,12 +81,12 @@ function semua() {
 <tr>
 	<td align="center"><p><strong>Departemen &nbsp;</strong>
     	<select name="departemen" id="departemen" onchange="departemen()" style="width:50%;">
-       <?	$dep = getDepartemen(SI_USER_ACCESS());    
+       <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
               	<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> ><?=$value ?> </option>
-                <?	} ?>
+                <?php } ?>
             </select>  <p>
            	<input type="button" name="tampil" value="Tampilkan Semua Guru" class="but" onclick="semua()" style="width:180px;"/>
 	</td>
@@ -94,11 +94,11 @@ function semua() {
 </table>
 <hr />
 
-<? 
+<?php 
 	OpenDb();
 	$sql = "SELECT replid,nama,aktif,kode FROM pelajaran WHERE departemen = '$departemen' ORDER BY nama ASC, aktif DESC";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
 <table border="0" width="100%" align="center">
 <tr>
@@ -116,24 +116,24 @@ function semua() {
         <td width="12%" class="header" align="center">Status</td>
     </tr>
     
-     <?
+     <?php
 		
 		$cnt = 0;
 		//$aktif = 1;
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25">   	
        	<td align="left"><?=$row['kode'] ?></td>
         <td align="left" onclick="tampil(<?=$row['replid']?>)" style="cursor:pointer">
         <u><b><?=$row['nama']?></b></u>
         <!--<a href="guru_content.php?id=<?=$row['replid']?>&departemen=<?=$departemen?>&aktif=<?=$aktif?>" target = "isi" ><?=$row['nama']?></a>--></td>
-        <td align="center"><? if ($row['aktif'] == 1) 
+        <td align="center"><?php if ($row['aktif'] == 1) 
 					echo 'Aktif';
 				else
 					echo 'Tidak Aktif';
 			?></td>        
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); 
 ?>	
 	<!-- END TABLE CONTENT -->
@@ -144,24 +144,24 @@ function semua() {
 	</td>
 </tr>
 </table>
-<? } else {?>
+<?php } else {?>
 
    
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
-        <? if ($departemen <> "") {	?>
+        <?php if ($departemen <> "") {	?>
     		<font size = "2" color ="red"><b>Tidak ditemukan adanya data. <br /><br />Tambah data pelajaran pada departemen <?=$departemen?> di menu Pendataan Pelajaran pada bagian Guru & Pelajaran. </b></font>
-       	 <? } else { ?> 
+       	 <?php } else { ?> 
               <font size = "2" color ="red"><b>Belum ada data Departemen.
               <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
               </b></font>
-		<? } ?>
+		<?php } ?>
 		</td>
 	</tr>
 	</table>  
 	
-<? } ?>
+<?php } ?>
 
 
 </body>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -62,7 +62,7 @@ if (isset($_REQUEST['jenis']))
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Komentar Nilai Rapor</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -122,7 +122,7 @@ function change_urut(urut,urutan)
 <input type="hidden" name="pelajaran" id="pelajaran" value="<?=$pelajaran ?>" />
 <input type="hidden" name="kelas" id="kelas" value="<?=$kelas ?>" />
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis ?>" />
-<? 
+<?php 
 	OpenDb();		
 	$sql = "SELECT DISTINCT k.replid, s.nis, s.nama, k.komentar 
 			  FROM siswa s, komennap k, infonap i 
@@ -134,7 +134,7 @@ function change_urut(urut,urutan)
 		  ORDER BY $urut $urutan";			   
 	$result = QueryDb($sql);		
 	$cnt = 1;
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 	if ($jum > 0) 
 	{ ?>	
 
@@ -147,18 +147,18 @@ function change_urut(urut,urutan)
 	<tr style="height: 1px;">
 		<td colspan="2"></td>
 	</tr>
-<? 	while ($row = @mysql_fetch_array($result)) 
+<?php 	while ($row = @mysqli_fetch_array($result)) 
 	{	?>
     <tr>        			
-		<td height="25" align="center" onclick="tampil('<?=$row[nis]?>')" style="cursor:pointer" title="Klik untuk menampilkan komentar rapor siswa ini">
+		<td height="25" align="center" onclick="tampil('<?=$row['nis']?>')" style="cursor:pointer" title="Klik untuk menampilkan komentar rapor siswa ini">
 		<?=$cnt?>
         </td>
-  		<td height="25" onclick="tampil('<?=$row[nis]?>')" style="cursor:pointer" title="Klik untuk menampilkan komentar rapor <?=$row['nama']?>">
+  		<td height="25" onclick="tampil('<?=$row['nis']?>')" style="cursor:pointer" title="Klik untuk menampilkan komentar rapor <?=$row['nama']?>">
 		<i><?=$row['nis']?></i><br />
         <strong><?=$row['nama']?></strong>
         </td>
     </tr>
-<?	$cnt++;
+<?php $cnt++;
 	} 
 	CloseDb();	?>
 	</table>   	 
@@ -171,7 +171,7 @@ function change_urut(urut,urutan)
 <!-- END TABLE CENTER -->    
 </table>
 </form>
-<?  } 
+<?php  } 
 ?>
 </body>
 </html>

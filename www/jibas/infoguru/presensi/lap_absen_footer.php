@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -62,7 +62,7 @@ $tglakhir = "$th2-$bln2-$tgl2";
 if (isset($_REQUEST['tglakhir']))
 	$tglakhir = $_REQUEST['tglakhir'];	
 
-$filter1 = "AND t.departemen = '$departemen'";
+$filter1 = "AND t.departemen = '".$departemen."'";
 if ($tingkat <> -1) 
 	$filter1 = "AND k.idtingkat = $tingkat";
 
@@ -75,7 +75,7 @@ $op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM presensipelajaran WHERE replid = $_REQUEST[replid]";
+	$sql = "DELETE FROM presensipelajaran WHERE replid = {$_REQUEST['replid']}";
 	QueryDb($sql);
 	CloseDb();	
 }	
@@ -149,12 +149,12 @@ function change_urut(urut,urutan) {
 <tr>
 	<td>
 
-    <? 		
+    <?php 		
 	OpenDb();
 	$sql = "SELECT DISTINCT s.nis, s.nama, l.nama, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), pp.statushadir, pp.catatan, s.telponsiswa, s.hpsiswa, s.namaayah, s.telponortu, s.hportu, k.kelas FROM siswa s, presensipelajaran p, ppsiswa pp, pelajaran l, kelas k, tingkat t WHERE pp.idpp = p.replid AND s.idkelas = k.replid AND p.idsemester = '$semester' AND pp.nis = s.nis AND k.idtingkat = t.replid $filter1 $filter2 AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = l.replid AND pp.statushadir <> 0 ORDER BY $urut $urutan";
 	//echo $sql;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 	?>  
      	<table width="100%" border="0" align="center">
@@ -174,9 +174,9 @@ function change_urut(urut,urutan) {
 			<td width="5%">No</td>
 			<td width="8%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('s.nis','<?=$urutan?>')">N I S <?=change_urut('s.nis',$urut,$urutan)?></td>
 			<td width="15%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('s.nama','<?=$urutan?>')">Nama <?=change_urut('s.nama',$urut,$urutan)?></td>            
-			<? if ($kelas == -1) { ?>
+			<?php if ($kelas == -1) { ?>
         	<td width="9%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('k.kelas','<?=$urutan?>')">Kelas <?=change_urut('k.kelas',$urut,$urutan)?></td>
-			<? } ?>
+			<?php } ?>
             <td width="12%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('l.nama','<?=$urutan?>')">Pelajaran<?=change_urut('l.nama',$urut,$urutan)?></td>
             <td width="6%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('p.tanggal','<?=$urutan?>')">Tgl <?=change_urut('p.tanggal',$urut,$urutan)?></td>
             <td width="8%">Presensi</td>
@@ -187,9 +187,9 @@ function change_urut(urut,urutan) {
             <td width="7%">Tlp Ortu</td>
             <td width="10%">HP Ortu</td>
 		</tr>
-		<? 
+		<?php 
 		$cnt = 0;
-		while ($row = @mysql_fetch_row($result)) {	
+		while ($row = @mysqli_fetch_row($result)) {	
 			switch ($row[6]){
 				case 1 : $st="Ijin";
 				break;
@@ -206,11 +206,11 @@ function change_urut(urut,urutan) {
 			<td align="center"><?=++$cnt?></td>
 			<td align="center"><?=$row[0]?></td>
             <td><?=$row[1]?></td>
-            <? if ($kelas == -1) { ?>
+            <?php if ($kelas == -1) { ?>
             <td align="center"><?=$row[13]?></td>
-            <? } ?>
+            <?php } ?>
             <td><?=$row[2]?></td>
-            <td align="center"><?=$row[3].'-'.$row[4].'-'.substr($row[5],2,2)?></td>
+            <td align="center"><?=$row[3].'-'.$row[4].'-'.substr((string) $row[5],2,2)?></td>
            	<td align="center"><?=$st ?></td>
             <td><?=$row[7] ?></td>
             <td align="center"><?=$row[8]?></td>
@@ -219,7 +219,7 @@ function change_urut(urut,urutan) {
             <td align="center"><?=$row[11]?></td>
             <td align="center"><?=$row[12]?></td>            
     	</tr>
- 	<?		
+ 	<?php 	
 		} 
 		CloseDb();	?>
 		</table>
@@ -228,7 +228,7 @@ function change_urut(urut,urutan) {
 		</script>       
 		</td>
     </tr>
-<? 	} else { ?>
+<?php 	} else { ?>
 
 	 <table width="100%" border="0" align="center">          
 	<tr>
@@ -237,7 +237,7 @@ function change_urut(urut,urutan) {
 		</td>
 	</tr>
 	</table>
-<?	} ?> 
+<?php } ?> 
 	</td>
 </tr>    
 <!-- END OF TABLE UTAMA -->

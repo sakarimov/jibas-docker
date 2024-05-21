@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ function ShowLaporanMutasi()
              ORDER BY replid DESC";
     $res = QueryDb($sql);
 
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<br><br>Tidak ada data mutasi";
         return;
@@ -54,7 +54,7 @@ function ShowLaporanMutasi()
     echo "</tr>";
 
     $no = 0;
-    while ($row = mysql_fetch_array($res))
+    while ($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -68,16 +68,16 @@ function ShowLaporanMutasi()
                   FROM jbsfina.bankmutasidata
                  WHERE idmutasi = $idMutasi";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $jumlah = $row2[0];
         $rp = FormatRupiah($jumlah);
 
         echo "<tr>";
         echo "<td align='center' style='background-color: #efefef'>$no</td>";
-        echo "<td align='left'>$row[fwaktu]</td>";
+        echo "<td align='left'>".$row['fwaktu']."</td>";
         echo "<td align='center' style='background-color: $bgColor'>$namaJenis</td>";
         echo "<td align='right'><span style='font-size: 12px; font-weight: bold;'>$rp</span></td>";
-        echo "<td align='left'>Nomor: $row[nomormutasi]<br>Petugas: $row[namapetugas] ($row[idpetugas])<br>$row[keterangan]</td>";
+        echo "<td align='left'>Nomor: {$row['nomormutasi']}<br>Petugas: {$row['namapetugas']} ({$row['idpetugas']})<br>".$row['keterangan']."</td>";
         echo "<td class='tdmenu' align='center'>";
         echo "<a href='#' onclick='showRincianMutasi($idMutasi)' title='rincian'><img src='../images/ico/lihat.png' border='0'></a>";
         echo "</td>";

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -70,15 +70,15 @@ function excel()
 </head>
 
 <body topmargin="0" leftmargin="0">
-<?
+<?php
 OpenDb();
 
 // Ambil penerimaan di departemen terpilih
-$arrpen = array();
+$arrpen = [];
 $sql = "SELECT replid, nama FROM datapenerimaan WHERE departemen='$departemen' AND idkategori='JTT'";
 $res = QueryDb($sql);
 $i = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
 	$arrpen[$i][0] = $row[0];
 	$arrpen[$i][1] = $row[1];
@@ -151,12 +151,12 @@ $width = 1180 + $n_arrpen * 600;
         <td width="80" rowspan="2">Kode Pos</td>
         <td width="80" rowspan="2">Telpon Ortu</td>
         <td width="80" rowspan="2">HP Ortu</td>
-        <? for ($i = 0; $i < $n_arrpen; $i++) { ?>
+        <?php for ($i = 0; $i < $n_arrpen; $i++) { ?>
         <td width="800" colspan="8"><?=$arrpen[$i][1]?></td>
-        <? } ?> 
+        <?php } ?> 
 	</tr>
     <tr align="center" class="header">
- 	    <? for ($i = 0; $i < $n_arrpen; $i++) { ?>
+ 	    <?php for ($i = 0; $i < $n_arrpen; $i++) { ?>
         <td width="100">Cicilan</td>
         <td width="100">Total</td>
         <td width="100">Pembayaran</td>
@@ -165,12 +165,12 @@ $width = 1180 + $n_arrpen * 600;
         <td width="100">Tgl.Akhir</td>
         <td width="100">Bay.Akhir</td>
         <td width="100">Ket.Akhir</td>
-        <? } ?> 
+        <?php } ?> 
     </tr>
-<?	$res = QueryDb($sqlsiswa);
+<?php $res = QueryDb($sqlsiswa);
 	$n = 0;
 
-	$arrtotal = array();
+	$arrtotal = [];
 	for($i = 0; $i < $n_arrpen; $i++)
 		for($j = 0; $j < 8; $j++)
 			if ($j > 0 && $j < 5)
@@ -178,7 +178,7 @@ $width = 1180 + $n_arrpen * 600;
 			else
 				$arrtotal[$i * 8 + $j] = "";
 
-	while ($row = mysql_fetch_array($res))
+	while ($row = mysqli_fetch_array($res))
 	{ 
 		$n++; 
 		$nis = $row['nis'];
@@ -204,7 +204,7 @@ $width = 1180 + $n_arrpen * 600;
         <td align="center"><?=$row['kodepossiswa']?></td>
         <td align="left"><?=$row['telponortu']?></td>
         <td align="left"><?=$row['hportu']?></td>
-        <? for ($i = 0; $i < $n_arrpen; $i++) 
+        <?php for ($i = 0; $i < $n_arrpen; $i++) 
 		{ 
 			$idpenerimaan = $arrpen[$i][0];
 			$sql = "SELECT b.nis, b.besar, SUM(p.jumlah) AS jumlah, b.cicilan, SUM(p.info1) AS diskon
@@ -212,21 +212,21 @@ $width = 1180 + $n_arrpen * 600;
 					 WHERE b.replid = p.idbesarjtt AND b.idpenerimaan = '$idpenerimaan' AND b.nis = '$nis' AND b.info2 = '$idtahunbuku'
 				  GROUP BY b.nis";  
 			$res2 = QueryDb($sql);
-			$row2 = mysql_fetch_row($res2);
+			$row2 = mysqli_fetch_row($res2);
 			$besar = $row2[1];
 			$jumlah = $row2[2] + $row2[4];
 			$bcicilan = $row2[3];
 			$diskon = $row2[4];
 			$sisa = $besar - $jumlah;
-			if (0 == mysql_num_rows($res2))
+			if (0 == mysqli_num_rows($res2))
 			{
 				$sql = "SELECT b.besar, b.cicilan
 					 	  FROM besarjtt b
-						 WHERE b.idpenerimaan = '$idpenerimaan' AND b.nis = '$nis' AND b.info2 = '$idtahunbuku'";
+						 WHERE b.idpenerimaan = '$idpenerimaan' AND b.nis = '$nis' AND b.info2 = '".$idtahunbuku."'";
 				$res2 = QueryDb($sql);
-				if (0 != mysql_num_rows($res2))
+				if (0 != mysqli_num_rows($res2))
 				{
-					$row2 = mysql_fetch_row($res2);
+					$row2 = mysqli_fetch_row($res2);
 					$besar = $row2[0];
 					$jumlah = 0;
 					$bcicilan = $row2[1];
@@ -241,7 +241,7 @@ $width = 1180 + $n_arrpen * 600;
 				  ORDER BY tanggal DESC, p.replid DESC
 				     LIMIT 1";
 			$res2 = QueryDb($sql);
-			$row2 = mysql_fetch_row($res2);
+			$row2 = mysqli_fetch_row($res2);
 			$tglakhir = $row2[0];
 			$jumakhir = $row2[1];
 			$ketakhir = $row2[2];
@@ -278,13 +278,13 @@ $width = 1180 + $n_arrpen * 600;
                 <td align="center" style="background-color:<?=$color2?>"><?=$tglakhir?></td>
                 <td align="right" style="background-color:<?=$color2?>"><?=FormatRupiah($jumakhir)?></td>
                 <td align="left" style="background-color:<?=$color2?>"><?=$ketakhir?></td>
-    <? 		}
+    <?php 		}
 		} ?> 
     </tr>        
-<?	} ?>
+<?php } ?>
 	<tr height="25">
     	<td colspan="12" style="background-color:#3CF" align="right"><strong>T O T A L</strong></td>
-<?		for($i = 0; $i < $n_arrpen; $i++) 
+<?php 	for($i = 0; $i < $n_arrpen; $i++) 
 			for($j = 0; $j < 8; $j++)
 				if ($j < 5)
 					echo  "<td align='right' style='background-color:#3CF'>" . FormatRupiah($arrtotal[$i * 8 + $j]) . "</td>";	
@@ -297,7 +297,7 @@ $width = 1180 + $n_arrpen * 600;
     </td>
 </tr>
 </table>
-<?
+<?php
 
 ?>
 

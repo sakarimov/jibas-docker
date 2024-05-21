@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -61,10 +61,10 @@ if (isset($_REQUEST['kelas']))
 <tr><td align="left">
 <!-- BOF CONTENT -->
 
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT s.nis, s.nama, k.kelas FROM siswa s, kelas k, tingkat t WHERE t.departemen = '$departemen' AND s.idkelas = k.replid AND k.idtingkat = t.replid AND t.replid = $tingkat AND k.idtahunajaran = $tahunajaran AND s.aktif=1 AND s.idkelas = $kelas ORDER BY nama"; 
 	$result = QueryDb($sql);
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 		if ($jum > 0) {
 ?>
 <table width="100%" id="table" class="tab" align="center" cellpadding="2" cellspacing="0">
@@ -75,9 +75,9 @@ if (isset($_REQUEST['kelas']))
     <!--<td class="header" width="10%" align="center">Kelas</td>-->
     <td class="header" width="10%" align="center">&nbsp;</td>
 </tr>
-<?
+<?php
 	$cnt = 1;	
-	while($row = mysql_fetch_row($result)) { 
+	while($row = mysqli_fetch_row($result)) { 
 ?>
 <tr>
 	<td align="center" onclick="parent.pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer"><?=$cnt ?></td>
@@ -88,7 +88,7 @@ if (isset($_REQUEST['kelas']))
     <input type="button" name="pilih" class="but" id="pilih" value="Pilih" onclick="parent.pilih('<?=$row[0]?>', '<?=$row[1]?>')" />
     </td>
 </tr>
-<? $cnt++; 
+<?php $cnt++; 
 	} 
 ?> 
 </table>
@@ -97,7 +97,7 @@ if (isset($_REQUEST['kelas']))
 </script>
 <!-- EOF CONTENT -->
 
-<? 
+<?php 
 } else { 
 	echo "<strong><font color='red'>Tidak ditemukan adanya data</strong></td></tr>";
 }		

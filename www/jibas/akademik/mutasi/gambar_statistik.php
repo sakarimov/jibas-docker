@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
+include_once '../../vendor/autoload.php';
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
-include("../library/class/jpgraph.php");
-include("../library/class/jpgraph_pie.php");
-include("../library/class/jpgraph_pie3d.php");
-include("../library/class/jpgraph_bar.php");
-include("../library/class/jpgraph_line.php");
+
 $tahunakhir=(int)$_REQUEST['tahunakhir'];
 $tahunawal=(int)$_REQUEST['tahunawal'];
 $departemen=$_REQUEST['departemen'];
@@ -37,12 +34,12 @@ OpenDb();
 $querysuku = "SELECT COUNT(*) as Jum, j.jenismutasi as jenismutasi FROM jbsakad.mutasisiswa m,jbsakad.siswa s,jbsakad.kelas k,jbsakad.tahunajaran ta,jbsakad.tingkat ti,jbsakad.jenismutasi j WHERE s.idkelas=k.replid AND k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid AND ti.departemen='$departemen' AND ta.departemen='$departemen' AND m.jenismutasi=j.replid AND s.statusmutasi=m.jenismutasi AND m.nis=s.nis AND YEAR(m.tglmutasi)<='$tahunakhir' AND YEAR(m.tglmutasi)>='$tahunawal' GROUP BY jenismutasi";
 
 $resultsuku = QueryDb($querysuku);
-$num = @mysql_num_rows($resultsuku);
+$num = @mysqli_num_rows($resultsuku);
 
-while ($rowsuku = @mysql_fetch_assoc($resultsuku)) {
-    $data[] = $rowsuku[Jum];
-    $suku[] = $rowsuku[jenismutasi];
-    $color = array('red','black','green','blue','gray','darkblue','gold','yellow','navy','orange','darkred','darkgreen', 'pink');
+while ($rowsuku = @mysqli_fetch_assoc($resultsuku)) {
+    $data[] = $rowsuku['Jum'];
+    $suku[] = $rowsuku['jenismutasi'];
+    $color = ['red', 'black', 'green', 'blue', 'gray', 'darkblue', 'gold', 'yellow', 'navy', 'orange', 'darkred', 'darkgreen', 'pink'];
 }
 
 if($num == 0) {
@@ -51,6 +48,7 @@ if($num == 0) {
 }else {
 
 //Buat grafik
+mitoteam\jpgraph\MtJpGraph::load(['bar']);
 $graph = new Graph(450,300,"auto");
 $graph->SetScale("textlin");
 

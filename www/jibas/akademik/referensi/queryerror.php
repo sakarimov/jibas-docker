@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../cek.php');
 ?>
@@ -58,14 +58,14 @@ require_once('../cek.php');
     </tr>
 	</table>
 
-<?	$logFile = realpath(dirname(__FILE__)) . "/../../log/akademik-error.log";
+<?php $logFile = realpath(__DIR__) . "/../../log/akademik-error.log";
 	$logFile = str_replace("\\", "/", $logFile);
 	if (!file_exists($logFile))
 		$logFile = ""; 
 	
 	if ($logFile != "")
 	{
-		$r = rand(1, 30000);
+		$r = random_int(1, 30000);
 		$docRoot = $_SERVER['DOCUMENT_ROOT'];
 		$logFile = "http://" . $_SERVER['SERVER_ADDR'] . str_replace($docRoot, "", $logFile) . "?$r";
 	} ?>

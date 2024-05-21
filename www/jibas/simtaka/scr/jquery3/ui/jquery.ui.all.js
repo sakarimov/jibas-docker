@@ -3962,7 +3962,7 @@ var colors = {
  *
  * Open source under the BSD License.
  *
- * Copyright © 2008 George McGinley Smith
+ * Copyright ï¿½ 2008 George McGinley Smith
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -4131,7 +4131,7 @@ $.extend($.easing,
  *
  * Open source under the BSD License.
  *
- * Copyright © 2001 Robert Penner
+ * Copyright ï¿½ 2001 Robert Penner
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -8662,7 +8662,7 @@ $.widget("ui.tabs", {
 	select: function(index) {
 		// TODO make null as argument work
 		if (typeof index == 'string')
-			index = this.$tabs.index( this.$tabs.filter('[href$=' + index + ']')[0] );
+			index = this.$tabs.index( this.$tabs.filter('[href$=' + index + ']."')[0] );
 		this.$tabs.eq(index).trigger(this.options.event + '.tabs');
 	},
 

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -49,14 +49,14 @@ if (isset($_REQUEST['btSubmit']))
 		opener.Refresh();
 		window.close();
     </script>
-<?	exit();
+<?php exit();
 }
 else
 {
 	OpenDb();
 	$sql = "SELECT golongan, tmt, sk, keterangan FROM jbssdm.peggol WHERE replid=$id";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$gol = $row['golongan'];
 	$tgl = $row['tmt'];
 	$tgltmtgol = GetDatePart($tgl, 'd');
@@ -110,12 +110,12 @@ function focusNext(elemName, evt) {
         <td align="right" valign="top" width="22%"><strong>Golongan :</strong></td>
         <td width="*" align="left" valign="top">
         <select name="cbGolongan" id="cbGolongan" onKeyPress="return focusNext('cbTglTMTGol', event)">
-    <?	OpenDb();
+    <?php OpenDb();
 		$sql = "SELECT golongan FROM jbssdm.golongan ORDER BY urutan";
         $result = QueryDb($sql);
-        while ($row = mysql_fetch_row($result)) { ?>    
+        while ($row = mysqli_fetch_row($result)) { ?>    
             <option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $gol)?>><?=$row[0]?></option>
-    <?	} 
+    <?php } 
 		CloseDb();
 		?>    
         </select>
@@ -125,14 +125,14 @@ function focusNext(elemName, evt) {
         <td align="right" valign="top"><strong>TMT :</strong></td>
         <td width="*" align="left" valign="top">
         <select id="cbTglTMTGol" name="cbTglTMTGol" onKeyPress="return focusNext('cbBlnTMTGol', event)">
-    <?	for ($i = 1; $i <= 31; $i++) { ?>    
+    <?php for ($i = 1; $i <= 31; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $tgltmtgol)?>><?=$i?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <select id="cbBlnTMTGol" name="cbBlnTMTGol" onKeyPress="return focusNext('txThnTMTGol', event)">
-    <?	for ($i = 1; $i <= 12; $i++) { ?>    
+    <?php for ($i = 1; $i <= 12; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $blntmtgol)?>><?=NamaBulan($i)?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <input type="text" name="txThnTMTGol" onKeyPress="return focusNext('txSK', event)" id="txThnTMTGol" size="4" maxlength="4" value="<?=$thntmtgol?>"/>
         </td>

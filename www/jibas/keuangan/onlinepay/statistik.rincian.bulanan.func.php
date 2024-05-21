@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,15 +51,15 @@ function ShowRincianStatistikBulanan()
                   FROM jbsfina.pgtrans p, jbsfina.pgtransdata pd
                  WHERE pd.idpgtrans = p.replid
                    AND MONTH(p.tanggal) = $bulan AND YEAR(p.tanggal) = $tahun";
-        if ($departemen != "ALL") $sql .= " AND p.departemen = '$departemen'";
-        if ($bankNo != "ALL") $sql .= " AND p.bankno = '$bankNo'";
-        if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '$idPetugas'";
-        if ($metode != "0") $sql .= " AND p.jenis = '$metode'";
+        if ($departemen != "ALL") $sql .= " AND p.departemen = '".$departemen."'";
+        if ($bankNo != "ALL") $sql .= " AND p.bankno = '".$bankNo."'";
+        if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '".$idPetugas."'";
+        if ($metode != "0") $sql .= " AND p.jenis = '".$metode."'";
 
         $nData = 0;
         $stIdPgTrans = "";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $nData++;
 
@@ -129,7 +129,7 @@ function ShowRincianStatistikBulanan()
 <?php
     $res = QueryDb($sql);
     $cnt = ($page - 1) * $nRowPerPage;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $cnt += 1;
         $idPgTrans = $row['replid'];
@@ -139,7 +139,7 @@ function ShowRincianStatistikBulanan()
                  WHERE idpgtrans = $idPgTrans
                    AND kategori <> 'LB'";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $jTransaksi = $row2[0];
         $rpTransaksi = FormatRupiah($jTransaksi);
 
@@ -148,7 +148,7 @@ function ShowRincianStatistikBulanan()
                  WHERE idpgtrans = $idPgTrans
                    AND kategori = 'LB'";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $jLebih = $row2[0];
 
         $jenis = $row["jenis"];
@@ -160,9 +160,9 @@ function ShowRincianStatistikBulanan()
             $sql = "SELECT ts.nomor
                       FROM jbsfina.tagihansiswainfo tsi, jbsfina.tagihanset ts
                      WHERE tsi.idtagihanset = ts.replid
-                       AND tsi.notagihan = '$row[nomor]'";
+                       AND tsi.notagihan = '".$row['nomor']."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
                 $nomorTs = $row2[0];
         }
 
@@ -173,11 +173,11 @@ function ShowRincianStatistikBulanan()
         echo "<table border='0' cellpadding='2' cellspacing='0' width='100%'>";
         echo "<tr>";
         echo "<td width='80%'>";
-        echo "<strong>$row[namasiswa]</strong>  |  $row[nis]<br>";
-        echo "<strong>$row[transaksi]</strong>";
+        echo "<strong>".$row['namasiswa']."</strong>  |  {$row['nis']}<br>";
+        echo "<strong>".$row['transaksi']."</strong>";
         echo "</td>";
         echo "<td width='20%' align='right'>";
-        echo "<i>$row[fwaktu]</i>";
+        echo "<i>".$row['fwaktu']."</i>";
         echo "</td>";
         echo "</tr>";
         echo "</table>";
@@ -194,7 +194,7 @@ function ShowRincianStatistikBulanan()
                  ORDER BY kelompok;";
         $res2 = QueryDb($sql);
         $stNoJurnal = "";
-        while($row2 = mysql_fetch_array($res2))
+        while($row2 = mysqli_fetch_array($res2))
         {
             $kategori = $row2["kategori"];
 
@@ -239,12 +239,12 @@ function ShowRincianStatistikBulanan()
         echo "</td>";
         echo "<td align='left' valign='top'>";
         if ($jenis == 1)
-            echo "<b>$row[nomor]</b><br><i>$nomorTs</i><br><i>$row[paymentid]</i>";
+            echo "<b>".$row['nomor']."</b><br><i>$nomorTs</i><br><i>".$row['paymentid']."</i>";
         else
-            echo "<b>$row[nomor]</b><br><i>$row[paymentid]</i>";
+            echo "<b>".$row['nomor']."</b><br><i>".$row['paymentid']."</i>";
         echo "</td>";
-        echo "<td align='left' valign='top'><strong>$row[bank]</strong><br><i>$row[bankno]</i></td>";
-        echo "<td align='left' valign='top'>$row[petugas]<br>$row[idpetugas]<br><i>$row[ketver]</i></td>";
+        echo "<td align='left' valign='top'><strong>".$row['bank']."</strong><br><i>".$row['bankno']."</i></td>";
+        echo "<td align='left' valign='top'>".$row['petugas']."<br>".$row['idpetugas']."<br><i>".$row['ketver']."</i></td>";
 
         echo "</tr>";
     }
@@ -267,35 +267,35 @@ function ShowRekapStatistikBulanan()
     $sql = "SELECT COUNT(DISTINCT nis)
               FROM jbsfina.pgtrans
              WHERE MONTH(tanggal) = $bulan AND YEAR(tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nSiswa = $row[0];
 
     $sql = "SELECT COUNT(replid)
               FROM jbsfina.pgtrans
              WHERE MONTH(tanggal) = $bulan AND YEAR(tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nTransaksi = $row[0];
 
     $sql = "SELECT SUM(pd.jumlah)
               FROM jbsfina.pgtrans p, jbsfina.pgtransdata pd
              WHERE p.replid = pd.idpgtrans 
                AND MONTH(p.tanggal) = $bulan AND YEAR(p.tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND p.departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND p.bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND p.jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND p.departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND p.bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND p.jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $sumTransaksi = $row[0];
 
     echo "<table border='0' cellpadding='2' cellspacing='0'>";
@@ -322,7 +322,7 @@ function ShowRequestInfo()
     echo "<table border='0' cellpadding='2' cellspacing='0'>";
     echo "<tr>";
     echo "<td width='80'>Bulan:</td>";
-    echo "<td width='300'>" . NamaBulan($bulan) . " $tahun</td>";
+    echo "<td width='300'>" . NamaBulan($bulan) .$tahun."</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td>Departemen:</td>";

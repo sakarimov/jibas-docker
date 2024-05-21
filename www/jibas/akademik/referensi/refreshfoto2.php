@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,19 +20,19 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
-$departemen = $_REQUEST[departemen];
+$departemen = $_REQUEST['departemen'];
 OpenDb();
-$sql = "SELECT replid FROM jbsumum.identitas WHERE departemen='$_REQUEST[departemen]'";
+$sql = "SELECT replid FROM jbsumum.identitas WHERE departemen='".$_REQUEST['departemen']."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $replid = $row[0];
 CloseDb(); 
 ?>
 	<img src="../library/gambar.php?replid=<?=$replid?>&table=jbsumum.identitas" />&nbsp;
-<? if ($_REQUEST[gbrbaru]=='1'){ ?>
+<?php if ($_REQUEST['gbrbaru']=='1'){ ?>
 	<img src="../images/panah.png" border="0" width="100" height="100"/>&nbsp;
 	<img src="../../temp/ad-logo-tmp.jpg?<?=date("his")?>" border="0"/>
-<? } ?>
+<?php } ?>

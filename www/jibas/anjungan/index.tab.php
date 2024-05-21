@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" width="75%">
-<?              require_once("infosekolah/infosekolah.menu.php"); ?>
+<?php              require_once("infosekolah/infosekolah.menu.php"); ?>
             </td>
             <td align="right" width="25%">
                 <font style="font-family: Tahoma; font-size: 22px; color: #557d1d">INFO SEKOLAH</font>
@@ -69,7 +69,7 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" width="70%">
-<?              require_once("mading/mading.menu.php"); ?>
+<?php              require_once("mading/mading.menu.php"); ?>
             </td>
             <td align="right" width="30%">
                 <font style="font-family: Tahoma; font-size: 22px; color: #557d1d">MADING SISWA</font>
@@ -101,7 +101,7 @@
         <table border="0" cellpadding="2" cellspacing="2" width="100%">
         <tr>
             <td align="left" width="50%">
-<?              require_once("jadkal/jadkal.menu.php"); ?>
+<?php              require_once("jadkal/jadkal.menu.php"); ?>
             </td>
             <td align="right" width="50%">
                 <font style="font-family: Tahoma; font-size: 22px; color: #557d1d">JADWAL & KALENDER AKADEMIK</font>
@@ -116,7 +116,7 @@
         <table border="0" cellpadding="2" cellspacing="2" width="100%">
         <tr>
             <td align="left" width="50%">
-<?              require_once("pustaka/pustaka.menu.php"); ?>
+<?php              require_once("pustaka/pustaka.menu.php"); ?>
             </td>
             <td align="right" width="50%">
                 <font style="font-family: Tahoma; font-size: 22px; color: #557d1d">PERPUSTAKAAN</font>
@@ -141,7 +141,7 @@
         <table border="0" cellpadding="2" cellspacing="2" width="100%">
         <tr>
             <td align="left" width="80%">
-<?              require_once("psb/psb.menu.php"); ?>
+<?php              require_once("psb/psb.menu.php"); ?>
             </td>
             <td align="right" width="20%">
                 <font style="font-family: Tahoma; font-size: 22px; color: #557d1d">PSB</font>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -34,7 +34,7 @@ $sql="SELECT i.deskripsi, j.departemen, t.tahunajaran, t.tglmulai, t.tglakhir FR
 
 $result=QueryDb($sql);
 CloseDb();
-$row=@mysql_fetch_array($result);
+$row=@mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,7 +50,7 @@ $row=@mysql_fetch_array($result);
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<? include("../library/headercetak.php") ?>
+<?php include("../library/headercetak.php") ?>
 	
 <center>
   <font size="4"><strong>REKAP JADWAL GURU</strong></font><br />
@@ -91,13 +91,13 @@ $row=@mysql_fetch_array($result);
     <td width="8%" class="header" align="center">Kelas</td>
     <td width="8%" class="header" align="center">Hari</td>
 </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
     
     $sql = "SELECT p.nip, p.nama, SUM(IF(j.status = 0, 1, 0)), SUM(IF(j.status = 1, 1, 0)), SUM(IF(j.status = 2, 1, 0)), SUM(j.njam), COUNT(DISTINCT(j.idkelas)), COUNT(DISTINCT(j.hari)) FROM jadwal j, jbssdm.pegawai p WHERE j.nipguru = p.nip AND j.infojadwal = '$info' GROUP BY j.nipguru ORDER BY p.nama";
     
     $result = QueryDb($sql);
     $cnt = 0;
-    while ($row = mysql_fetch_row($result)) {
+    while ($row = mysqli_fetch_row($result)) {
 ?>
 <tr>
     <td align="center"><?=++$cnt?></td>
@@ -110,7 +110,7 @@ $row=@mysql_fetch_array($result);
     <td align="center"><?=$row[6]?></td> 
     <td align="center"><?=$row[7]?></td>        
 </tr>
-<?	} 
+<?php } 
 CloseDb() ?>	
 <!-- END TABLE CONTENT -->
 </table>

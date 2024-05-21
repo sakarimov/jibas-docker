@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -55,9 +55,9 @@ if (isset($_REQUEST['urutan']))
 	$urutan = $_REQUEST['urutan'];
 
 OpenDb();
-$sql_ajaran = "SELECT a.replid,a.tglmulai,t.tingkat FROM jbsakad.tahunajaran a, jbsakad.tingkat t WHERE a.replid='$tahunajaranawal' AND t.replid = '$tingkatawal'";
+$sql_ajaran = "SELECT a.replid,a.tglmulai,t.tingkat FROM jbsakad.tahunajaran a, jbsakad.tingkat t WHERE a.replid='$tahunajaranawal' AND t.replid = '".$tingkatawal."'";
 $result_ajaran = QueryDb($sql_ajaran);
-$row_ajaran = mysql_fetch_array($result_ajaran);
+$row_ajaran = mysqli_fetch_array($result_ajaran);
 $tglmulai = $row_ajaran['tglmulai'];
 $namatingkat = $row_ajaran['tingkat'];
 
@@ -66,16 +66,16 @@ $namatingkat = $row_ajaran['tingkat'];
 OpenDb();
 $sql_tahunajaranawal="SELECT replid,tahunajaran,tglmulai FROM jbsakad.tahunajaran WHERE replid='$tahunajaranawal'";
 $result_tahunajaranawal=QueryDb($sql_tahunajaranawal);
-if ($row_tahunajaranawal=@mysql_fetch_array($result_tahunajaranawal)){
+if ($row_tahunajaranawal=@mysqli_fetch_array($result_tahunajaranawal)){
 $tglmulaiawal=$row_tahunajaranawal['tglmulai'];
 }
 
 $sql_tingkatawal="SELECT replid,urutan,tingkat FROM jbsakad.tingkat WHERE replid='$tingkatawal'";
 $result_tingkatawal=QueryDb($sql_tingkatawal);
-if ($row_tingkatawal=@mysql_fetch_array($result_tingkatawal)){
+if ($row_tingkatawal=@mysqli_fetch_array($result_tingkatawal)){
 $tingkat_awal=$row_tingkatawal['tingkat'];
-$tingkat=$row_tingkatawal[replid];
-//$tktlama=$row_tingkatlama[replid];
+$tingkat=$row_tingkatawal['replid'];
+//$tktlama=$row_tingkatlama['replid'];
 }
 CloseDb();
 } else {
@@ -98,14 +98,14 @@ if ($op=="hgiu82kjs98uqjq89wuj89sga"){
 	if ($success){
 		$sql_rwyt_get="SELECT idkelas FROM jbsakad.riwayatkelassiswa WHERE nis='$nis' ORDER BY mulai DESC LIMIT 1";
 		$result_rwyt_get=QueryDbTrans($sql_rwyt_get, $success);
-		$row_rwyt_get=mysql_fetch_row($result_rwyt_get);
+		$row_rwyt_get=mysqli_fetch_row($result_rwyt_get);
 	}
 	if ($success){
-		$sql_rwyt_upd="UPDATE jbsakad.riwayatkelassiswa SET aktif=1 WHERE nis='$nis' AND idkelas='$row_rwyt_get[0]'";
+		$sql_rwyt_upd="UPDATE jbsakad.riwayatkelassiswa SET aktif=1 WHERE nis='$nis' AND idkelas='".$row_rwyt_get[0]."'";
 		QueryDbTrans($sql_rwyt_upd, $success);
 	}
 	if ($success){
-		$sql_siswa_upd="UPDATE jbsakad.siswa SET idkelas='$row_rwyt_get[0]' WHERE nis='$nis'";
+		$sql_siswa_upd="UPDATE jbsakad.siswa SET idkelas='".$row_rwyt_get[0]."' WHERE nis='$nis'";
 		QueryDbTrans($sql_siswa_upd, $success);
 	}
 	
@@ -114,11 +114,11 @@ if ($op=="hgiu82kjs98uqjq89wuj89sga"){
 		
 		?>
 		<script language="javascript">
-			//document.location.href="siswa_tidak_naik_tujuan.php?departemen=<?=$_REQUEST[departemen]?>&tingkatawal=<?=$_REQUEST[tingkatawal]?>&tahunajaranawal=<?=$_REQUEST[tahunajaranawal]?>&kelas=<?=$kelas?>&pilihan=<?=$pilihan?>";
+			//document.location.href="siswa_tidak_naik_tujuan.php?departemen=<?=$_REQUEST['departemen']?>&tingkatawal=<?=$_REQUEST['tingkatawal']?>&tahunajaranawal=<?=$_REQUEST['tahunajaranawal']?>&kelas=<?=$kelas?>&pilihan=<?=$pilihan?>";
 			parent.siswa_tidak_naik_menu.location.href="siswa_tidak_naik_menu.php?kelas=<?=$row_rwyt_get[0]?>&departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaranawal?>&tingkat=<?=$tingkatawal?>&pilihan=2&jenis=combo";
 			parent.siswa_tidak_naik_pilih.location.href="siswa_tidak_naik_pilih.php?kelas=<?=$row_rwyt_get[0]?>&pilihan=2&jenis=combo&departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaranawal?>&tingkat=<?=$tingkatawal?>";
 		</script>
-		<?
+		<?php
 	} else {
 		RollBackTrans();
 	}
@@ -137,19 +137,19 @@ if ($op=="x2378e23dkofh73n25ki9234"){
 	OpenDb();
 	$sql_kap_kelas_tujuan="SELECT kapasitas FROM jbsakad.kelas WHERE replid='$kelas'";
 	$result_kap_kelas_tujuan=QueryDb($sql_kap_kelas_tujuan);
-	$row_kap_kelas_tujuan=mysql_fetch_array($result_kap_kelas_tujuan);
+	$row_kap_kelas_tujuan=mysqli_fetch_array($result_kap_kelas_tujuan);
 	$kap_kelas_tujuan=$row_kap_kelas_tujuan['kapasitas'];
 	
 	$sql_jum_kelas_tujuan="SELECT COUNT(nis) FROM jbsakad.siswa WHERE idkelas='$kelas' AND aktif = 1";
 	$result_jum_kelas_tujuan=QueryDb($sql_jum_kelas_tujuan);
-	$row_jum_kelas_tujuan=mysql_fetch_row($result_jum_kelas_tujuan);
+	$row_jum_kelas_tujuan=mysqli_fetch_row($result_jum_kelas_tujuan);
 	
 	if ((int)$kap_kelas_tujuan <= (int)$row_jum_kelas_tujuan[0]){
 		$ERROR_MSG = "Kapasitas kelas tujuan sudah penuh.  Silahkan pilih kelas tujuan lain!";
 	} else { // Jika jumlah murid kelas tujuan < dari kapasitasnya 
-		$tahunsekarang=date(Y);
-		$bulansekarang=date(m);
-		$tanggalsekarang=date(j);
+		$tahunsekarang=date('Y');
+		$bulansekarang=date('m');
+		$tanggalsekarang=date('j');
 		$sekarang=$tahunsekarang."-".$bulansekarang."-".$tanggalsekarang;
 		OpenDb();
 		BeginTrans();
@@ -186,7 +186,7 @@ if ($op=="x2378e23dkofh73n25ki9234"){
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 
 function change_tahunajaran(){
@@ -313,10 +313,10 @@ function focusNext(elemName, evt) {
     	<td align="left" width="24%"><strong>Tahun&nbsp;Ajaran </strong></td>
         <td align="left">
         	<select name="tahunajaran" id="tahunajaran" onChange="change_tahunajaran()" style="width:228px;" onKeyPress="return focusNext('kelas', event)">
-        <?	OpenDb();
+        <?php OpenDb();
 			$sql_tahunajaran="SELECT replid,tahunajaran,aktif FROM jbsakad.tahunajaran WHERE departemen='$departemen' AND tglmulai > '$tglmulai' ORDER BY aktif DESC, tglmulai DESC";
 			$result_tahunajaran=QueryDb($sql_tahunajaran);
-			while ($row_tahunajaran=@mysql_fetch_array($result_tahunajaran)){
+			while ($row_tahunajaran=@mysqli_fetch_array($result_tahunajaran)){
 				if ($tahunajaran=="")
 					$tahunajaran=$row_tahunajaran['replid'];
 				if ($row_tahunajaran['aktif']) 
@@ -325,7 +325,7 @@ function focusNext(elemName, evt) {
 					$ada = '';
 		?>
               <option value="<?=$row_tahunajaran['replid']?>" <?=IntIsSelected($row_tahunajaran['replid'], $tahunajaran)?>><?=$row_tahunajaran['tahunajaran'].' '.$ada?></option>
-        <? 	} 
+        <?php 	} 
 			CloseDb();
 		?>      
         	</select>
@@ -341,21 +341,21 @@ function focusNext(elemName, evt) {
     	<td align="left"><strong>Kelas&nbsp;Tujuan </strong></th>
     	<td align="left">
         	<select name="kelas" id="kelas" onChange="change_kelas()" style="width:228px;">
-   		<? 	OpenDb();
+   		<?php 	OpenDb();
 			$sql_kelas="SELECT replid,kelas,kapasitas FROM jbsakad.kelas WHERE idtahunajaran='$tahunajaran' AND idtingkat='$tingkatawal' AND aktif=1";
 			$result_kelas=QueryDb($sql_kelas);
-			while ($row_kelas=@mysql_fetch_array($result_kelas)){
+			while ($row_kelas=@mysqli_fetch_array($result_kelas)){
 				if ($kelas=="")
-					$kelas=$row_kelas[replid];
+					$kelas=$row_kelas['replid'];
 				
-				$sql_terisi="SELECT COUNT(*) FROM jbsakad.siswa WHERE idkelas='$row_kelas[replid]' AND aktif = 1";
+				$sql_terisi="SELECT COUNT(*) FROM jbsakad.siswa WHERE idkelas='".$row_kelas['replid']."' AND aktif = 1";
 				$result_terisi=QueryDb($sql_terisi);
-				$row_terisi=@mysql_fetch_row($result_terisi);
+				$row_terisi=@mysqli_fetch_row($result_terisi);
 		?>  
 			  <option value="<?=$row_kelas['replid']?>" <?=IntIsSelected($row_kelas['replid'], $kelas)?>>
 			  <?=$row_kelas['kelas'].", kapasitas: ".$row_kelas['kapasitas'].", terisi: ".$row_terisi[0]?>
 			  </option>
-		<?
+		<?php
 		 	}
 			CloseDb();
 		?> 
@@ -368,25 +368,25 @@ function focusNext(elemName, evt) {
 </tr>
 <tr>
 	<td>
-<? 
+<?php 
 	if ($tahunajaran <> "" && $tingkatawal <> "" && $kelas <> "" ) {
 		OpenDb();    
 	
 		$sql_tot = "SELECT s.replid,s.nis,s.nama FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkatawal' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.aktif=1";
 		$result_tot = QueryDb($sql_tot);
-		$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 		$akhir = ceil($jumlah/5)*5;
 		
 		$sql_siswa = "SELECT s.replid,s.nis,s.nama FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkatawal' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.aktif=1 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		
 		$result_siswa = QueryDb($sql_siswa);
-		$jum = @mysql_num_rows($result_siswa);
+		$jum = @mysqli_num_rows($result_siswa);
 		
 		$sql5 = "SELECT kelas FROM jbsakad.kelas WHERE replid = '$kelas' ";
 		$result5 = QueryDb($sql5);
-		$row5 = @mysql_fetch_array($result5);
-		$nama_kelas = $row5[kelas];
+		$row5 = @mysqli_fetch_array($result5);
+		$nama_kelas = $row5['kelas'];
 		
 		if ($jum > 0) { ?> 
 	
@@ -398,49 +398,49 @@ function focusNext(elemName, evt) {
     	<td width="*">Keterangan</td>
     	<td width="6%">&nbsp;</td>
   	</tr>
-   	<? 
+   	<?php 
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row_siswa=@mysql_fetch_array($result_siswa)){
-		$sql_riwayat_kelas="SELECT keterangan,status FROM jbsakad.riwayatkelassiswa WHERE nis='$row_siswa[nis]' AND idkelas='$kelas'";
+	while ($row_siswa=@mysqli_fetch_array($result_siswa)){
+		$sql_riwayat_kelas="SELECT keterangan,status FROM jbsakad.riwayatkelassiswa WHERE nis='".$row_siswa['nis']."' AND idkelas='$kelas'";
         $result_riwayat_kelas=QueryDb($sql_riwayat_kelas);
-        $row_riwayat = mysql_fetch_array($result_riwayat_kelas);
+        $row_riwayat = mysqli_fetch_array($result_riwayat_kelas);
 		
 	?>
     <tr height="25">
         <td align="center"><?=$cnt?></td>
         <td align="center"><?=$row_siswa['nis']?></td>
         <td><a href="#" onClick="newWindow('../library/detail_siswa.php?replid=<?=$row_siswa['replid']?>', 'DetailSiswa','800','650','resizable=1,scrollbars=1,status=0,toolbar=0')"><?=$row_siswa['nama']?></a></td>
-        <? if ($row_riwayat['keterangan'] <> "") { ?>
+        <?php if ($row_riwayat['keterangan'] <> "") { ?>
         <td><?=$row_riwayat['keterangan']?>&nbsp;&nbsp;
-        	<? if ($row_riwayat['status'] == 2) {?>
-        	<a href="#" onClick="JavaScript:ubah_ket('<?=$row_siswa[nis]?>',<?=$kelas?>)"><img src="../images/ico/ubah.png" width="16" height="16" border="0" onMouseOver="showhint('Ubah Keterangan Siswa!', this, event, '100px')"/></a>    
-        	<? } ?>
-        </td>
-        <? } else { ?>
-        <td align="center">
-       		<? if ($row_riwayat['status'] == 2) {?>
+        	<?php if ($row_riwayat['status'] == 2) {?>
         	<a href="#" onClick="JavaScript:ubah_ket('<?=$row_siswa['nis']?>',<?=$kelas?>)"><img src="../images/ico/ubah.png" width="16" height="16" border="0" onMouseOver="showhint('Ubah Keterangan Siswa!', this, event, '100px')"/></a>    
-        	<? } ?>
+        	<?php } ?>
         </td>
-        <? } ?>
+        <?php } else { ?>
         <td align="center">
-			<? if ($row_riwayat['status']==2) {?>
+       		<?php if ($row_riwayat['status'] == 2) {?>
+        	<a href="#" onClick="JavaScript:ubah_ket('<?=$row_siswa['nis']?>',<?=$kelas?>)"><img src="../images/ico/ubah.png" width="16" height="16" border="0" onMouseOver="showhint('Ubah Keterangan Siswa!', this, event, '100px')"/></a>    
+        	<?php } ?>
+        </td>
+        <?php } ?>
+        <td align="center">
+			<?php if ($row_riwayat['status']==2) {?>
         	<a href="#" onClick="javascript:batal_naik('<?=$row_siswa['nis']?>')"><img src="../images/ico/hapus.png" width="16" height="16" border="0" onMouseOver="showhint('Batalkan tidak naik kelas!', this, event, '100px')"/></a>
-        	<? } ?>
+        	<?php } ?>
      	</td>
   	</tr>
-  	<?	$cnt++;
+  	<?php $cnt++;
   	}
   	CloseDb();?>
     </table>
  	<script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-     <?	if ($page==0){ 
+     <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -465,19 +465,19 @@ function focusNext(elemName, evt) {
     <tr>
        	<td width="50%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value="<<" onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -491,14 +491,14 @@ function focusNext(elemName, evt) {
  		</td-->
         <td width="50%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<?	} else {  ?>
+<?php } else {  ?>
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="250">
@@ -508,39 +508,39 @@ function focusNext(elemName, evt) {
 	</td>
 	</tr>
 	</table> 
-<?  } 
+<?php  } 
 } else {
 ?>
  	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="250">
-    	<? if ($tahunajaran == "") {	?>
+    	<?php if ($tahunajaran == "") {	?>
             <font size = "2" color ="red"><b>Tidak ada tahun ajaran yang lebih tinggi pada departemen <?=$departemen?>.
             <br />Tambah data tahun ajaran pada departemen <?=$departemen?> di menu Tahun Ajaran pada bagian Referensi. 
             </b></font>
-		<? } else if ($tingkatawal == "") { ?>
+		<?php } else if ($tingkatawal == "") { ?>
             <font size = "2" color ="red"><b>Tidak ada tingkat yang lebih tinggi pada departemen <?=$departemen?>.
             <br />Pindahkan siswa di menu Kelulusan pada bagian Kenaikan & Kelulusan.
             </b></font>
-		<? } else if ($kelas == "") { ?>    
+		<?php } else if ($kelas == "") { ?>    
         	<font size = "2" color ="red"><b>Belum ada kelas yang dituju.
             <br />Tambah data kelas pada departemen <?=$departemen?> di menu Kelas pada bagian Referensi. 
             </b></font>
-        <? } ?>
+        <?php } ?>
 	</td>
 	</tr>
 	</table> 	
-<? } ?>
+<?php } ?>
 </td>
 </tr>
 <!-- END TABLE CENTER -->    
 </table>
 </form>
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

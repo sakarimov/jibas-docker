@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -115,7 +115,7 @@ switch ($kriteria) {
 <?=getHeader($departemen)?>
 
 
-<center><font size="4"><strong>DATA JURNAL <?=strtoupper($jurnal)?></strong></font><br /> </center><br /><br />
+<center><font size="4"><strong>DATA JURNAL <?=strtoupper((string) $jurnal)?></strong></font><br /> </center><br /><br />
 
 <table border="0">
 <tr>
@@ -126,7 +126,7 @@ switch ($kriteria) {
 	<td width="90"><strong>Tanggal </strong></td>
     <td><strong>: <?=LongDateFormat($tanggal1) . " s/d 	" . LongDateFormat($tanggal2) ?></strong></td>
 </tr>
-<? if ($jurnal == "Umum" && $kriteria <> "all") { 
+<?php if ($jurnal == "Umum" && $kriteria <> "all") { 
 		switch ($kriteria) {
 			case 1	: $namakriteria = "Transaksi";
 				break;
@@ -141,7 +141,7 @@ switch ($kriteria) {
 <tr>
 	<td colspan="2"><strong>Pencarian berdasarkan <?=$namakriteria?> dengan keyword <?=$keyword?></strong></td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
 <br />
 
@@ -153,7 +153,7 @@ switch ($kriteria) {
     <td align="center" class="header">Detail Jurnal</td>  
 </tr>
 
-<?
+<?php
 OpenDb();
 $result = QueryDb($sql);
 //$cnt = 0;	
@@ -161,7 +161,7 @@ $result = QueryDb($sql);
 	$cnt = 1;
 //else
 	//$cnt = (int)$page*(int)$varbaris+1;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	if ($cnt % 2 == 0)
 		$bgcolor = "#FFFFB7";
 	else
@@ -173,24 +173,24 @@ while ($row = mysql_fetch_array($result)) {
 	<td align="center" rowspan="2" bgcolor="<?=$bgcolor ?>"><font size="4"><strong><?=$cnt ?></strong></font></td>
     <td align="center" bgcolor="<?=$bgcolor ?>"><strong><?=$row['nokas']?></strong><br /><em><?=LongDateFormat($row['tanggal'])?></em></td>
     <td valign="top" bgcolor="<?=$bgcolor ?>"><?=$row['transaksi'] ?>
-<?	if (strlen($row['keterangan']) > 0 )  { ?>
+<?php if (strlen((string) $row['keterangan']) > 0 )  { ?>
 	    <br /><strong>Keterangan:</strong><?=$row['keterangan'] ?> 
-<?	} ?>    
+<?php } ?>    
     </td>
     <td rowspan="2" valign="top" bgcolor="#E8FFE8">    
     
     <table border="1" style="border-collapse:collapse" width="100%" height="100%" cellpadding="2" bgcolor="#FFFFFF" bordercolor="#000000">    
-<?	$idjurnal = $row['replid'];
+<?php $idjurnal = $row['replid'];
 	$sql = "SELECT jd.koderek,ra.nama,jd.debet,jd.kredit FROM jurnaldetail jd, rekakun ra WHERE jd.idjurnal = '$idjurnal' AND jd.koderek = ra.kode ORDER BY jd.replid";    
 	$result2 = QueryDb($sql); 
-	while ($row2 = mysql_fetch_array($result2)) { ?>
+	while ($row2 = mysqli_fetch_array($result2)) { ?>
     <tr height="25">
     	<td width="12%" align="center"><?=$row2['koderek'] ?></td>
         <td width="*" align="left"><?=$row2['nama'] ?></td>
         <td width="25%" align="right"><?=FormatRupiah($row2['debet']) ?></td>
         <td width="25%" align="right"><?=FormatRupiah($row2['kredit']) ?></td>
     </tr>
-<?	} ?>    
+<?php } ?>    
     </table>
     
     </td>
@@ -199,7 +199,7 @@ while ($row = mysql_fetch_array($result)) {
     <td valign="top"><strong>Petugas: </strong><?=$row['petugas'] ?></td>
     <td valign="top">
     <strong>Sumber: </strong>
-<? 	switch($row['sumber']) {	
+<?php 	switch($row['sumber']) {	
 		case 'jurnalumum':
 			echo  "Jurnal Umum"; break;
 		case 'penerimaanjtt':
@@ -220,7 +220,7 @@ while ($row = mysql_fetch_array($result)) {
 <tr style="height:2px">
 	<td colspan="4" bgcolor="#EFEFDE"></td>
 </tr>
-<?
+<?php
 	$cnt++;
 }
 CloseDb();

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,19 +40,19 @@ if (isset($_REQUEST['Simpan']))
 	$sql = "SELECT * FROM departemen WHERE departemen = '".CQ($_REQUEST['departemen'])."' AND replid <> '$replid'";
 	$result = QueryDb($sql);
 	
-	$sql1 = "SELECT * FROM departemen WHERE urutan = '$_REQUEST[urutan]' AND replid <> '$replid'";
+	$sql1 = "SELECT * FROM departemen WHERE urutan = '".$_REQUEST['urutan']."' AND replid <> '$replid'";
 	$result1 = QueryDb($sql1);
 	
-	if (mysql_num_rows($result) > 0) 
+	if (mysqli_num_rows($result) > 0) 
 	{
 		CloseDb();
-		$ERROR_MSG = "Departemen $_REQUEST[departemen] sudah digunakan!";
+		$ERROR_MSG = "Departemen {$_REQUEST['departemen']} sudah digunakan!";
 		$cek = 0;	
 	} 
-	else if (mysql_num_rows($result1) > 0) 
+	else if (mysqli_num_rows($result1) > 0) 
 	{
 		CloseDb();
-		$ERROR_MSG = "Urutan $_REQUEST[urutan] sudah digunakan!";
+		$ERROR_MSG = "Urutan {$_REQUEST['urutan']} sudah digunakan!";
 		$cek = 2;
 	} 
 	else 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['Simpan']))
 		$departemen = CQ($_REQUEST['departemen']);
 		
 		$sql = "UPDATE departemen 
-				SET departemen='$departemen',nipkepsek='$_REQUEST[nip]',urutan='$_REQUEST[urutan]',
+				SET departemen='$departemen',nipkepsek='".$_REQUEST['nip']."',urutan='".$_REQUEST['urutan']."',
 				    keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid='$replid'";
 		$result = QueryDb($sql);
 		CloseDb();
@@ -71,7 +71,7 @@ if (isset($_REQUEST['Simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 		exit();
 	}
 };
@@ -90,10 +90,10 @@ OpenDb();
 
 $sql = "SELECT d.departemen,d.nipkepsek,p.nama,d.urutan,d.keterangan 
 		FROM departemen d, jbssdm.pegawai p 
-		WHERE d.nipkepsek = p.nip AND d.replid = '$replid'"; 
+		WHERE d.nipkepsek = p.nip AND d.replid = '".$replid."'"; 
 
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $departemen = $row[0];
 $nipkepsek = $row[1];
 $namakepsek = $row[2];
@@ -120,7 +120,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Departemen]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -247,11 +247,11 @@ function panggil(elem){
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -52,17 +52,17 @@ $cek = 0;
 $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
-	$sql = "SELECT * FROM jenisjabatan WHERE jenis = '$jenis'";
+	$sql = "SELECT * FROM jenisjabatan WHERE jenis = '".$jenis."'";
 	$result = QueryDb($sql);
 	
-	$sql1 = "SELECT * FROM jenisjabatan WHERE urutan = '$urutan'";
+	$sql1 = "SELECT * FROM jenisjabatan WHERE urutan = '".$urutan."'";
 	$result1 = QueryDb($sql1);
 		
-	if (@mysql_num_rows($result) > 0) {		
+	if (@mysqli_num_rows($result) > 0) {		
 		//CloseDb();
 		$ERROR_MSG = "Jenis Jabatan $jenis sudah digunakan!";	
 		$cek = 0;	
-	} else if (@mysql_num_rows($result1) > 0) {		
+	} else if (@mysqli_num_rows($result1) > 0) {		
 		//CloseDb();
 		$ERROR_MSG = "Urutan $urutan sudah digunakan!";
 		$cek = 1;
@@ -75,7 +75,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 	CloseDb();
 }
@@ -95,7 +95,7 @@ switch ($cek) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS Kepegawaian</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -148,10 +148,10 @@ function validate() {
 </table>
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

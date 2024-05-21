@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 </style>
 </head>
 <body>
-<?
+<?php
 $tahun30 = $_REQUEST['tahun30'];
 $bulan30 = $_REQUEST['bulan30'];
 $tanggal30 = $_REQUEST['tanggal30'];
@@ -61,24 +61,24 @@ OpenDb();
 ?>
 <strong>Tanggal: <?= $tanggal30 . " " . NamaBulan($bulan30) . " " . $tahun30 . " s/d " . $tanggal . " " . NamaBulan($bulan) . " " . $tahun ?></strong><br /><br />
 <br><strong>Hadir:</strong><br>
-<? ShowReportList(1); ?>
+<?php ShowReportList(1); ?>
 
 <br><strong>Izin:</strong><br>
-<? ShowReportList(2); ?>
+<?php ShowReportList(2); ?>
 
 <br><strong>Sakit:</strong><br>
-<? ShowReportList(3); ?>
+<?php ShowReportList(3); ?>
 
 <br><strong>Cuti:</strong><br>
-<? ShowReportList(4); ?>
+<?php ShowReportList(4); ?>
 
 <br><strong>Alpa:</strong><br>
-<? ShowReportList(5); ?>
+<?php ShowReportList(5); ?>
 
 <br><strong>Bebas:</strong><br>
-<? ShowReportList(6); ?>
+<?php ShowReportList(6); ?>
 
-<?
+<?php
 CloseDb();
 ?>
 </body>

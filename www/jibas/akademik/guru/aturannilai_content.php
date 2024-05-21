@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -39,10 +39,10 @@ $aspek = $_REQUEST['aspek'];
 OpenDb();
 $sql = "SELECT j.departemen, j.nama, p.nip, p.nama 
 		  FROM guru g, jbssdm.pegawai p, pelajaran j 
-		 WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND j.replid = '$id' AND g.nip = '$nip'"; 
+		 WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND j.replid = '$id' AND g.nip = '".$nip."'"; 
 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -50,10 +50,10 @@ $guru = $row[2].' - '.$row[3];
 $op = $_REQUEST['op'];
 if ($op == "xm8r389xemx23xb2378e23") 
 {
-	$sql = "DELETE FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '$aspek'"; 
+	$sql = "DELETE FROM aturangrading WHERE idpelajaran = '$id' AND nipguru = '$nip' AND idtingkat = '$idtingkat' AND dasarpenilaian = '".$aspek."'"; 
 	QueryDb($sql);	?>
     <script>refresh();</script> 
-<?
+<?php
 }	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -63,7 +63,7 @@ if ($op == "xm8r389xemx23xb2378e23")
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Aturan Penentuan Grading Nilai</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -145,30 +145,30 @@ function cetak() {
     	<td><strong>: <?=$guru ?>  
         <input type="hidden" name="nip" id="nip" value="<?=$nip ?>" />
          </strong></td>
-<?	$sql = "SELECT tingkat,replid FROM tingkat WHERE departemen = '$departemen' AND aktif=1 ORDER BY urutan";
+<?php $sql = "SELECT tingkat,replid FROM tingkat WHERE departemen = '$departemen' AND aktif=1 ORDER BY urutan";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0)
+	if (@mysqli_num_rows($result) > 0)
 	{ ?>
 		<td valign="top" align="right" colspan="2"> <a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
       <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;  
     	</td>
   	</tr>
   	</table>
-<?		$i = 0;
-		while ($row = @mysql_fetch_array($result)) 
+<?php 	$i = 0;
+		while ($row = @mysqli_fetch_array($result)) 
 		{
 			++$i;
 			$sql1 = "SELECT g.dasarpenilaian, dp.keterangan 
 					   FROM aturangrading g, tingkat t, dasarpenilaian dp
 					  WHERE t.replid = g.idtingkat AND t.departemen = '$departemen' 
 						AND g.dasarpenilaian = dp.dasarpenilaian AND dp.aktif = 1
-						AND g.idpelajaran = '$id' AND g.idtingkat = '$row[replid]' AND g.nipguru = '$nip' GROUP BY g.dasarpenilaian";
+						AND g.idpelajaran = '$id' AND g.idtingkat = '".$row['replid']."' AND g.nipguru = '$nip' GROUP BY g.dasarpenilaian";
 			$result1 = QueryDb($sql1);	?>
     	<br />
     	<fieldset>
         <legend><b>Tingkat <?=$row['tingkat']?> &nbsp;&nbsp;&nbsp; 
         <input type="hidden" name="idtingkat" id="idtingkat" value="<?=$row['replid'] ?>" />
-<?		if (@mysql_num_rows($result1) > 0) 
+<?php 	if (@mysqli_num_rows($result1) > 0) 
 		{ 
 			$cetak = 1; ?>	    
 	        <a href="JavaScript:tambah(<?=$row['replid']?>)" ><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')"/>&nbsp;Input Aturan Penentuan Grading Nilai</a>
@@ -181,21 +181,21 @@ function cetak() {
 			<td class="header" align="center" height="30" width="*">Grading</td>
             <td class="header" height="30" width="*">&nbsp;</td>
 		</tr>
-		<? 
+		<?php 
 			$cnt= 0;
-			while ($row1 = @mysql_fetch_row($result1)) 
+			while ($row1 = @mysqli_fetch_row($result1)) 
 			{	?>	
 		<tr>        			
 			<td align="center" height="25"><?=++$cnt?></td>
 			<td height="25"><?=$row1[1]?><input type="hidden" name="dasar" id="dasar" value="<?=$row1[0] ?>" /></td>
   			<td height="25">
-<?			$sql2 = "SELECT g.replid, grade, nmin, nmax
+<?php 		$sql2 = "SELECT g.replid, grade, nmin, nmax
 					   FROM aturangrading g, tingkat t
 					  WHERE t.replid = g.idtingkat AND t.departemen = '$departemen' 
-						AND g.idpelajaran = '$id' AND g.idtingkat = '$row[replid]' AND g.dasarpenilaian = '$row1[0]' 
+						AND g.idpelajaran = '$id' AND g.idtingkat = '".$row['replid']."' AND g.dasarpenilaian = '".$row1[0]."' 
 						AND g.nipguru = '$nip' ORDER BY grade";
 			$result2 = QueryDb($sql2);			
-			while ($row2 = @mysql_fetch_row($result2)) 
+			while ($row2 = @mysqli_fetch_row($result2)) 
 			{
 				echo $row2[1].' : '.$row2[2].' s/d '.$row2[3]. '<br>'; 
 			} ?>			
@@ -206,11 +206,11 @@ function cetak() {
     <img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus!', this, event, '50px')" /></a>
         	</td>
 		</tr>
-<?		} ?>
+<?php 	} ?>
 		</table>
 	<script language='JavaScript'>Tables('table<?=$i?>', 1, 0);</script>
     
-<?	} else { ?>
+<?php } else { ?>
     	
 	</legend>
 		<table width="100%" border="0" align="center">          
@@ -222,15 +222,15 @@ function cetak() {
 			</td>
 		</tr>
 	 	</table>
-<? } ?><br /> 
+<?php } ?><br /> 
   </fieldset>
-<? } ?>
+<?php } ?>
  <input type="hidden" name="cetak" id="cetak" value="<?=$cetak ?>" />
     <!-- END TABLE CONTENT -->
  	</td>
   </tr>
 </table>
-<? } else { ?>
+<?php } else { ?>
 </td><td width = "50%"></td>
 </tr>
 <tr height="60"><td colspan="4"><hr style="border-style:dotted" /></td>
@@ -245,12 +245,12 @@ function cetak() {
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td>
   </tr>
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,39 +20,39 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CFormatEdit{
-	var $kode, $nama, $replid, $keterangan;
+	public $kode, $nama, $replid, $keterangan;
 	function OnStart(){
-		if (isset($_REQUEST[simpan])){
-			$sql = "SELECT kode FROM format WHERE kode='".CQ($_REQUEST['kode'])."' AND replid <> '$_REQUEST[replid]'";
+		if (isset($_REQUEST['simpan'])){
+			$sql = "SELECT kode FROM format WHERE kode='".CQ($_REQUEST['kode'])."' AND replid <> '".$_REQUEST['replid']."'";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num>0){
 				$this->exist();
 			} else {
-				$sql = "UPDATE format SET kode='".CQ($_REQUEST['kode'])."', nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid='$_REQUEST[replid]'";
+				$sql = "UPDATE format SET kode='".CQ($_REQUEST['kode'])."', nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid='".$_REQUEST['replid']."'";
 				$result = QueryDb($sql);
 				if ($result)
 					$this->success();
 			}
 		} else {
-			$sql = "SELECT * FROM format WHERE replid='$_REQUEST[id]'";
+			$sql = "SELECT * FROM format WHERE replid='".$_REQUEST['id']."'";
 			$result = QueryDb($sql);
-			$row = @mysql_fetch_array($result);
-			$this->replid = $_REQUEST[id];
-			$this->kode = $row[kode];
-			$this->nama = $row[nama];
-			$this->keterangan = $row[keterangan];
+			$row = @mysqli_fetch_array($result);
+			$this->replid = $_REQUEST['id'];
+			$this->kode = $row['kode'];
+			$this->nama = $row['nama'];
+			$this->keterangan = $row['keterangan'];
 		}
 	}
 	function exist(){
 		?>
         <script language="javascript">
 			alert('Kode sudah digunakan!');
-			document.location.href="format.edit.php?id=<?=$_REQUEST[replid]?>";
+			document.location.href="format.edit.php?id=<?=$_REQUEST['replid']?>";
 		</script>
-        <?
+        <?php
 	}
 	function success(){
 		?>
@@ -60,7 +60,7 @@ class CFormatEdit{
 			parent.opener.getfresh();
 			window.close();
         </script>
-        <?
+        <?php
 	}
 	function edit(){
 		?>
@@ -89,7 +89,7 @@ class CFormatEdit{
           </tr>
         </table>
 		</form>
-		<?
+		<?php
 	}
 }
 ?>

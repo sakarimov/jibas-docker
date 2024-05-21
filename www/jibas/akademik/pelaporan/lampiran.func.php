@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowList()
 {
     global $SI_USER_STAFF;
@@ -37,7 +37,7 @@ function ShowList()
     $no = 0;
     $res = QueryDb($sql);
     
-    if (0 == mysql_num_rows($res))
+    if (0 == mysqli_num_rows($res))
     {
         echo "<tr height='60'>";
         echo "<td align='center' valign='middle' colspan='5'>";
@@ -48,7 +48,7 @@ function ShowList()
         return;
     }
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
         
@@ -62,7 +62,7 @@ function ShowList()
                       FROM jbssdm.pegawai
                      WHERE nip = '" . $row['xpetugas'] . "'";
             $res2 = QueryDb($sql);
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $nama = $row2[0];
         }
         
@@ -70,7 +70,7 @@ function ShowList()
         {
             if (SI_USER_LEVEL() != $SI_USER_STAFF)
             {
-                $asrc = "<a href='#' onclick='setStatus(0, $row[replid])' title='set non aktif'>
+                $asrc = "<a href='#' onclick='setStatus(0, {$row['replid']})' title='set non aktif'>
                          <img src='../images/ico/aktif.png' border='0'>
                          </a>";
             }
@@ -83,7 +83,7 @@ function ShowList()
         {
             if (SI_USER_LEVEL() != $SI_USER_STAFF)
             {
-                $asrc = "<a href='#' onclick='setStatus(1, $row[replid])' title='set aktif'>
+                $asrc = "<a href='#' onclick='setStatus(1, {$row['replid']})' title='set aktif'>
                          <img src='../images/ico/nonaktif.png' border='0'>
                          </a>";
             }
@@ -95,8 +95,8 @@ function ShowList()
         
         echo "<tr>";
         echo "<td align='center' valign='top'>$no</td>";
-        echo "<td align='left' valign='top'>$row[xtanggal]<br><strong>$nama</strong></td>";
-        echo "<td align='left' valign='top'><strong>$row[judul]</strong><br>";
+        echo "<td align='left' valign='top'>".$row['xtanggal']."<br><strong>$nama</strong></td>";
+        echo "<td align='left' valign='top'><strong>".$row['judul']."</strong><br>";
         echo "<div style='height: 200px; overflow: auto;'>";
         echo $row['pengantar'];
         echo "</div></td>";
@@ -105,10 +105,10 @@ function ShowList()
         
         if (SI_USER_LEVEL() != $SI_USER_STAFF)
         {
-            echo "<a href='#' onclick='ubah($row[replid])'>";
+            echo "<a href='#' onclick='ubah({$row['replid']})'>";
             echo "<img src='../images/ico/ubah.png' title='edit' border='0'>";
             echo "</a>&nbsp;";
-            echo "<a href='#' onclick='hapus($row[replid])'>";
+            echo "<a href='#' onclick='hapus({$row['replid']})'>";
             echo "<img src='../images/ico/hapus.png' title='hapus' border='0'>";
             echo "</a>";
         }

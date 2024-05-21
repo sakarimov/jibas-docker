@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,24 +52,24 @@ $sql = "SELECT DISTINCT MONTH(tanggal), YEAR(tanggal)
           FROM jbsfina.pgtrans
          WHERE ((MONTH(tanggal) >= $bulan1 AND YEAR(tanggal) >= $tahun1) 
            AND  (MONTH(tanggal) <= $bulan2 AND YEAR(tanggal) <= $tahun2))";
-if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-if ($metode != "0") $sql .= " AND jenis = '$metode'";
+if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
 $sql .= " ORDER BY tanggal DESC";
 
 $res = QueryDbEx($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     echo "Belum ada data transaksi pembayaran online";
     exit();
 }
 
-$lsBulan = array();
-while($row = mysql_fetch_row($res))
+$lsBulan = [];
+while($row = mysqli_fetch_row($res))
 {
-    $lsBulan[] = array($row[0], $row[1]);
+    $lsBulan[] = [$row[0], $row[1]];
 }
 
 //PrePrintR($lsTanggal);
@@ -93,35 +93,35 @@ for($i = 0; $i < count($lsBulan); $i++)
     $sql = "SELECT COUNT(DISTINCT nis)
               FROM jbsfina.pgtrans
              WHERE MONTH(tanggal) = $bulan AND YEAR(tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nSiswa = $row[0];
 
     $sql = "SELECT COUNT(replid)
               FROM jbsfina.pgtrans
              WHERE MONTH(tanggal) = $bulan AND YEAR(tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nTransaksi = $row[0];
 
     $sql = "SELECT SUM(pd.jumlah)
               FROM jbsfina.pgtrans p, jbsfina.pgtransdata pd
              WHERE p.replid = pd.idpgtrans
                AND MONTH(p.tanggal) = $bulan AND YEAR(p.tanggal) = $tahun";
-    if ($departemen != "ALL") $sql .= " AND p.departemen = '$departemen'";
-    if ($bankNo != "ALL") $sql .= " AND p.bankno = '$bankNo'";
-    if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '$idPetugas'";
-    if ($metode != "0") $sql .= " AND p.jenis = '$metode'";
+    if ($departemen != "ALL") $sql .= " AND p.departemen = '".$departemen."'";
+    if ($bankNo != "ALL") $sql .= " AND p.bankno = '".$bankNo."'";
+    if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '".$idPetugas."'";
+    if ($metode != "0") $sql .= " AND p.jenis = '".$metode."'";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $sumTransaksi = $row[0];
 
     echo "<tr>";
@@ -139,24 +139,24 @@ $sql = "SELECT COUNT(DISTINCT nis)
           FROM jbsfina.pgtrans
          WHERE ((MONTH(tanggal) >= $bulan1 AND YEAR(tanggal) >= $tahun1) 
            AND  (MONTH(tanggal) <= $bulan2 AND YEAR(tanggal) <= $tahun2))";
-if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-if ($metode != "0") $sql .= " AND jenis = '$metode'";
+if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
 $res = QueryDbEx($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nSiswa = $row[0];
 
 $sql = "SELECT COUNT(replid)
           FROM jbsfina.pgtrans
          WHERE ((MONTH(tanggal) >= $bulan1 AND YEAR(tanggal) >= $tahun1) 
            AND  (MONTH(tanggal) <= $bulan2 AND YEAR(tanggal) <= $tahun2))";
-if ($departemen != "ALL") $sql .= " AND departemen = '$departemen'";
-if ($bankNo != "ALL") $sql .= " AND bankno = '$bankNo'";
-if ($idPetugas != "ALL") $sql .= " AND idpetugas = '$idPetugas'";
-if ($metode != "0") $sql .= " AND jenis = '$metode'";
+if ($departemen != "ALL") $sql .= " AND departemen = '".$departemen."'";
+if ($bankNo != "ALL") $sql .= " AND bankno = '".$bankNo."'";
+if ($idPetugas != "ALL") $sql .= " AND idpetugas = '".$idPetugas."'";
+if ($metode != "0") $sql .= " AND jenis = '".$metode."'";
 $res = QueryDbEx($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nTransaksi = $row[0];
 
 $sql = "SELECT SUM(pd.jumlah)
@@ -164,12 +164,12 @@ $sql = "SELECT SUM(pd.jumlah)
          WHERE p.replid = pd.idpgtrans
            AND ((MONTH(p.tanggal) >= $bulan1 AND YEAR(p.tanggal) >= $tahun1) 
            AND  (MONTH(p.tanggal) <= $bulan2 AND YEAR(p.tanggal) <= $tahun2))";
-if ($departemen != "ALL") $sql .= " AND p.departemen = '$departemen'";
-if ($bankNo != "ALL") $sql .= " AND p.bankno = '$bankNo'";
-if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '$idPetugas'";
-if ($metode != "0") $sql .= " AND p.jenis = '$metode'";
+if ($departemen != "ALL") $sql .= " AND p.departemen = '".$departemen."'";
+if ($bankNo != "ALL") $sql .= " AND p.bankno = '".$bankNo."'";
+if ($idPetugas != "ALL") $sql .= " AND p.idpetugas = '".$idPetugas."'";
+if ($metode != "0") $sql .= " AND p.jenis = '".$metode."'";
 $res = QueryDbEx($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $sumTransaksi = $row[0];
 
 echo "<tr>";

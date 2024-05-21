@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,21 +83,21 @@ function cetak() {
 
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
-<tr><td align="left" valign="top"><? include("../include/headercetak.php") ?>
+<tr><td align="left" valign="top"><?php include("../include/headercetak.php") ?>
 <center>
     <font size="4"><strong><?=$judul?></strong></font><br />
    </center><br /><br />
    
-<? if ($stat==5){ ?>
+<?php if ($stat==5){ ?>
 	<strong>Satuan Kerja : <?=$satker?></strong><br />
-	<strong>Status Diklat: <? if ($status == "S") echo "Sudah"; else echo "Belum"; ?></strong><br /><br />
+	<strong>Status Diklat: <?php if ($status == "S") echo "Sudah"; else echo "Belum"; ?></strong><br /><br />
 	<table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
 	<tr height="35">
 		<td class="header" align="center" width="7%">No</td>
 		<td class="header" align="center" width="40%">NIP</td>
 		<td class="header" align="center" width="40%">Nama</td>
 	  </tr>
-	<?
+	<?php
 	OpenDb();
 	if ($status == "S")
 		$sql = "SELECT DISTINCT p.nip, TRIM(CONCAT(IFNULL(p.gelarawal,''), ' ', p.nama, ' ', IFNULL(p.gelarakhir,''))) AS fnama 
@@ -115,19 +115,19 @@ function cetak() {
 				 ORDER BY p.nama";	
 	$result = QueryDb($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 	?>
 	<tr height="20">
 		<td align="center" valign="top"><?=++$cnt?></td>
 		<td align="center" valign="top"><?=$row[0]?></td>
 		<td align="left" valign="top"><?=$row[1] ?></td>
 	  </tr>
-	<?
+	<?php
 	}
 	CloseDb();
 	?>
 	</table>
-<? } elseif ($stat==6){ ?>
+<?php } elseif ($stat==6){ ?>
 	<strong>Satuan Kerja : <?=$sat?></strong><br />
 	<strong>Status Pernikahan : <?=$nikah?></strong><br /><br />
 	<table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
@@ -136,7 +136,7 @@ function cetak() {
 		<td class="header" align="center" width="40%">NIP</td>
 		<td class="header" align="center" width="40%">Nama</td>
 	  </tr>
-	<?
+	<?php
 	OpenDb();
 	$sql = "SELECT p.nip, TRIM(CONCAT(IFNULL(p.gelarawal,''), ' ', p.nama, ' ', IFNULL(p.gelarakhir,''))) AS fnama 
 			FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
@@ -144,28 +144,28 @@ function cetak() {
 			ORDER BY p.nama";	
 	$result = QueryDb($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 	?>
 	<tr height="20">
 		<td align="center" valign="top"><?=++$cnt?></td>
 		<td align="center" valign="top"><?=$row[0]?></td>
 		<td align="left" valign="top"><?=$row[1] ?></td>
 	  </tr>
-	<?
+	<?php
 	}
 	CloseDb();
 	?>
 	</table>
-<? } elseif ($stat==7){ ?>
+<?php } elseif ($stat==7){ ?>
 	<strong>Satuan Kerja : <?=$sat?></strong><br />
-	<strong>Kelamin : <? if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></strong><br /><br />
+	<strong>Kelamin : <?php if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></strong><br /><br />
 	<table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
 	<tr height="35">
 		<td class="header" align="center" width="7%">No</td>
 		<td class="header" align="center" width="40%">NIP</td>
 		<td class="header" align="center" width="40%">Nama</td>
 	  </tr>
-	<?
+	<?php
 	OpenDb();
 	$sql = "SELECT p.nip, TRIM(CONCAT(IFNULL(p.gelarawal,''), ' ', p.nama, ' ', IFNULL(p.gelarakhir,''))) AS fnama 
 			FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
@@ -173,20 +173,20 @@ function cetak() {
 			ORDER BY p.nama";	
 	$result = QueryDb($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 	?>
 	<tr height="20">
 		<td align="center" valign="top"><?=++$cnt?></td>
 		<td align="center" valign="top"><?=$row[0]?></td>
 		<td align="left" valign="top"><?=$row[1] ?></td>
 	  </tr>
-	<?
+	<?php
 	}
 	CloseDb();
 	?>
 	</table>
-<? } else { ?>
-	<?
+<?php } else { ?>
+	<?php
 	if ($stat == 1) 
 	{
 		$info = "Satuan Kerja";
@@ -221,7 +221,7 @@ function cetak() {
 							  IF(usia >= 50 AND usia <= 55, '50-55', '>56'))))))) AS G FROM
 					(SELECT nip, TRIM(CONCAT(IFNULL(p.gelarawal,''), ' ', p.nama, ' ', IFNULL(p.gelarakhir,''))) AS fnama, 
 							FLOOR(DATEDIFF(NOW(), tgllahir) / 365) AS usia FROM pegawai p WHERE aktif = 1) AS X) AS XX 
-				WHERE G = '$ref'";
+				WHERE G = '".$ref."'";
 	}
 	
 	?>
@@ -232,23 +232,23 @@ function cetak() {
 				<td class="header" align="center" width="40%">NIP</td>
 				<td class="header" align="center" width="40%">Nama</td>
 			</tr>
-			<?
+			<?php
 			OpenDb();
 			$result = QueryDb($sql);
 			$cnt = 0;
-			while ($row = mysql_fetch_row($result)) {
+			while ($row = mysqli_fetch_row($result)) {
 			?>
 			<tr height="20">
 				<td align="center" valign="top"><?=++$cnt?></td>
 				<td align="center" valign="top"><?=$row[0]?></b></td>
 				<td align="left" valign="top"><?=$row[1] ?></td>
 			</tr>
-			<?
+			<?php
 			}
 			CloseDb();
 			?>
 	</table>
-<? } ?>
+<?php } ?>
 </td></tr></table>
 </body>
 <script language="javascript">

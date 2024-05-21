@@ -1,4 +1,4 @@
-<?
+<?php
 function GetMaxCommentId()
 {
     global $idsurat;
@@ -9,9 +9,9 @@ function GetMaxCommentId()
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     
@@ -20,11 +20,11 @@ function GetMaxCommentId()
 
 function GetOwnerName($ownerid)
 {
-    $sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+    $sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -45,7 +45,7 @@ function ShowPrevCommentLink()
     
     $sql = "SELECT COUNT(replid)
               FROM jbsletter.comment
-             WHERE idsurat = '$idsurat'";
+             WHERE idsurat = '".$idsurat."'";
     $nCmt = (int)FetchSingle($sql);
     if ($nCmt <= $NotesViewActiveComment)
         return;
@@ -63,7 +63,7 @@ function ShowPrevCommentLink()
             </span>
         </td>
     </tr>
-<?
+<?php
 }
 
 function ShowPrevComment()
@@ -74,7 +74,7 @@ function ShowPrevComment()
     
     $sql = "SELECT COUNT(replid)
               FROM jbsletter.comment
-             WHERE idsurat = '$idsurat'";
+             WHERE idsurat = '".$idsurat."'";
     $nCmt = (int)FetchSingle($sql);
     $sqlLimit = "LIMIT " . ($nCmt - $NotesViewActiveComment);
     
@@ -87,10 +87,10 @@ function ShowPrevComment()
                    $sqlLimit";
     
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownerid = $row['nip'];
@@ -103,7 +103,7 @@ function ShowPrevComment()
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='1%' align='left'>&nbsp;</td>
             <td class='NotesViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='letter.view.comment.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>' height='35'><br>
+                <img src='letter.view.comment.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>' height='35'><br>
             </td>
             <td class='NotesViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -111,7 +111,7 @@ function ShowPrevComment()
                 <span class='NotesViewCommentAge'>
                 <?= $age ?>
                 </span>
-<?              if ($userid == $ownerid) { ?>                    
+<?php              if ($userid == $ownerid) { ?>                    
                 <div class='NotesViewCommentDeleteDiv'
                      onmouseover="document.getElementById('<?=$delDivId?>').style.display = 'block';"
                      onmouseout="document.getElementById('<?=$delDivId?>').style.display = 'none';">                
@@ -121,11 +121,11 @@ function ShowPrevComment()
                              onclick="showDeleteCommentDialog('<?=$replid?>','<?=$rowId?>')">
                     </div>
                 </div>
-<?              } ?>                                             
+<?php              } ?>                                             
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -140,7 +140,7 @@ function ShowComment()
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsletter.comment
-                 WHERE idsurat = '$idsurat'";
+                 WHERE idsurat = '".$idsurat."'";
         $nCmt = (int)FetchSingle($sql);
         if ($nCmt > $NotesViewActiveComment)
             $sqlLimit = "LIMIT " . ($nCmt - $NotesViewActiveComment) . ", $NotesViewActiveComment";
@@ -162,10 +162,10 @@ function ShowComment()
                    $sqlLimit";
 
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownerid = $row['nip'];
@@ -178,7 +178,7 @@ function ShowComment()
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='1%' align='left'>&nbsp;</td>
             <td class='NotesViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='letter.view.comment.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>' height='35'><br>
+                <img src='letter.view.comment.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>' height='35'><br>
             </td>
             <td class='NotesViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -186,7 +186,7 @@ function ShowComment()
                 <span class='NotesViewCommentAge'>
                 <?= $age ?>
                 </span>
-<?              if ($userid == $ownerid) { ?>                
+<?php              if ($userid == $ownerid) { ?>                
                 <div class='NotesViewCommentDeleteDiv'
                      onmouseover="document.getElementById('<?=$delDivId?>').style.display = 'block';"
                      onmouseout="document.getElementById('<?=$delDivId?>').style.display = 'none';">
@@ -196,11 +196,11 @@ function ShowComment()
                              onclick="showDeleteCommentDialog('<?=$replid?>','<?=$rowId?>')">
                     </div>
                 </div>
-<?              } ?>                
+<?php              } ?>                
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -242,13 +242,13 @@ function ShowCommentBox()
     </table>
     </fieldset>
 
-<?    
+<?php    
 }
 
 function DeleteComment($replid)
 {
     $sql = "DELETE FROM jbsletter.comment
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     QueryDb($sql);         
 }
 ?>

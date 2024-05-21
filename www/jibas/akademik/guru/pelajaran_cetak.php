@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -65,7 +65,7 @@ $total = $_REQUEST['total'];
         <td width="*" class="header" align="center">Keterangan</td>
         <td width="10%" class="header" align="center">Status</td>
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT p.kode, p.nama, p.sifat, p.keterangan, p.aktif, k.kelompok
               FROM pelajaran p, kelompokpelajaran k 
              WHERE p.idkelompok = k.replid
@@ -77,13 +77,13 @@ $total = $_REQUEST['total'];
 	//else
 		//$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['kode'] ?></td>        
         <td><?=$row['nama'] ?></td>        
         <td align="center">
-			<? if ($row['sifat'] == 1) 
+			<?php if ($row['sifat'] == 1) 
 					echo 'Wajib';
 				else
 					echo 'Tambahan';
@@ -92,14 +92,14 @@ $total = $_REQUEST['total'];
         <td><?=$row['kelompok'] ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center">
-			<? if ($row['aktif'] == 1) 
+			<?php if ($row['aktif'] == 1) 
 					echo 'Aktif';
 				else
 					echo 'Tidak Aktif';
 			?>		
         </td> 
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>

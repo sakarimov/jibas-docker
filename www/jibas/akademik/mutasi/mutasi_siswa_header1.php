@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -154,14 +154,14 @@ function tampil_kelas() {
     <tr>
       	<td colspan="2" align="left" valign="top"><div align="center"><strong>Departemen</strong>
       	      <select name="departemen" id="departemen"  onchange="change_departemen()"  style="width:100px">
-              <?	$dep = getDepartemen(SI_USER_ACCESS());    
+              <?php $dep = getDepartemen(SI_USER_ACCESS());    
 	foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                   <?=$value ?> 
                   </option>
-              <?	} ?>
+              <?php } ?>
               </select>
 			      	            
     	      </div>
@@ -178,7 +178,7 @@ function tampil_kelas() {
             <tr>
               <td width="18%"><strong>NIS</strong></td>
               <td width="40%"><input type="text" name="nis" id="nis" 
-		<?
+		<?php
 		if ($nis<>"")
 		echo "value='$nis'";
 		?>
@@ -188,7 +188,7 @@ function tampil_kelas() {
             <tr>
               <td><strong>Nama</strong></td>
               <td><input type="text" name="nama" id="nama" 
-		<?
+		<?php
 		if ($nama<>"")
 		echo "value='$nama'";
 		?>
@@ -202,7 +202,7 @@ function tampil_kelas() {
             <tr>
               <td width="18%"><strong>Kelas</strong></td>
               <td width="44%"><div id="kelasInfo"><select name="kelas" id="kelas" onchange="change_kelas()" style="width:100px">
-              <?
+              <?php
               OpenDb();
 				$sql_kelas = "SELECT k.replid,k.kelas FROM jbsakad.kelas k,jbsakad.tahunajaran t WHERE k.aktif=1 AND t.departemen='$departemen' AND k.idtahunajaran=t.replid ORDER BY k.replid";
 				
@@ -210,14 +210,14 @@ function tampil_kelas() {
 				
 			echo $sql_kelas;
 				$kelas = "";	
-				while($row_kelas=@mysql_fetch_row($result_kelas)) {
+				while($row_kelas=@mysqli_fetch_row($result_kelas)) {
 					if ($kelas == "")
 						$kelas = $row_kelas[0];
 			?> 
-              <option value="<?=urlencode($row_kelas[0])?>" <?=StringIsSelected($row_kelas[0], $kelas) ?>>
+              <option value="<?=urlencode((string) $row_kelas[0])?>" <?=StringIsSelected($row_kelas[0], $kelas) ?>>
               <?=$row_kelas[1]?>
               </option>
-              <?
+              <?php
 				} //while
 				CloseDb();
 			?>

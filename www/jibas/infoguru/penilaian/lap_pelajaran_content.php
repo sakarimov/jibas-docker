@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,27 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
 require_once("../include/theme.php");
-$pelajaran=$_REQUEST[pelajaran];
-$kelas=$_REQUEST[kelas];
-$nis=$_REQUEST[nis];
-$departemen=$_REQUEST[departemen];
+$pelajaran=$_REQUEST['pelajaran'];
+$kelas=$_REQUEST['kelas'];
+$nis=$_REQUEST['nis'];
+$departemen=$_REQUEST['departemen'];
 
 OpenDb();
-$sql_sem = "SELECT * FROM semester WHERE departemen = '$departemen'";
+$sql_sem = "SELECT * FROM semester WHERE departemen = '".$departemen."'";
 $result_sem = QueryDb($sql_sem);
 $i = 0;
-while ($row_sem = @mysql_fetch_array($result_sem)) {
-	$sem[$i] = array($row_sem['replid'],$row_sem['semester']);
+while ($row_sem = @mysqli_fetch_array($result_sem)) {
+	$sem[$i] = [$row_sem['replid'], $row_sem['semester']];
 	$i++;
 }
-$sql_pel = "SELECT nama FROM pelajaran WHERE replid = '$pelajaran'";
+$sql_pel = "SELECT nama FROM pelajaran WHERE replid = '".$pelajaran."'";
 $result_pel = QueryDb($sql_pel);
-$row_pel = @mysql_fetch_array($result_pel);
+$row_pel = @mysqli_fetch_array($result_pel);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -113,12 +113,12 @@ function cetak(semester) {
     	<td width="100%" bgcolor="#FFFFFF" valign="top">
         <div id="TabbedPanels1" class="TabbedPanels">
           <ul class="TabbedPanelsTabGroup">
-            <? for($k=0;$k<sizeof($sem);$k++) {?>
+            <?php for($k=0;$k<sizeof($sem);$k++) {?>
             <li class="TabbedPanelsTab" tabindex="<?=$k?>">Semester <?=$sem[$k][1]?></li>
-            <? } ?>
+            <?php } ?>
           </ul>
           <div class="TabbedPanelsContentGroup">
-            <? for($k=0;$k<sizeof($sem);$k++) {?>
+            <?php for($k=0;$k<sizeof($sem);$k++) {?>
             <div class="TabbedPanelsContent">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -140,10 +140,10 @@ function cetak(semester) {
                     </tr>
                     
                     
-            <?	$sql = "SELECT j.replid, j.jenisujian FROM jenisujian j WHERE j.idpelajaran = '$pelajaran' GROUP BY j.jenisujian";
+            <?php $sql = "SELECT j.replid, j.jenisujian FROM jenisujian j WHERE j.idpelajaran = '$pelajaran' GROUP BY j.jenisujian";
                 //echo $sql;
                 $result = QueryDb($sql);
-                while($row = @mysql_fetch_array($result)){			
+                while($row = @mysqli_fetch_array($result)){			
             ?>
                     <tr>
                         <td colspan="2">
@@ -156,17 +156,17 @@ function cetak(semester) {
                             <td width="100" height="30" align="center" class="header">Nilai</td>
                             <td width="400" class="header" align="center" height="30">Keterangan</td>
                         </tr>
-                <? 	OpenDb();		
-                    $sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[$k][0]."' AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
+                <?php 	OpenDb();		
+                    $sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[$k][0]."' AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
                     $result1 = QueryDb($sql1);
-                    $sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[$k][0]."' AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis' ";
+                    $sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[$k][0]."' AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis' ";
                     $result2 = QueryDb($sql2);
-                    $row2 = @mysql_fetch_array($result2);
-                    $rata = $row2[rata];
+                    $row2 = @mysqli_fetch_array($result2);
+                    $rata = $row2['rata'];
                   
                     $cnt = 1;
-                    if (@mysql_num_rows($result1)>0){
-                        while($row1 = @mysql_fetch_array($result1)){			
+                    if (@mysqli_num_rows($result1)>0){
+                        while($row1 = @mysqli_fetch_array($result1)){			
                  ?>
                         <tr>        			
                             <td height="25" align="center"><?=$cnt?></td>
@@ -174,27 +174,27 @@ function cetak(semester) {
                             <td height="25" align="center"><?=$row1[1]?></td>
                             <td height="25"><?=$row1[2]?></td>            
                         </tr>	
-                <?		$cnt++;
+                <?php 	$cnt++;
                         } ?>
                         <tr style="background-color:#E1FFFF">        			
                             <td colspan="2" height="25" align="center"><strong>Nilai rata rata</strong></td>
                             <td height="25" align="center"><?=round($rata,2)?></td>
                             <td height="25">&nbsp;</td>            
                         </tr>                    
-                <? } else { ?>
+                <?php } else { ?>
                         <tr>        			
                             <td colspan="4" height="25" align="center">Tidak ada nilai</td>
                         </tr>
-                <? } ?>
+                <?php } ?>
                         </table>                    </td>	
                     </tr>
-            <? } ?>
+            <?php } ?>
                     </table>
                     </td>
                 </tr>
                 </table>
             </div>
-            <? } ?>
+            <?php } ?>
           </div>
         </div>
         <script type="text/javascript">

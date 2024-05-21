@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/common.php');
 require_once('../include/db_functions.php');
@@ -83,7 +83,7 @@ function Cetak() {
     <td width="25%" class="header" align="center" valign="top">Nama</td>
     <td width="*" class="header" align="center" valign="top">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT j.nip, ja.nama AS jenisagenda, p.nama, DATE_FORMAT(j.tanggal, '%d-%m-%Y') AS tanggal, j.jenis, j.keterangan 
         FROM jadwal j, pegawai p, jenisagenda ja
 		WHERE j.nip = p.nip AND j.aktif = 1 AND j.exec = 0 AND j.jenis = ja.agenda AND j.tanggal BETWEEN '$tgl1' AND '$tgl2'
@@ -91,7 +91,7 @@ $sql = "SELECT j.nip, ja.nama AS jenisagenda, p.nama, DATE_FORMAT(j.tanggal, '%d
 OpenDb();
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center" valign="top"><?=++$cnt?></td>
@@ -101,7 +101,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left" valign="top"><?=$row['nama']?></td>
     <td align="left" valign="top"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

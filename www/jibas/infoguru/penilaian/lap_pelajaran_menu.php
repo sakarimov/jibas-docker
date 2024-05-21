@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,20 +38,20 @@ OpenDb();
 
 $sql = "SELECT replid, departemen, nislama FROM riwayatdeptsiswa WHERE nis = '$nis_awal'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$dep[0] = array($row['departemen'], $nis_awal);
+$row = @mysqli_fetch_array($result);
+$dep[0] = [$row['departemen'], $nis_awal];
 //$no[1] = $row['nislama'];
 if ($row['nislama'] <> "") {
-	$sql1 = "SELECT replid, departemen, nislama FROM riwayatdeptsiswa WHERE nis = '$row[nislama]'";
+	$sql1 = "SELECT replid, departemen, nislama FROM riwayatdeptsiswa WHERE nis = '".$row['nislama']."'";
 	$result1 = QueryDb($sql1);
-	$row1 = @mysql_fetch_array($result1);	
-	$dep[1] = array($row1['departemen'], $row['nislama']);
+	$row1 = @mysqli_fetch_array($result1);	
+	$dep[1] = [$row1['departemen'], $row['nislama']];
 	//$no[2] = $row1['nislama'];	
 	if ($row1['nislama'] <> "") {				
-		$sql2 = "SELECT replid, departemen, nislama FROM riwayatdeptsiswa WHERE nis = '$row1[nislama]'";
+		$sql2 = "SELECT replid, departemen, nislama FROM riwayatdeptsiswa WHERE nis = '".$row1['nislama']."'";
 		$result2 = QueryDb($sql2);
-		$row2 = @mysql_fetch_array($result2);					
-		$dep[2] = array($row2['departemen'],$row1['nislama']) ;
+		$row2 = @mysqli_fetch_array($result2);					
+		$dep[2] = [$row2['departemen'], $row1['nislama']] ;
 	}	
 }		
 
@@ -61,8 +61,8 @@ $sql_ajaran = "SELECT DISTINCT(t.replid), t.tahunajaran FROM riwayatkelassiswa r
 
 $result_ajaran = QueryDb($sql_ajaran);
 $k = 0;
-while ($row_ajaran = @mysql_fetch_array($result_ajaran)) {
-	$ajaran[$k] = array($row_ajaran['replid'],$row_ajaran['tahunajaran']);
+while ($row_ajaran = @mysqli_fetch_array($result_ajaran)) {
+	$ajaran[$k] = [$row_ajaran['replid'], $row_ajaran['tahunajaran']];
 	$k++;
 }
 
@@ -74,8 +74,8 @@ $sql_kls = "SELECT DISTINCT(r.idkelas), k.kelas, t.tingkat, k.idtahunajaran FROM
 
 $result_kls = QueryDb($sql_kls);
 $j = 0;
-while ($row_kls = @mysql_fetch_array($result_kls)) {
-	$kls[$j] = array($row_kls['idkelas'],$row_kls['kelas'],$row_kls['tingkat'],$row_kls['idtahunajaran']);
+while ($row_kls = @mysqli_fetch_array($result_kls)) {
+	$kls[$j] = [$row_kls['idkelas'], $row_kls['kelas'], $row_kls['tingkat'], $row_kls['idtahunajaran']];
 	if ($row_kls['idtahunajaran']==$tahunajaran)
 		$kelas = $row_kls['idkelas'];	
 	$j++;
@@ -158,9 +158,9 @@ function tampil(pelajaran,kelas,nis,departemen) {
 	<td width="38%"><strong>Departemen </strong></td>
     <td width="*"> 
     	<select name="departemen" id="departemen" onChange="change_dep()" style="width:100%">
-		<? for ($i=0;$i<sizeof($dep);$i++) {	?>        	
+		<?php for ($i=0;$i<sizeof($dep);$i++) {	?>        	
             <option value="<?=$i ?>" <?=IntIsSelected($i, $departemen) ?> > <?=$dep[$i][0] ?> </option>
-		<? } ?>
+		<?php } ?>
 		</select>
     </td>
 </tr>
@@ -168,21 +168,21 @@ function tampil(pelajaran,kelas,nis,departemen) {
 <tr>
 	<td><strong>Tahun Ajaran</strong></td>
    	<td><select name="tahunajaran" id="tahunajaran" onchange="change_ta()" style="width:100%">
-   		<? for($k=0;$k<sizeof($ajaran);$k++) {?>
+   		<?php for($k=0;$k<sizeof($ajaran);$k++) {?>
 			<option value="<?=$ajaran[$k][0] ?>" <?=IntIsSelected($ajaran[$k][0], $tahunajaran) ?> > 
 			<?=$ajaran[$k][1]?> </option>
-		<? } ?>
+		<?php } ?>
     	</select>    
 	</td>
 </tr>
 <tr>
 	<td><strong>Kelas </strong></td>
    	<td><select name="kelas" id="kelas" onchange="change_kls()" style="width:100%">
-   		<? for ($j=0;$j<sizeof($kls);$j++) {
+   		<?php for ($j=0;$j<sizeof($kls);$j++) {
 				if ($kls[$j][3] == $tahunajaran) {
 		?>
 			<option value="<?=$kls[$j][0] ?>" <?=IntIsSelected($kls[$j][0], $kelas) ?> > <?=$kls[$j][2]." - ".$kls[$j][1] ?> </option>
-		<? 		}
+		<?php 		}
 			} ?>
     	</select>    
 	</td>
@@ -196,11 +196,11 @@ function tampil(pelajaran,kelas,nis,departemen) {
     	<td width="52" class="header" align="center">No</td>
         <td colspan="2" align="center" class="header">Pelajaran</td>
     </tr>
-    <? 	OpenDb();		
+    <?php 	OpenDb();		
 		$sql = "SELECT DISTINCT p.replid, p.nama FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY p.nama";
 		//echo '<br> sql '.$sql;
 		$result = QueryDb($sql); 				
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr>   	
        	<td height="25" align="center" onclick="tampil('<?=$row[0]?>','<?=$kelas?>','<?=$nis?>','<?=$dep[$departemen][0]?>')" style="cursor:pointer"><?=++$cnt?></td>
@@ -209,7 +209,7 @@ function tampil(pelajaran,kelas,nis,departemen) {
         <td width="16" style="cursor:pointer" onclick="tampil('<?=$row[0]?>','<?=$kelas?>','<?=$nis?>','<?=$dep[$departemen][0]?>')"><img src="../images/ico/panahkanan.png" width="16" height="16" /></td>
     </tr>
     <!-- END TABLE CONTENT -->
-    <? 	} ?>
+    <?php 	} ?>
 	</table>
 	  <script language='JavaScript'>
 	    Tables('table', 1, 0);

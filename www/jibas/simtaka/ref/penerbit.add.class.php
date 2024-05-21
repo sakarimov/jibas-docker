@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CPenerbitAdd{
 	function OnStart(){
-		if (isset($_REQUEST[simpan])){
-			$sql = "SELECT kode FROM penerbit WHERE kode='$_REQUEST[kode]' ";
+		if (isset($_REQUEST['simpan'])){
+			$sql = "SELECT kode FROM penerbit WHERE kode='".$_REQUEST['kode']."' ";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num>0){
 				$this->exist();
 			} else {
@@ -35,9 +35,9 @@ class CPenerbitAdd{
 				if ($result){
 					$sql = "SELECT replid FROM penerbit ORDER BY replid DESC LIMIT 1";
 					$result = QueryDb($sql);
-					$row = @mysql_fetch_row($result);
+					$row = @mysqli_fetch_row($result);
 					//echo $row[0];
-					$this->success($_REQUEST[flag],$row[0]);	
+					$this->success($_REQUEST['flag'],$row[0]);	
 				}
 			}
 		}
@@ -48,7 +48,7 @@ class CPenerbitAdd{
 			alert('Kode sudah digunakan!');
 			document.location.href="penerbit.add.php";
 		</script>
-        <?
+        <?php
 	}
 	function success($flag,$lastid){
 		if ($flag=='' || $flag=='0') {
@@ -57,20 +57,20 @@ class CPenerbitAdd{
 				parent.opener.getfresh();
 				window.close();
 			</script>
-			<?
+			<?php
 		} else {
 			?>
 			<script language="javascript">
 				parent.opener.getfresh('penerbit','<?=$lastid?>');
 				window.close();
 			</script>
-			<?
+			<?php
 		}
 	}
 	function add(){
 		?>
         <form name="addpenerbit" onSubmit="return validate()">
-		<input name="flag" type="hidden" class="inputtxt" id="flag" value="<?=$_REQUEST[flag]?>" >
+		<input name="flag" type="hidden" class="inputtxt" id="flag" value="<?=$_REQUEST['flag']?>" >
 		<table width="100%" border="0" cellspacing="2" cellpadding="2">
           <tr>
             <td colspan="2" align="left">
@@ -118,7 +118,7 @@ class CPenerbitAdd{
           </tr>
         </table>
 		</form>
-		<?
+		<?php
 	}
 }
 ?>

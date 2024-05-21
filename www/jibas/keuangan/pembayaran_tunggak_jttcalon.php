@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -54,17 +54,17 @@ $idcalon = 0;
 $sql = "SELECT c.replid, c.nopendaftaran, c.nama, c.telponsiswa as telpon, c.hpsiswa as hp, 
 				   k.kelompok, c.alamatsiswa as alamattinggal, p.proses 
 			 FROM jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k, jbsakad.prosespenerimaansiswa p 
-			WHERE c.idkelompok = k.replid AND c.idproses = p.replid AND c.nopendaftaran = '$nopendaftaran'";
+			WHERE c.idkelompok = k.replid AND c.idproses = p.replid AND c.nopendaftaran = '".$nopendaftaran."'";
 		
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	CloseDb();
 	exit();
 } 
 else 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$no = $row['nopendaftaran'];
 	$nama = $row['nama'];
 	$telpon = $row['telpon'];
@@ -76,9 +76,9 @@ else
 }
 
 //// Informasi nama penerimaan
-$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 
 //// Ambil informasi besar pembayaran yang harus dilunasi
@@ -92,14 +92,14 @@ $lunas = 0;
 // FIXED: 27 Agustus 2010
 $sql = "SELECT b.replid AS id, b.besar, b.keterangan, b.lunas, b.info1 AS idjurnal 
  		    FROM besarjttcalon b 
-		   WHERE b.idcalon = '$idcalon' AND b.idpenerimaan = '$idpenerimaan' AND b.info2 = '$idtahunbuku'";	
+		   WHERE b.idcalon = '$idcalon' AND b.idpenerimaan = '$idpenerimaan' AND b.info2 = '".$idtahunbuku."'";	
 
 $result = QueryDb($sql);
-$bayar = mysql_num_rows($result);
+$bayar = mysqli_num_rows($result);
 $tgl_jurnal = date('d-m-Y');
-if (mysql_num_rows($result) > 0) 
+if (mysqli_num_rows($result) > 0) 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$idbesarjtt = $row['id'];
 	$lunas = $row['lunas'];
 	$besar = $row['besar'];
@@ -275,7 +275,7 @@ function panggil(elem){
             </tr>
             <tr>
                 <td><strong>Jumlah</strong></td>
-            	<td><input type="text" name="besar" id="besar" size="20" value="<?=FormatRupiah($besar) ?>" onblur="formatRupiah('besar')" onfocus="unformatRupiah('besar');panggil('besar')" onKeyPress="return focusNext('keterangan', event)" <? //$dis?> onkeyup="salinangka()"/>
+            	<td><input type="text" name="besar" id="besar" size="20" value="<?=FormatRupiah($besar) ?>" onblur="formatRupiah('besar')" onfocus="unformatRupiah('besar');panggil('besar')" onKeyPress="return focusNext('keterangan', event)" <?php //$dis?> onkeyup="salinangka()"/>
                 	<input type="hidden" name="angkabesar" id="angkabesar" value="<?=$besar ?>" />
                 </td>
             </tr>
@@ -286,7 +286,7 @@ function panggil(elem){
             <tr>
 			    <td>Status</td>
                 <td>
-				<?  if ($lunas == 1)
+				<?php  if ($lunas == 1)
                     $info = "<font color=blue><strong>Lunas</strong></font>";
 					 elseif ($lunas == 2)
 						  $info = "<font color=brown><strong>Gratis</strong></font>";
@@ -355,11 +355,11 @@ function panggil(elem){
   	</tr>
     <tr>
         <td align="center" colspan="2"> 
-<? 	  if ($bayar > 0 && $lunas <> 2) 
+<?php 	  if ($bayar > 0 && $lunas <> 2) 
 		  { 
-        		$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+        		$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
         		$result = QueryDb($sql);
-        		$row = mysql_fetch_row($result);
+        		$row = mysqli_fetch_row($result);
         		$nbayar = $row[0];
         
        		$info = "Pembayaran Pertama";
@@ -376,7 +376,7 @@ function panggil(elem){
 							   AND b.replid = '$idbesarjtt'
 							 ORDER BY p.tanggal ASC";
 					$result = QueryDb($sql);
-					if (mysql_num_rows($result) > 1) 
+					if (mysqli_num_rows($result) > 1) 
 						$info = "Pembayaran Cicilan";   ?> 
                   
         		  <fieldset>
@@ -388,10 +388,10 @@ function panggil(elem){
             <a href="#" onClick="document.location.reload()"><img src="images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
 
             <a href="JavaScript:cetak()"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;        
-        	<? if ($lunas == 0) { ?>		
+        	<?php if ($lunas == 0) { ?>		
             <a href="#" onClick="JavaScript:tambah()">
             <img src="images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')">&nbsp;Tambah Cicilan</a>&nbsp;
-         <? } ?>
+         <?php } ?>
 
             </td>
         </tr>
@@ -408,10 +408,10 @@ function panggil(elem){
             <td class="header" width="12%">Petugas</td>
             <td class="header">&nbsp;</td>
         </tr>
-<? 		$cnt = 0;
+<?php 		$cnt = 0;
 			$total = 0;
 			$total_diskon = 0;
-			while ($row = mysql_fetch_array($result)) 
+			while ($row = mysqli_fetch_array($result)) 
 			{
 			  $total += $row['jumlah'] + $row['diskon'];
 			  $total_diskon += $row['diskon'];
@@ -424,18 +424,18 @@ function panggil(elem){
 			   <td align="right"><?=FormatRupiah($row['diskon'])?></td>
                <td align="left"><?=$row['keterangan'] ?></td>
                <td align="center"><?=$row['petugas'] ?></td>
-               <? if ($row['idtahunbuku'] == $idtahunbuku_aktif) { ?>
+               <?php if ($row['idtahunbuku'] == $idtahunbuku_aktif) { ?>
                <td align="center">
                    <a href="#" onclick="cetakkuitansi(<?=$row['id'] ?>)">
                    <img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Kuitansi Pembayaran!', this, event, '100px')"/></a>&nbsp;
-                  <? if (getLevel() != 2) { ?>
+                  <?php if (getLevel() != 2) { ?>
                         <a href="#" onclick="editpembayaran(<?=$row['id'] ?>)">
                         <img src="images/ico/ubah.png" border="0"onMouseOver="showhint('Ubah Pembayaran Cicilan!', this, event, '120px')" /></a>
-                  <? } ?>
+                  <?php } ?>
                </td>
-            <? } else {  echo  "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; } ?>
+            <?php } else {  echo  "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; } ?>
            </tr>
-        <?
+        <?php
         	}
         	$sisa = $besar - $total;?>
         <tr height="35">
@@ -451,7 +451,7 @@ function panggil(elem){
         </script>
         </form>
         </fieldset>
-   <?	} else { ?>
+   <?php } else { ?>
    		<fieldset>
         <legend><font size="2" color="#003300"><strong>Pembayaran Pertama</strong></font></legend>
         <table width="100%" border="0" align="center">          
@@ -464,8 +464,8 @@ function panggil(elem){
         </tr>
         </table>  
 		</fieldset>   		
-   <? 	} ?>     
-<?	} ?>       
+   <?php 	} ?>     
+<?php } ?>       
 		<!-- EOF CONTENT -->
 		</td>
 	</tr>
@@ -474,11 +474,11 @@ function panggil(elem){
 </tr>
 </table>
 
-<? if (strlen($errmsg) > 0) { ?>
+<?php if (strlen((string) $errmsg) > 0) { ?>
 <script language="javascript">
 alert('<?=$errmsg ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

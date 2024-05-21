@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -73,7 +73,7 @@ function cetak() {
 <tr>
 	<td align="left">
     
-<?  OpenDb();   
+<?php  OpenDb();   
 	$sql = "SELECT d.replid AS id, d.nama, SUM(p.jumlah) AS jumlah 
 			  FROM pengeluaran p, datapengeluaran d, jurnal j
 			 WHERE p.idpengeluaran = d.replid AND d.departemen = '$departemen' 
@@ -81,7 +81,7 @@ function cetak() {
 			   AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' GROUP BY d.replid, d.nama ORDER BY d.nama";
     
     $result = QueryDb($sql);    
-  	if (mysql_num_rows($result) > 0) {   
+  	if (mysqli_num_rows($result) > 0) {   
 ?>    
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
     <!-- TABLE TITLE -->
@@ -99,11 +99,11 @@ function cetak() {
         <td width="50%" class="header">Pengeluaran</td>
         <td width="*" class="header">Jumlah</td>
     </tr>
-    <?
+    <?php
     
     $cnt = 0;
     $total = 0;
-    while ($row = mysql_fetch_array($result)) {
+    while ($row = mysqli_fetch_array($result)) {
         $total += $row['jumlah'];
     ?>
     <tr height="25" onclick="show_detail(<?=$row['id'] ?>)" style="cursor:pointer">
@@ -111,7 +111,7 @@ function cetak() {
         <td align="left"><strong><u><?=$row['nama'] ?></u></strong></td>
         <td align="right"><?=FormatRupiah($row['jumlah']) ?></td>
     </tr>
-    <?
+    <?php
     }
     CloseDb();
     ?>
@@ -126,7 +126,7 @@ function cetak() {
     </script>
    
 
-<?	} else { ?>	
+<?php } else { ?>	
 
     <table width="100%" border="0" align="center">          
     <tr>
@@ -137,7 +137,7 @@ function cetak() {
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

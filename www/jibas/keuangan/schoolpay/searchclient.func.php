@@ -4,9 +4,9 @@
  * Jaringan Informasi Bersama Antar Sekolah
  *
  * @version: 15 (January 02, 2019)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ function SearchClient()
     }
 
     $res = QUeryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<center>Tidak ditemukan data</center>";
         return;
@@ -107,10 +107,10 @@ function SearchClient()
             <td width="18%" class="header"><?=$titleInfo?></td>
             <td width="12%" class="header">&nbsp;</td>
         </tr>
-        <?
+        <?php
         $cnt = 0;
 
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $cnt += 1;
             ?>
@@ -123,10 +123,10 @@ function SearchClient()
                     <input type="button" class="but" value="pilih" style="width: 40px; height: 24px;" onclick="pilih('<?=$data?>', '<?=$row[0]?>', '<?=$row[1]?>', '<?=$row[2]?>');">
                 </td>
             </tr>
-            <?
+            <?php
         }
         ?>
     </table>
-    <?
+    <?php
 }
 ?>

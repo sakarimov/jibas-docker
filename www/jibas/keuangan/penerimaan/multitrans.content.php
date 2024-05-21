@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 16.2 (March 12, 2019)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -41,9 +41,9 @@ $nama = $_REQUEST['nama'];
 $kelas = $_REQUEST['kelas'];
 
 if ($kelompok == "siswa")
-    $jenisp = array("JTT" => "Iuran Wajib Siswa", "SKR" => "Iuran Sukarela Siswa");
+    $jenisp = ["JTT" => "Iuran Wajib Siswa", "SKR" => "Iuran Sukarela Siswa"];
 else
-    $jenisp = array("CSWJB" => "Iuran Wajib Calon Siswa", "CSSKR" => "Iuran Sukarela Calon Siswa");
+    $jenisp = ["CSWJB" => "Iuran Wajib Calon Siswa", "CSSKR" => "Iuran Sukarela Calon Siswa"];
 
 OpenDb();    
 ?>
@@ -68,7 +68,7 @@ OpenDb();
 		<table border="0" cellpadding="6" cellspacing="0" width="100%">
 		<tr>
 			<td align="center" valign="top" width='30%' rowspan='3' style='background-color: #eee'>
-<?          	ShowInfoSiswa() ?>					
+<?php          	ShowInfoSiswa() ?>					
 			</td>
 			<td align="left" valign="top">
 				<strong><?= "$noid $nama ($kelas)" ?></strong>
@@ -76,13 +76,13 @@ OpenDb();
 		</tr>
 		<tr>	
 			<td align="left" valign="top">
-<?          	ShowSelectJenisPayment() ?>
+<?php          	ShowSelectJenisPayment() ?>
 			</td>
 		</tr>
 		<tr>	
 			<td align="left" valign="top">
 			<div id="divSelectPayment">
-<?          	ShowSelectPayment() ?>
+<?php          	ShowSelectPayment() ?>
 			</div>
 			</td>
 		</tr>
@@ -141,7 +141,7 @@ OpenDb();
 		<td align="left" valign="top">
 			Keterangan:<br>
 			<input type='text' id='ktransaksi' name='ktransaksi' size='100' style="border-style: solid; border-color: #ccc; border-width: 1px;"><br>
-			<input type='checkbox' id='smsinfo' name='smsinfo' <? if ($SendSmsPayment == 1) echo "checked"?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
+			<input type='checkbox' id='smsinfo' name='smsinfo' <?php if ($SendSmsPayment == 1) echo "checked"?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
 		</td>
 	</tr>	
 	</table>
@@ -154,6 +154,6 @@ OpenDb();
         
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

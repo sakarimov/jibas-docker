@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $sql = "SELECT c.nopendaftaran, c.nama, c.panggilan, c.tahunmasuk, c.idproses, c
 		 WHERE c.replid=$replid AND p.replid = c.idproses AND k.replid = c.idkelompok AND p.replid = k.idproses";
 
 $result=QueryDB($sql);
-$row_siswa = mysql_fetch_array($result); 
+$row_siswa = mysqli_fetch_array($result); 
 
 
 ?>
@@ -150,7 +150,7 @@ function cetak() {
                 <td >3.</td>
                 <td>Jenis Kelamin</td>
                 <td >:
-                    <? 	if ($row_siswa['kelamin']=="l")
+                    <?php 	if ($row_siswa['kelamin']=="l")
                         echo "Laki-laki";
                     if ($row_siswa['kelamin']=="p")
                         echo "Perempuan";
@@ -184,13 +184,13 @@ function cetak() {
                 <td>8.</td>
                 <td>Anak ke</td>
                 <td>:
-                    <? if ($row_siswa['anakke']!=0) { echo $row_siswa['anakke']; } ?></td>
+                    <?php if ($row_siswa['anakke']!=0) { echo $row_siswa['anakke']; } ?></td>
             </tr>
             <tr height="20">
                 <td>9.</td>
                 <td>Dari</td>
                 <td>:
-                    <? if ($row_siswa['jsaudara']!=0) { echo $row_siswa['jsaudara']; } ?> bersaudara</td>
+                    <?php if ($row_siswa['jsaudara']!=0) { echo $row_siswa['jsaudara']; } ?> bersaudara</td>
             </tr>
             <tr height="20">
                 <td>10.</td>
@@ -286,13 +286,13 @@ function cetak() {
                 <td>22.</td>
                 <td >Berat Badan</td>
                 <td colspan="2">:
-                    <? if ($row_siswa['berat']!=0) { echo $row_siswa['berat']." Kg"; } ?></td>
+                    <?php if ($row_siswa['berat']!=0) { echo $row_siswa['berat']." Kg"; } ?></td>
             </tr>
             <tr height="20">
                 <td>23.</td>
                 <td>Tinggi Badan</td>
                 <td colspan="2">:
-                    <? if ($row_siswa['tinggi']!=0) { echo $row_siswa['tinggi']." cm"; } ?></td>
+                    <?php if ($row_siswa['tinggi']!=0) { echo $row_siswa['tinggi']." cm"; } ?></td>
             </tr>
             <tr height="20">
                 <td>24.</td>
@@ -359,12 +359,12 @@ function cetak() {
                 <td >Nama</td>
                 <td >:
                     <?=$row_siswa['namaayah']?>
-                    <?
+                    <?php
                     if ($row_siswa['almayah']==1)
                         echo "&nbsp;(alm)";
                     ?></td>
                 <td><?=$row_siswa['namaibu']?>
-                    <?
+                    <?php
                     if ($row_siswa['almibu']==1)
                         echo "&nbsp;(alm)";
                     ?></td>
@@ -402,8 +402,8 @@ function cetak() {
             <tr height="20">
                 <td>36.</td>
                 <td >Penghasilan</td>
-                <td >:&nbsp;<? if ($row_siswa['penghasilanayah']!=0) { echo FormatRupiah($row_siswa['penghasilanayah']); } ?></td>
-                <td><? if ($row_siswa['penghasilanibu']!=0) { echo FormatRupiah($row_siswa['penghasilanibu']); } ?></td>
+                <td >:&nbsp;<?php if ($row_siswa['penghasilanayah']!=0) { echo FormatRupiah($row_siswa['penghasilanayah']); } ?></td>
+                <td><?php if ($row_siswa['penghasilanibu']!=0) { echo FormatRupiah($row_siswa['penghasilanibu']); } ?></td>
             </tr>
             <tr height="20">
                 <td>37.</td>
@@ -483,7 +483,7 @@ $sql = "SELECT ds.replid, ds.idtambahan, td.kolom, ds.jenis, ds.teks, ds.filenam
          ORDER BY td.urutan  ";
 
 $res = QueryDb($sql);
-$ntambahandata = mysql_num_rows($res);
+$ntambahandata = mysqli_num_rows($res);
 
 if ($ntambahandata > 0)
 {
@@ -504,7 +504,7 @@ if ($ntambahandata > 0)
 <?php
             $no = 46;
             $first = true;
-            while ($row = mysql_fetch_array($res)) {
+            while ($row = mysqli_fetch_array($res)) {
                 $no += 1;
                 $replid = $row['replid'];
                 $kolom = $row['kolom'];
@@ -530,7 +530,7 @@ if ($ntambahandata > 0)
                     <td colspan="2">:
                         <?= $data ?></td>
                 </tr>
-        <?
+        <?php
             }
 }
 ?>

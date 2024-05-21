@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/config.php');
@@ -50,21 +50,21 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "dw8dxn8w9ms8zs22") {
-	$sql = "UPDATE jbsvcr.gambarlogin SET aktif = 1 WHERE replid = $_REQUEST[replid] ";
+	$sql = "UPDATE jbsvcr.gambarlogin SET aktif = 1 WHERE replid = {$_REQUEST['replid']} ";
 	QueryDb($sql);
-	$sql2 = "UPDATE jbsvcr.gambarlogin SET aktif = 0 WHERE replid <> $_REQUEST[replid] ";
+	$sql2 = "UPDATE jbsvcr.gambarlogin SET aktif = 0 WHERE replid <> {$_REQUEST['replid']} ";
 	QueryDb($sql2);
 } 
 if ($op == "fckgwrhqq2yxrkt8tg6w2b7q8") {
-	$sql = "SELECT * FROM jbsvcr.gambarlogin WHERE replid = $_REQUEST[replid] ";
+	$sql = "SELECT * FROM jbsvcr.gambarlogin WHERE replid = {$_REQUEST['replid']} ";
 	$res = QueryDb($sql);
-	$row = @mysql_fetch_array($res);
-	if ($row[aktif]==1){
+	$row = @mysqli_fetch_array($res);
+	if ($row['aktif']==1){
 		$sql2 = "SELECT replid FROM jbsvcr.gambarlogin ORDER BY replid ASC LIMIT 1 ";
 		//echo $sql2;
 		$res2 = QueryDb($sql2);
-		$row2 = @mysql_fetch_array($res2);
-		$akt2 = $row2[replid];
+		$row2 = @mysqli_fetch_array($res2);
+		$akt2 = $row2['replid'];
 		$sql3 = "UPDATE jbsvcr.gambarlogin SET aktif=1 WHERE replid = $akt2";
 		//echo $sql3;
 		$res3 = QueryDb($sql3);
@@ -73,7 +73,7 @@ if ($op == "fckgwrhqq2yxrkt8tg6w2b7q8") {
 	//echo $filename ;
 	if ($row['direktori']!="" && $row['namafile']!=""){
 	delete($filename);
-	$sql4 = "DELETE FROM jbsvcr.gambarlogin WHERE replid = $_REQUEST[replid]";
+	$sql4 = "DELETE FROM jbsvcr.gambarlogin WHERE replid = {$_REQUEST['replid']}";
 	$res4 = QueryDb($sql4);
 	} else {
 	exit;
@@ -137,31 +137,31 @@ function hapus(replid) {
     <td width="18%" height="30" align="center" class="header">Aktif</td>
     <td width="17%" height="30" align="center" class="header">&nbsp;</td>
   </tr>
-  <?
+  <?php
   OpenDb();
   $sql="SELECT * FROM jbsvcr.gambarlogin ORDER BY replid";
   $result=QueryDb($sql);
-  if (@mysql_num_rows($result)>0){
+  if (@mysqli_num_rows($result)>0){
   $cnt=1;
-  while ($row=@mysql_fetch_array($result)){
+  while ($row=@mysqli_fetch_array($result)){
   $aktif=0;
-  $aktif=$row[aktif];
+  $aktif=$row['aktif'];
   ?>
   <tr>
     <th align="center" valign="top" width="5"><?=$cnt?></th>
-    <td align="center" width="150"><img title="Klik untuk Preview, Dobel Klik untuk mengaktifkan Gambar" src="../<?=$row[direktori].$row[namafile]?>" width="80" height="60" onclick="view('<?=$row[direktori].$row[namafile]?>')" ondblclick="setaktif('<?=$row[replid] ?>')" style="cursor:pointer;"/></td>
-    <td align="center" valign="top" width="7"><? if ($aktif == 1) { ?>
+    <td align="center" width="150"><img title="Klik untuk Preview, Dobel Klik untuk mengaktifkan Gambar" src="../<?=$row['direktori'].$row['namafile']?>" width="80" height="60" onclick="view('<?=$row['direktori'].$row['namafile']?>')" ondblclick="setaktif('<?=$row['replid'] ?>')" style="cursor:pointer;"/></td>
+    <td align="center" valign="top" width="7"><?php if ($aktif == 1) { ?>
 				<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/>
-<?			} else { ?>
-				<a href="JavaScript:setaktif('<?=$row[replid] ?>')"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/></a>
-<?			} ?></td>
-    <td align="center" valign="top" width="8"><img onclick="hapus('<?=$row[replid] ?>')" title="Hapus gambar ini" src="../images/ico/hapus.png" width="16" height="16" style="cursor:pointer;"/></td>
+<?php 		} else { ?>
+				<a href="JavaScript:setaktif('<?=$row['replid'] ?>')"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/></a>
+<?php 		} ?></td>
+    <td align="center" valign="top" width="8"><img onclick="hapus('<?=$row['replid'] ?>')" title="Hapus gambar ini" src="../images/ico/hapus.png" width="16" height="16" style="cursor:pointer;"/></td>
   </tr>
-  <? $cnt++; } } else { ?>
+  <?php $cnt++; } } else { ?>
   <tr>
     <th align="center" scope="row" colspan="4">Tidak ada Gambar Login</th>
   </tr>
-  <? } ?>
+  <?php } ?>
 </table></th>
     <td width="450" valign="top"><div align="left" id="viewcolumn"></div></td>
   </tr>

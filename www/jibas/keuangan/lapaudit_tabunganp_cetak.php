@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -45,8 +45,8 @@ $idtahunbuku = 0;
 if (isset($_REQUEST['idtahunbuku']))
 	$idtahunbuku = $_REQUEST['idtahunbuku'];
 
-$tgl1 = explode(' ',$tanggal1);
-$tgl2 = explode(' ',$tanggal2);
+$tgl1 = explode(' ',(string) $tanggal1);
+$tgl2 = explode(' ',(string) $tanggal2);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -87,7 +87,7 @@ $tgl2 = explode(' ',$tanggal2);
     <td class="header" width="*">Keterangan</td>
     <td class="header" width="15%">Petugas</td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT DISTINCT ai.petugas as petugasubah, j.transaksi, date_format(ai.tanggal, '%d-%b-%Y %H:%i:%s') as tanggalubah,  
 			   ap.idaudit, ap.statusdata, j.nokas, date_format(ap.tanggal, '%d-%b-%Y') AS tanggal, ap.petugas, ap.keterangan, 
@@ -99,7 +99,7 @@ $sql = "SELECT DISTINCT ai.petugas as petugasubah, j.transaksi, date_format(ai.t
 $result = QueryDb($sql);
 $cnt = 0;
 $no = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$statusdata = "Data Lama";
 	$bgcolor = "#FFFFFF";
 	if ($row['statusdata'] == 1) {
@@ -117,7 +117,7 @@ while ($row = mysql_fetch_array($result)) {
          &nbsp;&nbsp;<strong>Alasan : </strong><?=$row['alasan'];?>
         <br /><strong>Transaksi :</strong> <?=$row['transaksi'] ?></td>
     </tr>
-<?  } ?>
+<?php  } ?>
 
 	<tr bgcolor="<?=$bgcolor?>">
 		<td><?=$statusdata ?></td>
@@ -127,7 +127,7 @@ while ($row = mysql_fetch_array($result)) {
 	    <td><?=$row['keterangan'] ?></td>
 	    <td align="center"><?=$row['petugas']; ?></td>
 	</tr>
-<?
+<?php
 	$cnt++;
 }
 CloseDb();

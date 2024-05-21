@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $kelas = $_REQUEST['kelas'];
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? include("../library/headercetak.php") ?>
+<?php include("../library/headercetak.php") ?>
 
 <center>
 <font size="3"><strong>DATA SISWA</strong></font><br />
@@ -63,17 +63,17 @@ $kelas = $_REQUEST['kelas'];
         <td width="20%" class="header">NIS</td>
         <td width="70%" class="header">Nama</td>
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	//$sql = "SELECT NIS,nama FROM siswa WHERE departemen='$departemen' ORDER BY NIS";   
 	$result = QueryDB($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['semester'] ?></td>        
         <td><?=$row['keterangan'] ?></td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>

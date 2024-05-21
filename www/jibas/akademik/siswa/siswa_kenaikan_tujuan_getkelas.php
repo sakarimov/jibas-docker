@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -30,22 +30,22 @@ $tingkat=$_REQUEST['tingkat'];
 $tahunajaran=$_REQUEST['tahunajaran'];
 ?>
 <select name="kelas" id="kelas" onchange="change_tabel()">
-  <?
+  <?php
 OpenDb();
 $sql_kelas="SELECT k.replid,k.kelas,k.kapasitas FROM jbsakad.kelas k WHERE k.idtingkat='$tingkat' AND k.idtahunajaran='$tahunajaran' AND k.aktif=1 ORDER BY k.kelas";
 $result_kelas=QueryDb($sql_kelas);
 
-while ($row_kelas=@mysql_fetch_row($result_kelas)){
+while ($row_kelas=@mysqli_fetch_row($result_kelas)){
 //$idkelas=$row_kelas[0];
-$sql_terisi="SELECT COUNT(*) FROM jbsakad.siswa WHERE idkelas='$row_kelas[0]' AND aktif = 1";
+$sql_terisi="SELECT COUNT(*) FROM jbsakad.siswa WHERE idkelas='".$row_kelas[0]."' AND aktif = 1";
 $result_terisi=QueryDb($sql_terisi);
-$row_terisi=@mysql_fetch_row($result_terisi);
+$row_terisi=@mysqli_fetch_row($result_terisi);
 $terisi=(int)$row_terisi[0];
 ?>
       <option value="<?=$row_kelas[0]?>">
         <?=$row_kelas[1]?>&nbsp;Kapasitas&nbsp;:&nbsp;<?=$row_kelas[2]?>&nbsp;Terisi&nbsp;:&nbsp;<?=$terisi?>
         </option>
-      <?
+      <?php
 }
 CloseDb();
 ?></select>

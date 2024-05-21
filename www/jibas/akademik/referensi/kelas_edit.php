@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,17 +31,17 @@ require_once('../include/db_functions.php');
 $replid = $_REQUEST['replid'];
 
 OpenDb();
-/*$sql_get_namatahunajaran = "SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid = '$tahunajaran'";
+/*$sql_get_namatahunajaran = "SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid = '".$tahunajaran."'";
 $result_get_namatahunajaran = QueryDb($sql_get_namatahunajaran);
-$row_get_namatahunajaran =@mysql_fetch_array($result_get_namatahunajaran);
+$row_get_namatahunajaran =@mysqli_fetch_array($result_get_namatahunajaran);
 
-$sql_get_namatingkat = "SELECT tingkat, departemen FROM jbsakad.tingkat WHERE replid = '$tingkat'";
+$sql_get_namatingkat = "SELECT tingkat, departemen FROM jbsakad.tingkat WHERE replid = '".$tingkat."'";
 $result_get_namatingkat = QueryDb($sql_get_namatingkat);
-$row_get_namatingkat =@mysql_fetch_array($result_get_namatingkat);
+$row_get_namatingkat =@mysqli_fetch_array($result_get_namatingkat);
 */
 $sql_get_kelas = "SELECT k.kelas, k.kapasitas, k.keterangan, a.tahunajaran, a.departemen, t.tingkat, k.nipwali, k.idtahunajaran, k.idtingkat FROM jbsakad.kelas k, tahunajaran a, tingkat t WHERE k.replid = '$replid' AND k.idtingkat = t.replid AND k.idtahunajaran = a.replid";
 $result_get_kelas = QueryDb($sql_get_kelas);
-$row_get_kelas =@mysql_fetch_array($result_get_kelas);
+$row_get_kelas =@mysqli_fetch_array($result_get_kelas);
 $departemen = $row_get_kelas['departemen'];
 $idtahunajaran = $row_get_kelas['idtahunajaran'];
 $idtingkat = $row_get_kelas['idtingkat'];
@@ -58,9 +58,9 @@ if (isset($_REQUEST['kapasitas']))
 if (isset($_REQUEST['keterangan']))
 	$keterangan = CQ($_REQUEST['keterangan']);
 
-$sql_get_pegawai = "SELECT * FROM jbssdm.pegawai WHERE nip = '$row_get_kelas[nipwali]'";
+$sql_get_pegawai = "SELECT * FROM jbssdm.pegawai WHERE nip = '".$row_get_kelas['nipwali']."'";
 $result_get_pegawai = QueryDb($sql_get_pegawai);
-$row_get_pegawai =@mysql_fetch_array($result_get_pegawai);
+$row_get_pegawai =@mysqli_fetch_array($result_get_pegawai);
 $nipwali = $row_get_pegawai['nip'];
 $namawali = $row_get_pegawai['nama'];
 
@@ -73,11 +73,11 @@ $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
 	$sql_cek = "SELECT * FROM kelas WHERE kelas = '$kelas' AND idtahunajaran = '$idtahunajaran' AND idtingkat = '$idtingkat' AND replid <>  '$replid'";
 	$result_cek = QueryDb($sql_cek);
-	if (@mysql_num_rows($result_cek) > 0) {
+	if (@mysqli_num_rows($result_cek) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Kelas ".$kelas." sudah digunakan!";
 	} else {
-		$sql = "UPDATE kelas SET kelas='$kelas',kapasitas='$_REQUEST[kapasitas]', nipwali='".trim($_REQUEST[nipwali])."', keterangan='$keterangan' WHERE replid= '$replid'";
+		$sql = "UPDATE kelas SET kelas='$kelas',kapasitas='".$_REQUEST['kapasitas']."', nipwali='".trim((string) $_REQUEST['nipwali'])."', keterangan='$keterangan' WHERE replid= '$replid'";
 		
 		$result = QueryDb($sql);
 		if ($result) { ?>
@@ -85,7 +85,7 @@ if (isset($_REQUEST['Simpan'])) {
 			opener.refresh();
 			window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 } 
 CloseDb();
@@ -97,7 +97,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Kelas]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -227,11 +227,11 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

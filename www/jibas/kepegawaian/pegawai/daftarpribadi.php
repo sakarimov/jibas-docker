@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -84,7 +84,7 @@ $DP = new DaftarPribadi();
 <tr><td>
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">
-<? if (strlen($DP->ERRMSG) > 0) { ?>
+<?php if (strlen((string) $DP->ERRMSG) > 0) { ?>
 <tr>
 	<td colspan="2" align="center">
         <table border="1" style="border-style:dashed; border-color:#CC0000; background-color:#FFFFCC" width="300">
@@ -92,25 +92,25 @@ $DP = new DaftarPribadi();
         </table>
 	</td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
 	<td align="right" valign="top"><strong>Status </strong>:</td>
     <td width="*" align="left" valign="top">
-    <input type="radio" name="rbPNS" id="rbPNS" value="PNS" <? if($DP->pns == "PNS") echo "checked"; ?> />&nbsp;PNS&nbsp;&nbsp;
-    <input type="radio" name="rbPNS" id="rbPNS" value="CPNS" <? if($DP->pns == "CPNS") echo "checked"; ?> />&nbsp;CPNS&nbsp;&nbsp;
-    <input type="radio" name="rbPNS" id="rbPNS" value="HONORER" <? if($DP->pns == "HONORER") echo "checked"; ?> />&nbsp;Honorer
-	<input type="radio" name="rbPNS" id="rbPNS" value="SWASTA" <? if($DP->pns == "SWASTA") echo "checked"; ?> />&nbsp;Swasta
+    <input type="radio" name="rbPNS" id="rbPNS" value="PNS" <?php if($DP->pns == "PNS") echo "checked"; ?> />&nbsp;PNS&nbsp;&nbsp;
+    <input type="radio" name="rbPNS" id="rbPNS" value="CPNS" <?php if($DP->pns == "CPNS") echo "checked"; ?> />&nbsp;CPNS&nbsp;&nbsp;
+    <input type="radio" name="rbPNS" id="rbPNS" value="HONORER" <?php if($DP->pns == "HONORER") echo "checked"; ?> />&nbsp;Honorer
+	<input type="radio" name="rbPNS" id="rbPNS" value="SWASTA" <?php if($DP->pns == "SWASTA") echo "checked"; ?> />&nbsp;Swasta
     </td>
 </tr>
 <tr>
 	<td align="right" valign="top"><strong>Bagian </strong>:</td>
     <td width="*" align="left" valign="top">
-<?	 $sql = "SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan";
+<?php  $sql = "SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan";
 	 $res = QueryDb($sql);
 	 $checked = "checked='checked'";
-	 while ($row = @mysql_fetch_row($res))
+	 while ($row = @mysqli_fetch_row($res))
 	 {
-		 echo "<input type='radio' $checked name='rbBagian' id='rbBagian' value='$row[0]' " .  StringIsChecked($row[0], $DP->bagian) . " />&nbsp;$row[0]&nbsp;";
+		 echo "<input type='radio' $checked name='rbBagian' id='rbBagian' value='".$row[0]."' " .  StringIsChecked($row[0], $DP->bagian) . " />&nbsp;$row[0]&nbsp;";
 		 $checked = "";
 	 } ?>
     </td>
@@ -171,14 +171,14 @@ $DP = new DaftarPribadi();
     <td width="*" align="left" valign="top">
     <input type="text" name="txTmpLahir" id="txTmpLahir" size="20" maxlength="25" value="<?=$DP->tmplahir?>" onKeyPress="return focusNext('cbTglLahir', event)"/>, 
     <select id="cbTglLahir" name="cbTglLahir" onKeyPress="return focusNext('cbBlnLahir', event)">
-<?	for ($i = 1; $i <= 31; $i++) { ?>    
+<?php for ($i = 1; $i <= 31; $i++) { ?>    
     	<option value="<?=$i?>" <?=IntIsSelected($i, $DP->tgllahir)?>><?=$i?></option>	
-<?	} ?>    
+<?php } ?>    
 	</select>
     <select id="cbBlnLahir" name="cbBlnLahir" onKeyPress="return focusNext('txThnLahir', event)">
-<?	for ($i = 1; $i <= 12; $i++) { ?>    
+<?php for ($i = 1; $i <= 12; $i++) { ?>    
     	<option value="<?=$i?>" <?=IntIsSelected($i, $DP->blnlahir)?>><?=NamaBulan($i)?></option>	
-<?	} ?>    
+<?php } ?>    
 	</select>
     <input type="text" name="txThnLahir" id="txThnLahir" size="4" maxlength="4" value="<?=$DP->thnlahir?>" onKeyPress="return focusNext('txAlamat', event)"/>    </td>
 </tr>
@@ -187,15 +187,15 @@ $DP = new DaftarPribadi();
     <td width="*" align="left" valign="top">
 	<span id="agama_info">
     <select name="cbAgama" id="cbAgama" onKeyPress="return focusNext('cbSuku', event)">
-<?	$sql = "SELECT agama FROM jbsumum.agama ORDER BY urutan";
+<?php $sql = "SELECT agama FROM jbsumum.agama ORDER BY urutan";
 	$result = QueryDb($sql);
-	while ($row = mysql_fetch_row($result)) { ?>    
+	while ($row = mysqli_fetch_row($result)) { ?>    
     	<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $DP->agama)?> ><?=$row[0]?></option>
-<?	} ?>    
+<?php } ?>    
     </select>&nbsp;
-<? 	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
     <img src="../images/ico/tambah.png" border="0" onClick="tambah_agama();"">
-<? 	} ?>
+<?php 	} ?>
 	</span>
 	</td>
 </tr>
@@ -204,15 +204,15 @@ $DP = new DaftarPribadi();
     <td width="*" align="left" valign="top">
 	<span id="suku_info">
     <select name="cbSuku" id="cbSuku" onKeyPress="return focusNext('cbNikah', event)">
-<?		$sql = "SELECT suku FROM jbsumum.suku";
+<?php 	$sql = "SELECT suku FROM jbsumum.suku";
 		$res = QueryDb($sql);
-	    while ($row = @mysql_fetch_row($res))
-		  echo "<option value='$row[0]' " . StringIsSelected($row[0], $DP->suku) . " >$row[0]</option>";
+	    while ($row = @mysqli_fetch_row($res))
+		  echo "<option value='".$row[0]."' " . StringIsSelected($row[0], $DP->suku) . " >".$row[0]."</option>";
 ?>
     </select>&nbsp;
-<? 	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
 		<img src="../images/ico/tambah.png" onClick="tambah_suku();" />
-<? 	} ?>
+<?php 	} ?>
     </span>
 	</td>
 </tr>
@@ -278,7 +278,7 @@ $DP = new DaftarPribadi();
 <tr>
 	<td align="right" valign="top"><strong>Status :</strong></td>
     <td width="*" align="left" valign="top">
-<?	$aktifchecked = "";
+<?php $aktifchecked = "";
 	if ($DP->aktif == 1) 
 		$aktifchecked = "checked"; 
 		
@@ -294,15 +294,15 @@ $DP = new DaftarPribadi();
 	<td align="right" valign="top"><strong>Mulai Kerja :</strong></td>
     <td width="*" align="left" valign="top">
     <select id="cbTglMulai" name="cbTglMulai" onKeyPress="return focusNext('cbBlnMulai', event)">
-<?	for ($i = 1; $i <= 31; $i++) { ?>    
+<?php for ($i = 1; $i <= 31; $i++) { ?>    
     	<option value="<?=$i?>" <?=IntIsSelected($i, $DP->tglmulai)?>><?=$i?></option>	
-<?	} ?>    
+<?php } ?>    
 	</select>
     <select id="cbBlnMulai" name="cbBlnMulai" onKeyPress="return focusNext('txThnMulai', event)">
-<?	$M = date("m");
+<?php $M = date("m");
 	for ($i = 1; $i <= 12; $i++) { ?>    
     	<option value="<?=$i?>" <?=IntIsSelected($i, $DP->blnmulai)?>><?=NamaBulan($i)?></option>	
-<?	} ?>    
+<?php } ?>    
 	</select>
     <input type="text" name="txThnMulai" id="txThnMulai" onKeyPress="return focusNext('cbTglPensiun', event)" size="4" maxlength="4" value="<?=$DP->thnmulai?>"/>    </td>
 </tr>
@@ -320,7 +320,7 @@ $DP = new DaftarPribadi();
              ORDER BY urutan";
     $res = QueryDb($sql);
     $idtambahan = "";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $replid = $row[0];
         $kolom = $row[1];
@@ -333,9 +333,9 @@ $DP = new DaftarPribadi();
         $data = "";
         if ($jenis == 1)
         {
-            $sql = "SELECT replid, teks FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -343,9 +343,9 @@ $DP = new DaftarPribadi();
         }
         else if ($jenis == 2)
         {
-            $sql = "SELECT replid, filename FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, filename FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $filename = $row2[1];
@@ -354,9 +354,9 @@ $DP = new DaftarPribadi();
         }
         else if ($jenis == 3)
         {
-            $sql = "SELECT replid, teks FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM jbssdm.tambahandatapegawai WHERE nip = '$nip' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -369,11 +369,11 @@ $DP = new DaftarPribadi();
                      ORDER BY urutan";
             $res2 = QueryDb($sql);
 
-            $arrList = array();
-            if (mysql_num_rows($res2) == 0)
+            $arrList = [];
+            if (mysqli_num_rows($res2) == 0)
                 $arrList[] = "-";
 
-            while($row2 = mysql_fetch_row($res2))
+            while($row2 = mysqli_fetch_row($res2))
             {
                 $arrList[] = $row2[0];
             }
@@ -391,25 +391,25 @@ $DP = new DaftarPribadi();
         <tr>
             <td align="right" valign="top"><?=$kolom?> :</td>
             <td width="*" align="left" valign="top">
-                <? if ($jenis == 1) { ?>
+                <?php if ($jenis == 1) { ?>
                     <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="1">
                     <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="text" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="40" maxlength="1000" value="<?=$data?>">
-                <? } else if ($jenis == 2) { ?>
+                <?php } else if ($jenis == 2) { ?>
                     <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="2">
                     <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="file" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="40" style="width: 255px""/>
                     <i><?=$data?></i>
-                <? } else { ?>
+                <?php } else { ?>
                     <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="3">
                     <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <select name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" style="width:215px">
                         <?= $opt ?>
                     </select>
-                <? } ?>
+                <?php } ?>
             </td>
         </tr>
-        <?
+        <?php
     }
     ?>
     <input type="hidden" id="idtambahan" name="idtambahan" value="<?=$idtambahan?>">
@@ -417,13 +417,13 @@ $DP = new DaftarPribadi();
 	<td align="center" valign="top" colspan="2" bgcolor="#CCCCCC">
     <input type="submit" value="Simpan" name="btSubmit" id="btSubmit" class="but" />
     &nbsp;
-<? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
     <input type="button" value="Hapus Pegawai Ini" name="btHapus" style="color:#FF0000; font-weight:bold" class="but" onClick="JavaScript:Hapus('<?=$DP->nip?>')" />
-<? } ?>	
+<?php } ?>	
 </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>    
 </td></tr>

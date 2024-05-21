@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowCbPustaka()
 {
     $sql = "SELECT replid, nama
@@ -29,9 +29,9 @@ function ShowCbPustaka()
     $res = QueryDb($sql);
     
     echo "<select id='ptkadaftar_perpus' name='ptkadaftar_perpus' class='inputbox' onchange='ptkadaftar_perpus_change()'>\r\n";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>\r\n";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>\r\n";
     }
     echo "<option value='-1'>(Semua Perpustakaan)</option>\r\n";
     echo "</select>\r\n";
@@ -69,9 +69,9 @@ function ShowCbKriteria($choice)
     $res = QueryDb($sql);
     
     echo "<select id='ptkadaftar_kriteria' name='ptkadaftar_kriteria' class='inputbox' style='width: 300px;' onchange='ptkadaftar_kriteria_change()'>\r\n";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>\r\n";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>\r\n";
     }
     echo "</select>\r\n";
 }
@@ -113,11 +113,11 @@ function ShowList($perpus, $pilih, $kriteria, $halaman)
     
     $where = "";
     if ($pilih == "KAT")
-        $where = "AND p.katalog = '$kriteria'";
+        $where = "AND p.katalog = '".$kriteria."'";
     elseif ($pilih == "PNLS")   
-        $where = "AND p.penulis = '$kriteria'";
+        $where = "AND p.penulis = '".$kriteria."'";
     elseif ($pilih == "PNBT")   
-        $where = "AND p.penerbit = '$kriteria'";    
+        $where = "AND p.penerbit = '".$kriteria."'";    
     
     if ($perpus == -1)
     {
@@ -157,7 +157,7 @@ function ShowList($perpus, $pilih, $kriteria, $halaman)
                     AND p.katalog = kt.replid
                     AND p.replid = dp.pustaka
                     $where
-                    AND dp.perpustakaan = '$perpus'";         
+                    AND dp.perpustakaan = '".$perpus."'";         
     }
     
     echo "<div style='overflow: auto; height: 350px'>";
@@ -180,34 +180,34 @@ function ShowList($perpus, $pilih, $kriteria, $halaman)
         <td width="*" class="header" align="center">Pustaka</td>
         <td width="10%" class="header" align="center">Jumlah</td>
     </tr>
-<?
+<?php
     if ($ndata == 0)
     {
         ?>
         <tr height='30'>
             <td colspan='5' align='center'><i>Tidak ada data</i></td>
         </tr>        
-        <?
+        <?php
         return;
     }
     
     $res = QueryDb($sql);        
     $cnt = ($halaman - 1) * $Pustaka_NItemPerView;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $idpustaka = $row['replid'];
         if ($perpus == -1)
         {
             $sql = "SELECT COUNT(replid)
                       FROM jbsperpus.daftarpustaka
-                     WHERE pustaka = '$idpustaka'";    
+                     WHERE pustaka = '".$idpustaka."'";    
         }
         else
         {
             $sql = "SELECT COUNT(replid)
                       FROM jbsperpus.daftarpustaka
                      WHERE pustaka = '$idpustaka'
-                       AND perpustakaan = '$perpus'"; 
+                       AND perpustakaan = '".$perpus."'"; 
         }
         $ndata = FetchSingle($sql);
         
@@ -233,7 +233,7 @@ function ShowList($perpus, $pilih, $kriteria, $halaman)
                 <font style='font-weight: bold; font-size: 12px;'><?=$ndata?></font>
             </td>
         </tr>
-        <?
+        <?php
     }
 
     echo "</table><br>";
@@ -250,15 +250,15 @@ function ShowDetailPustaka($cnt, $idpustaka)
                    IF(LENGTH(TRIM(keteranganfisik)) = 0, '-', keteranganfisik) AS keteranganfisik,
                    IF(LENGTH(TRIM(keyword)) = 0, '-', keyword) AS keyword
               FROM jbsperpus.pustaka
-             WHERE replid = '$idpustaka'";
+             WHERE replid = '".$idpustaka."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "-";
         return;
     }
     
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
     echo "<font style='color: #444;'><strong>Kata Kunci:</strong></font><br>";
     echo $row['keyword'];
     echo "<br><br>";

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -39,12 +39,12 @@ $urutan1 = $_REQUEST['urutan1'];
 OpenDb();
 $sql = "SELECT departemen FROM tahunajaran t, kelas k, siswa s WHERE s.nis='$nis' AND s.idkelas=k.replid AND k.idtahunajaran=t.replid";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 
 $sql = "SELECT nama FROM siswa WHERE nis='$nis'";   
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 //if ($pelajaran=='-1') {
 	$filter="";
 //} else {
@@ -84,15 +84,15 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	OpenDb();
 	$sql = "SELECT k.kelas, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, pp.catatan, l.nama, g.nama, p.materi, pp.replid FROM  presensipelajaran p, ppsiswa pp, jbssdm.pegawai g, kelas k, pelajaran l WHERE  pp.idpp = p.replid AND p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = g.nip AND pp.nis = '$nis' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND pp.statushadir = 0 $filter ORDER BY $urut $urutan" ;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	
 	$sql1 = "SELECT k.kelas, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, pp.catatan, l.nama, g.nama, p.materi, pp.replid FROM presensipelajaran p, ppsiswa pp, jbssdm.pegawai g, kelas k, pelajaran l WHERE  pp.idpp = p.replid AND p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = g.nip AND pp.nis = '$nis' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND pp.statushadir <> 0 $filter ORDER BY $urut1 $urutan1" ;
 	$result1 = QueryDb($sql1);			 
-	$jum_absen = mysql_num_rows($result1);
+	$jum_absen = mysqli_num_rows($result1);
 
 	if ($jum_hadir > 0) { 
 	?>
@@ -110,21 +110,21 @@ $row = mysql_fetch_array($result);
       	<td width="15%" height="30" align="center" class="header">Guru</td>
       	<td width="25%" height="30" align="center" class="header">Materi</td>       
     </tr>
-	<? 
+	<?php 
     $cnt = 1;
-    while ($row = @mysql_fetch_row($result)) {					
+    while ($row = @mysqli_fetch_row($result)) {					
     ?>	
     <tr>        			
         <td height="25" align="center"><?=$cnt?></td>      	
-      	<td height="25" align="center"><?=$row[1].'-'.$row[2].'-'.substr($row[3],2,2)?></td>
-      	<td height="25" align="center"><?=substr($row[4],0,5)?></td>
+      	<td height="25" align="center"><?=$row[1].'-'.$row[2].'-'.substr((string) $row[3],2,2)?></td>
+      	<td height="25" align="center"><?=substr((string) $row[4],0,5)?></td>
         <td height="25" align="center"><?=$row[0]?></td>        
       	<td height="25"><?=$row[5]?></td>
       	<td height="25"><?=$row[6]?></td>
       	<td height="25"><?=$row[7]?></td>
       	<td height="25"><?=$row[8]?></td>    
     </tr>
-<?		$cnt++;
+<?php 	$cnt++;
     } 
     CloseDb();	?>
     </table>
@@ -133,7 +133,7 @@ $row = mysql_fetch_array($result);
     </script>	
     </fieldset>
     
-<? 	} 
+<?php 	} 
 	if ($jum_absen > 0) { 
 	?>
    	<br />
@@ -151,27 +151,27 @@ $row = mysql_fetch_array($result);
       	<td width="15%" height="30" align="center" class="header">Guru</td>
       	<td width="25%" height="30" align="center" class="header">Materi</td>      	
     </tr>
-	<? 
+	<?php 
     $cnt = 1;
-    while ($row1 = @mysql_fetch_row($result1)) {					
+    while ($row1 = @mysqli_fetch_row($result1)) {					
     ?>	
     <tr>        			
         <td height="25" align="center"><?=$cnt?></td>        
-        <td height="25" align="center"><?=$row1[1].'-'.$row1[2].'-'.substr($row1[3],2,2)?></td>
-        <td height="25" align="center"><?=substr($row1[4],0,5)?></td>
+        <td height="25" align="center"><?=$row1[1].'-'.$row1[2].'-'.substr((string) $row1[3],2,2)?></td>
+        <td height="25" align="center"><?=substr((string) $row1[4],0,5)?></td>
         <td height="25" align="center"><?=$row1[0]?></td>
         <td height="25"><?=$row1[5]?></td>
         <td height="25"><?=$row1[6]?></td>
         <td height="25"><?=$row1[7]?></td>
         <td height="25"><?=$row1[8]?></td>        
     </tr>
-<?		$cnt++;
+<?php 	$cnt++;
     } 
     CloseDb();	?>
 	  </table>	 
 
 	</fieldset>
-<? 	} ?>    
+<?php 	} ?>    
 	<br />
     <table width="100%" border="0" align="center">
     <tr>
@@ -184,12 +184,12 @@ $row = mysql_fetch_array($result);
     </tr>
     <tr>
         <td><b>Jumlah Seharusnya</b></td>
-        <td><b>: <? $total = $jum_hadir+$jum_absen;
+        <td><b>: <?php $total = $jum_hadir+$jum_absen;
                 echo $total ?></b></td>
     </tr>
     <tr>
         <td><b>Presentase Kehadiran</b></td>
-        <td><b>: <? 	if ($total == 0) 
+        <td><b>: <?php 	if ($total == 0) 
                     $total = 1;
                 $prs = (( $jum_hadir/$total)*100) ;
                 echo (int)$prs ?>%</b></td>
@@ -199,9 +199,9 @@ $row = mysql_fetch_array($result);
 </td></tr>
 </table>    
 </body>
-<? if ($_REQUEST['lihat'] == 1) { ?>
+<?php if ($_REQUEST['lihat'] == 1) { ?>
 <script language="javascript">
 window.print();
 </script>
-<? } ?> 
+<?php } ?> 
 </html>

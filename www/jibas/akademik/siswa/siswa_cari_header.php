@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -29,7 +29,7 @@ require_once('../include/db_functions.php');
 require_once('../library/departemen.php');
 require_once('../cek.php');
 
-$tipe = array(array("nis","NIS"),array("nisn","N I S N"), array("nama","Nama"), array("panggilan","Nama Panggilan"), array("agama","Agama"), array("suku","Suku"), array ("status","Status"), array("kondisi","Kondisi Siswa"), array("darah","Golongan Darah"), array("alamatsiswa","Alamat Siswa"), array("asalsekolah","Asal Sekolah"), array("namaayah","Nama Ayah"), array("namaibu","Nama Ibu"), array("alamatortu","Alamat Orang Tua"), array("keterangan","Keterangan"));
+$tipe = [["nis", "NIS"], ["nisn", "N I S N"], ["nama", "Nama"], ["panggilan", "Nama Panggilan"], ["agama", "Agama"], ["suku", "Suku"], ["status", "Status"], ["kondisi", "Kondisi Siswa"], ["darah", "Golongan Darah"], ["alamatsiswa", "Alamat Siswa"], ["asalsekolah", "Asal Sekolah"], ["namaayah", "Nama Ayah"], ["namaibu", "Nama Ibu"], ["alamatortu", "Alamat Orang Tua"], ["keterangan", "Keterangan"]];
 
 $departemen = "";
 if (isset($_REQUEST['departemen']))
@@ -52,7 +52,7 @@ OpenDb();
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 function blank() {
 	var departemen = document.getElementById('departemen').value;
@@ -117,12 +117,12 @@ function focusNext(elemName, evt) {
   		<td width = "16%"><strong>Departemen</strong>
    		<td width = "*">
         <select name="departemen" id="departemen" onChange="blank()" style="width:140px;" onKeyPress="return focusNext('jenis', event)">
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 				if ($departemen == "")
 					$departemen = $value; ?>
     		<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> ><?=$value ?></option>
-       	<?	} ?>
+       	<?php } ?>
         </select></td>
         <td width = "*">&nbsp;</td>
         <td width = "*" rowspan="2" align="left">
@@ -131,23 +131,23 @@ function focusNext(elemName, evt) {
 	<tr> 
     	<td><strong>Pencarian</strong>
       	<td><select name="jenis" id="jenis" onchange="blank_jenis()" style="width:140px;" onKeyPress="return focusNext('cari', event)">			
-       	<?	foreach($tipe as $value) { ?>
+       	<?php foreach($tipe as $value) { ?>
 				<option value="<?=$value[0]?>" <?=StringIsSelected($value[0], $jenis)?> ><?=$value[1]?></option>
-        <? 	} ?>
+        <?php 	} ?>
     		</select>
-         <?
+         <?php
 	
 	if ($jenis == 'darah') {
-		$row = array('A','O','B','AB');
+		$row = ['A', 'O', 'B', 'AB'];
 		$jum = 4;
 ?>				
 			<select name="cari" id="cari" style="width:140px;" onKeyPress="return focusNext('tabel', event)">
-<? 			for ($i=0;$i<$jum;$i++) { 	 ?>
+<?php 			for ($i=0;$i<$jum;$i++) { 	 ?>
         		<option value="<?=$row[$i]?>" <?=StringIsSelected($row[$i], $cari)?> ><?=$row[$i]?></option>
               	
-<? 			} ?>   
+<?php 			} ?>   
         	</select>
-<? 		
+<?php 		
 	} elseif ($jenis == 'kondisi' || $jenis == 'status' || $jenis == 'agama' || $jenis == 'suku') {	
 		if ($jenis == 'kondisi') {								
 			$query = "SELECT kondisi FROM jbsakad.kondisisiswa ORDER BY kondisi ";			
@@ -165,15 +165,15 @@ function focusNext(elemName, evt) {
 
 
 ?>		<select name="cari" id="cari" style="width:140px;" onKeyPress="return focusNext('tabel', event)">
-<?		while ($row = mysql_fetch_row($result)) {	?>
+<?php 	while ($row = mysqli_fetch_row($result)) {	?>
    			<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $cari)?> ><?=$row[0]?></option>
-<? 		} ?>    
+<?php 		} ?>    
          </select>
 
-<?	}	else { 	 ?>
+<?php }	else { 	 ?>
     	<input type="text" name="cari" id="cari" style="width:140px;"  value="<?=$cari?>" onKeyPress="return focusNext('tabel', event)"/>
         
-<? 	} 
+<?php 	} 
 	
 CloseDb();
 

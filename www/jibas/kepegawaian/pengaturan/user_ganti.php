@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -32,44 +32,44 @@ $login = getUserId();
 
 if (isset($_REQUEST['simpan']))
 {
-	$nip = trim($_REQUEST['nip']);
-	$login = trim($_REQUEST['login']);
+	$nip = trim((string) $_REQUEST['nip']);
+	$login = trim((string) $_REQUEST['login']);
 	if ($login == 'landlord' || $login == 'LANDLORD')
 	{
 		OpenDb();
 		
-		$sql = "SELECT password FROM jbsuser.landlord WHERE password=md5('$_REQUEST[passlama]')";
+		$sql = "SELECT password FROM jbsuser.landlord WHERE password=md5('".$_REQUEST['passlama']."')";
 		$result = QueryDb($sql);
-		if (mysql_num_rows($result) == 0)
+		if (mysqli_num_rows($result) == 0)
 		{
 			CloseDb(); 
-			$MYSQL_ERROR_MSG = "Password lama Anda tidak cocok!";
+			$mysqli_ERROR_MSG = "Password lama Anda tidak cocok!";
 		}
 		else
 		{
-			$sql = "UPDATE jbsuser.landlord SET password=md5('$_REQUEST[pass1]')";
+			$sql = "UPDATE jbsuser.landlord SET password=md5('".$_REQUEST['pass1']."')";
 			$result = QueryDb($sql);
 			CloseDb();
-			$MYSQL_ERROR_MSG = "Password Administrator telah berubah!";	
+			$mysqli_ERROR_MSG = "Password Administrator telah berubah!";	
 			$exit = 1;
 		}	
 	}
 	else
 	{
 		OpenDb();
-		$sql = "SELECT login FROM jbsuser.login WHERE password=md5('$_REQUEST[passlama]') AND login='$nip'";
+		$sql = "SELECT login FROM jbsuser.login WHERE password=md5('".$_REQUEST['passlama']."') AND login='$nip'";
 		$result = QueryDb($sql);
-		if (mysql_num_rows($result) == 0)
+		if (mysqli_num_rows($result) == 0)
 		{
 			CloseDb(); 
-			$MYSQL_ERROR_MSG = "Password lama Anda tidak cocok!";
+			$mysqli_ERROR_MSG = "Password lama Anda tidak cocok!";
 		}
 		else
 		{
-			$sql = "UPDATE jbsuser.login SET password=md5('$_REQUEST[pass1]') WHERE login='$nip'";
+			$sql = "UPDATE jbsuser.login SET password=md5('".$_REQUEST['pass1']."') WHERE login='$nip'";
 			$result = QueryDb($sql);
 			CloseDb();
-			$MYSQL_ERROR_MSG = "Password Anda telah berubah!";	
+			$mysqli_ERROR_MSG = "Password Anda telah berubah!";	
 			$exit = 1;
 		}
 	}
@@ -84,9 +84,9 @@ if ($login=='landlord' || $login=='LANDLORD')
 }
 else
 {
-	$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p WHERE p.nip = '$login'"; 
+	$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p WHERE p.nip = '".$login."'"; 
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$nip = $row[0];
 	$nama = $row[1];
 	$title = "Pengguna";
@@ -179,9 +179,9 @@ function panggil(elem){
     <tr>
         <td width="110"><strong>Nama</strong></td>
         <td>
-        	<? if ($login!='landlord' && $login!='LANDLORD'){ ?>
+        	<?php if ($login!='landlord' && $login!='LANDLORD'){ ?>
             	<input type="text" name="nip" id="nip" size="10" readonly="readonly" value="<?=$nip ?>" class="disabled" />
-        	<? } ?>
+        	<?php } ?>
             	<input type="text" name="nama" id="nama" size="30" readonly="readonly" value="<?=$nama ?>" class="disabled" />        
         </td>
     </tr>
@@ -215,15 +215,15 @@ function panggil(elem){
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-    alert('<?=$MYSQL_ERROR_MSG ?>');
+    alert('<?=$mysqli_ERROR_MSG ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
-<? if ($exit) { ?>
+<?php if ($exit) { ?>
 <script language="javascript">
     window.close();
 </script>
-<? } ?>
+<?php } ?>

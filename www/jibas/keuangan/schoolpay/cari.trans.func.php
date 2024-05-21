@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@ function SearchTrans($showMenu)
               LEFT JOIN jbssdm.pegawai pg ON p.nip = pg.nip
               LEFT JOIN jbsfina.datapenerimaan dp ON p.iddatapenerimaan = dp.replid
               LEFT JOIN jbsfina.refund r ON p.idrefund = r.replid
-             WHERE transactionid = '$transId'";
+             WHERE transactionid = '".$transId."'";
 
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
     if ($num == 0)
     {
         echo "tidak ditemukan transaksi dengan id $transId";
@@ -71,7 +71,7 @@ function SearchTrans($showMenu)
         echo "<td align='left' class='header' width='40'>&nbsp;</td>";
     }
     echo "</tr>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -94,7 +94,7 @@ function SearchTrans($showMenu)
 
         $keterangan = "";
         $ket = $row["keterangan"];
-        if (strlen($ket) != 0)
+        if (strlen((string) $ket) != 0)
             $keterangan = "Ket: " . $ket . "<br>";
         $keterangan .= "Id Trans: " . $row["transactionid"] . "<br>";
         if ($jenisTrans == 0)
@@ -104,12 +104,12 @@ function SearchTrans($showMenu)
 
         echo "<tr>";
         echo "<td align='center'>$no</td>";
-        echo "<td align='left'>$row[waktu]</td>";
-        echo "<td align='left'>$row[namavendor]<br>$row[namauser]</td>";
+        echo "<td align='left'>".$row['waktu']."</td>";
+        echo "<td align='left'>".$row['namavendor']."<br>".$row['namauser']."</td>";
         echo "<td align='left'>$pelanggan</td>";
         echo "<td align='right'>$jumlah</td>";
         echo "<td align='left'>$pembayaran</td>";
-        echo "<td align='left'>$row[valmethod]</td>";
+        echo "<td align='left'>".$row['valmethod']."</td>";
         echo "<td align='left'>$keterangan</td>";
         if ($showMenu)
         {

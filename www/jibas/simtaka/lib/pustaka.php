@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,23 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
 require_once('../inc/sessioninfo.php');
 require_once('../inc/common.php');
 $op = "";
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 $kriteria = "";
-if (isset($_REQUEST[kriteria]))
-	$kriteria = $_REQUEST[kriteria];
+if (isset($_REQUEST['kriteria']))
+	$kriteria = $_REQUEST['kriteria'];
 $keyword = "";
-if (isset($_REQUEST[keyword]))
-	$keyword = $_REQUEST[keyword];
+if (isset($_REQUEST['keyword']))
+	$keyword = $_REQUEST['keyword'];
 $perpustakaan = "";
-if (isset($_REQUEST[perpustakaan]))
-	$perpustakaan = $_REQUEST[perpustakaan];	
+if (isset($_REQUEST['perpustakaan']))
+	$perpustakaan = $_REQUEST['perpustakaan'];	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -90,7 +90,7 @@ function pilih(id){
               <tr>
                 <td>Perpustakaan</td>
                 <td>
-                	<?
+                	<?php
 					OpenDb();
 					if (SI_USER_LEVEL()==2){
 						$sql = "SELECT replid,nama FROM perpustakaan WHERE replid=".SI_USER_IDPERPUS()." ORDER BY nama";
@@ -100,16 +100,16 @@ function pilih(id){
 					$result = QueryDb($sql);
 					?>
                 	<select name="perpustakaan" id="perpustakaan" class="cmbfrm"  onchange="chg_krit()">
-					<?
+					<?php
                     if (SI_USER_LEVEL()!=2){
                         echo "<option value='-1' ".IntIsSelected('-1',$perpustakaan).">(Semua)</option>";
                     }
-                    while ($row = @mysql_fetch_row($result)){
+                    while ($row = @mysqli_fetch_row($result)){
                     if ($perpustakaan == "")
                         $perpustakaan = $row[0];	
                     ?>
                         <option value="<?=$row[0]?>" <?=IntIsSelected($row[0],$perpustakaan)?>><?=$row[1]?></option>
-                    <?
+                    <?php
                     }
                     ?>
                     </select>
@@ -133,7 +133,7 @@ function pilih(id){
           </tr>
         </table>
     </div>
-    <? if ($op!=""){ ?>
+    <?php if ($op!=""){ ?>
 <div>
     <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab">
       <tr>
@@ -142,7 +142,7 @@ function pilih(id){
         <td width="788" height="25" align="center" class="header">Judul</td>
         <td width="40" align="center" class="header">&nbsp;</td>
       </tr>
-      <?
+      <?php
 	  OpenDb();
 	  $filter="";
 	  if ($op=="all"){
@@ -159,10 +159,10 @@ function pilih(id){
 	  }
 	  //echo $sql;
 	  $result = QueryDb($sql);	  
-	  $num = @mysql_num_rows($result);
+	  $num = @mysqli_num_rows($result);
 	  if ($num>0){
 		  $cnt=1;
-		  while ($row = @mysql_fetch_row($result)){
+		  while ($row = @mysqli_fetch_row($result)){
 		  ?>
           <input type="hidden" name="replid<?=$cnt?>" id="replid<?=$cnt?>" value="<?=$row[0]?>" />
           <input type="hidden" name="kodepustaka<?=$cnt?>" id="kodepustaka<?=$cnt?>" value="<?=$row[2]?>" />
@@ -173,18 +173,18 @@ function pilih(id){
             <td height="20" class="tab_content"><div class="tab_content"><?=$row[1]?></div></td>
 			<td align="center" class="tab_content"><input name="button2" type="button" class="cmbfrm2" id="button2" value="Pilih" onclick="pilih('<?=$cnt?>')" /></td>
 		  </tr>
-          <? $cnt++; ?>
-		  <? } ?>
-      <? } else { ?>
+          <?php $cnt++; ?>
+		  <?php } ?>
+      <?php } else { ?>
       <tr>
         <td height="20" colspan="4" align="center" class="nodata">Tidak ada data</td>
       </tr>
-      <? } ?>
+      <?php } ?>
     </table>
 </div>
-    <? } else { ?>
+    <?php } else { ?>
     <br />
-	<? } ?>
+	<?php } ?>
 	<br />
 <div align="center">
 <input type="button" class="cmbfrm2" value="Tutup" onclick="window.close()" />

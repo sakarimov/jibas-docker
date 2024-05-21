@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,11 +41,11 @@ if (isset($_REQUEST['Simpan'])) {
 	$sql_cek= "SELECT * FROM jbsakad.statusguru WHERE status='$status' AND replid <>'$replid_baru'";
 	$hasil = QueryDb ($sql_cek);
 	
-	if (mysql_num_rows($hasil) > 0) {
+	if (mysqli_num_rows($hasil) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Status guru $status sudah digunakan!";
 	} else {
-   		$sql_update= "UPDATE jbsakad.statusguru SET status='$_REQUEST[status]',keterangan='$_REQUEST[keterangan]' WHERE replid='$replid_baru'";
+   		$sql_update= "UPDATE jbsakad.statusguru SET status='".$_REQUEST['status']."',keterangan='".$_REQUEST['keterangan']."' WHERE replid='$replid_baru'";
 		$hasil_update=QueryDb($sql_update); 
 		if ($hasil_update){
 ?>
@@ -53,7 +53,7 @@ if (isset($_REQUEST['Simpan'])) {
             opener.refresh();
             window.close();
         </script>
-<?	
+<?php 
 		}
 	}
 }
@@ -61,7 +61,7 @@ if (isset($_REQUEST['Simpan'])) {
 OpenDb();
 $sql_tampil="SELECT replid,status,keterangan from jbsakad.statusguru where replid='$replid'";
 $hasil_tampil=QueryDb($sql_tampil);
-$row_tampil=mysql_fetch_array($hasil_tampil);
+$row_tampil=mysqli_fetch_array($hasil_tampil);
 $status = $row_tampil['status'];
 $keterangan = $row_tampil['keterangan'];
 
@@ -81,7 +81,7 @@ if (isset($_REQUEST['keterangan']))
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -121,7 +121,7 @@ function focusNext(elemName, evt) {
     <!-- CONTENT GOES HERE //--->
 
 <form name="main" onSubmit="return validate()" method="post">
-<!--<input type="hidden" name="replid" id="replid" value="<? //= //$replid ?>" />-->
+<!--<input type="hidden" name="replid" id="replid" value="<?php //= //$replid ?>" />-->
 <table border="0" width="95%" cellpadding="2" cellspacing="2" align="center">
 <!-- TABLE CONTENT -->
 <tr>
@@ -156,11 +156,11 @@ function focusNext(elemName, evt) {
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 

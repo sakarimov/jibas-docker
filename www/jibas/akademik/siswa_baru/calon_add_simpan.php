@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -125,10 +125,10 @@ $kelompok=$_REQUEST['kelompok'];
 <input type="hidden" name="departemen" id="departemen" value="<?=$departemen ?>" />
 <input type="hidden" name="proses" id="proses" value="<?=$proses ?>" />
 <input type="hidden" name="kelompok" id="kelompok" value="<?=$kelompok ?>" />
-<?
+<?php
 OpenDb();
 if ($_REQUEST['action'] == 'ubah') {
-	$sql="UPDATE calonsiswa SET nopendaftaran='$no',nama='$nama',panggilan='$panggilan',tahunmasuk=$tahunmasuk,idproses=$proses,idkelompok=$kelompok,suku='$suku',agama='$agama',status='$status',kondisi='$kondisi',kelamin='$kelamin',tmplahir='$tmplahir',tgllahir='$lahir',warga='$warga',anakke=$urutananak,jsaudara=$jumlahanak,bahasa='$bahasa',berat=$berat,tinggi=$tinggi,darah='$gol',foto='$foto',alamatsiswa='$alamatsiswa',kodepossiswa='$kodepos',telponsiswa='$telponsiswa',hpsiswa='$hpsiswa',emailsiswa='$emailsiswa',kesehatan='$kesehatan',asalsekolah='$sekolah',ketsekolah='$ketsekolah',namaayah='$namaayah',namaibu='$namaibu',almayah=$almayah,almibu=$almibu,pendidikanayah='$pendidikanayah',pendidikanibu='$pendidikanibu',pekerjaanayah='$pekerjaanayah',pekerjaanibu='$pekerjaanibu',wali='$namawali',penghasilanayah=$penghasilanayah,penghasilanibu=$penghasilanibu,alamatortu='$alamatortu',telponortu='$telponortu',hportu='$hportu',emailortu='$emailortu',alamatsurat='$alamatsurat',keterangan='$keterangan' WHERE replid='$_REQUEST[replid]'";
+	$sql="UPDATE calonsiswa SET nopendaftaran='$no',nama='$nama',panggilan='$panggilan',tahunmasuk=$tahunmasuk,idproses=$proses,idkelompok=$kelompok,suku='$suku',agama='$agama',status='$status',kondisi='$kondisi',kelamin='$kelamin',tmplahir='$tmplahir',tgllahir='$lahir',warga='$warga',anakke=$urutananak,jsaudara=$jumlahanak,bahasa='$bahasa',berat=$berat,tinggi=$tinggi,darah='$gol',foto='$foto',alamatsiswa='$alamatsiswa',kodepossiswa='$kodepos',telponsiswa='$telponsiswa',hpsiswa='$hpsiswa',emailsiswa='$emailsiswa',kesehatan='$kesehatan',asalsekolah='$sekolah',ketsekolah='$ketsekolah',namaayah='$namaayah',namaibu='$namaibu',almayah=$almayah,almibu=$almibu,pendidikanayah='$pendidikanayah',pendidikanibu='$pendidikanibu',pekerjaanayah='$pekerjaanayah',pekerjaanibu='$pekerjaanibu',wali='$namawali',penghasilanayah=$penghasilanayah,penghasilanibu=$penghasilanibu,alamatortu='$alamatortu',telponortu='$telponortu',hportu='$hportu',emailortu='$emailortu',alamatsurat='$alamatsurat',keterangan='$keterangan' WHERE replid='".$_REQUEST['replid']."'";
 
 $result = QueryDb($sql);
 CloseDb();
@@ -144,7 +144,7 @@ if ($result) { ?>
 	//parent.footer.location.href = "calon_content.php?departemen="+departemen+"&proses="+proses+"&kelompok="+kelompok;
 	window.close();
 </script> 
-<? }
+<?php }
 } else {
 	$sql="INSERT INTO calonsiswa SET nopendaftaran='$no',nama='$nama',panggilan='$panggilan',tahunmasuk=$tahunmasuk,idproses=$proses,idkelompok=$kelompok,suku='$suku',agama='$agama',status='$status',kondisi='$kondisi',kelamin='$kelamin',tmplahir='$tmplahir',tgllahir='$lahir',warga='$warga',anakke=$urutananak,jsaudara=$jumlahanak,bahasa='$bahasa',berat=$berat,tinggi=$tinggi,darah='$gol',foto='$foto',alamatsiswa='$alamatsiswa',kodepossiswa='$kodepos',telponsiswa='$telponsiswa',hpsiswa='$hpsiswa',emailsiswa='$emailsiswa',kesehatan='$kesehatan',asalsekolah='$sekolah',ketsekolah='$ketsekolah',namaayah='$namaayah',namaibu='$namaibu',almayah=$almayah,almibu=$almibu,pendidikanayah='$pendidikanayah',pendidikanibu='$pendidikanibu',pekerjaanayah='$pekerjaanayah',pekerjaanibu='$pekerjaanibu',wali='$namawali',penghasilanayah=$penghasilanayah,penghasilanibu=$penghasilanibu,alamatortu='$alamatortu',telponortu='$telponortu',hportu='$hportu',emailortu='$emailortu',alamatsurat='$alamatsurat',keterangan='$keterangan'";
 
@@ -162,7 +162,7 @@ if ($result) { ?>
 	parent.footer.location.href = "calon_content.php?departemen="+departemen+"&proses="+proses+"&kelompok="+kelompok;
 	window.close();
 </script> 
-<?  } 
+<?php  } 
 }
 ?>
 

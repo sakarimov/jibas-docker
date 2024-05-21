@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetDataTransaksi()
 {
     global $idpembayaran;
@@ -54,7 +54,7 @@ function GetDataTransaksi()
               FROM jurnaldetail jd, rekakun r
              WHERE jd.koderek = r.kode
                AND r.kategori = 'HARTA'
-               AND jd.idjurnal = '$idjurnal'";
+               AND jd.idjurnal = '".$idjurnal."'";
     $row = FetchSingleArray($sql);
     $rekkastrans = $row['koderek'];
     $idjurnalrekkas = $row['replid'];
@@ -105,9 +105,9 @@ function SimpanTransaksi()
             $sql = "SELECT SUM(debet), SUM(kredit)
                       FROM tabunganp
                      WHERE nip = '$nip'
-                       AND idtabungan = '$idtabungan'";
+                       AND idtabungan = '".$idtabungan."'";
             $result = QueryDbTrans($sql, $success);
-            $row = mysql_fetch_row($result);
+            $row = mysqli_fetch_row($result);
             $jsetor = (int)$row[1];
             $jtarik = (int)$row[0];
             $jsaldo = $jsetor - $jtarik;
@@ -116,7 +116,7 @@ function SimpanTransaksi()
                       FROM tabunganp
                      WHERE replid = $idpembayaran";
             $result = QueryDbTrans($sql, $success);
-            $row = mysql_fetch_row($result);
+            $row = mysqli_fetch_row($result);
             $debetawal = (int)$row[0];
                         
             $jsaldo = $jsaldo + $debetawal;
@@ -133,7 +133,7 @@ function SimpanTransaksi()
                       FROM tabunganp
                      WHERE replid = $idpembayaran";
             $result = QueryDbTrans($sql, $success);
-            $row = mysql_fetch_row($result);
+            $row = mysqli_fetch_row($result);
             $kreditawal = (int)$row[0];
             
             if ($jbayar < $kreditawal)
@@ -141,9 +141,9 @@ function SimpanTransaksi()
                 $sql = "SELECT SUM(debet), SUM(kredit)
                           FROM tabunganp
                          WHERE nip = '$nip'
-                           AND idtabungan = '$idtabungan'";
+                           AND idtabungan = '".$idtabungan."'";
                 $result = QueryDbTrans($sql, $success);
-                $row = mysql_fetch_row($result);
+                $row = mysqli_fetch_row($result);
                 $jsetor = (int)$row[1];
                 $jtarik = (int)$row[0];
                                 
@@ -182,7 +182,7 @@ function SimpanTransaksi()
         $idjurnal = 0;
         if ($success)
         {
-            $sql = "SELECT idjurnal FROM tabunganp WHERE replid = '$idpembayaran'";
+            $sql = "SELECT idjurnal FROM tabunganp WHERE replid = '".$idpembayaran."'";
             $idjurnal = FetchSingle($sql);
         }
         

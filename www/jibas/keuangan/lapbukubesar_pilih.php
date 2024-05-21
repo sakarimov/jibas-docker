@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -76,14 +76,14 @@ function cetak() {
 <!-- TABLE CENTER -->
 <tr>
 	<td align="left">
-<? 	OpenDb();
+<?php 	OpenDb();
 	if ($kategori != "ALL")
 		$sql = "SELECT r.nama, r.kode, sum(jd.debet), sum(jd.kredit) FROM jurnal j, jurnaldetail jd, rekakun r WHERE j.replid = jd.idjurnal AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND  jd.koderek = r.kode AND r.kategori = '$kategori' GROUP BY r.nama, r.kode ORDER BY r.kode";
 	else
 		$sql = "SELECT r.nama, r.kode, sum(jd.debet), sum(jd.kredit) FROM jurnal j, jurnaldetail jd, rekakun r WHERE j.replid = jd.idjurnal AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND  jd.koderek = r.kode GROUP BY r.nama, r.kode ORDER BY r.kode";
 		
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
     <!-- TABLE TITLE -->
@@ -102,11 +102,11 @@ function cetak() {
         <td class="header" width="22%" align="center">Debet</td>
         <td class="header" width="22%" align="center">Kredit</td>
     </tr>
-<?
+<?php
 	$cnt = 0;
 	$totaldebet = 0;
 	$totalkredit = 0;
-	while($row = mysql_fetch_row($result)) {
+	while($row = mysqli_fetch_row($result)) {
 		$totaldebet += $row[2];
 		$totalkredit += $row[3];
 ?>
@@ -116,7 +116,7 @@ function cetak() {
         <td align="right"><?=FormatRupiah($row[2]) ?></td>
         <td align="right"><?=FormatRupiah($row[3]) ?></td>
     </tr>
-<? } ?>
+<?php } ?>
     <tr height="30">
         <td colspan="2" align="center" bgcolor="#999900"><font color="#FFFFFF"><strong>T O T A L</strong></font></td>
         <td align="right" bgcolor="#999900"><font color="#FFFFFF"><strong><?=FormatRupiah($totaldebet) ?></strong></font></td>
@@ -126,17 +126,17 @@ function cetak() {
     <script language='JavaScript'>
 		Tables('table', 1, 0);
 	</script>
-<?	} else { ?>	
+<?php } else { ?>	
 
     <table width="100%" border="0" align="center">          
     <tr>
         <td align="center" valign="middle" height="300">    
-            <font size = "2" color ="red"><b>Tidak ditemukan adanya data transaksi <? if ($kategori <> "ALL") echo  "pada kategori ".$kategori; ?> antara tanggal <?=LongDateFormat($tanggal1)." s/d ".LongDateFormat($tanggal2) ?>.
+            <font size = "2" color ="red"><b>Tidak ditemukan adanya data transaksi <?php if ($kategori <> "ALL") echo  "pada kategori ".$kategori; ?> antara tanggal <?=LongDateFormat($tanggal1)." s/d ".LongDateFormat($tanggal2) ?>.
             </b></font>
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

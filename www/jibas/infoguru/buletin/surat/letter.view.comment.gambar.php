@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 require_once("../../include/config.php");
@@ -10,12 +10,12 @@ OpenDb();
 
 $ownerid = $_REQUEST['ownerid'];
 
-$sql = "SELECT foto, foto IS NULL AS isnull FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+$sql = "SELECT foto, foto IS NULL AS isnull FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
 $res = QueryDb($sql);
 
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
 {
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
     if ($row['isnull'] == 0)
     {
         echo $row['foto'];    

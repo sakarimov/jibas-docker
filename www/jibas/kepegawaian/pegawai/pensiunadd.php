@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -45,7 +45,7 @@ if (isset($_REQUEST['btSubmit'])) {
 		opener.Refresh();
 		window.close();
     </script>
-<?
+<?php
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -94,14 +94,14 @@ function focusNext(elemName, evt)
         <td align="right" valign="top"><strong>Pensiun TMT :</strong></td>
         <td width="*" align="left" valign="top">
         <select id="cbTglPensiun" name="cbTglPensiun" onKeyPress="return focusNext('cbBlnPensiun', event)">
-    <?	for ($i = 1; $i <= 31; $i++) { ?>    
+    <?php for ($i = 1; $i <= 31; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $tglpensiun)?>><?=$i?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <select id="cbBlnPensiun" name="cbBlnPensiun" onKeyPress="return focusNext('txThnPensiun', event)">
-    <?	for ($i = 1; $i <= 12; $i++) { ?>    
+    <?php for ($i = 1; $i <= 12; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $blnpensiun)?>><?=NamaBulan($i)?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <input type="text" name="txThnPensiun" onKeyPress="return focusNext('txKeterangan', event)" id="txThnPensiun" size="4" maxlength="4" value="<?=$thnpensiun?>"/>
         </td>

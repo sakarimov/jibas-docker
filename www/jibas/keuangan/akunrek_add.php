@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/sessioninfo.php');
 require_once('include/common.php');
@@ -33,13 +33,13 @@ require_once('include/errorhandler.php');
 if (isset($_REQUEST['simpan'])) 
 {
 	OpenDb();
-	$sql = "SELECT * FROM rekakun WHERE kode = '$_REQUEST[kode]'";
+	$sql = "SELECT * FROM rekakun WHERE kode = '".$_REQUEST['kode']."'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
-		$MYSQL_ERROR_MSG = "Kode $_REQUEST[kode] sudah digunakan!";
+	if (mysqli_num_rows($result) > 0) {
+		$mysqli_ERROR_MSG = "Kode {$_REQUEST['kode']} sudah digunakan!";
 	} else {
-		$sql = "INSERT INTO rekakun SET kategori='$_REQUEST[kategori]',kode='".CQ($_REQUEST['kode'])."',nama='".CQ($_REQUEST['nama'])."',keterangan='".CQ($_REQUEST['keterangan'])."'";
+		$sql = "INSERT INTO rekakun SET kategori='".$_REQUEST['kategori']."',kode='".CQ($_REQUEST['kode'])."',nama='".CQ($_REQUEST['nama'])."',keterangan='".CQ($_REQUEST['keterangan'])."'";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -48,7 +48,7 @@ if (isset($_REQUEST['simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 ?>
@@ -59,7 +59,7 @@ if (isset($_REQUEST['simpan']))
 <link rel="stylesheet" type="text/css" href="style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS KEU [Tambah Rekening]</title>
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript">
 
@@ -147,10 +147,10 @@ function panggil(elem){
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

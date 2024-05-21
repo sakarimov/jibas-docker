@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -30,7 +30,7 @@ $foto1 = $_FILES['foto'];
 $uploadedfile = $foto1['tmp_name'];
 $uploadedtypefile = $foto1['type'];
 $uploadedsizefile = $foto1['size'];
-if (strlen($uploadedfile) != 0)
+if (strlen((string) $uploadedfile) != 0)
 {
 	$tmp_path = realpath(".") . "/../../temp";
 	$tmp_exists = file_exists($tmp_path) && is_dir($tmp_path);

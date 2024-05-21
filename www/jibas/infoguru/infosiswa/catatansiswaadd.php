@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -34,7 +34,7 @@ if (isset($_REQUEST['nis']))
 
 if (isset($_REQUEST['simpan'])){
 	$nis = $_REQUEST['nis'];
-	$tgl=explode("-",$_REQUEST['tanggal']);
+	$tgl=explode("-",(string) $_REQUEST['tanggal']);
 	$tanggal=$tgl[2]."-".$tgl[1]."-".$tgl[0];
 	$judul = $_REQUEST['judul'];
 	$catatan = $_REQUEST['catatan'];
@@ -45,8 +45,8 @@ if (isset($_REQUEST['simpan'])){
 	OpenDb();
 	$sql_get_idkelas = "SELECT idkelas FROM jbsakad.siswa WHERE nis='$nis'";
 	$res_get_idkelas = QueryDb($sql_get_idkelas);
-	$row_id = @mysql_fetch_array($res_get_idkelas);
-	$idkelas = $row_id[idkelas];
+	$row_id = @mysqli_fetch_array($res_get_idkelas);
+	$idkelas = $row_id['idkelas'];
 	CloseDb();
 	//echo " idkelas = ".$idkelas;
 	$nip = SI_USER_ID();
@@ -65,7 +65,7 @@ if (isset($_REQUEST['simpan'])){
 	
 		//document.location.href="../blank.php";
 	</script>
-	<?
+	<?php
 	}
 	CloseDb();
 }
@@ -128,14 +128,14 @@ function validate(){
     <td width="68"><strong>Kategori </strong></td>
     <td width="1147">
     <select name="kategori" id="kategori" style="font-size: 14px; height: 24px;" >
-    <?
+    <?php
 	OpenDb();
 	$sql = "SELECT * FROM jbsvcr.catatankategori WHERE aktif=1 ORDER BY replid";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 	$cnt=1;
-	while ($row=@mysql_fetch_array($result)){
-		echo "<option value='".$row[replid]."'>".$row[kategori]."</option>";
+	while ($row=@mysqli_fetch_array($result)){
+		echo "<option value='".$row['replid']."'>".$row['kategori']."</option>";
 	}
 	} else {
 		echo "<option value=''>Tidak ada kategori</option>";
@@ -149,7 +149,7 @@ function validate(){
     <td><strong>Tanggal</strong></td>
     <td>
         <input title="Klik untuk membuka kalender !" type="text" name="tanggal" id="tanggal" size="10" readonly="readonly"
-               class="disabled" value="<?=date(d)."-".date(m)."-".date(Y); ?>"
+               class="disabled" value="<?=date('d')."-".date('m')."-".date('Y'); ?>"
                style="font-size: 14px; height: 24px; background-color: #eee" />&nbsp;
         <img title="Klik untuk membuka kalender !" src="../images/ico/calendar_1.png" name="btntanggal" width="16" height="16" border="0" id="btntanggal"/>
     </td>

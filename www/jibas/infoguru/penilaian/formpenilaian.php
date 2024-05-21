@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -65,7 +65,7 @@ OpenDb();
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -229,29 +229,29 @@ function d(){
    		<td width="15%"><strong>Departemen</strong></td>
     	<td width="25%"> 
     		<select name="departemen" id="departemen" onChange="change_dep()" style="width:150px" onKeyPress="return focusNext('tingkat', event)">
-		<?	$dep = getDepartemen(SI_USER_ACCESS());    
+		<?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 				if ($departemen == "")
 					$departemen = $value; ?>
 			<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-		<?	} ?>
+		<?php } ?>
 			</select>    </td>
        	<td width="10%"><strong>Tingkat </strong></td>
     	<td><select name="tingkat" id="tingkat" onChange="change_tingkat()" style="width:225px" onkeypress="return focusNext('kelas', event)">
-          <?	OpenDb();
+          <?php OpenDb();
 			$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($tingkat == "")
 				$tingkat = $row['replid'];				
 			$nama_tingkat = $row['tingkat'];
 			?>
-          <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+          <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
             <?=$row['tingkat']?>
             </option>
-          <?
+          <?php
 			} //while
 			?>
         </select></td> 
@@ -259,11 +259,11 @@ function d(){
     <tr>
     	<td><strong>Tahun Ajaran</strong></td>
        	<td>
-        <?  OpenDb();
+        <?php  OpenDb();
 			$sql = "SELECT replid,tahunajaran FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			$row = @mysql_fetch_array($result);	
+			$row = @mysqli_fetch_array($result);	
 			$tahunajaran = $row['replid'];				
 		?>
         	<input type="text" name="tahun" id="tahun" size="22" readonly value="<?=$row['tahunajaran']?>" class="disabled" />
@@ -271,19 +271,19 @@ function d(){
         <td><strong>Kelas </strong></td>
     	<td>
    			<select name="kelas" id="kelas" onChange="change()" style="width:225px" onKeyPress="return focusNext('pelajaran', event)">
-		<?	OpenDb();
+		<?php OpenDb();
 			$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas ";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($kelas == "")
 				$kelas = $row['replid'];
 			$nama_kelas = $row['kelas'];			 
 			?>
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
              
-    		<?
+    		<?php
 			} //while
 			?>
     		</select>		</td>
@@ -291,12 +291,12 @@ function d(){
     <tr>
     	<td><strong>Semester </strong></td>
     	<td>
-		<?
+		<?php
             OpenDb();
             $sql = "SELECT replid,semester FROM semester where departemen='$departemen' AND aktif = 1";
             $result = QueryDb($sql);
             CloseDb();
-            $row = @mysql_fetch_array($result);
+            $row = @mysqli_fetch_array($result);
             
        	?>   	
             <input type="text" name="sem" size="22" value="<?=$row['semester'] ?>" readonly class="disabled"/>
@@ -304,19 +304,19 @@ function d(){
         <td align="left"><strong>Pelajaran</strong></td>      	
       	<td>
         	<select name="pelajaran" id="pelajaran" onChange="change()" style="width:225px" onKeyPress="return focusNext('nip', event)">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT p.replid,p.nama FROM pelajaran p, guru g WHERE p.departemen = '$departemen' AND g.idpelajaran=p.replid AND g.nip='".SI_USER_ID()."' AND p.aktif=1 ORDER BY p.nama";
 			
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];			
 			$nama_pelajaran = $row['nama'];
 			?>
-         	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                  
-    		<?
+         	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                  
+    		<?php
 			}
     		?>
     		</select>		
@@ -328,17 +328,17 @@ function d(){
       <td><strong>Guru</strong></td>
       <td colspan="3">
       		<select name="nip" id="nip" onChange="change()" style="width:465px">
-   		 	<?
+   		 	<?php
 			//OpenDb();
 			//$sql = "SELECT DISTINCT p.nip,p.nama FROM jbssdm.pegawai p, guru g, pelajaran l WHERE p.nip = g.nip AND g.idpelajaran = $pelajaran AND g.aktif = 1  ORDER BY p.nama  ";
 			//$result = QueryDb($sql);
 			//CloseDb();
-			//while ($row = @mysql_fetch_array($result)) {
+			//while ($row = @mysqli_fetch_array($result)) {
 			//if ($nip == "") 				
 			//	$nip = $row['nip'];			
 			?>
          	<option value="<?//=urlencode($row['nip'])?>" <?//=StringIsSelected($row['nip'], $nip)?> ><?//=$row['nip']?> - <?//=$row['nama']?></option>                  
-    		<?
+    		<?php
 			//}
     		?>
     		</select>      </td>
@@ -363,14 +363,14 @@ function d(){
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>
-<?
+<?php
 $ERROR_MSG = "";
 if (isset($_REQUEST['jenis'])) {
 	OpenDb();
 	$sql = "SELECT nis, nama FROM siswa WHERE idkelas = '$kelas' ORDER BY nama";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {	
+	if (mysqli_num_rows($result) > 0) {	
 		switch($_REQUEST['jenis']) {
 			case 1 :
 ?>
@@ -378,18 +378,18 @@ if (isset($_REQUEST['jenis'])) {
 			<script language="javascript">				
 					a();						
 			</script>
-<?					
+<?php 				
 					break;
 			case 2 :
 				$sql1="SELECT * FROM jbsakad.aturannhb WHERE idtingkat='$tingkat' AND idpelajaran='$pelajaran' AND aktif=1 AND nipguru='$nip'";
 				$result1=QueryDb($sql1);
-				if (mysql_num_rows($result1) > 0) {
+				if (mysqli_num_rows($result1) > 0) {
 			?>
         	<!--<script language="javascript" src="../script/tools.js"></script>-->
 			<script language="javascript">				
 				b();											
 			</script>
-<?				} else {					
+<?php 			} else {					
 					$ERROR_MSG = "Belum ada Jenis Pengujian!";		
 				}	
 					break;
@@ -399,7 +399,7 @@ if (isset($_REQUEST['jenis'])) {
 			<script language="javascript">				
 					c();					
 			</script>
-<?			
+<?php 		
 					break;
 			case 4 :
 ?>
@@ -407,7 +407,7 @@ if (isset($_REQUEST['jenis'])) {
 			<script language="javascript">				
 				d();								
 			</script>
-<?					
+<?php 				
 					break;
 		}
 	} else {
@@ -417,11 +417,11 @@ if (isset($_REQUEST['jenis'])) {
 	}
 }
 ?>    
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

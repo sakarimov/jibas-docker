@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,16 +47,16 @@ try
 
     $sql = "SELECT transkey
               FROM jbsumum.appregis
-             WHERE transid = '$transId'";
+             WHERE transid = '".$transId."'";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo ToGenericReturn(-1, "INVALID TRANS ID", "");
         return;
     }
 
     $publicKey = 0;
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $publicKey = $row[0];
 
     $privateKey = 3649;
@@ -80,7 +80,7 @@ try
     }
 
     $sql = "DELETE FROM jbsumum.appregis
-             WHERE transid = '$transId'";
+             WHERE transid = '".$transId."'";
     QueryDbEx($sql);
 
     $uploadPath = "$FILESHARE_UPLOAD_DIR/$app";
@@ -114,7 +114,7 @@ try
 
         $sql = "SELECT LAST_INSERT_ID()";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $id = $row[0] . "";
 
         $listId[] = array($id, $fileSave);

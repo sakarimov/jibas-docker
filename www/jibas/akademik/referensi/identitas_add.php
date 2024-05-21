@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -28,7 +28,7 @@ require_once('../include/theme.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../cek.php');
-$departemen = $_REQUEST[departemen];
+$departemen = $_REQUEST['departemen'];
 $title = "Sekolah";
 if ($departemen=='yayasan')
 	$title = "";
@@ -36,7 +36,7 @@ if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
 		$sql1="SELECT * FROM jbsumum.identitas WHERE departemen='$departemen'";
 		$result1=QueryDb($sql1);
-		$row1 = mysql_fetch_array($result1);
+		$row1 = mysqli_fetch_array($result1);
 		$nama = CQ($_REQUEST['nama']);
 		$situs = CQ($_REQUEST['situs']);
 		$email = CQ($_REQUEST['email']);
@@ -48,8 +48,8 @@ if (isset($_REQUEST['Simpan'])) {
 		$tlp4 = CQ($_REQUEST['tlp4']);
 		$fax1 = CQ($_REQUEST['fax1']);
 		$fax2 = CQ($_REQUEST['fax2']);
-		if (mysql_num_rows($result1) > 0) {
-			$sql = "UPDATE jbsumum.identitas SET nama='$nama', situs='$situs', email='$email', alamat1='$alamat1', alamat2='$alamat2', telp1='$tlp1', telp2='$tlp2', telp3='$tlp3', telp4='$tlp4', fax1='$fax1', fax2='$fax2' WHERE departemen = '$departemen'";
+		if (mysqli_num_rows($result1) > 0) {
+			$sql = "UPDATE jbsumum.identitas SET nama='$nama', situs='$situs', email='$email', alamat1='$alamat1', alamat2='$alamat2', telp1='$tlp1', telp2='$tlp2', telp3='$tlp3', telp4='$tlp4', fax1='$fax1', fax2='$fax2' WHERE departemen = '".$departemen."'";
 		} else {
 			$sql = "INSERT INTO jbsumum.identitas SET nama='$nama', situs='$situs', email='$email', alamat1='$alamat1', alamat2='$alamat2', telp1='$tlp1', telp2='$tlp2', telp3='$tlp3', telp4='$tlp4', fax1='$fax1', fax2='$fax2', departemen='$departemen'";
 		}
@@ -62,7 +62,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.getfresh();
 				window.close();
 			</script>
-<?		}
+<?php 	}
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -72,7 +72,7 @@ if (isset($_REQUEST['Simpan'])) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Input Identitas Sekolah]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -228,10 +228,10 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

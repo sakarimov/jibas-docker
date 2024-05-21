@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -102,14 +102,14 @@ OpenDb();
                     <span id="divCbDepartemen">
                     <select class='inputbox' name="departemen" id="departemen" style="width:130px;"
                              onchange='changeCbDepartemen()'>
-        <?			$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php 		$dep = getDepartemen(SI_USER_ACCESS());    
                     foreach($dep as $value)
                     {
                         if ($departemen == "")
                             $departemen = $value;
                         $sel = $departemen == $value ? "selected" : "";	?>
                         <option value="<?=$value?>" <?=$sel?> ><?=$value ?></option>
-        <?			} ?>
+        <?php 		} ?>
                     </select>
                     </span>    
                     </legend>
@@ -127,12 +127,12 @@ OpenDb();
                             
                             &nbsp;Tingkat:
                             <span id="divCbTingkat">
-    <?                      ShowCbTingkat($departemen) ?>
+    <?php                      ShowCbTingkat($departemen) ?>
                             </span>
                             
                             &nbsp;Kelas:
                             <span id="divCbKelas">
-    <?                      ShowCbKelas(0) ?>
+    <?php                      ShowCbKelas(0) ?>
                             </span>
     
                         </div>
@@ -199,11 +199,11 @@ OpenDb();
                 <td width="600" align="left" valign="top">
                     Pengantar:
                     <span id="divCbPengantar">
-<?                  $idpengantar = ShowCbPengantar($departemen) ?>
+<?php                  $idpengantar = ShowCbPengantar($departemen) ?>
                     </span>
                     <div class='inputbox' id='divPengantar'
                          style='border-width: 1px; border-style: solid; border-color: #666; overflow: auto; height: 140px; width: 780px;'>
-<?                  ShowPengantar($idpengantar) ?>                        
+<?php                  ShowPengantar($idpengantar) ?>                        
                     </div>
                 </td>
             </tr>
@@ -227,11 +227,11 @@ OpenDb();
                            id="chLampiran" name="chLampiran" onchange='changeLampiran()'>&nbsp;
                     <font style='color: blue;'><strong>Halaman lampiran</strong></font>        
                     <span id='divCbLampiran'>
-<?                      $idlampiran = ShowCbLampiran($departemen) ?>
+<?php                      $idlampiran = ShowCbLampiran($departemen) ?>
                     </span><br>
                     <div id='divLampiran' class='inputbox' disabled='disabled'
                          style='border-width: 1px; border-style: solid; border-color: #666; overflow: auto; height: 140px; width: 780px; background-color: #DDD'>
-<?                      ShowLampiran($idlampiran) ?>                        
+<?php                      ShowLampiran($idlampiran) ?>                        
                     </div>
                 </td>
             </tr>
@@ -261,7 +261,7 @@ OpenDb();
                             <font style='color: blue; font-size: 11px;'><strong>Nilai Harian Siswa</strong></font><br>
                             <em><font color='maroon'>data diambil dari JIBAS Akademik</font></em><br>
                             Tanggal:
-<?                          ShowCbDateRange('cbNilai', false)    ?>                            
+<?php                          ShowCbDateRange('cbNilai', false)    ?>                            
                         </td>
                     </tr>
                     <tr>
@@ -272,7 +272,7 @@ OpenDb();
                             <font style='color: blue; font-size: 11px;'><strong>Pembayaran Siswa</strong></font><br>
                             <em><font color='maroon'>data diambil dari JIBAS Keuangan (Iuran Wajib, Iuran Sukarela, Tabungan)</font></em><br>
                             Tanggal:
-<?                          ShowCbDateRange('cbKeuangan', false)    ?>                         
+<?php                          ShowCbDateRange('cbKeuangan', false)    ?>                         
                         </td>
                     </tr>
                     <tr>
@@ -283,7 +283,7 @@ OpenDb();
                             <font style='color: blue; font-size: 11px;'><strong>Presensi Harian Siswa</strong></font><br>
                             <em><font color='maroon'>data diambil dari JIBAS SPT Fingerprint</font></em><br>
                             Tanggal:
-<?                          ShowCbDateRange('cbPresensi', false)    ?>                            
+<?php                          ShowCbDateRange('cbPresensi', false)    ?>                            
                         </td>
                     </tr>
                     <tr>
@@ -294,7 +294,7 @@ OpenDb();
                             <font style='color: blue; font-size: 11px;'><strong>Presensi Kegiatan Siswa</strong></font><br>
                             <em><font color='maroon'>data diambil dari JIBAS SPT Fingerprint</font></em><br>
                             Tanggal:
-<?                          ShowCbDateRange('cbKegiatan', false)    ?>                       
+<?php                          ShowCbDateRange('cbKegiatan', false)    ?>                       
                         </td>
                     </tr>
                     <tr>
@@ -305,7 +305,7 @@ OpenDb();
                             <font style='color: blue; font-size: 11px;'><strong>Nilai Computer Based Exam</strong></font><br>
                             <em><font color='maroon'>data diambil dari JIBAS Computer Based Exam (Ujian Khusus)</font></em><br>
                             Tanggal:
-<?                          ShowCbDateRange('cbCbe', false)    ?>
+<?php                          ShowCbDateRange('cbCbe', false)    ?>
                         </td>
                     </tr>
                     </table>
@@ -339,6 +339,6 @@ OpenDb();
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

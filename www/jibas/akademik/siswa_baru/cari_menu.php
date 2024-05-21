@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -148,7 +148,7 @@ function edit(replid){
 <input type="hidden" name="departemen" id="departemen" value="<?=$departemen ?>" />
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis ?>" />
 <input type="hidden" name="cari" id="cari" value="<?=$cari ?>" />
-	<? 
+	<?php 
 	OpenDb();
 	if ($jenis!="kondisi" && $jenis!="status" && $jenis!="agama" && $jenis!="suku" && $jenis!="darah") {
 		$sql_tot = "SELECT c.replid,c.nopendaftaran,c.nama,p.departemen,k.kelompok,c.aktif,c.nisn FROM calonsiswa c,kelompokcalonsiswa k, prosespenerimaansiswa p WHERE c.$jenis like '%$cari%' AND p.departemen='$departemen' AND c.idkelompok = k.replid AND c.idproses = p.replid AND p.replid = k.idproses";
@@ -161,13 +161,13 @@ function edit(replid){
 	}
 	
  	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$result = QueryDb($sql);
 		
-	if (mysql_num_rows($result) > 0) { 
+	if (mysqli_num_rows($result) > 0) { 
 	?>
     <input type="hidden" name="total" id="total" value="<?=$total?>"/>
 	<table width="100%" border="0">
@@ -193,13 +193,13 @@ function edit(replid){
         <td width="10%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('aktif','<?=$urutan?>')" >Status <?=change_urut('aktif',$urut,$urutan)?></td>
         <td width="8%">Detail</td>
     </tr>   
-    <?
+    <?php
 		if ($page==0)
 			$cnt = 0;
 		else 
 			$cnt = (int)$page*(int)$varbaris;
 	
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25">
        	<td align="center"><?=++$cnt ?></td>
@@ -207,7 +207,7 @@ function edit(replid){
 		<td align="center"><?=$row['nisn'] ?></td>
         <td><?=$row['nama']?></td>
         <td><?=$row['kelompok'] ?></td>
-        <td align="center"><?	if ($row['aktif']==1){
+        <td align="center"><?php if ($row['aktif']==1){
 					echo "Aktif";
 				} elseif ($row['aktif']==0){
 					echo "Tidak Aktif ";
@@ -219,7 +219,7 @@ function edit(replid){
 			<a href="JavaScript:tampil(<?=$row['replid'] ?>)"><img src="../images/ico/lihat.png" border="0" onmouseover="showhint('Detail Data Calon Siswa!', this, event, '80px')" /></a>&nbsp;
 		</td>        
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); 
 ?>	
 	<!-- END TABLE CONTENT -->
@@ -228,7 +228,7 @@ function edit(replid){
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -253,19 +253,19 @@ function edit(replid){
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -279,14 +279,14 @@ function edit(replid){
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=10; $m <= 100; $m=$m+10) { ?>
+        <?php 	for ($m=10; $m <= 100; $m=$m+10) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center" height="300">          
 <tr>
@@ -297,7 +297,7 @@ function edit(replid){
 	</td>
 </tr>
 </table>  
-<? } ?> 	
+<?php } ?> 	
 </td>
 </tr>
 <!-- END TABLE CENTER -->    

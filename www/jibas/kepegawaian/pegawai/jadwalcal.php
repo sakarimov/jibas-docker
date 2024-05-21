@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -45,7 +45,7 @@ if (($bulan == "") || ($tahun == ""))
 {
 	$sql = "SELECT MONTH(NOW()), YEAR(NOW())";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$bulan = $row[0];
 	$tahun = $row[1];
 };	
@@ -53,7 +53,7 @@ if (($bulan == "") || ($tahun == ""))
 $tmp = $tahun."-".$bulan."-1";
 $sql = "SELECT DAYOFWEEK('$tmp')";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $first_weekday_this_month = $row[0];
 
 if ($bulan == 12) 
@@ -83,13 +83,13 @@ else
 }	
 $sql = "SELECT DAY(LAST_DAY('$tmp'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_last_month = $row[0];
 
 $now = $tahun . "-" . $bulan . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_this_month = $row[0];
 
 $nweek = 0;
@@ -206,16 +206,16 @@ function Cetak() {
 <strong>Bulan :</strong>
 <input type="button" class="but" onclick="GoToLastMonth()" value="  <  ">
 <select id="bulan" name="bulan" onchange="ChangeCal()">
-<? $namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");
+<?php $namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];
    for ($i = 1; $i <= 12; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $bulan)?>><?=$namabulan[$i - 1]?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <select id="tahun" name="tahun" onchange="ChangeCal()">
-<? $YNOW = date('Y');
+<?php $YNOW = date('Y');
    for ($i = 2007; $i <= $YNOW + 10; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $tahun)?>><?=$i?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <input type="button" class="but" onclick="GoToNextMonth()" value="  >  ">
 <a href="JavaScript:Refresh()"><img src="../images/ico/refresh.png" border="0" />&nbsp;Refresh</a>&nbsp;&nbsp;
@@ -234,7 +234,7 @@ function Cetak() {
     <td width="70" class="greenheader" align="center" style="background-color:#339900; color:#FFFFFF"><b>Jum'at</b></td>
     <td width="70" class="header" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Sabtu</b></td>
 </tr>
-<?
+<?php
 for ($i = 0; $i < count($cal); $i++) 
 {
 	echo "<tr height='40'>";
@@ -249,12 +249,12 @@ for ($i = 0; $i < count($cal); $i++)
 		
 		$sql = "SELECT COUNT(*) FROM jadwal WHERE tanggal='$tanggal' AND exec=0";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$njadwal = $row[0];
 		
 		$sql = "SELECT COUNT(*) FROM jadwal WHERE tanggal='$tanggal' AND exec=1";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$nexecjadwal = $row[0];
 		
 		if ($j == 0)
@@ -297,21 +297,21 @@ for ($i = 0; $i < count($cal); $i++)
 <fieldset>
 <legend><font style="color:white; background-color:black; font-weight:bold">&nbsp;Agenda bulan <?= namabulan($bulan) . " $tahun" ?>&nbsp;</font></legend>	
 <table border="0" cellspacing="0" align="left">
-<?
+<?php
 $bln2=$bulan;
 $thn2=$tahun;
 $sql="SELECT agenda, nama
 		FROM jenisagenda
 	   ORDER BY urutan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result))
+while ($row = mysqli_fetch_row($result))
 {
 	$sql1 = "SELECT COUNT(nip)
 			   FROM jadwal
 			  WHERE (MONTH(tanggal)='$bln2' AND YEAR(tanggal)='$thn2')
-			    AND jenis='$row[0]' AND exec=0";
+			    AND jenis='".$row[0]."' AND exec=0";
 	$result1 = QueryDb($sql1);
-	$row1 = mysql_fetch_row($result1);
+	$row1 = mysqli_fetch_row($result1);
 	if ($row1[0] > 0)
 	{
 		$jumlah = $row1[0]." Orang";
@@ -351,6 +351,6 @@ while ($row = mysql_fetch_row($result))
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

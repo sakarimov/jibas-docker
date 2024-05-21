@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -46,7 +46,7 @@ else
 			  FROM jbsumum.pengantarsurat
 			 WHERE replid = $id";
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$judul = $row[0];
 	$pengantar = $row[1];
 	CloseDb();		 
@@ -66,7 +66,7 @@ $_SESSION["uploaddept"] = $departemen;
 <link rel="stylesheet" type="text/css" href="penyusunan.css">	
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Pengantar Surat]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -156,7 +156,7 @@ $_SESSION["uploaddept"] = $departemen;
 </td></tr>
 </table>     
 
-<?
+<?php
 if ($mode == "new")
 {
 ?>
@@ -170,7 +170,7 @@ $(function() {
 	)
 });	
 </script>
-<?
+<?php
 }
 ?>
 </body>

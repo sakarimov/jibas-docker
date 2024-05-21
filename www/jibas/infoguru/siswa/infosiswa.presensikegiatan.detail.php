@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/common.php');
@@ -30,8 +30,8 @@ require_once('../library/datearith.php');
 $nis = $_SESSION["infosiswa.nis"];
 
 $idkegiatan = $_REQUEST['idkegiatan'];
-$bulan = isset($_REQUEST['bulan']) ? $_REQUEST['bulan'] : date('n');
-$tahun = isset($_REQUEST['tahun']) ? $_REQUEST['tahun'] : date('Y');
+$bulan = $_REQUEST['bulan'] ?? date('n');
+$tahun = $_REQUEST['tahun'] ?? date('Y');
 $cnt = $_REQUEST['cnt'];
 
 OpenDb();
@@ -49,7 +49,7 @@ OpenDb();
         <td width='12%' align='center' class='header'>Keter lambatan</td>
         <td width='*' align='left' class='header'>Keterangan</td>
     </tr>            
-<?
+<?php
     $cnt = 0;
     
     $sql = "SELECT p.replid, DATE_FORMAT(date_in, '%d %b %Y') AS date_in, time_in, DATE_FORMAT(date_out, '%d %b %Y') AS date_out, 
@@ -62,7 +62,7 @@ OpenDb();
                AND p.idkegiatan = $idkegiatan
              ORDER BY date_in DESC";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $ti = $row['time_in'];
         
@@ -77,9 +77,9 @@ OpenDb();
                      WHERE idkegiatan = $idkegiatan
                        AND hari = $wd";
             $res2 = QueryDb($sql);
-            if (mysql_num_rows($res2) > 0)
+            if (mysqli_num_rows($res2) > 0)
             {
-                $row2 = mysql_fetch_row($res2);
+                $row2 = mysqli_fetch_row($res2);
                 
                 $to = $row2[0] . ":00";
                 $tomark = " (std)";
@@ -113,11 +113,11 @@ OpenDb();
             <td align='center'><?= DateArith::ToStringHourFromMinute($row['telat']) ?></td>
             <td align='left'><?= $row['description'] ?>&nbsp;</td>
         </tr>
-<?
+<?php
     }
 ?>
     </table>
 
-<?
+<?php
 CloseDb();
 ?>

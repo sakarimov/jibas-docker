@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -96,48 +96,48 @@ function show_detail(lap)
 <!-- TABLE CENTER -->
 <tr>
 	<td align="left" valign="top">
-<?  OpenDb();
+<?php  OpenDb();
 	
 	 //// Maintenance script to update info1 in auditinfo as idjurnal for each source
 	 $sql = "SELECT * FROM auditinfo WHERE info1 IS NULL";
 	 $res = QueryDb($sql);
 	 
-	 if (mysql_num_rows($res) > 0)
+	 if (mysqli_num_rows($res) > 0)
 	 	  set_time_limit(1000);
 		
-	 while ($row = mysql_fetch_array($res))
+	 while ($row = mysqli_fetch_array($res))
 	 {
 		 $id = $row['replid'];
 		 $table = $row['sumber'];
 		 $idsumber = $row['idsumber'];
 		 
 		 if ($table == "besarjtt")
-		 	$sql = "SELECT info1 FROM besarjtt WHERE replid = '$idsumber'";
+		 	$sql = "SELECT info1 FROM besarjtt WHERE replid = '".$idsumber."'";
 		 elseif ($table == "besarjttcalon")
-		   $sql = "SELECT info1 FROM besarjttcalon WHERE replid = '$idsumber'";
+		   $sql = "SELECT info1 FROM besarjttcalon WHERE replid = '".$idsumber."'";
 		 elseif ($table == "penerimaanjtt")
-		   $sql = "SELECT idjurnal FROM penerimaanjtt WHERE replid = '$idsumber'";
+		   $sql = "SELECT idjurnal FROM penerimaanjtt WHERE replid = '".$idsumber."'";
 		 elseif ($table == "penerimaanjttcalon")
-		   $sql = "SELECT idjurnal FROM penerimaanjttcalon WHERE replid = '$idsumber'";			
+		   $sql = "SELECT idjurnal FROM penerimaanjttcalon WHERE replid = '".$idsumber."'";			
   		 elseif ($table == "penerimaaniuran")
-		   $sql = "SELECT idjurnal FROM penerimaaniuran WHERE replid = '$idsumber'";
+		   $sql = "SELECT idjurnal FROM penerimaaniuran WHERE replid = '".$idsumber."'";
 		 elseif ($table == "penerimaaniurancalon")
-		   $sql = "SELECT idjurnal FROM penerimaaniurancalon WHERE replid = '$idsumber'";			
+		   $sql = "SELECT idjurnal FROM penerimaaniurancalon WHERE replid = '".$idsumber."'";			
 		 elseif ($table == "penerimaanlain")
-		   $sql = "SELECT idjurnal FROM penerimaanlain WHERE replid = '$idsumber'";
+		   $sql = "SELECT idjurnal FROM penerimaanlain WHERE replid = '".$idsumber."'";
 		 elseif ($table == "pengeluaran")
-		   $sql = "SELECT idjurnal FROM pengeluaran WHERE replid = '$idsumber'";
+		   $sql = "SELECT idjurnal FROM pengeluaran WHERE replid = '".$idsumber."'";
 		 elseif ($table == "tabungan")
-		   $sql = "SELECT idjurnal FROM tabungan WHERE replid = '$idsumber'";
+		   $sql = "SELECT idjurnal FROM tabungan WHERE replid = '".$idsumber."'";
          elseif ($table == "tabunganp")
-           $sql = "SELECT idjurnal FROM tabunganp WHERE replid = '$idsumber'";
+           $sql = "SELECT idjurnal FROM tabunganp WHERE replid = '".$idsumber."'";
     	 elseif ($table == "jurnalumum")
 		   $sql = "SELECT $idsumber";			
 			
 		 $res2 = QueryDb($sql);
-		 if (mysql_num_rows($res2) > 0)
+		 if (mysqli_num_rows($res2) > 0)
 		 {
-			 $row2 = mysql_fetch_row($res2);
+			 $row2 = mysqli_fetch_row($res2);
 			 $idjurnal = $row2[0];
 			 
 			 $sql = "UPDATE auditinfo SET info1='$idjurnal' WHERE replid='$id'";
@@ -162,7 +162,7 @@ function show_detail(lap)
 
     $result = QueryDb($sql);
 
-    if (mysql_num_rows($result) > 0) 
+    if (mysqli_num_rows($result) > 0) 
 	{
 	    ?>
 
@@ -172,8 +172,8 @@ function show_detail(lap)
         <td class="header" width="73%">Perubahan</td>
         <td class="header" width="10%">Jumlah</td>
     </tr>
-<?  $cnt = 0;
-    while($row = mysql_fetch_row($result)) 
+<?php  $cnt = 0;
+    while($row = mysqli_fetch_row($result)) 
 	 { 
         switch($row[0]) 
 		{	
@@ -205,12 +205,12 @@ function show_detail(lap)
         <td align="left"><strong><u><?=$jurnal ?></u></strong></td>
         <td align="center"><font size="2"><strong><?=$row[1] ?></strong></font></td>
     </tr>
-<?  }  ?>
+<?php  }  ?>
     </table>
 <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-<?	} else { ?>	
+<?php } else { ?>	
 
     <table width="100%" border="0" align="center">          
     <tr>
@@ -220,7 +220,7 @@ function show_detail(lap)
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

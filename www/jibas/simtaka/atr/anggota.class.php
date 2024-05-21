@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CAnggota{
 	function OnStart(){
-		$op=$_REQUEST[op];
+		$op=$_REQUEST['op'];
 		if ($op=="del"){
-			$sql = "DELETE FROM anggota WHERE replid='$_REQUEST[id]'";
+			$sql = "DELETE FROM anggota WHERE replid='".$_REQUEST['id']."'";
 			QueryDb($sql);
 		}
 		if ($op=="nyd6j287sy388s3h8s8"){
-			$sql = "UPDATE anggota SET aktif='$_REQUEST[newaktif]' WHERE replid='$_REQUEST[replid]'";
+			$sql = "UPDATE anggota SET aktif='".$_REQUEST['newaktif']."' WHERE replid='".$_REQUEST['replid']."'";
 			QueryDb($sql);
 		}
 	}
@@ -38,12 +38,12 @@ class CAnggota{
 		<script language='JavaScript'>
 			Tables('table', 1, 0);
 		</script>
-		<?
+		<?php
     }
     function Content(){
 		$sql = "SELECT * FROM anggota ORDER BY nama";
 		$result = QueryDb($sql);
-		$num = @mysql_num_rows($result);
+		$num = @mysqli_num_rows($result);
 		?>
 		<link href="../sty/style.css" rel="stylesheet" type="text/css">
         <div class="funct">
@@ -61,38 +61,38 @@ class CAnggota{
   			   <td align="center" class="header">&nbsp;</td>
             <td height="30" align="center" class="header">&nbsp;</td>
 		  </tr>
-          <?
+          <?php
 		  if ($num>0){
-			  while ($row=@mysql_fetch_array($result)){
+			  while ($row=@mysqli_fetch_array($result)){
 			  ?>
 			  <tr>
-				<td height="25" align="center"><?=stripslashes($row[noregistrasi])?></td>
-				<td height="25" align="center">&nbsp;<?=stripslashes($row[nama])?></td>
-				<td height="25" align="center">&nbsp;<?=stripslashes($row[email])?></td>
-				<td height="25" align="center">&nbsp;<?=stripslashes($row[telpon])?></td>
-				<td height="25" align="center">&nbsp;<?=stripslashes($row[keterangan])?></td>
+				<td height="25" align="center"><?=stripslashes((string) $row['noregistrasi'])?></td>
+				<td height="25" align="center">&nbsp;<?=stripslashes((string) $row['nama'])?></td>
+				<td height="25" align="center">&nbsp;<?=stripslashes((string) $row['email'])?></td>
+				<td height="25" align="center">&nbsp;<?=stripslashes((string) $row['telpon'])?></td>
+				<td height="25" align="center">&nbsp;<?=stripslashes((string) $row['keterangan'])?></td>
 				<td align="center">
-                	<? if ($row[aktif]==1) { ?>
-						<a href="javascript:setaktif(<?=$row[replid]?>,'0')"><img src="../img/ico/aktif.png" width="16" height="16" border="0" /></a>
-					<? } else { ?>    
-						<a href="javascript:setaktif(<?=$row[replid]?>,'1')"><img src="../img/ico/nonaktif.png" width="16" height="16" border="0" /></a>
-					<? } ?>
+                	<?php if ($row['aktif']==1) { ?>
+						<a href="javascript:setaktif(<?=$row['replid']?>,'0')"><img src="../img/ico/aktif.png" width="16" height="16" border="0" /></a>
+					<?php } else { ?>    
+						<a href="javascript:setaktif(<?=$row['replid']?>,'1')"><img src="../img/ico/nonaktif.png" width="16" height="16" border="0" /></a>
+					<?php } ?>
 				</td>
-				<td height="25" align="center" bgcolor="#FFFFFF"><a href="javascript:ubah('<?=$row[replid]?>')"><img src="../img/ico/ubah.png" width="16" height="16" border="0"></a>&nbsp;<a href="javascript:hapus('<?=$row[replid]?>')"><img src="../img/ico/hapus.png" border="0"></a></td>
+				<td height="25" align="center" bgcolor="#FFFFFF"><a href="javascript:ubah('<?=$row['replid']?>')"><img src="../img/ico/ubah.png" width="16" height="16" border="0"></a>&nbsp;<a href="javascript:hapus('<?=$row['replid']?>')"><img src="../img/ico/hapus.png" border="0"></a></td>
 			  </tr>
-			  <?
+			  <?php
 			  }
 		  } else {
 		  ?>
           <tr>
             <td height="25" colspan="7" align="center" class="nodata">Tidak ada data</td>
           </tr>
-		  <?
+		  <?php
 		  }
 		  ?>	
         </table>
 
-        <?
+        <?php
 	}
 }
 ?>

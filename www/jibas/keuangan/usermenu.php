@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once('include/sessioninfo.php');
 //require_once('include/theme.php');
 //require_once
@@ -59,21 +59,21 @@ alert ('Belum beres');
 <table width="80%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td>
-    	<? if (getLevel()!="2"){ ?>
+    	<?php if (getLevel()!="2"){ ?>
      	<table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><a href="user.php"><img src="images/user_group.png" border="0" height="80" /></a></td>
             <td><a href="user.php"><strong>Daftar Pengguna</strong></a></td>
           </tr>
         </table>
-        <? } else { ?>
+        <?php } else { ?>
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><a href="#" onClick="alert ('Maaf, Anda tidak berhak mengakses halaman ini !');"><img src="images/user_group.png" border="0" height="80" /></a></td>
             <td><a href="#" onClick="alert ('Maaf, Anda tidak berhak mengakses halaman ini !');"><strong>Daftar Pengguna</strong></a></td>
           </tr>
         </table>
-        <? } ?>
+        <?php } ?>
     </td>
     <td>
     	<table border="0" cellspacing="0" cellpadding="0">
@@ -84,21 +84,21 @@ alert ('Belum beres');
         </table>
     </td>
     <td>
-    	<? if (getLevel()!="2"){ ?>
+    	<?php if (getLevel()!="2"){ ?>
      	<table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><a href="queryerror.php"><img src="images/ico/b_warning.png" border="0" height="80" /></a></td>
             <td><a href="queryerror.php"><strong>Query Error Log</strong></a></td>
           </tr>
         </table>
-        <? } else { ?>
+        <?php } else { ?>
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td><a href="#" onClick="alert ('Maaf, Anda tidak berhak mengakses halaman ini !');"><img src="images/b_warning.png" border="0" height="80" /></a></td>
             <td><a href="#" onClick="alert ('Maaf, Anda tidak berhak mengakses halaman ini !');"><strong>Query Error Log</strong></a></td>
           </tr>
         </table>
-        <? } ?>
+        <?php } ?>
     </td>
   </tr>
 </table>

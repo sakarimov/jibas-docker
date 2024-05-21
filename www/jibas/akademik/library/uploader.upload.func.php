@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -34,11 +34,11 @@ $departemen = $_REQUEST['departemen'];
 $deskripsi = $_REQUEST["deskripsi"];
 $gambar = $_FILES["gambar"];
 $size = $gambar['size'];
-$ext = substr(strrchr($gambar["name"], "."), 1); 
-list($width, $height) = getimagesize($gambar["tmp_name"]);
+$ext = substr(strrchr((string) $gambar["name"], "."), 1); 
+[$width, $height] = getimagesize($gambar["tmp_name"]);
 
 $nama = $gambar["name"];
-$nama = str_replace(" ", "_", $nama);
+$nama = str_replace(" ", "_", (string) $nama);
 $nama = str_replace("'", "", $nama);
 
 $fspath = "gambar/" . date('Y');
@@ -64,12 +64,12 @@ $sql = "INSERT INTO jbsumum.gambar
                tinggi = $height,
                ukuran = $size,
                lokasi = '$fspath',
-               deskripsi = '$deskripsi'";
+               deskripsi = '".$deskripsi."'";
 QueryDb($sql);
 
 $sql = "SELECT LAST_INSERT_ID()";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $id = $row[0];
 
 $fname = $id . "_" . RandStr(7) . "." . $ext;

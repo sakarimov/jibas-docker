@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ function cetak() {
 <table width="100%" border="0">
   <tr>
     <td><strong>Satuan Kerja : <?=$sat?></strong><br />
-<strong>Kelamin : <? if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></strong>
+<strong>Kelamin : <?php if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></strong>
 </td>
     <td width="100" align="right"><a href="#" onclick="cetak()"><img src="../images/ico/print.png" width="16" height="16" border="0" />&nbsp;Cetak</a>&nbsp;</td>
   </tr>
@@ -69,7 +69,7 @@ function cetak() {
     <td class="header" align="center" width="40%">Nama</td>
 	<td class="header" align="center" width="10%">&nbsp;</td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT p.nip, CONCAT(p.gelarawal, ' ', p.nama, ' ', p.gelarakhir) AS fnama 
         FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
@@ -77,7 +77,7 @@ $sql = "SELECT p.nip, CONCAT(p.gelarawal, ' ', p.nama, ' ', p.gelarakhir) AS fna
 		ORDER BY p.nama";	
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 ?>
 <tr height="20">
 	<td align="center" valign="top"><?=++$cnt?></td>
@@ -87,7 +87,7 @@ while ($row = mysql_fetch_row($result)) {
 	    <a href="JavaScript:DetailPegawai('<?=$row[0]?>')" title="Lihat Detail Pegawai"><img src="../images/ico/lihat.png" border="0" /></a>
     </td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

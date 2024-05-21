@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -37,7 +37,7 @@ OpenDb();
 $sql = "SELECT t.departemen, a.tahunajaran, s.semester, t.tingkat, l.nama FROM tahunajaran a, kelas k, tingkat t, semester s, presensipelajaran p, pelajaran l WHERE p.idkelas = k.replid AND k.idtingkat = t.replid AND k.idtahunajaran = a.replid AND p.idsemester = s.replid AND s.replid = '$semester' AND t.replid = '$tingkat' AND p.idpelajaran = l.replid AND l.replid = '$pelajaran' ";  
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,7 +53,7 @@ $row = mysql_fetch_array($result);
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<?=getHeader($row[departemen])?>
+<?=getHeader($row['departemen'])?>
 	
 <center>
   <font size="4"><strong>STATISTIK KEHADIRAN SETIAP KELAS</strong></font><br />
@@ -85,11 +85,11 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT DISTINCT k.kelas, k.replid FROM presensipelajaran p, kelas k WHERE p.idkelas = k.replid AND k.idtingkat = '$tingkat' AND p.idsemester = '$semester' AND p.idpelajaran = '$pelajaran' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' ORDER BY k.kelas, p.tanggal ";	
 	
 	$result = QueryDb($sql);
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0) { 
 ?>
 	<table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left" bordercolor="#000000">
@@ -98,20 +98,20 @@ $row = mysql_fetch_array($result);
 		<td width="10%" class="header">Kelas</td>
         <td width="*" class="header"></td>
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { ?>
+	while ($row = mysqli_fetch_row($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt?></td>
         <td align="center"><?=$row[0]?></td>
          <td align="center"><img src="statistik_batang.php?semester=<?=$semester?>&kelas=<?=$row[1]?>&pelajaran=<?=$pelajaran?>&tglakhir=<?=$tglakhir?>&tglawal=<?=$tglawal?>" />
         </td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>	
-<? 	} ?>
+<?php 	} ?>
 	</td>
 </tr>    
 </table>

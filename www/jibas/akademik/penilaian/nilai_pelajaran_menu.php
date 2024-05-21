@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -55,8 +55,8 @@ if(isset($_REQUEST["idpelajaran"]))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <title>Menu</title>
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript">
 
 function klik(kelas,semester,idaturan)
 {	
@@ -73,7 +73,7 @@ function changePel()
 </script>
 </head>
 <body style="margin-left:5px; margin-top:5px; margin-right:5px; background-color: #f5f5f5">
-<? 
+<?php 
 OpenDb();
 $query_aturan = "SELECT DISTINCT aturannhb.idpelajaran, pelajaran.nama 
 				   FROM jbsakad.aturannhb aturannhb, jbsakad.pelajaran pelajaran 
@@ -84,12 +84,12 @@ $query_aturan = "SELECT DISTINCT aturannhb.idpelajaran, pelajaran.nama
 				    AND aturannhb.aktif = 1 
 				  ORDER BY pelajaran.nama";
 
-$arrpel = array();
+$arrpel = [];
 
 $res = QueryDb($query_aturan);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $arrpel[] = array($row[0], $row[1]);
+    $arrpel[] = [$row[0], $row[1]];
 }
 
 if (count($arrpel) == 0)
@@ -135,7 +135,7 @@ $query_ap = "SELECT DISTINCT a.dasarpenilaian, dp.keterangan
 $result_ap = QueryDb($query_ap);
 
 $cnt = 0;
-while($row_ap = @mysql_fetch_array($result_ap))
+while($row_ap = @mysqli_fetch_array($result_ap))
 {
     $cnt++;	?>
     <table class="tab" id="table<?=$cnt?>" border="1" style="border-collapse:collapse; border-width: 1px;"
@@ -143,30 +143,30 @@ while($row_ap = @mysql_fetch_array($result_ap))
     <tr height="22" class="header" align="left">
         <td><?=$row_ap['keterangan']?></td>
     </tr>
-<? 	$query_jp = "SELECT a.idjenisujian, j.jenisujian, j.replid, a.replid 
+<?php 	$query_jp = "SELECT a.idjenisujian, j.jenisujian, j.replid, a.replid 
 				   FROM jbsakad.aturannhb a, jbsakad.jenisujian j 
 				  WHERE a.idpelajaran = '$idpelajaran' 
-				    AND a.dasarpenilaian = '$row_ap[dasarpenilaian]' 
+				    AND a.dasarpenilaian = '".$row_ap['dasarpenilaian']."' 
 				    AND a.idjenisujian = j.replid 
 				    AND a.idtingkat = '$tingkat' 
 				    AND a.nipguru='$nip' 
 				  ORDER BY j.jenisujian";
     $result_jp = QueryDb($query_jp);
-    while($row_jp = @mysql_fetch_row($result_jp))
+    while($row_jp = @mysqli_fetch_row($result_jp))
     {	?>
         <tr>
         <td height="22" style="cursor:pointer" onclick="klik('<?=$kelas?>','<?=$semester?>','<?=$row_jp[3]?>')" align="left">
             <?=$row_jp[1]?>
         </td>
         </tr>
-	<?	} ?>
+	<?php } ?>
     </table>
     <font style="font-size: 15px"><br>&nbsp;</font>
     <script language='JavaScript'>Tables('table<?=$cnt?>', 1, 0);</script>
 
-<?
+<?php
 } // while
 ?>
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>

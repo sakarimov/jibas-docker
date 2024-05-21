@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -29,8 +29,8 @@ require_once('../include/config.php');
 require_once('../cek.php');
 
 $departemen="";
-if (isset($_REQUEST[departemen]))
-	$departemen=$_REQUEST[departemen];
+if (isset($_REQUEST['departemen']))
+	$departemen=$_REQUEST['departemen'];
 	
 $title = "Sekolah";
 if ($departemen=='yayasan')
@@ -42,13 +42,13 @@ if ($op == "delheader")
 	OpenDb();
 	$sql = "SELECT foto FROM jbsumum.identitas WHERE departemen='$departemen'";
 	$result = QueryDb($sql);
-	$row = @mysql_fetch_row($result);
+	$row = @mysqli_fetch_row($result);
 	if ($row[0] != '')
 		$sql = "UPDATE jbsumum.identitas SET nama=NULL, situs=NULL, email=NULL, alamat1=NULL, 
 					   alamat2=NULL, telp1=NULL, telp2=NULL, telp3=NULL, telp4=NULL, fax1=NULL, fax2=NULL 
-				 WHERE departemen = '$departemen'";
+				 WHERE departemen = '".$departemen."'";
 	else
-		$sql = "DELETE FROM jbsumum.identitas WHERE departemen = '$departemen'";
+		$sql = "DELETE FROM jbsumum.identitas WHERE departemen = '".$departemen."'";
 	QueryDb($sql);		
 	CloseDb();		
 }
@@ -58,11 +58,11 @@ if ($op == "dellogo")
 	OpenDb();
 	$sql = "SELECT nama FROM jbsumum.identitas WHERE departemen='$departemen'";
 	$result = QueryDb($sql);
-	$row = @mysql_fetch_row($result);
+	$row = @mysqli_fetch_row($result);
 	if ($row[0] != '')
-		$sql = "UPDATE jbsumum.identitas SET foto=NULL WHERE departemen = '$departemen'";
+		$sql = "UPDATE jbsumum.identitas SET foto=NULL WHERE departemen = '".$departemen."'";
 	else
-		$sql = "DELETE FROM jbsumum.identitas WHERE departemen = '$departemen'";
+		$sql = "DELETE FROM jbsumum.identitas WHERE departemen = '".$departemen."'";
 	QueryDb($sql);		
 	CloseDb();		
 }
@@ -153,14 +153,14 @@ function cetak(){
 				<strong>Departemen : </strong>
 				<select name="departemen" id="departemen" onchange="chg_dep()">
 					<option value="yayasan" <?=StringIsSelected($departemen,'yayasan')?>>Umum</option>
-					<?
+					<?php
 					$res = QueryDb("SELECT departemen FROM departemen WHERE aktif=1 ORDER BY urutan");
-					while ($r = @mysql_fetch_array($res)){
+					while ($r = @mysqli_fetch_array($res)){
 					if ($departemen=="")
-						$departemen=$r[departemen];	
+						$departemen=$r['departemen'];	
 					?>
-					<option value="<?=$r[departemen]?>" <?=StringIsSelected($departemen,$r[departemen])?>><?=$r[departemen]?></option>							
-					<?
+					<option value="<?=$r['departemen']?>" <?=StringIsSelected($departemen,$r['departemen'])?>><?=$r['departemen']?></option>							
+					<?php
 					}
 					?>
 				</select>
@@ -168,15 +168,15 @@ function cetak(){
 			<td align="right"><a href="javascript:cetak()"><img border="0" src="../images/ico/print.png" />&nbsp;Cetak KOP Surat</a></td>
 		</tr>
 	</table><br>
-	<?
+	<?php
 	$replid = 0;
 	$foto = 0;
 	$nama = 0;
 	$sql="SELECT * FROM jbsumum.identitas WHERE departemen='$departemen' ORDER BY replid DESC LIMIT 1";
 	$result=QueryDb($sql);
 
-	$row=@mysql_fetch_array($result);
-	if (mysql_num_rows($result) > 0) {
+	$row=@mysqli_fetch_array($result);
+	if (mysqli_num_rows($result) > 0) {
 		$replid = $row['replid'];
 	}
 	?>
@@ -187,7 +187,7 @@ function cetak(){
     </tr>
 
     <tr height="100">
-  	<? 	
+  	<?php 	
 		if ($row['foto'] == "") {
 			$foto = 0;
 	?>	
@@ -196,12 +196,12 @@ function cetak(){
     	<font size = "2" color ="green">di sini</font></a>&nbsp;untuk memasukkan logo <?=$title?>.</b></font>
  	    	  
         </td>
-	<? } else { 
+	<?php } else { 
 			$foto = $row['replid'];
 	?> 
     	<td align="center"><img src="../library/gambar.php?replid=<?=$replid?>&table=jbsumum.identitas" border="0"/></td>
-    <? } ?>
-    <? 	
+    <?php } ?>
+    <?php 	
 		
 	
 		if ($row['nama'] != "") {	
@@ -209,7 +209,7 @@ function cetak(){
         <td align="left" valign="top">
         	<font size="6"><strong><?=$row['nama']?></strong></font><br />
         	<font size="2"><strong>
-    	<? 	if ($row['alamat2'] <> "" && $row['alamat1'] <> "")
+    	<?php 	if ($row['alamat2'] <> "" && $row['alamat1'] <> "")
             	echo "Lokasi 1: ";
 		  	if ($row['alamat1'] != "") 
 				echo $row['alamat1'];
@@ -250,30 +250,29 @@ function cetak(){
 		?>
             </strong></font>
         </td>  
-    <? } else { 
+    <?php } else { 
 			?>    
     	<td align="center" rowspan="2"><font size = "2" color ="red"><b>Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk memasukkan data.</b></font>
         </td> 
-    <? } ?>   
+    <?php } ?>   
     </tr>			 
-<?	
+<?php 
 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>         
     <tr height="25"> 
-	<? 	if ($row['foto'] !="") {   	?>
+	<?php 	if ($row['foto'] !="") {   	?>
 		<td align="center">
             <a href="JavaScript:tambah_logo()"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Logo Sekolah!', this, event, '75px')" /></a>&nbsp;
             <a href="JavaScript:hapus('logo')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Logo Sekolah!', this, event, '75px')"/></a>
         </td>
-     <? } ?>
-     <? if (mysql_num_rows($result) >  0  && $row['nama'] != "") {	 ?>
+     <?php } ?>
+     <?php if (mysqli_num_rows($result) >  0  && $row['nama'] != "") {	 ?>
         <td align="center">
             <a href="JavaScript:edit()"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Header!', this, event, '85px')" /></a>&nbsp;
             <a href="JavaScript:hapus('header')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Header!', this, event, '85px')"/></a>
         </td>
-    <? } ?>
+    <?php } ?>
     </tr>
-<?		//}  ?>	
-<? 	 } ?>
+<?php 	 } ?>
     
 	</table>
     <br /><br />      
@@ -287,4 +286,4 @@ function cetak(){
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -70,12 +70,12 @@ $DJ = new DaftarJabatan();
 	<td width="45%" align="center" class="header">Keterangan</td>
 	<td width="10%" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT replid, DATE_FORMAT(tanggal,'%d %M %Y') AS ftmt, keterangan FROM jadwal WHERE nip='$DJ->nip' AND jenis='jabatan'";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
 	<tr height="25">
 		<td align="center"><?=++$cnt?></td>
 	    <td align="center"><?=$row['ftmt']?></td>
@@ -85,7 +85,7 @@ if (mysql_num_rows($result) > 0) {
 		    <a href="JavaScript:HapusJ(<?=$row['replid']?>)" title="hapus"><img src="../images/ico/hapus.png" border="0" /></a>
 	    </td>
 	</tr>
-<?	} // while 
+<?php } // while 
 } else { ?>
 	<tr height="80">
     	<td colspan="4" align="center" valign="middle">
@@ -94,7 +94,7 @@ if (mysql_num_rows($result) > 0) {
                     
         </td>
     </tr>
-<? 
+<?php 
 } // end if
 ?>
 </table>
@@ -126,24 +126,24 @@ if (mysql_num_rows($result) > 0) {
     <td width="*" align="center" class="header">Keterangan</td>
     <td width="8%" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT p.replid, p.jenis, DATE_FORMAT(p.tmt,'%d %M %Y') AS ftmt, p.sk, p.keterangan, p.terakhir, p.namajab FROM pegjab p WHERE p.nip = '$DJ->nip' ORDER BY tmt DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
     <td align="left"><strong><?=$row['jenis']?></strong> <?=$row['namajab']?></td>
     <td align="center"><?=$row['ftmt']?></td>
     <td align="center">
-<?		if ($row['terakhir'] == 1) { ?>
+<?php 	if ($row['terakhir'] == 1) { ?>
 			<img src="../images/ico/aktif.png" border="0" title="jabatan saat ini" />
-<?		} else { ?>
+<?php 	} else { ?>
 	    	<a title="klik untuk menjadi jabatan pegawai yang aktif" href="JavaScript:ChangeLast(<?=$row['replid']?>)">
 			<img src="../images/ico/nonaktif.png" border="0" />
 			</a>
-<?		} ?>
+<?php 	} ?>
     </td>
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
@@ -152,13 +152,13 @@ while ($row = mysql_fetch_array($result)) {
         <a href="JavaScript:Hapus(<?=$row['replid']?>)" title="hapus"><img src="../images/ico/hapus.png" border="0" /></a>
     </td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>    
 

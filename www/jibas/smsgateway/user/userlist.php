@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
 new UserList();
 class UserList{
 	public function __construct(){
-		$cmd = (isset($_REQUEST['cmd']))?$_REQUEST['cmd']:'';
+		$cmd = $_REQUEST['cmd'] ?? '';
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 		echo '<html xmlns="http://www.w3.org/1999/xhtml">';
 		echo '<head>';
@@ -40,15 +40,13 @@ class UserList{
 		echo '<script language="javascript" src="user.js"></script>';
 		echo '</head>';
 		echo '<body>';
-		switch($cmd){
-			case "add": $this->addUser(); break;
-			case "edit": $this->editUser(); break;
-			
-			case "selectpegawai": $this->selectPegawai(); break;
-			case "del": $this->deleteUser(); break;
-			
-			default : $this->showUserList(); break;
-		}
+		match ($cmd) {
+      "add" => $this->addUser(),
+      "edit" => $this->editUser(),
+      "selectpegawai" => $this->selectPegawai(),
+      "del" => $this->deleteUser(),
+      default => $this->showUserList(),
+  };
 		echo '</body>';
 		echo '</html>';
 	}
@@ -61,7 +59,7 @@ class UserList{
 			OpenDb();
 			$sql = "SELECT login FROM $db_name_user.hakakses WHERE replid='$id'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$login = $row[0];
 			
 			$sql = "DELETE FROM $db_name_user.hakakses WHERE replid='$id'";
@@ -69,7 +67,7 @@ class UserList{
 			
 			$sql = "SELECT COUNT(replid) FROM $db_name_user.hakakses WHERE login='$login'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$num = $row[0];
 			
 			if ($num==0){
@@ -132,7 +130,7 @@ class UserList{
 			OpenDb();
 			$sql = "SELECT login,tingkat,keterangan,lastlogin,replid FROM $db_name_user.hakakses WHERE modul='SMSG'";
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0){
 				$cnt = 1;
 				?>
@@ -147,10 +145,10 @@ class UserList{
 					<td>&nbsp;</td>
 				</tr>
 				<?php
-				while ($row = @mysql_fetch_row($res)){
-				$sqlpeg = "SELECT nama FROM $db_name_sdm.pegawai WHERE nip='$row[0]'";
+				while ($row = @mysqli_fetch_row($res)){
+				$sqlpeg = "SELECT nama FROM $db_name_sdm.pegawai WHERE nip='".$row[0]."'";
 				$respeg = QueryDb($sqlpeg);
-				$rowpeg = @mysql_fetch_row($respeg);
+				$rowpeg = @mysqli_fetch_row($respeg);
 				?>
 				<tr height="20">
 					<td align="center"><?php echo $cnt ?></td>
@@ -189,8 +187,8 @@ class UserList{
 			global $db_name_user;
 			
 			$nip	= $_REQUEST['nip'];
-			$pass	= md5($_REQUEST['password1']);
-			$ket	= addslashes($_REQUEST['ket']);
+			$pass	= md5((string) $_REQUEST['password1']);
+			$ket	= addslashes((string) $_REQUEST['ket']);
 			$tingkat= $_REQUEST['tingkat'];
 				
 			OpenDb();
@@ -200,7 +198,7 @@ class UserList{
 					 WHERE login = '$nip'
 					   AND modul='SMSG'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$num = $row[0];
 			if ($num > 0)
 			{
@@ -212,7 +210,7 @@ class UserList{
 					      FROM $db_name_user.login
 						 WHERE login='$nip'";
 				$res = QueryDb($sql);
-				$row = @mysql_fetch_row($res);
+				$row = @mysqli_fetch_row($res);
 				
 				if ($row[0] < 1)
 				{
@@ -252,8 +250,8 @@ class UserList{
 				<td>
                 	<table border="0" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td><input type="text" id="nip" name="nip" readonly="readonly" size="15" class='InputTxt nip' value="<?php echo stripslashes($nip) ?>" style="margin-right:4px"/></td>
-                        <td><input type="text" id="nama" name="nama" readonly="readonly"  size="35" class='InputTxt nama' value="<?php echo stripslashes($nama) ?>"  style="margin-right:4px"></td>
+                        <td><input type="text" id="nip" name="nip" readonly="readonly" size="15" class='InputTxt nip' value="<?php echo stripslashes((string) $nip) ?>" style="margin-right:4px"/></td>
+                        <td><input type="text" id="nama" name="nama" readonly="readonly"  size="35" class='InputTxt nama' value="<?php echo stripslashes((string) $nama) ?>"  style="margin-right:4px"></td>
                         <td><input type="button" value="..."  id="caripegawai" class="Btn" /></td>
                       </tr>
                     </table>
@@ -328,14 +326,14 @@ class UserList{
 			
 			$sql = "SELECT login,tingkat,keterangan FROM $db_name_user.hakakses WHERE replid='$id'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$nip = $row[0];
 			$tingkat = $row[1];
 			$ket = $row[2];
 			
 			$sql = "SELECT nama FROM $db_name_sdm.pegawai WHERE nip='$nip'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$nama= $row[0];
 			?>
 			<title>Ubah Pengguna</title>
@@ -369,7 +367,7 @@ class UserList{
 			  <tr>
 				<td>Keterangan</td>
 				<td>:</td>
-				<td><textarea class="AreaTxt" name="ket" id="ket" rows='3'  style='width:99%'><?php echo stripslashes($ket) ?></textarea></td>
+				<td><textarea class="AreaTxt" name="ket" id="ket" rows='3'  style='width:99%'><?php echo stripslashes((string) $ket) ?></textarea></td>
 			  </tr>
 			  <tr>
 				<td colspan='3' align='center'>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -34,7 +34,7 @@ if (isset($_REQUEST['nip'])){ //0
 		$sql = "SELECT p.nama from jbssdm.pegawai p WHERE p.nip=$nip ";    
 		$result = QueryDb($sql);
 		$cnt = 0;
-		if ($row = @mysql_fetch_array($result)) {
+		if ($row = @mysqli_fetch_array($result)) {
 		$nama=$row[0];
 		}
 		CloseDb();*/
@@ -44,7 +44,7 @@ if (isset($_REQUEST['nip'])){ //0
 <head>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Aturan Perhitungan Nilai Rapor[Menu]</title>
+<title>Aturan Perhitungan Nilai Rapor['Menu']</title>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
@@ -59,16 +59,16 @@ function tampil(id,nip) {
 <table border="0" width="100%" align="center">
 <!-- TABLE CENTER -->
 
-<?
+<?php
 OpenDb();
-$sql="SELECT DISTINCT pel.departemen FROM pelajaran pel, guru g, departemen  d WHERE g.nip='$_REQUEST[nip]' AND pel.replid=g.idpelajaran AND pel.departemen = d.departemen ORDER BY d.urutan";
+$sql="SELECT DISTINCT pel.departemen FROM pelajaran pel, guru g, departemen  d WHERE g.nip='".$_REQUEST['nip']."' AND pel.replid=g.idpelajaran AND pel.departemen = d.departemen ORDER BY d.urutan";
 $result = QueryDb($sql);
 $cnt = 0;
-if ((@mysql_num_rows($result))>0){
+if ((@mysqli_num_rows($result))>0){
 ?>
 		<div align="left"><strong>Pelajaran yang diajar oleh guru<br /><?=$_REQUEST['nama']?></strong></div></strong><br />
-	<?
-	while ($row = @mysql_fetch_array($result)) {
+	<?php
+	while ($row = @mysqli_fetch_array($result)) {
 		$departemen=$row[0];
 		
 	?>
@@ -76,25 +76,25 @@ if ((@mysql_num_rows($result))>0){
         <table class="tab" id="table<?=$cnt?>" border="1" style="border-collapse:collapse" width="100%" align="left">
         <tr>
         	<td class="header" align="center" height="30"><?=$departemen?></td></tr>
-   	<? 
-		$sql2="SELECT pel.nama,pel.departemen,pel.replid FROM pelajaran pel, guru g WHERE g.nip='$_REQUEST[nip]' AND pel.replid=g.idpelajaran AND pel.departemen='$departemen' GROUP BY pel.nama";
+   	<?php 
+		$sql2="SELECT pel.nama,pel.departemen,pel.replid FROM pelajaran pel, guru g WHERE g.nip='".$_REQUEST['nip']."' AND pel.replid=g.idpelajaran AND pel.departemen='$departemen' GROUP BY pel.nama";
 		$result2 = QueryDb($sql2);
 		$cnt2 = 0;
-		while ($row2 = @mysql_fetch_array($result2)) {
+		while ($row2 = @mysqli_fetch_array($result2)) {
 			$nama_pelajaran=$row2[0];
 		?>
 		<tr>
         	<td align="left" height="25" onclick="tampil('<?=$row2[2]?>','<?=$_REQUEST['nip']?>','<?=$departemen?>')" style="cursor:pointer"><u><b><?=$nama_pelajaran?></b></u>
             </td>
         </tr>
-		<?
+		<?php
 			$cnt2++;
         }
 		?></table>
 		<script language='JavaScript'>
 	    Tables('table<?=$cnt?>', 1, 0);
 		</script>
-		<?
+		<?php
  	$cnt++;
 		}
 	CloseDb();
@@ -107,7 +107,7 @@ if ((@mysql_num_rows($result))>0){
 		</td>
 	</tr>
 	</table> 
-<? } ?> 
+<?php } ?> 
 
 <!-- END TABLE CENTER -->    
 </table> 

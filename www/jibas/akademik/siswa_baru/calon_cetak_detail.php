@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -47,7 +47,7 @@ $sql="SELECT c.nopendaftaran, c.nama, c.panggilan, c.tahunmasuk, c.idproses, c.i
 		 AND p.replid = k.idproses";
 
 $result=QueryDB($sql);
-$row_siswa = mysql_fetch_array($result); 
+$row_siswa = mysqli_fetch_array($result); 
 
 
 ?>
@@ -149,7 +149,7 @@ $row_siswa = mysql_fetch_array($result);
                     <td >5.</td>
                     <td>Jenis Kelamin</td>
                     <td colspan="2" >:
-                        <? 	if ($row_siswa['kelamin']=="l")
+                        <?php 	if ($row_siswa['kelamin']=="l")
                             echo "Laki-laki";
                         if ($row_siswa['kelamin']=="p")
                             echo "Perempuan";
@@ -364,12 +364,12 @@ $row_siswa = mysql_fetch_array($result);
                     <td >Nama</td>
                     <td >:
                         <?=$row_siswa['namaayah']?>
-                        <?
+                        <?php
                         if ($row_siswa['almayah']==1)
                             echo "&nbsp;(alm)";
                         ?></td>
                     <td colspan="2"><?=$row_siswa['namaibu']?>
-                        <?
+                        <?php
                         if ($row_siswa['almibu']==1)
                             echo "&nbsp;(alm)";
                         ?></td>
@@ -480,7 +480,7 @@ $row_siswa = mysql_fetch_array($result);
                            AND ds.nopendaftaran = '$no'
                          ORDER BY td.urutan  ";
                 $res = QueryDb($sql);
-                $ntambahandata = mysql_num_rows($res);
+                $ntambahandata = mysqli_num_rows($res);
 
                 if ($ntambahandata > 0)
                 {   ?>
@@ -495,7 +495,7 @@ $row_siswa = mysql_fetch_array($result);
 <?php
                     $no = 46;
                     $first = true;
-                    while($row = mysql_fetch_array($res))
+                    while($row = mysqli_fetch_array($res))
                     {
                         $no += 1;
                         $replid = $row['replid'];
@@ -527,7 +527,7 @@ $row_siswa = mysql_fetch_array($result);
                             <td colspan="2">:
                                 <?=$data?></td>
                         </tr>
-<?                  }
+<?php                  }
                     echo "<tr height='20'><td colspan='5'>&nbsp;</td></tr>";
                 } ?>
                 </table>

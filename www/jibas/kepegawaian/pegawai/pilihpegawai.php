@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -77,8 +77,8 @@ function Cari()
     
     </td>
 </tr>
-<?
-if (strlen($nip) > 0 || strlen($nama) > 0 || $all == 1)
+<?php
+if (strlen((string) $nip) > 0 || strlen((string) $nama) > 0 || $all == 1)
 { 
 ?>
 <tr>
@@ -91,20 +91,20 @@ if (strlen($nip) > 0 || strlen($nama) > 0 || $all == 1)
     <td class="header" width="55%" align="left">Nama</td>
     <td class="header" width="10%" align="center">&nbsp;</td>
 </tr>
-<?
+<?php
 	if ($all == 1) 
 		$sql = "SELECT nip, TRIM(CONCAT(IFNULL(gelarawal, ''), ' ' , nama, ' ', IFNULL(gelarakhir,''))) AS fnama
 				  FROM pegawai
 				 WHERE aktif = 1 
 				 ORDER BY nama";
 	else
-		if (strlen($nama) > 0)
+		if (strlen((string) $nama) > 0)
 			$sql = "SELECT nip, TRIM(CONCAT(IFNULL(gelarawal, ''), ' ' , nama, ' ', IFNULL(gelarakhir,''))) AS fnama
 					  FROM pegawai
 					 WHERE nama LIKE '%$nama%'
 					   AND aktif = 1
 					 ORDER BY nama";
-		elseif (strlen($nip) > 0)
+		elseif (strlen((string) $nip) > 0)
 			$sql = "SELECT nip, TRIM(CONCAT(IFNULL(gelarawal, ''), ' ' , nama, ' ', IFNULL(gelarakhir,''))) AS fnama
 					  FROM pegawai
 					 WHERE nip LIKE '%$nip%'
@@ -113,7 +113,7 @@ if (strlen($nip) > 0 || strlen($nama) > 0 || $all == 1)
 	OpenDb();
 	$result = QueryDb($sql);
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) 
+	while ($row = mysqli_fetch_array($result)) 
 	{ ?>
 
 <tr height="25">
@@ -125,7 +125,7 @@ if (strlen($nip) > 0 || strlen($nama) > 0 || $all == 1)
     </td>
 </tr>    
 
-<?	}
+<?php }
 	CloseDb();
 ?>
 
@@ -139,7 +139,7 @@ if (strlen($nip) > 0 || strlen($nama) > 0 || $all == 1)
 </td>
 </tr>
 
-<?
+<?php
 }
 ?>
 </table>

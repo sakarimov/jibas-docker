@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,7 +40,7 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama
 		    FROM guru g, jbssdm.pegawai p, pelajaran j 
 		   WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND j.replid = '$id_pelajaran' AND g.nip = '$nip_guru'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -55,14 +55,14 @@ if ($op == "dw8dxn8w9ms8zs22") {
 	QueryDb($sql);
 	CloseDb();
 } else if ($op == "xm8r389xemx23xb2378e23") {	
-	$sql = "DELETE FROM aturannhb WHERE idpelajaran = '$id_pelajaran' AND nipguru = '$nip_guru' AND idtingkat = '$id_tingkat' AND dasarpenilaian = '$aspek'"; 
+	$sql = "DELETE FROM aturannhb WHERE idpelajaran = '$id_pelajaran' AND nipguru = '$nip_guru' AND idtingkat = '$id_tingkat' AND dasarpenilaian = '".$aspek."'"; 
 	QueryDb($sql);	
 	CloseDb();
 	?>
     <script>
     	refresh();
     </script> 
-	<?
+	<?php
 }	
 
 ?>
@@ -74,7 +74,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
 <script language="javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 
 var win = null;
 function newWindow(mypage,myname,w,h,features) {
@@ -188,13 +188,13 @@ function cetak() {
     	<td><b>: <?=$guru ?></b>
     	<input type="hidden" name="nip_guru" id="nip_guru" value="<?=$nip_guru ?>" />
    	 	</td>
-	<? 
+	<?php 
 	     
     OpenDb();
 	$sql = "SELECT tingkat,replid FROM tingkat WHERE departemen = '$departemen' AND aktif=1 ORDER BY urutan";
 	$result = QueryDb($sql);
 	CloseDb();
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 		
 	?>
   		<td align="right" colspan="2" valign="top"><a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
@@ -202,14 +202,14 @@ function cetak() {
    		</td>
 	</tr>
 	</table>
-  <?
+  <?php
    	$cnt = 0;  
-    while ($row_tkt = @mysql_fetch_array($result)) {
+    while ($row_tkt = @mysqli_fetch_array($result)) {
 		++$cnt;
 		OpenDb();
 		$query_at = "SELECT a.dasarpenilaian, dp.keterangan
 		               FROM aturannhb a, tingkat t, dasarpenilaian dp 
-			 		  WHERE a.idtingkat='$row_tkt[replid]' AND a.idpelajaran = '$id_pelajaran' AND t.departemen='$departemen' 
+			 		  WHERE a.idtingkat='".$row_tkt['replid']."' AND a.idpelajaran = '$id_pelajaran' AND t.departemen='$departemen' 
 					    AND a.dasarpenilaian = dp.dasarpenilaian AND dp.aktif = 1
   					    AND t.replid = a.idtingkat AND a.nipguru = '$nip_guru' GROUP BY a.dasarpenilaian";
 		
@@ -218,8 +218,8 @@ function cetak() {
   ?>
   	<br>
   		<fieldset>
-        <legend><b>Tingkat <?=$row_tkt[tingkat] ?> &nbsp;&nbsp;&nbsp;
-  	<?	if (@mysql_num_rows($result_at)>0){ 
+        <legend><b>Tingkat <?=$row_tkt['tingkat'] ?> &nbsp;&nbsp;&nbsp;
+  	<?php if (@mysqli_num_rows($result_at)>0){ 
 			$cetak = 1; ?>	
     		<a href = "JavaScript:tambah(<?=$row_tkt['replid']?>)">
             <img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')">&nbsp;Input Aturan Perhitungan Nilai Rapor</a>
@@ -233,27 +233,27 @@ function cetak() {
 		<td class="header" align="center" height="30">Bobot Perhitungan Nilai Rapor </td>
         <td class="header" colspan="2" height="30">&nbsp;</td>
 	</tr>
-	<?
+	<?php
 	
 	$i=1;
 	
-	while($row_at = mysql_fetch_row($result_at)){
+	while($row_at = mysqli_fetch_row($result_at)){
 
 	?>
 	<tr height="25">
 		<td align="center"><?=$i ?></td>
 		<td><?=$row_at[1] ?></td>
 		<td>
-		<?
+		<?php
 		OpenDb();
 		$query_ju = "SELECT j.jenisujian, a.bobot, a.aktif, a.replid FROM aturannhb a, tingkat t, jenisujian j ".
-				 	"WHERE a.idtingkat = '$row_tkt[replid]' AND a.idpelajaran = '$id_pelajaran' AND j.replid = a.idjenisujian ".
-					"AND t.departemen = '$departemen' AND a.dasarpenilaian = '$row_at[0]' AND a.nipguru = '$nip_guru' ".
+				 	"WHERE a.idtingkat = '".$row_tkt['replid']."' AND a.idpelajaran = '$id_pelajaran' AND j.replid = a.idjenisujian ".
+					"AND t.departemen = '$departemen' AND a.dasarpenilaian = '".$row_at[0]."' AND a.nipguru = '$nip_guru' ".
 					"AND t.replid = a.idtingkat";
 		
 		$result_ju = QueryDb($query_ju);
 		CloseDb();
-		while($row_ju = mysql_fetch_row($result_ju)){
+		while($row_ju = mysqli_fetch_row($result_ju)){
 			if ($row_ju[2] == 1) { ?>
 				<a href="JavaScript:setaktif(<?=$row_ju[3] ?>, <?=$row_ju[2] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')" /></a>&nbsp;
 <?=$row_ju[0]." = ".$row_ju[1]."<br>";
@@ -271,7 +271,7 @@ function cetak() {
             <img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus!', this, event, '50px')" /></a> 
    		</td>
         </tr>
-	<?
+	<?php
 	$i++;
 	}
 	?>
@@ -281,7 +281,7 @@ function cetak() {
           Tables('table<?=$cnt?>', 1, 0);
     </script>
     
-<?	} else { ?>
+<?php } else { ?>
 	</legend>	
 		<table width="100%" border="0" align="center">          
 		<tr>
@@ -292,16 +292,16 @@ function cetak() {
 			</td>
 		</tr>
 	 	</table>
-<? } 	?> 
+<?php } 	?> 
 	<br>
   	</fieldset>
-<? }	?>
+<?php }	?>
  	<input type="hidden" name="cetak" id="cetak" value="<?=$cetak ?>" />
     <!-- END TABLE CONTENT -->
  	</td>
   </tr>
 </table>
-<?	} else { ?>
+<?php } else { ?>
 </td><td width = "50%"></td>
 </tr>
 <tr height="60"><td colspan="4"><hr style="border-style:dotted" /></td>
@@ -316,7 +316,7 @@ function cetak() {
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td>
 </tr>
 </table>

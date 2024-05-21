@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -49,12 +49,12 @@ if (isset($_REQUEST['aktif']))
 	$aktif = $_REQUEST['aktif'];
 
 OpenDb();
-$sql = "SELECT t.tahunajaran, t.tglmulai, t.tglakhir FROM tahunajaran t, kelas k WHERE k.idtahunajaran = t.replid AND k.replid = '$kelas'"; 
+$sql = "SELECT t.tahunajaran, t.tglmulai, t.tglakhir FROM tahunajaran t, kelas k WHERE k.idtahunajaran = t.replid AND k.replid = '".$kelas."'"; 
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
-$jgk1 = explode('-',$row['tglmulai']);
-$jgk2 = explode('-',$row['tglakhir']); 
+$jgk1 = explode('-',(string) $row['tglmulai']);
+$jgk2 = explode('-',(string) $row['tglakhir']); 
 
 $tahunajaran = $row['tahunajaran'];
 $awal = $row['tglmulai'];
@@ -151,16 +151,16 @@ function change() {
     	<td>
     	<strong>Bulan</strong>&nbsp;
             <select name="bln" id="bln" onChange="change()" onFocus="panggil()" onKeyPress="focusNext('th',event)">
-        <? 	for ($i=1;$i<=12;$i++) { ?>
+        <?php 	for ($i=1;$i<=12;$i++) { ?>
           	<option value="<?=$i?>" <?=IntIsSelected($bln, $i)?>><?=$bulan[$i]?></option>	
-       	<?	}	?>	
+       	<?php }	?>	
         	</select> 
             <select name="th" id="th" onchange="change()" onfocus="panggil()" >
-        <?  for ($i = $tahun1; $i <= $tahun2; $i++) {
+        <?php  for ($i = $tahun1; $i <= $tahun2; $i++) {
 			///for($i=$thn-10;$i<=$thn;$i++){ ?>
-        <?  //for($i=$thn;$i>=$thn-10;$i--){ ?>
+        <?php  //for($i=$thn;$i>=$thn-10;$i--){ ?>
           	<option value="<?=$i?>" <?=IntIsSelected($th, $i)?>><?=$i?></option>	   
-       	<?	} ?>	
+<?php } ?>	
         	</select>            
  		</td>
  	</tr>
@@ -169,7 +169,7 @@ function change() {
 </tr>
 <tr>
 	<td>
-<?
+<?php
 
 
 if ((int)$bln == (int)$bulan2 && (int)$th == (int)$tahun2) {		
@@ -191,12 +191,12 @@ $sql = "SELECT t.tglmulai, t.tglakhir FROM tahunajaran t, kelas k WHERE k.idtahu
 $result = QueryDb($sql);
 
 CloseDb();
-if (mysql_num_rows($result)) {
+if (mysqli_num_rows($result)) {
 	OpenDb();
 	$sql = "SELECT replid, DAY(tanggal1) AS tgl1, MONTH(tanggal1) AS bln1, YEAR(tanggal1) AS th1, DAY(tanggal2) AS tgl2, MONTH(tanggal2) AS bln2, YEAR(tanggal2) AS th2 FROM presensiharian WHERE idkelas = '$kelas' AND idsemester = '$semester' AND ((MONTH(tanggal1) = '$bln' AND YEAR(tanggal1) = '$th') OR (MONTH(tanggal2) = '$bln') AND YEAR(tanggal2) = '$th') ORDER BY tanggal1";    
 	
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
 
 
@@ -207,9 +207,9 @@ if (mysql_num_rows($result)) {
     	<td width="4%" class="header" align="center">No</td>
         <td width="*" class="header" align="center">Tanggal</td>
     </tr>
-   	<?
+   	<?php
 		$cnt = 0;
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25">   	
        	<td align="center"><?=++$cnt ?></td>        
@@ -220,7 +220,7 @@ if (mysql_num_rows($result)) {
         
         </td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); 
 ?>	
 	<!-- END TABLE CONTENT -->
@@ -229,7 +229,7 @@ if (mysql_num_rows($result)) {
 	    Tables('table', 1, 0);
     </script>
 
-<? } else { ?>	
+<?php } else { ?>	
     <table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
@@ -239,7 +239,7 @@ if (mysql_num_rows($result)) {
 	</tr>
 	</table>  
 	
-<? }
+<?php }
 } else {
 	$aktif = 0;
 	?>
@@ -253,7 +253,7 @@ if (mysql_num_rows($result)) {
 	</tr>
 	</table>  
     
-<? } ?>
+<?php } ?>
 	<input type="hidden" name="aktif" id="aktif" value="<?=$aktif?>">
 	<input type="hidden" name="tgl1" id="tgl1" value="<?=$tgl1 ?>">
     <input type="hidden" name="tgl2" id="tgl2" value="<?=$tgl2 ?>">    

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/db_functions.php');
@@ -55,12 +55,12 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") {
-	$sql = "DELETE FROM jbsuser.hakakses WHERE login = '$_REQUEST[login]' AND modul='SIMAKA'";
+	$sql = "DELETE FROM jbsuser.hakakses WHERE login = '".$_REQUEST['login']."' AND modul='SIMAKA'";
 	QueryDb($sql);
-	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '$_REQUEST[login]' AND modul<>'SIMAKA'";
+	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '".$_REQUEST['login']."' AND modul<>'SIMAKA'";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result)==0) {
-		$sql = "DELETE FROM jbsuser.login WHERE login='$_REQUEST[login]'";
+	if (@mysqli_num_rows($result)==0) {
+		$sql = "DELETE FROM jbsuser.login WHERE login='".$_REQUEST['login']."'";
 		QueryDb($sql);
 	}
 	CloseDb();
@@ -160,20 +160,20 @@ function change_baris() {
       </tr>
 	</table>
 	<br /><br />
-<?
+<?php
 	OpenDb();
 	$sql_tot = "SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,  DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='SIMAKA' AND h.login = l.login AND l.login = p.nip ";
 	
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 					
 	$sql="SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,  DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='SIMAKA' AND h.login = l.login AND l.login = p.nip ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	
 	$result = QueryDB($sql);
 	$akhir = ceil($jumlah/5)*5;
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
     <input type="hidden" name="total" id="total" value="<?=$total?>"/>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
@@ -182,9 +182,9 @@ function change_baris() {
       	<td align="right">   
     	<a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
     	<a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
-<?	if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
+<?php if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
 	    <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Pengguna</a>
-<?	} ?>    
+<?php } ?>    
     </td>
     </tr>
     </table><br />
@@ -199,22 +199,22 @@ function change_baris() {
         <td width="10%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" onClick="change_urut('aktif','<?=$urutan?>')" style="cursor:pointer;">Status <?=change_urut('aktif',$urut,$urutan)?></td>
         <td width="*">Keterangan</td>  
         <td width="15%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" onClick="change_urut('tanggal','<?=$urutan?>')" style="cursor:pointer;">Login Terakhir <?=change_urut('tanggal',$urut,$urutan)?></td>
-         <?	if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
+         <?php if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
         <td width="8%">&nbsp;</td>
-        <? } ?>
+        <?php } ?>
     </tr>
-<? 	
+<?php 	
 	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['login'] ?></td>
         <td><?=$row['nama']; ?></td>
-        <td align="center"><?	if ($row['tingkat']==1){
+        <td align="center"><?php if ($row['tingkat']==1){
 					echo "Semua Departemen";
 				} else {
 					echo $row['departemen'];
@@ -222,7 +222,7 @@ function change_baris() {
 			?>
        	</td>
         <td align="center">
-			<?	switch ($row['tingkat']){
+			<?php switch ($row['tingkat']){
 					case 0: echo "Landlord";
 						break;
 					case 1: echo "Manajer Akademik";
@@ -234,24 +234,24 @@ function change_baris() {
         </td>
         
         
-        <td align="center"><? if ($row['aktif'] == 1) echo 'Aktif'; else echo 'Tidak Aktif'; ?></td>
+        <td align="center"><?php if ($row['aktif'] == 1) echo 'Aktif'; else echo 'Tidak Aktif'; ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center"><?=format_tgl($row['tanggal'])?> <?=$row['jam']?></td>
- <?		if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) {  ?> 
+ <?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) {  ?> 
         <td align="center">
             <a href="JavaScript:edit('<?=$row['replid'] ?>')"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pengguna!', this, event, '75px')" /></a>&nbsp;
             <a href="JavaScript:hapus('<?=$row['login'] ?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Pengguna!', this, event, '75px')"/></a>
         </td>
-<?		} ?>
+<?php 	} ?>
     </tr>
-<?	} CloseDb(); ?>	
+<?php } CloseDb(); ?>	
     
     <!-- END TABLE CONTENT -->
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>	
-     <?	if ($page==0){ 
+     <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -276,19 +276,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -302,9 +302,9 @@ function change_baris() {
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -312,18 +312,18 @@ function change_baris() {
     </td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
        	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF && SI_USER_LEVEL() != $SI_USER_MANAGER) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? } ?>
+        <?php } ?>
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->

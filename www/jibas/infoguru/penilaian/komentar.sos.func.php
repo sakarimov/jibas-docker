@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,9 +49,9 @@ function ReadParams()
     if (isset($_REQUEST['komentar']))
         $komentar = CQ($_REQUEST['komentar']);
 
-    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$nis'";
+    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$nis."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nama = $row[0];
 }
 
@@ -74,7 +74,7 @@ function ShowUserInfo()
 
 function SafeText($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     return $text;
 }
 
@@ -85,8 +85,8 @@ function SimpanData()
 
     global $semester, $pelajaran, $kelas, $nis;
 
-    $arrjenis = array("SPI", "SOS");
-    $arrnmjenis = array("Spiritual", "Sosial");
+    $arrjenis = ["SPI", "SOS"];
+    $arrnmjenis = ["Spiritual", "Sosial"];
 
     $success = true;
     BeginTrans();
@@ -108,18 +108,18 @@ function SimpanData()
                  WHERE nis = '$nis'
                    AND idsemester = '$semester'
                    AND idkelas = '$kelas'
-                   AND jenis = '$jenis'";
+                   AND jenis = '".$jenis."'";
         //echo "$sql<br>";
         $ndata = (int) FetchSingle($sql);
 
         if ($ndata == 0)
             $sql = "INSERT INTO jbsakad.komenrapor
                        SET nis = '$nis', idsemester = '$semester', idkelas = '$kelas',
-                           predikat = '$predikat', komentar = '$komentar', jenis = '$jenis'";
+                           predikat = '$predikat', komentar = '$komentar', jenis = '".$jenis."'";
         else
             $sql = "UPDATE jbsakad.komenrapor
                        SET predikat = '$predikat', komentar = '$komentar', jenis = '$jenis'
-                     WHERE nis = '$nis' AND idsemester = '$semester' AND idkelas = '$kelas'";
+                     WHERE nis = '$nis' AND idsemester = '$semester' AND idkelas = '".$kelas."'";
         //echo "$sql<br>";
 
         QueryDbTrans($sql, $success);
@@ -152,11 +152,11 @@ function GetListKomentar($idpelajaran, $idtingkat, $jenis)
               FROM jbsakad.pilihkomensos
              WHERE idpelajaran = '$idpelajaran'
                AND idtingkat = '$idtingkat'
-               AND jenis = '$jenis'";
+               AND jenis = '".$jenis."'";
     $res2 = QueryDb($sql);
-    $numlen = strlen(mysql_num_rows($res2));
+    $numlen = strlen(mysqli_num_rows($res2));
     $cnt = 0;
-    while($row2 = mysql_fetch_row($res2))
+    while($row2 = mysqli_fetch_row($res2))
     {
         $cnt += 1;
         $nocnt = str_pad($cnt, $numlen, "0", STR_PAD_LEFT);
@@ -164,7 +164,7 @@ function GetListKomentar($idpelajaran, $idtingkat, $jenis)
         $replid = $row2[0];
         $komentar = $row2[1];
 
-        $komentar = strip_tags($komentar);
+        $komentar = strip_tags((string) $komentar);
         if (strlen($komentar) > 50)
             $komentar = substr($komentar, 0, 50) . " ..";
 
@@ -178,9 +178,9 @@ function GetKomentar($replid)
 {
     $sql = "SELECT komentar
               FROM jbsakad.pilihkomensos
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         return $row[0];
 
     return "";

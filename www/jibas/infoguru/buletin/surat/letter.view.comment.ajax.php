@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 require_once("../../include/config.php");
@@ -20,7 +20,7 @@ elseif ($op == "showprevcomment")
     $idsurat = $_REQUEST['idsurat'];
     
     OpenDb();
-    ShowPrevComment($notesid);
+    ShowPrevComment();
     CloseDb();
 }
 elseif ($op == "shownewcomment")

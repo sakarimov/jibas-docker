@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,12 +45,12 @@ OpenDb();
 $op = $_REQUEST['op'];
 if ($op == "dw8dxn8w9ms8zs22") {
 	OpenDb();
-	$sql = "UPDATE rpp SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE rpp SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 	CloseDb();			
 } else if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM rpp WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM rpp WHERE replid = '".$_REQUEST['replid']."'";
 	//echo $sql;
 	//exit;
 	$result = QueryDb($sql);
@@ -58,9 +58,9 @@ if ($op == "dw8dxn8w9ms8zs22") {
 		CloseDb();
 	?>
     	<script language="javascript">
-    	document.location.href="rpp_footer.php?departemen=<?=$_REQUEST[departemen]?>&tingkat=<?=$_REQUEST[tingkat]?>&semester=<?=$_REQUEST[semester]?>&urut=<?=$_REQUEST[urut]?>&urutan=<?=$_REQUEST[urutan]?>&pelajaran=<?=$_REQUEST[pelajaran]?>";
+    	document.location.href="rpp_footer.php?departemen=<?=$_REQUEST['departemen']?>&tingkat=<?=$_REQUEST['tingkat']?>&semester=<?=$_REQUEST['semester']?>&urut=<?=$_REQUEST['urut']?>&urutan=<?=$_REQUEST['urutan']?>&pelajaran=<?=$_REQUEST['pelajaran']?>";
     	</script>
-	<?	}
+	<?php }
 	
 }
 
@@ -171,12 +171,12 @@ function change_urut(urut,urutan) {
 <tr><td>
 	<!--<td background="../images/ico/b_kelas.png" style="background-repeat:no-repeat; background-attachment:fixed; margin-left:10">-->
 
-<? 	
+<?php 	
 OpenDb();
 $sql = "SELECT replid, koderpp, rpp, deskripsi, aktif FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' ORDER BY $urut $urutan";
 $result = QueryDb($sql);
 
-if (@mysql_num_rows($result) > 0){ 
+if (@mysqli_num_rows($result) > 0){ 
 ?>
 
 <table width="100%" border="0" align="center">          
@@ -201,13 +201,13 @@ if (@mysql_num_rows($result) > 0){
 	<td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('rpp','<?=$urutan?>')">Materi <?=change_urut('rpp',$urut,$urutan)?></td>
     <td width="*">Deskripsi</td>
     <td width="8%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></td>	    
-    <? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+    <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
     <td width="*">&nbsp;</td>
-    <?	//} ?>
+    <?php //} ?>
 </tr>
-<?	
+<?php 
 	$cnt = 0;
-	while ($row = @mysql_fetch_row($result)) {		
+	while ($row = @mysqli_fetch_row($result)) {		
 ?>
 <tr height="25">   	
 	<td align="center"><?=++$cnt ?></td>
@@ -215,49 +215,49 @@ if (@mysql_num_rows($result) > 0){
     <td><?=$row[2]?></td>
 	<td><?=$row[3]?></td>
     <td align="center">  
-<?		//if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+<?php 	//if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
 		//	if ($row[4] == 1) { ?> 
      	<!--<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/>-->
-<?		//	} else { ?>                
+<?php 	//	} else { ?>                
         <!--<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/>-->
-<?		//	}
+<?php 	//	}
 		//} else { 
 			if ($row[4] == 1) { ?>
         <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/></a>
-<?			} else { ?>
+<?php 		} else { ?>
         <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/></a>
-<?			} //end if
+<?php 		} //end if
 		//} //end if ?>        
 	</td>
     
-<?		//if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
+<?php 	//if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
     <td align="center">
     	<a href="JavaScript:edit(<?=$row[0] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah RPP!', this, event, '50px')"/></a>&nbsp;
         <a href="JavaScript:hapus(<?=$row[0] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus RPP!', this, event, '50px')"/></a>
 	</td>
-<?		//} ?>  
+<?php 	//} ?>  
 </tr>
-<?	} ?>
+<?php } ?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script></div>
 
 
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="250">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-       <? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+       <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-        <? //} ?>
+        <?php //} ?>
         </p></b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 </table>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("sessionchecker.php");
 
 //$UPLOAD_DIR = "c:\\xampp\\htdocs\\alfakeu\\upload\\";
 //$BASE_ADDR  = "http://localhost/alfakeu/";
-$bulan = array(1=>'Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agust','Sep','Okt','Nov','Des');
+$bulan = [1=>'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agust', 'Sep', 'Okt', 'Nov', 'Des'];
 
 function StringIsSelected($value, $comparer) {
 	if ($value == $comparer) 
@@ -62,7 +62,7 @@ function RandStr($length) {
 	$charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	$s = "";
 	while(strlen($s) < $length) 
-		$s .= substr($charset, rand(0, 61), 1);
+		$s .= substr($charset, random_int(0, 61), 1);
 	return $s;		
 }
 
@@ -94,7 +94,7 @@ function NamaBulan($bln) {
 }
 
 function rpad($string, $padchar, $length) {
-	$result = trim($string);
+	$result = trim((string) $string);
 	if (strlen($result) < $length) {
 		$nzero = $length - strlen($result);
 		$zero = "";
@@ -106,17 +106,17 @@ function rpad($string, $padchar, $length) {
 }
 
 function MySqlDateFormat($date) {
-	list($d, $m, $y) = split('[/.-]', $date); 
+	[$d, $m, $y] = explode('[/.-]', (string) $date); 
 	return "$y-$m-$d";
 }
 
 function RegularDateFormat($mysqldate) {
-	list($y, $m, $d) = split('[/.-]', $mysqldate); 
+	[$y, $m, $d] = explode('[/.-]', (string) $mysqldate); 
 	return "$d-$m-$y";
 }
 
 function LongDateFormat($mysqldate) {
-	list($y, $m, $d) = split('[/.-]', $mysqldate); 
+	[$y, $m, $d] = explode('[/.-]', (string) $mysqldate); 
 	return "$d ". NamaBulan($m) ." $y";
 }
 

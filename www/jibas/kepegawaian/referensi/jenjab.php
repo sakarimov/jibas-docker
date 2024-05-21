@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -34,7 +34,7 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") {
-	$sql = "DELETE FROM jenisjabatan WHERE jenis = '$_REQUEST[jenis]'";
+	$sql = "DELETE FROM jenisjabatan WHERE jenis = '".$_REQUEST['jenis']."'";
 	$result = QueryDb($sql);
 	
 }
@@ -85,20 +85,20 @@ function cetak() {
 </td></tr>
 <tr><td>
 	<br />
-    <?
+    <?php
 	$sql = "SELECT jenis,keterangan,isdefault FROM jenisjabatan ORDER BY urutan";
 	//echo $sql;    
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 	?>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
     <!-- TABLE CONTENT -->
     <tr><td align="right">
     
     <a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>	
+<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>	
 	<a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Jenis Jabatan</a>
-<?	} ?>	
+<?php } ?>	
     </td></tr>
     </table>
     
@@ -109,21 +109,21 @@ function cetak() {
         <td width="15%" class="header" align="center">Keterangan</td>
         <td width="8%" class="header">&nbsp;</td>
     </tr>
-<? 	$cnt = 0;
-	while ($row = mysql_fetch_row($result))
+<?php 	$cnt = 0;
+	while ($row = mysqli_fetch_row($result))
 	{ ?>
     <tr height="25">
     	<td align="center"><?= ++$cnt ?></td>
         <td><?= $row[0] ?></td>
         <td><?= $row[1] ?></td>
         <td align="center">
-<?		if ($row[2] == 0 && SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php 	if ($row[2] == 0 && SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <a href="JavaScript:edit('<?= $row[0] ?>')"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Jenis Jabatan!', this, event, '80px')" /></a>&nbsp;
             <a href="JavaScript:hapus('<?= $row[0] ?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Jenis Jabatan!', this, event, '80px')"/></a>        </td>
 			&nbsp;
-<?		} ?>			
+<?php 	} ?>			
     </tr>
-<?	} ?>
+<?php } ?>
     <!-- END TABLE CONTENT -->
     </table>
     <script language='JavaScript'>
@@ -133,21 +133,21 @@ function cetak() {
 	</td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">
 
 <tr>
 	<td align="center" valign="middle" height="250" colspan="2">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-       <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+       <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-        <? } ?>
+        <?php } ?>
         </p></b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
  </table>
     
 </td></tr>
@@ -155,4 +155,4 @@ function cetak() {
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,14 +35,14 @@ $stIdPgTrans = $_REQUEST["stidpgtrans"];
 
 OpenDb();
 
-$lsPenerimaan = array();
+$lsPenerimaan = [];
 $sql = "SELECT DISTINCT kategori, IFNULL(idpenerimaan, 0) AS idpenerimaan,
                IFNULL(idtabungan, 0) AS idtabungan,
                IFNULL(idtabunganp, 0) AS idtabunganp
           FROM jbsfina.pgtransdata
          WHERE idpgtrans IN ($stIdPgTrans)";
 $res = QueryDb($sql);
-while($row = mysql_fetch_array($res))
+while($row = mysqli_fetch_array($res))
 {
     $kategori =  $row["kategori"];
     $idPenerimaan = "0";
@@ -65,7 +65,7 @@ while($row = mysql_fetch_array($res))
     }
 
     $namaPenerimaan = NamaPenerimaan($kategori, $idPenerimaan);
-    $lsItem = array($kategori, $idPenerimaan, $namaPenerimaan, $colName);
+    $lsItem = [$kategori, $idPenerimaan, $namaPenerimaan, $colName];
     $lsPenerimaan[] = $lsItem;
 }
 
@@ -120,7 +120,7 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
              WHERE p.replid IN ($stIdPgTrans)
              ORDER BY p.tanggal DESC, p.replid DESC";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
         $idPgTrans = $row["replid"];
@@ -129,24 +129,24 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
                   FROM jbsfina.pgtransdata
                  WHERE idpgtrans = $idPgTrans";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $jTransaksi = $row2[0];
 
         $namaMetode = NamaMetode($row["jenis"]);
 
         echo "<tr>";
         echo "<td>$no</td>";
-        echo "<td>$row[namasiswa]</td>";
-        echo "<td>$row[nis]</td>";
+        echo "<td>".$row['namasiswa']."</td>";
+        echo "<td>".$row['nis']."</td>";
         echo "<td>$jTransaksi</td>";
-        echo "<td>$row[fwaktu]</td>";
+        echo "<td>".$row['fwaktu']."</td>";
         echo "<td>$namaMetode</td>";
-        echo "<td>$row[nomor]</td>";
-        echo "<td>$row[bank]</td>";
-        echo "<td>$row[bankno]</td>";
-        echo "<td>$row[idpetugas]</td>";
-        echo "<td>$row[petugas]</td>";
-        echo "<td>$row[ketver]</td>";
+        echo "<td>".$row['nomor']."</td>";
+        echo "<td>".$row['bank']."</td>";
+        echo "<td>".$row['bankno']."</td>";
+        echo "<td>".$row['idpetugas']."</td>";
+        echo "<td>".$row['petugas']."</td>";
+        echo "<td>".$row['ketver']."</td>";
 
         for($i = 0; $i < count($lsPenerimaan); $i++)
         {
@@ -163,7 +163,7 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
                 $sql = "SELECT jumlah, nokas
                           FROM jbsfina.pgtransdata
                          WHERE idpgtrans = $idPgTrans
-                           AND kategori = '$kategori'";
+                           AND kategori = '".$kategori."'";
             }
             else
             {
@@ -174,7 +174,7 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             }
 
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $jumlah = $row2[0];
                 $noJurnal = $row2[1];

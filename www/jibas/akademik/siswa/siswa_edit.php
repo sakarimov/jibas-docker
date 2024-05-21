@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -43,7 +43,7 @@ require_once('siswa_edit.func.php');
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/rupiah.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="siswa_edit.js"></script>
@@ -83,14 +83,14 @@ require_once('siswa_edit.func.php');
     		<td width="*" colspan="2">
                 <select name="departemen" id="departemen" onChange="change_dep()" style="width:260px;"
                         onKeyPress="return focusNext('tingkat',event)" onFocus="panggil('departemen')">
-                <?	$dep = getDepartemen(SI_USER_ACCESS());    
+                <?php $dep = getDepartemen(SI_USER_ACCESS());    
                     foreach($dep as $value) {
                         if ($departemen == "")
                             $departemen = $value; ?>
                     <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
                     <?=$value ?>
                     </option>
-                <?	} ?>
+                <?php } ?>
                 </select>
             </td>
   		</tr>
@@ -98,10 +98,10 @@ require_once('siswa_edit.func.php');
     		<td><strong>Tahun Ajaran </strong></td>
     		<td colspan="2">
                 <div id="tahunajaranInfo">
-                <?  
+                <?php  
                     $sql = "SELECT replid,tahunajaran FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
                     $result = QueryDb($sql);
-                    $row = @mysql_fetch_array($result);	
+                    $row = @mysqli_fetch_array($result);	
                     $tahunajaran = $row['replid'];				
                 ?>
                 <input type="text" name="tahun" id="tahun" size="20" readonly class="disabled" value="<?=$row['tahunajaran']?>" style="width:250px;"/>
@@ -115,41 +115,41 @@ require_once('siswa_edit.func.php');
 
         $sql = "SELECT replid FROM jbsakad.phsiswa WHERE nis = '$nis' LIMIT 1";
         $res = QueryDb($sql);
-        $ndata = mysql_num_rows($res);
+        $ndata = mysqli_num_rows($res);
 
         if ($ndata == 0)
         {
             $sql = "SELECT replid FROM jbsakad.ppsiswa WHERE nis = '$nis' LIMIT 1";
             $res = QueryDb($sql);
-            $ndata = mysql_num_rows($res);
+            $ndata = mysqli_num_rows($res);
         }
 
         if ($ndata == 0)
         {
             $sql = "SELECT replid FROM jbsakad.nilaiujian WHERE nis = '$nis' LIMIT 1";
             $res = QueryDb($sql);
-            $ndata = mysql_num_rows($res);
+            $ndata = mysqli_num_rows($res);
         }
 
         if ($ndata == 0)
         {
             $sql = "SELECT replid FROM jbsfina.besarjtt WHERE nis = '$nis' LIMIT 1";
             $res = QueryDb($sql);
-            $ndata = mysql_num_rows($res);
+            $ndata = mysqli_num_rows($res);
         }
 
         if ($ndata == 0)
         {
             $sql = "SELECT replid FROM jbsfina.penerimaaniuran WHERE nis = '$nis' LIMIT 1";
             $res = QueryDb($sql);
-            $ndata = mysql_num_rows($res);
+            $ndata = mysqli_num_rows($res);
         }
 
         if ($ndata == 0)
         {
             $sql = "SELECT replid FROM jbsperpus.pinjam WHERE nis = '$nis' LIMIT 1";
             $res = QueryDb($sql);
-            $ndata = mysql_num_rows($res);
+            $ndata = mysqli_num_rows($res);
         }
 
         $disabled = $ndata != 0 ? "disabled" : "";
@@ -162,12 +162,12 @@ require_once('siswa_edit.func.php');
                 <div id="InfoTingkat">
                 <select name="tingkat" id="tingkatInfo" onChange="change_tingkat()" style="width:55px;"
                         onKeyPress="return focusNext('kelas',event)" onFocus="panggil('tingkatInfo')" <?=$disabled?>>
-                <?	$sql = "SELECT replid,tingkat FROM tingkat where departemen='$departemen' AND aktif = 1 ORDER BY urutan";
+                <?php $sql = "SELECT replid,tingkat FROM tingkat where departemen='$departemen' AND aktif = 1 ORDER BY urutan";
                     $result = QueryDb($sql);
-                    while ($row = @mysql_fetch_array($result))
+                    while ($row = @mysqli_fetch_array($result))
                     { ?>
-                        <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat)?> ><?=$row['tingkat']?></option>
-                <?	} ?>
+                        <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat)?> ><?=$row['tingkat']?></option>
+                <?php } ?>
                 </select>
                 </div>
             </td>
@@ -175,17 +175,17 @@ require_once('siswa_edit.func.php');
                 <div id="InfoKelas">
                  <select name="kelas" id="kelasInfo" style="width:200px;" onKeyPress="return focusNext('idangkatan',event)"
                         onFocus="panggil('kelasInfo')" onChange="change_kelas()" <?=$disabled?>>
-                <?	$sql = "SELECT replid, kelas, kapasitas FROM kelas where idtingkat=$tingkat AND idtahunajaran=$tahunajaran AND aktif = 1 ORDER BY kelas";
+                <?php $sql = "SELECT replid, kelas, kapasitas FROM kelas where idtingkat=$tingkat AND idtahunajaran=$tahunajaran AND aktif = 1 ORDER BY kelas";
                     $result = QueryDb($sql);
-                    while ($row = @mysql_fetch_array($result)) {					
+                    while ($row = @mysqli_fetch_array($result)) {					
                         $sql1 = "SELECT COUNT(*) FROM siswa WHERE idkelas = $row[0] AND aktif = 1";
                         $result1 = QueryDb($sql1);
-                        $row1 = @mysql_fetch_row($result1); 				
+                        $row1 = @mysqli_fetch_row($result1); 				
                 ?>
-                    <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row[replid], $kelas)?> >
+                    <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas)?> >
                     <?=$row['kelas'].', kapasitas: '.$row['kapasitas'].', terisi: '.$row1[0]?>
                     </option>
-                <?  } ?>
+                <?php  } ?>
                 </select>
                 <input type="hidden" name="kelas_lama" id="kelas_lama"   value="<?php echo $kelas ?>">
                 </div>
@@ -202,12 +202,12 @@ require_once('siswa_edit.func.php');
         <tr>
         	<td colspan="2">
         	<div id="InfoKapasitas">
-            <? 	$sql1 = "SELECT kapasitas FROM kelas WHERE replid = $kelas";
+            <?php 	$sql1 = "SELECT kapasitas FROM kelas WHERE replid = $kelas";
 				$result1 = QueryDb($sql1);
-				$row_cek1 = mysql_fetch_array($result1);
+				$row_cek1 = mysqli_fetch_array($result1);
 				$sql2 = "SELECT COUNT(*) AS jum FROM siswa WHERE idkelas = $kelas AND aktif = 1";
 				$result2 = QueryDb($sql2);
-				$row_cek2 = mysql_fetch_array($result2);
+				$row_cek2 = mysqli_fetch_array($result2);
 			?>
             <input type="hidden" name="kapasitas" id="kapasitas" value="<?=$row_cek1['kapasitas']?>" />
 			<input type="hidden" name="isi" id="isi" value="<?=$row_cek2['jum']?>" />
@@ -238,15 +238,15 @@ require_once('siswa_edit.func.php');
             <td colspan="2">
                 <div id="InfoAngkatan">    
                 <select name="idangkatan" id="idangkatan" class="ukuran" style="width:195px;" onKeyPress="return focusNext('tahunmasuk', event)" onFocus="panggil('idangkatan')" onBlur="unfokus('idangkatan')">
-                <?  $sql_angkatan="SELECT * FROM jbsakad.angkatan WHERE aktif=1 AND departemen='$departemen' ORDER BY replid DESC";
+                <?php  $sql_angkatan="SELECT * FROM jbsakad.angkatan WHERE aktif=1 AND departemen='$departemen' ORDER BY replid DESC";
                     $result_angkatan=QueryDB($sql_angkatan);
-                    while ($row_angkatan = mysql_fetch_array($result_angkatan))
+                    while ($row_angkatan = mysqli_fetch_array($result_angkatan))
                     {
                 ?>
                     <option value="<?=$row_angkatan['replid']?>"<?=IntIsSelected($row_angkatan['replid'], $row_siswa['idangkatan'])?>>
                     <?=$row_angkatan['angkatan']?>
                     </option>
-                <?
+                <?php
                     } 	?>
                 </select>
                 </div>
@@ -309,10 +309,10 @@ require_once('siswa_edit.func.php');
             <td>Jenis Kelamin</td>
             <td colspan="3">
                 <input type="radio" id="kelamin" name="kelamin" value="l" 
-                       <? if ($row_siswa['kelamin']=="l") echo "checked='checked'";	?>
+                       <?php if ($row_siswa['kelamin']=="l") echo "checked='checked'";	?>
                         onKeyPress="return focusNext('tmplahir', event)"/>&nbsp;Laki-laki&nbsp;&nbsp;
                 <input type="radio" id="kelamin" name="kelamin" value="p" 
-                       <? if ($row_siswa[kelamin]=="p") echo "checked='checked'"; ?>
+                       <?php if ($row_siswa['kelamin']=="p") echo "checked='checked'"; ?>
                         onKeyPress="return focusNext('tmplahir', event)"/>&nbsp;Perempuan
             </td>
         </tr>
@@ -321,7 +321,7 @@ require_once('siswa_edit.func.php');
             <td colspan="2">
                 <input type="text" name="tmplahir" id="tmplahir" size="30" maxlength="50"
                        onFocus="showhint('Tempat Lahir tidak boleh kosong!', this, event, '120px');panggil('tmplahir')"
-                       value="<?=$row_siswa[tmplahir]?>" onKeyPress="return focusNext('tgllahir', event)" onBlur="unfokus('tmplahir')"/>
+                       value="<?=$row_siswa['tmplahir']?>" onKeyPress="return focusNext('tgllahir', event)" onBlur="unfokus('tmplahir')"/>
             </td>
         </tr>
         <tr>
@@ -333,20 +333,20 @@ require_once('siswa_edit.func.php');
                         <div id="tgl_info">
                         <select name="tgllahir" id="tgllahir" onKeyPress="return focusNext('blnlahir', event)"
                                 onFocus="panggil('tgllahir')" onBlur="unfokus('tgllahir')">
-                            <option value="">[Tgl]</option>  
-                            <?	for ($tgl=1;$tgl<=$n;$tgl++){	?>
+                            <option value="">['Tgl']</option>  
+                            <?php for ($tgl=1;$tgl<=$n;$tgl++){	?>
                                 <option value="<?=$tgl?>" <?=StringIsSelected($tgl, $row_siswa['tanggal'])?>><?=$tgl?></option>
-                            <? } ?>
+                            <?php } ?>
                         </select>
                         </div>
                     </td>
                     <td>
                     <select name="blnlahir" id="blnlahir" onChange="change_bln()" onKeyPress="return focusNext('thnlahir', event)"
                             onFocus="panggil('blnlahir')" onBlur="unfokus('blnlahir')">
-                        <option value="">[Bulan]</option>  
-                        <? 	for ($i=1;$i<=12;$i++) { ?>
+                        <option value="">['Bulan']</option>  
+                        <?php 	for ($i=1;$i<=12;$i++) { ?>
                             <option value="<?=$i?>" <?=IntIsSelected($row_siswa['bulan'], $i)?>><?=NamaBulan($i)?></option>	
-                        <?	} ?>
+                        <?php } ?>
                     </select>
                     <input type="text" name="thnlahir" id="thnlahir" size="5" maxlength="4"
                            onFocus="showhint('Tahun Lahir tidak boleh kosong!', this, event, '120px');panggil('thnlahir')"
@@ -363,21 +363,21 @@ require_once('siswa_edit.func.php');
                 <select name="agama" id="agama" class="ukuran" onKeyPress="return focusNext('suku', event)"
                         onFocus="panggil('agama')" onBlur="unfokus('agama')">
                     <option value="">[Pilih Agama]</option>
-                    <? 
+                    <?php 
                         $sql_agama="SELECT replid,agama,urutan FROM jbsumum.agama ORDER BY urutan";
                         $result_agama=QueryDB($sql_agama);
-                        while ($row_agama = mysql_fetch_array($result_agama)) {
+                        while ($row_agama = mysqli_fetch_array($result_agama)) {
                     ?>
                         <option value="<?=$row_agama['agama']?>" <?=StringIsSelected($row_agama['agama'], $row_siswa['agama'])?>>
                         <?=$row_agama['agama']?>
                         </option>
-                    <?
+                    <?php
                         } 
                             ?>
                 </select>
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_agama();" onMouseOver="showhint('Tambah Agama!', this, event, '50px')"/>    
-                <? } ?>
+                <?php } ?>
                 </div>
             </td>
         </tr>
@@ -388,20 +388,20 @@ require_once('siswa_edit.func.php');
                 <select name="suku" id="suku" class="ukuran" onKeyPress="return focusNext('status', event)"
                         onFocus="panggil('suku')" onBlur="unfokus('suku')">
                     <option value="">[Pilih Suku]</option>
-                <? 
+                <?php 
                     $sql_suku="SELECT suku,urutan,replid FROM jbsumum.suku ORDER BY urutan";
                     $result_suku=QueryDB($sql_suku);
-                    while ($row_suku = mysql_fetch_array($result_suku)) {
+                    while ($row_suku = mysqli_fetch_array($result_suku)) {
                 ?>
                     <option value="<?=$row_suku['suku']?>" <?=StringIsSelected($row_suku['suku'], $row_siswa['suku'])?>>
                     <?=$row_suku['suku']?>
                     </option>
-                <?
+                <?php
                     }  ?>
                 </select>
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_suku();" onMouseOver="showhint('Tambah Suku!', this, event, '50px')" />
-                <? } ?>
+                <?php } ?>
                 </div>
             </td>
         </tr>
@@ -412,20 +412,20 @@ require_once('siswa_edit.func.php');
                 <select name="status" id="status" class="ukuran" onKeyPress="return focusNext('kondisi', event)"
                         onFocus="panggil('status')" onBlur="unfokus('status')">
                     <option value="">[Pilih Status]</option>
-        			<? 
+        			<?php 
                         $sql_status="SELECT replid,status,urutan FROM jbsakad.statussiswa ORDER BY urutan";
                         $result_status=QueryDB($sql_status);
-                        while ($row_status = mysql_fetch_array($result_status)) {
+                        while ($row_status = mysqli_fetch_array($result_status)) {
                     ?>
                         <option value="<?=$row_status['status']?>" <?=StringIsSelected($row_status['status'], $row_siswa['status'])?>>
                         <?=$row_status['status']?>
                         </option>
-                    <?
+                    <?php
                         }  ?>
                 </select>
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_status();" onMouseOver="showhint('Tambah Status!', this, event, '50px')"/>  
-                <? } ?>
+                <?php } ?>
                 </div>
             </td>
         </tr>
@@ -436,21 +436,21 @@ require_once('siswa_edit.func.php');
                 <select name="kondisi" id="kondisi" class="ukuran" onKeyPress="return focusNext('warga', event)"
                         onFocus="panggil('kondisi')" onBlur="unfokus('kondisi')">
                     <option value="">[Pilih Kondisi]</option>
-                    <? 
+                    <?php 
                         $sql_kondisi="SELECT kondisi,urutan FROM jbsakad.kondisisiswa ORDER BY urutan";
                         $result_kondisi=QueryDB($sql_kondisi);
-                        while ($row_kondisi = mysql_fetch_array($result_kondisi)) {
+                        while ($row_kondisi = mysqli_fetch_array($result_kondisi)) {
                     ?>
                         <option value="<?=$row_kondisi['kondisi']?>" <?=StringIsSelected($row_kondisi['kondisi'], $row_siswa['kondisi'])?>>
                         <?=$row_kondisi['kondisi']?>
                         </option>
-                    <?
+                    <?php
                         } 
                             ?>
                 </select>
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_kondisi();" onMouseOver="showhint('Tambah Kondisi!', this, event, '50px')"/>
-                <? } ?>
+                <?php } ?>
                 </div>
             </td>
         </tr>
@@ -458,9 +458,9 @@ require_once('siswa_edit.func.php');
             <td>Kewarganegaraan</td>
             <td colspan="2">
                 <input type="radio" id="warga" name="warga" value="WNI" 
-                       <? if ($row_siswa[warga]=="WNI") echo "checked='checked'"; ?> onKeyPress="return focusNext('urutananak', event)"/>&nbsp;WNI&nbsp;&nbsp;
+                       <?php if ($row_siswa['warga']=="WNI") echo "checked='checked'"; ?> onKeyPress="return focusNext('urutananak', event)"/>&nbsp;WNI&nbsp;&nbsp;
                 <input type="radio" id="warga" name="warga" value="WNA" 
-                       <? if ($row_siswa[warga]=="WNA") echo "checked='checked'"; ?> onKeyPress="return focusNext('urutananak', event)"/>&nbsp;WNA
+                       <?php if ($row_siswa['warga']=="WNA") echo "checked='checked'"; ?> onKeyPress="return focusNext('urutananak', event)"/>&nbsp;WNA
             </td>
         </tr>
         <tr>
@@ -523,7 +523,7 @@ require_once('siswa_edit.func.php');
                 <textarea name="alamatsiswa" id="alamatsiswa" maxlength="255"
                           onFocus="showhint('Alamat siswa tidak boleh lebih dari 255 karakter!', this, event, '120px');panggil('alamatsiswa')"
                           class="Ukuranketerangan" onKeyUp="change_alamat()"  onKeyPress="return focusNext('kodepos', event)"
-                          onBlur="unfokus('alamatsiswa')"><?=$row_siswa[alamatsiswa]?></textarea>
+                          onBlur="unfokus('alamatsiswa')"><?=$row_siswa['alamatsiswa']?></textarea>
             </td>
         </tr>
         <tr>
@@ -573,13 +573,13 @@ require_once('siswa_edit.func.php');
             	<select name="dep_asal" id="dep_asal"  onKeyPress="return focusNext('sekolah', event)"
                         onChange="change_departemen(0)" style="width:150px;" onFocus="panggil('dep_asal')" onBlur="unfokus('dep_asal')"> 
                     <option value="">[Pilih Departemen]</option>
-					<? 
+					<?php 
                     $sql_departemen="SELECT DISTINCT departemen FROM jbsakad.asalsekolah ORDER BY departemen";   
                     $result_departemen=QueryDB($sql_departemen);
-                    while ($row_dep = mysql_fetch_array($result_departemen)) {
+                    while ($row_dep = mysqli_fetch_array($result_departemen)) {
                     ?>
                         <option value="<?=$row_dep['departemen']?>" <?=StringIsSelected($row_dep['departemen'], $dep_asal)?>><?=$row_dep['departemen']?></option>
-                    <?
+                    <?php
                         }
                     ?>
                 </select> 
@@ -596,24 +596,24 @@ require_once('siswa_edit.func.php');
                     <select name="sekolah" id="sekolah" onKeyPress="return focusNext('noijasah', event)"
                             style="width:150px;" onFocus="panggil('sekolah')" onBlur="unfokus('sekolah')">
                         <option value="">[Pilih Asal Sekolah]</option>	
-                        <? 
+                        <?php 
                         $sql_sekolah="SELECT sekolah FROM jbsakad.asalsekolah WHERE departemen='$dep_asal'  ORDER BY sekolah";
                         $result_sekolah=QueryDB($sql_sekolah);
-                        while ($row_sekolah = mysql_fetch_array($result_sekolah)) {
+                        while ($row_sekolah = mysqli_fetch_array($result_sekolah)) {
                         ?>
-                            <option value="<?=$row_sekolah[sekolah]?>" <?=StringIsSelected($row_sekolah['sekolah'], $sekolah)?>>
+                            <option value="<?=$row_sekolah['sekolah']?>" <?=StringIsSelected($row_sekolah['sekolah'], $sekolah)?>>
                             <?=$row_sekolah['sekolah']?>
                             </option>
-                        <?
+                        <?php
                             } 
                                 ?>
                     </select>
                 </div>
                 </td>
                 <td valign="middle">
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_asal_sekolah();" onMouseOver="showhint('Tambah Asal Sekolah!', this, event, '80px')"/>
-                <? } ?>
+                <?php } ?>
                 </td>
           	</tr>
             </table>
@@ -663,19 +663,19 @@ require_once('siswa_edit.func.php');
             <td width="20%" valign="top">Gol. Darah</td>
             <td colspan="3">
                 <input type="radio" id="gol" name="gol" value="A" 
-                <? 	if ($row_siswa[darah]=="A")
+                <?php 	if ($row_siswa['darah']=="A")
                         echo "checked='checked'";	?> onKeyPress="return focusNext('berat', event)"	
                 />&nbsp;A&nbsp;&nbsp;<input type="radio" id="gol" name="gol" value="AB" 
-                <? 	if ($row_siswa[darah]=="AB")
+                <?php 	if ($row_siswa['darah']=="AB")
                         echo "checked='checked'";	?> onKeyPress="return focusNext('berat', event)"
                 />&nbsp;AB&nbsp;&nbsp;<input type="radio" id="gol" name="gol" value="B" 
-                <?  if ($row_siswa[darah]=="B")
+                <?php  if ($row_siswa['darah']=="B")
                         echo "checked='checked'";		?> onKeyPress="return focusNext('berat', event)"
                 />&nbsp;B&nbsp;&nbsp;<input type="radio" id="gol" name="gol" value="O" 
-                <? 	if ($row_siswa[darah]=="O")
+                <?php 	if ($row_siswa['darah']=="O")
                         echo "checked='checked'";		?> onKeyPress="return focusNext('berat', event)"
                 />&nbsp;O&nbsp;&nbsp;<input type="radio" id="gol" name="gol" value="" 
-                <? 	if ($row_siswa[darah]=="")
+                <?php 	if ($row_siswa['darah']=="")
                         echo "checked='checked'";	?> onKeyPress="return focusNext('berat', event)"
                 />&nbsp;<em>(belum ada data)</em>
             </td>
@@ -724,7 +724,7 @@ require_once('siswa_edit.func.php');
                        value="<?=$row_siswa['namaayah']?>" class="ukuran" onKeyPress="return focusNext('namaibu', event)" onBlur="unfokus('namaayah')"/>
                 <br />
                 <input type="checkbox" name="almayah" value="1" 
-                    <?  if ($row_siswa['almayah']==1)	echo "checked='checked'"; ?> 
+                    <?php  if ($row_siswa['almayah']==1)	echo "checked='checked'"; ?> 
                     title="Klik disini jika Ayah Almarhum"/>&nbsp;&nbsp;
                 <font color="#990000" size="1">(Almarhum)</font>
             </td>
@@ -734,7 +734,7 @@ require_once('siswa_edit.func.php');
                        value="<?=$row_siswa['namaibu']?>" class="ukuran" onKeyPress="return focusNext('Infopendidikanayah', event)" onBlur="unfokus('namaibu')"/>
                 <br />
                 <input type="checkbox" name="almibu" value="1"
-                    <? 	if ($row_siswa['almibu']==1)	echo "checked='checked'"; ?> 
+                    <?php 	if ($row_siswa['almibu']==1)	echo "checked='checked'"; ?> 
                     title="Klik disini jika Ibu Almarhumah" />&nbsp;&nbsp;
                 <font color="#990000" size="1">(Almarhumah)</font>
             </td>
@@ -791,15 +791,15 @@ require_once('siswa_edit.func.php');
                 <select name="pendidikanayah" id="Infopendidikanayah" class="ukuran" onKeyPress="return focusNext('Infopendidikanibu', event)"
                         onFocus="panggil('Infopendidikanayah')"  style="width:140px" onBlur="unfokus('Infopendidikanayah')">
                     <option value="">[Pilih Pendidikan]</option>
-                    <? 
+                    <?php 
                     $sql_pend_ayah="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
                     $result_pend_ayah=QueryDB($sql_pend_ayah);
-                    while ($row_pend_ayah = mysql_fetch_array($result_pend_ayah)) {
+                    while ($row_pend_ayah = mysqli_fetch_array($result_pend_ayah)) {
                     ?>
                         <option value="<?=$row_pend_ayah['pendidikan']?>" <?=StringIsSelected($row_pend_ayah['pendidikan'], $row_siswa['pendidikanayah'])?>>
                         <?=$row_pend_ayah['pendidikan']?>
                         </option>
-                    <?
+                    <?php
                     } 
                     ?>
                 </select>
@@ -813,24 +813,24 @@ require_once('siswa_edit.func.php');
                     <select name="pendidikanibu" id="Infopendidikanibu" class="ukuran" onKeyPress="return focusNext('Infopekerjaanayah', event)"
                             onFocus="panggil('Infopendidikanibu')"  style="width:140px" onBlur="unfokus('Infopendidikanibu')">
                         <option value="">[Pilih Pendidikan]</option>
-                        <? 
+                        <?php 
                         $sql_pend_ibu="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
                         $result_pend_ibu=QueryDB($sql_pend_ibu);
-                        while ($row_pend_ibu = mysql_fetch_array($result_pend_ibu)) {
+                        while ($row_pend_ibu = mysqli_fetch_array($result_pend_ibu)) {
                         ?>
                             <option value="<?=$row_pend_ibu['pendidikan']?>" <?=StringIsSelected($row_pend_ibu['pendidikan'], $row_siswa['pendidikanibu'])?>>
                             <?=$row_pend_ibu['pendidikan']?>
                             </option>
-                        <?
+                        <?php
                         } 
                         ?>
                     </select>
                     </div>
                     </td>
                     <td>
-                    <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                    <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                     <img src="../images/ico/tambah.png" onClick="tambah_pendidikan();" onMouseOver="showhint('Tambah Tingkat Pendidikan!', this, event, '80px')"/>
-                    <? } ?>
+                    <?php } ?>
                     </td>
             	</tr>
             	</table>
@@ -843,15 +843,15 @@ require_once('siswa_edit.func.php');
                 <select name="pekerjaanayah" id="Infopekerjaanayah" class="ukuran"  onKeyPress="return focusNext('Infopekerjaanibu', event)"
                         onFocus="panggil('Infopekerjaanayah')"  style="width:140px" onBlur="unfokus('Infopekerjaanayah')">
                     <option value="">[Pilih Pekerjaan]</option>
-                    <? 
+                    <?php 
                     $sql_kerja_ayah = "SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan";
                     $result_kerja_ayah = QueryDb($sql_kerja_ayah);
-                    while ($row_kerja_ayah = mysql_fetch_array($result_kerja_ayah)) {
+                    while ($row_kerja_ayah = mysqli_fetch_array($result_kerja_ayah)) {
                     ?>
                         <option value="<?=$row_kerja_ayah['pekerjaan']?>" <?=StringIsSelected($row_kerja_ayah['pekerjaan'], $row_siswa['pekerjaanayah'])?>>
                         <?=$row_kerja_ayah['pekerjaan']?>
                         </option>
-                    <?
+                    <?php
                     } 
                     ?>
                 </select>
@@ -865,24 +865,24 @@ require_once('siswa_edit.func.php');
                     <select name="pekerjaanibu" id="Infopekerjaanibu" class="ukuran"  onKeyPress="return focusNext('penghasilanayah1', event)"
                             onFocus="panggil('Infopekerjaanibu')" style="width:140px" onBlur="unfokus('Infopekerjaanibu')">
                         <option value="">[Pilih Pekerjaan]</option>
-                        <? 
+                        <?php 
                         $sql_kerja_ibu="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan";
                         $result_kerja_ibu=QueryDb($sql_kerja_ibu);
-                        while ($row_kerja_ibu = mysql_fetch_array($result_kerja_ibu)) {
+                        while ($row_kerja_ibu = mysqli_fetch_array($result_kerja_ibu)) {
                         ?>
                             <option value="<?=$row_kerja_ibu['pekerjaan']?>" <?=StringIsSelected($row_kerja_ibu['pekerjaan'], $row_siswa['pekerjaanibu'])?>>
                             <?=$row_kerja_ibu['pekerjaan']?>
                             </option>
-                        <?
+                        <?php
                         } 	
                         ?>
                     </select>
                     </div>
                     </td>
            		    <td>
-                    <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                    <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                     <img src="../images/ico/tambah.png" onClick="tambah_pekerjaan();" onMouseOver="showhint('Tambah Jenis Pekerjaan!', this, event, '80px')"/>	
-                    <? } ?>
+                    <?php } ?>
                     </td>
             	</tr>
             	</table>
@@ -921,7 +921,7 @@ require_once('siswa_edit.func.php');
         <tr>
             <td>Nama Wali</td>
             <td colspan="2">
-                <input type="text" name="namawali" id="namawali" size="30" maxlength="100" value="<?=$row_siswa[wali]?>"
+                <input type="text" name="namawali" id="namawali" size="30" maxlength="100" value="<?=$row_siswa['wali']?>"
                        onKeyPress="return focusNext('alamatortu', event)" onFocus="panggil('namawali')" onBlur="unfokus('namawali')" />
             </td>
         </tr>
@@ -930,14 +930,14 @@ require_once('siswa_edit.func.php');
             <td colspan="2">
                 <textarea name="alamatortu" id="alamatortu" size="25" maxlength="100" class="Ukuranketerangan"
                           onKeyPress="return focusNext('telponortu', event)" onFocus="panggil('alamatortu')"
-                          onBlur="unfokus('alamatortu')"><?=$row_siswa[alamatortu]?></textarea>
+                          onBlur="unfokus('alamatortu')"><?=$row_siswa['alamatortu']?></textarea>
             </td>
         </tr>
         <tr>
             <td>Telpon Ortu</td>
             <td colspan="2">
                 <input type="text" name="telponortu" id="telponortu" size="15" maxlength="20"
-                       value="<?=$row_siswa[telponortu]?>" class="ukuran" onKeyPress="return focusNext('hportu', event)"
+                       value="<?=$row_siswa['telponortu']?>" class="ukuran" onKeyPress="return focusNext('hportu', event)"
                        onFocus="panggil('telponortu')" onBlur="unfokus('telponortu')"/>
             </td>
         </tr>
@@ -945,7 +945,7 @@ require_once('siswa_edit.func.php');
             <td>HP Ortu #1</td>
             <td align="left">
                 <input type="text" name="hportu" id="hportu" size="15" maxlength="20"
-                       value="<?=$row_siswa[hportu]?>" class="ukuran" onKeyPress="return focusNext('hportu2', event)"
+                       value="<?=$row_siswa['hportu']?>" class="ukuran" onKeyPress="return focusNext('hportu2', event)"
                        onFocus="panggil('hportu')" onBlur="unfokus('hportu')"/>
             </td>
             <td rowspan="3" align="left" valign="top">
@@ -956,7 +956,7 @@ require_once('siswa_edit.func.php');
             <td>HP Ortu #2</td>
             <td align="left">
                 <input type="text" name="hportu2" id="hportu2" size="15" maxlength="20"
-                       value="<?=$row_siswa[info1]?>" class="ukuran" onKeyPress="return focusNext('hportu3', event)"
+                       value="<?=$row_siswa['info1']?>" class="ukuran" onKeyPress="return focusNext('hportu3', event)"
                        onFocus="panggil('hportu2')" onBlur="unfokus('hportu2')"/>
             </td>
         </tr>
@@ -964,7 +964,7 @@ require_once('siswa_edit.func.php');
             <td>HP Ortu #3</td>
             <td align="left">
                 <input type="text" name="hportu3" id="hportu3" size="15" maxlength="20"
-                       value="<?=$row_siswa[info2]?>" class="ukuran" onKeyPress="return focusNext('alamatsurat', event)"
+                       value="<?=$row_siswa[\INFO2]?>" class="ukuran" onKeyPress="return focusNext('alamatsurat', event)"
                        onFocus="panggil('hportu3')" onBlur="unfokus('hportu3')"/>
             </td>
         </tr>
@@ -1015,7 +1015,7 @@ require_once('siswa_edit.func.php');
                  ORDER BY urutan";
         $res = QueryDb($sql);
         $idtambahan = "";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $replid = $row[0];
             $kolom = $row[1];
@@ -1028,9 +1028,9 @@ require_once('siswa_edit.func.php');
             $data = "";
             if ($jenis == 1)
             {
-                $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+                $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
                 $res2 = QueryDb($sql);
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                 {
                     $replid_data = $row2[0];
                     $data = $row2[1];
@@ -1038,9 +1038,9 @@ require_once('siswa_edit.func.php');
             }
             else if ($jenis == 2)
             {
-                $sql = "SELECT replid, filename FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+                $sql = "SELECT replid, filename FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
                 $res2 = QueryDb($sql);
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                 {
                     $replid_data = $row2[0];
                     $filename = $row2[1];
@@ -1049,9 +1049,9 @@ require_once('siswa_edit.func.php');
             }
             else if ($jenis == 3)
             {
-                $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+                $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
                 $res2 = QueryDb($sql);
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                 {
                     $replid_data = $row2[0];
                     $data = $row2[1];
@@ -1064,11 +1064,11 @@ require_once('siswa_edit.func.php');
                          ORDER BY urutan";
                 $res2 = QueryDb($sql);
 
-                $arrList = array();
-                if (mysql_num_rows($res2) == 0)
+                $arrList = [];
+                if (mysqli_num_rows($res2) == 0)
                     $arrList[] = "-";
 
-                while($row2 = mysql_fetch_row($res2))
+                while($row2 = mysqli_fetch_row($res2))
                 {
                     $arrList[] = $row2[0];
                 }
@@ -1086,25 +1086,25 @@ require_once('siswa_edit.func.php');
             <tr>
                 <td valign="top"><?=$kolom?></td>
                 <td colspan="2">
-                    <? if ($jenis == 1) { ?>
+                    <?php if ($jenis == 1) { ?>
                         <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="1">
                         <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                         <input type="text" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="40" maxlength="1000" value="<?=$data?>">
-                    <? } else if ($jenis == 2) { ?>
+                    <?php } else if ($jenis == 2) { ?>
                         <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="2">
                         <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                         <input type="file" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="40" style="width: 255px""/>
                         <i><?=$data?></i>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="3">
                         <input type="hidden" id="repliddata-<?=$replid?>" name="repliddata-<?=$replid?>" value="<?=$replid_data?>">
                         <select name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" style="width:215px">
                             <?= $opt ?>
                         </select>
-                    <? } ?>
+                    <?php } ?>
                 </td>
             </tr>
-            <?
+            <?php
         }
         ?>
         <input type="hidden" id="idtambahan" name="idtambahan" value="<?=$idtambahan?>">
@@ -1133,13 +1133,13 @@ require_once('siswa_edit.func.php');
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

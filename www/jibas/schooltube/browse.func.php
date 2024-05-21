@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@ function ShowCbDepartemen()
 
     echo "<select id='cbDepartemen' style='height: 25px; width: 220px' onchange='bw_changeDept()'>";
     $res = QueryDb($sql);
-    while ($row = mysql_fetch_row($res))
+    while ($row = mysqli_fetch_row($res))
     {
         if ($selDept == "") $selDept = $row[0];
-        echo "<option value='$row[0]'>$row[0]</option>";
+        echo "<option value='".$row[0]."'>".$row[0]."</option>";
     }
     echo "</select>";
 }
@@ -52,15 +52,15 @@ function ShowCbPelajaran($dept)
     $res = QueryDb($sql);
 
     echo "<select id='cbPelajaran' style='height: 25px; width: 300px' onchange='bw_changePel()'>";
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<option value='0'>(belum ada channel pelajaran)</option>";
     }
     else
     {
-        while ($row = mysql_fetch_row($res))
+        while ($row = mysqli_fetch_row($res))
         {
-            echo "<option value='$row[0]'>$row[1]</option>";
+            echo "<option value='".$row[0]."'>".$row[1]."</option>";
         }
     }
     echo "</select>";
@@ -78,7 +78,7 @@ function BrowseChannel($idPelajaran)
     $res = QueryDb($sql);
 
     echo "<table border='0' width='900' cellpadding='2' cellspacing='0'>";
-    while ($row = mysql_fetch_array($res))
+    while ($row = mysqli_fetch_array($res))
     {
         $idChannel = $row['id'];
 
@@ -89,13 +89,13 @@ function BrowseChannel($idPelajaran)
 
         echo "<tr style='cursor: pointer; line-height: 18px;' onclick='bw_showChannelView($idChannel)'>";
         echo "<td align='left' valign='top' width='500px' style='line-height: 20px;'>";
-        echo "<span style='color: blue'>$row[pelajaran] | $row[guru]</span><br>";
-        echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>$row[channel]</span><br>";
-        echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>$row[deskripsi]</span><br><br>";
+        echo "<span style='color: blue'>".$row['pelajaran'] | $row['guru']."</span><br>";
+        echo "<span style='font-family: Arial; font-weight: bold; font-size: 14px'>".$row['channel']."</span><br>";
+        echo "<span style='font-family: 'Times New Roman'; font-size: 12px;'>".$row['deskripsi']."</span><br><br>";
         echo "</td>";
         echo "<td align='left' valign='top' width='100px'><br>";
         echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$nMedia Video</span><br>";
-        echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>$row[nfollower] Follower</span><br>";
+        echo "<span style='margin-left: 10px; line-height: 18px; color: #666;'>{$row['nfollower']} Follower</span><br>";
         echo "</td>";
         echo "</tr>";
     }

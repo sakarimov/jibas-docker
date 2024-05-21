@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -40,13 +40,13 @@ if (isset($_REQUEST['op']))
 if ($op == "gj83cs065mnsg4y9fnby37d")
 {
 	OpenDb();
-	$sql = "DELETE FROM jbsvcr.agenda WHERE replid='$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbsvcr.agenda WHERE replid='".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	CloseDb(); ?>
 	<script language="javascript">
 		parent.kiriatas.refresh();	
 	</script>
-	<?
+	<?php
 }
 
 if ($bulan == 4 || $bulan == 6|| $bulan == 9 || $bulan == 11) 
@@ -57,7 +57,7 @@ else if ($bulan == 2 && $tahun % 4 == 0)
 	$n = 29;
 else 
 	$n = 31;
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");	
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -65,7 +65,7 @@ $namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agu
 <link href="../../style/style.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
-<script language="JavaScript" src="../../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../../script/tools.js"></script>
 <script language="javascript">
 function tambah(tanggal){
 	newWindow('tambahagenda.php?tanggal='+tanggal,'TambahAgenda',660, 480,'resizable=0,scrollbars=0,status=0,toolbar=0');
@@ -103,18 +103,18 @@ function ubah(replid){
     <td height="30" class="header">Agenda</td>
     <td height="30" class="header">&nbsp;</td>
   </tr>
-  <?
+  <?php
 	  for ($y=1;$y<=$n;$y++){
   ?>
   <tr>
     <th height="25"  scope="row"><a id="tgl<?=$y?>" name="tgl<?=$y?>"><?=$y?></a></th>
-    <?
+    <?php
 	OpenDb();
 	$sql1="SELECT * FROM jbsvcr.agenda WHERE idguru='".SI_USER_ID()."' AND tanggal='$tahun-$bulan-$y'";
   	$result1=QueryDb($sql1);
 	$i=0;
-	$ada=@mysql_num_rows($result1);
-	while ($row1=@mysql_fetch_array($result1)){
+	$ada=@mysqli_num_rows($result1);
+	while ($row1=@mysqli_fetch_array($result1)){
 		$idguru[$i]=$row1['idguru'];
 		$judul[$i]=$row1['judul'];
 		$replid[$i]=$row1['replid'];	
@@ -124,48 +124,48 @@ function ubah(replid){
 	?>
     <td height="25" align="left">
         <table border="0" cellspacing="0" cellpadding="1">
-		<? 
+		<?php 
         for ($x=0;$x<=$i-1;$x++){
             ?>
             <tr>
                 <td valign="top">-&nbsp;</td>
                 <td valign="top"><a href="detailagenda.php?replid=<?=$replid[$x]?>" target="kanan" onClick="tampil('<?=$judul[$x]?>')" title="Lihat Detail !"><?=$judul[$x]?></a></td>
             </tr>
-            <?
+            <?php
         }
         ?>
         </table>
     </td>
-    <td height="25" <? if ($ada>0){ ?> align="left" <? } else { ?> align="left" <? } ?> width="70">
+    <td height="25" <?php if ($ada>0){ ?> align="left" <?php } else { ?> align="left" <?php } ?> width="70">
     
-	<? if (SI_USER_ID()!="LANDLORD" && SI_USER_ID()!="landlord"){ ?>
+	<?php if (SI_USER_ID()!="LANDLORD" && SI_USER_ID()!="landlord"){ ?>
 	<table border="0" cellspacing="0" cellpadding="2">
-	<?
+	<?php
 	if ($ada>0){
 	for ($x=0;$x<=$i-1;$x++){
 		?>
         <tr>
             <td>
-            	<? if ($x==0){ ?>
+            	<?php if ($x==0){ ?>
                 <img style="cursor:pointer;visibility:visible;" title="Tambah agenda tanggal <?=$y."-".$namabulan[$bulan-1]."-".$tahun?> !" src="../../images/ico/tambah.png" border="0" onClick="tambah('<?=$y."-".$bulan."-".$tahun?>')"/>
-                <? } else { ?>
+                <?php } else { ?>
                 &nbsp;
-				<? } ?>
+				<?php } ?>
             </td>
             <td><img style="cursor:pointer;visibility:visible;" title="Ubah !" src="../../images/ico/ubah.png" border="0" onClick="ubah('<?=$replid[$x]?>')"/></td>
             <td><img style="cursor:pointer;visibility:visible;" title="Hapus !" src="../../images/ico/hapus.png" border="0" onClick="hapus('<?=$replid[$x]?>')"/></td>
         </tr>
-	<?
+	<?php
 	}
 	} else {
 		echo "<tr></td><img style='cursor:pointer;visibility:visible;' title='Tambah agenda tanggal $y - ".$namabulan[$bulan-1]." - $tahun !' src='../../images/ico/tambah.png' border='0' onClick=\"tambah('$y-$bulan-$tahun')\"/></td></tr>";
 	}
 	?>
  	</table>
-	<? } ?>
+	<?php } ?>
     </td>
   </tr>
-  <?
+  <?php
 	  } ?>
   
 </table>

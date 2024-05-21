@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
 require_once('../inc/common.php');
@@ -90,7 +90,7 @@ $idperpustakaan = (int)$_REQUEST['perpus'];
 			<td width='5%' align="center">Cetak Barcode<br><a href='#' onclick='ClearCheckBarcode()' style='color: blue'>clear</a></td>
             <td width='5%' align="center">Hapus</td>
         </tr>
-<?		ShowList() ?>		
+<?php 	ShowList() ?>		
         </table>
     </div>
 	<script language='JavaScript'>
@@ -98,4 +98,4 @@ $idperpustakaan = (int)$_REQUEST['perpus'];
 	</script>
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>

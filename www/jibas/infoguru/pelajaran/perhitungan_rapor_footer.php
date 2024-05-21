@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -49,16 +49,16 @@ function tampil(id,nip) {
 <table border="0" width="100%" align="center">
 <!-- TABLE CENTER -->
 
-<?
+<?php
 OpenDb();
 $sql="SELECT DISTINCT pel.departemen FROM pelajaran pel, guru g, departemen  d WHERE g.nip='".SI_USER_ID()."' AND pel.replid=g.idpelajaran AND pel.departemen = d.departemen ORDER BY d.urutan";
 $result = QueryDb($sql);
 $cnt = 0;
-if ((@mysql_num_rows($result))>0){
+if ((@mysqli_num_rows($result))>0){
 ?>
 		
-	<?
-	while ($row = @mysql_fetch_array($result)) {
+	<?php
+	while ($row = @mysqli_fetch_array($result)) {
 		$departemen=$row[0];
 		
 	?>
@@ -67,25 +67,25 @@ if ((@mysql_num_rows($result))>0){
 
         <tr>
         	<td class="header" align="center" height="30"><?=$departemen?></td></tr>
-   	<? 
+   	<?php 
 		$sql2="SELECT pel.nama,pel.departemen,pel.replid FROM pelajaran pel, guru g WHERE g.nip='".SI_USER_ID()."' AND pel.replid=g.idpelajaran AND pel.departemen='$departemen' GROUP BY pel.nama";
 		$result2 = QueryDb($sql2);
 		$cnt2 = 0;
-		while ($row2 = @mysql_fetch_array($result2)) {
+		while ($row2 = @mysqli_fetch_array($result2)) {
 			$nama_pelajaran=$row2[0];
 		?>
 		<tr>
         	<td align="center" height="25" onclick="tampil('<?=$row2[2]?>','<?=SI_USER_ID()?>','<?=$departemen?>')" style="cursor:pointer"><b><?=$nama_pelajaran?></b>           
             </td>
         </tr>
-		<?
+		<?php
 			$cnt2++;
         }
 		?></table>
 		<script language='JavaScript'>
 	    Tables('table', 1, 0);
 		</script>
-		<?
+		<?php
  	}
 	CloseDb();
 } else { 
@@ -97,7 +97,7 @@ if ((@mysql_num_rows($result))>0){
 		</td>
 	</tr>
 	</table> 
-<? } ?> 
+<?php } ?> 
 
 <!-- END TABLE CENTER -->    
 </table> 

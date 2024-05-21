@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/errorhandler.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/common.php');
@@ -36,14 +36,14 @@ OpenDb();
 
 $sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE idroot = 0";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $rootname = $row[0];
 
-$sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE replid = '$iddir'";
+$sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE replid = '".$iddir."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $dfullpath = $row[0];
-$fullpath = str_replace($rootname, "", $dfullpath);
+$fullpath = str_replace($rootname, "", (string) $dfullpath);
 
 CloseDb();
 
@@ -52,8 +52,8 @@ $ERROR_MSG = "";
 $FileShareDir = "$FILESHARE_UPLOAD_DIR/fileshare/";
 if (isset($_REQUEST['Simpan']))
 {
-	$rootfolder_db = trim($_REQUEST[fullpath]);
-	$dir_db = $rootfolder_db . $_REQUEST[folder] . "/";
+	$rootfolder_db = trim((string) $_REQUEST['fullpath']);
+	$dir_db = $rootfolder_db . $_REQUEST['folder'] . "/";
 	$dir_real = str_replace($rootname, $FileShareDir, $dir_db);
 		
 	if (!file_exists($dir_real))
@@ -70,7 +70,7 @@ if (isset($_REQUEST['Simpan']))
 	}
 	
 	OpenDb();
-	$sql="INSERT INTO jbsvcr.dirshare SET idroot=$iddir, dirname='$_REQUEST[folder]', dirfullpath='$dir_db', idguru='".SI_USER_ID()."'";
+	$sql="INSERT INTO jbsvcr.dirshare SET idroot=$iddir, dirname='".$_REQUEST['folder']."', dirfullpath='$dir_db', idguru='".SI_USER_ID()."'";
 	QueryDb($sql);
 	CloseDb();
 	?>
@@ -78,7 +78,7 @@ if (isset($_REQUEST['Simpan']))
 		opener.get_fresh();
 		window.close();
 	</script>
-	<?
+	<?php
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -89,7 +89,7 @@ if (isset($_REQUEST['Simpan']))
 <link rel="stylesheet" type="text/css" href="../../script/SpryAssets/SpryValidationTextField.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS INFOGURU [Tambah Folder]</title>
-<script language="JavaScript" src="../../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../../script/tooltips.js"></script>
 <script language="javascript" src="../../script/tables.js"></script>
 <script language="javascript" src="../../script/tools.js"></script>
 <script language="javascript" src="../../script/validasi.js"></script>
@@ -136,15 +136,15 @@ function acceptPegawai(nip, nama) {
 </tr>
 <tr>
   <td align="right"><div align="left"><strong>Nama&nbsp;Folder&nbsp;:&nbsp;</strong></div></td>
-  <td height="25" align="left">&nbsp;<input onKeyUp="kopikecopy()" name="folder" id="folder" type="text" <? if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?> readonly onClick="caripegawai()" <? } ?>/>&nbsp;<? if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?><img src="../../images/ico/cari.png" border="0" onClick="caripegawai()"/><? } ?> </td>
+  <td height="25" align="left">&nbsp;<input onKeyUp="kopikecopy()" name="folder" id="folder" type="text" <?php if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?> readonly onClick="caripegawai()" <?php } ?>/>&nbsp;<?php if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?><img src="../../images/ico/cari.png" border="0" onClick="caripegawai()"/><?php } ?> </td>
 </tr>
-<? if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?>
+<?php if (SI_USER_ID()=="LANDLORD" || SI_USER_ID()=="landlord"){ ?>
 <tr>
   <td height="30" colspan="2" align="center" bgcolor="#CCCCCC"> 
   <div align="center" class="style1">* Untuk menambah folder Guru, lebih baik gunakan NIP supaya lebih mudah diakses</div>
   </td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
 	<td colspan="2" align="center">
     <input type="submit" name="Simpan" id="Simpan" value="Simpan" class="but" />&nbsp;
@@ -154,11 +154,11 @@ function acceptPegawai(nip, nama) {
 </table>
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 </body>

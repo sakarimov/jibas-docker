@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -35,7 +35,7 @@ if (!isset($_REQUEST['tgl']))
 {
     $sql = "SELECT DAY(NOW()), MONTH(NOW()), YEAR(NOW())";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     $seltgl = $row[0];
     $selbln = $row[1];
@@ -72,7 +72,7 @@ if (isset($_REQUEST['departemen']))
     <tr>
     	<td align="left" width = "15%"><strong>Departemen&nbsp;</strong></td>
       	<td width="*">
-<?      ShowSelectDept(); ?>
+<?php      ShowSelectDept(); ?>
         &nbsp;
         <strong>Pembayaran</strong>&nbsp;
         <select name='kate' id='kate' onchange="change_kate()">
@@ -87,7 +87,7 @@ if (isset($_REQUEST['departemen']))
     <tr>
     	<td align="left" width = "15%"><strong>Tanggal&nbsp;</strong></td>
       	<td width="*">
-<?      ShowSelectTanggal(); ?>          
+<?php      ShowSelectTanggal(); ?>          
     	</td>
 	</tr>
 	</table>
@@ -108,6 +108,6 @@ if (isset($_REQUEST['departemen']))
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -75,7 +75,7 @@ if (isset($_REQUEST['urutan']))
 <tr><td align="left" valign="top">
 
 <?=getHeader($departemen)?>
-<?
+<?php
 	OpenDb(); 
 ?>
 
@@ -105,13 +105,13 @@ if (isset($_REQUEST['urutan']))
     <td class="header" width="12%" align="center">Debet</td>
     <td class="header" width="12%" align="center">Kredit</td>
 </tr>
-<?
+<?php
 $sql = "SELECT date_format(j.tanggal, '%d-%b-%Y') AS tanggal, j.petugas, j.transaksi, j.keterangan, j.nokas, jd.debet, jd.kredit FROM jurnal j, jurnaldetail jd WHERE j.replid = jd.idjurnal AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND jd.koderek = '$koderek' ORDER BY $urut $urutan, j.petugas";
 $result = QueryDb($sql);
 $cnt = 0;
 $totaldebet = 0;
 $totalkredit = 0;
-while($row = mysql_fetch_array($result)) {
+while($row = mysqli_fetch_array($result)) {
 	$totaldebet += $row['debet'];
 	$totalkredit += $row['kredit'];
 ?>
@@ -120,14 +120,14 @@ while($row = mysql_fetch_array($result)) {
     <td valign="top" align="center"><strong><?=$row['nokas'] ?></strong><br /><em><?=$row['tanggal'] ?></em></td>
     <td valign="top" align="left"><?=$row['petugas'] ?></td>
     <td valign="top" align="left"><?=$row['transaksi'] ?><br />
-    <? if ($row['keterangan'] <> "") { ?>
+    <?php if ($row['keterangan'] <> "") { ?>
     <strong>Keterangan: </strong><?=$row['keterangan'] ?>
-    <? } ?>
+    <?php } ?>
     </td>
     <td valign="top" align="right"><?=FormatRupiah($row['debet']) ?></td>
     <td valign="top" align="right"><?=FormatRupiah($row['kredit']) ?></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

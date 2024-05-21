@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,11 +51,11 @@ function ReadData()
 
     $sql = "SELECT kolom, jenis, keterangan, departemen, urutan 
               FROM tambahandata 
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     $result = QueryDb($sql);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $kolom = $row[0];
         $jenis = $row[1];
         $keterangan = $row[2];
@@ -85,7 +85,7 @@ function SaveData()
                AND replid <> '$replid'";
     $result = QueryDb($sql);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         CloseDb();
         $ERROR_MSG = "Nama kolom $kolom sudah digunakan!";
@@ -97,7 +97,7 @@ function SaveData()
                        jenis = '$jenis', 
                        keterangan = '$keterangan',
                        urutan = '$urutan'
-                 WHERE replid = '$replid'";
+                 WHERE replid = '".$replid."'";
         $result = QueryDb($sql);
         if ($result)
         { ?>
@@ -105,7 +105,7 @@ function SaveData()
                 opener.refresh();
                 window.close();
             </script>
-        <?
+        <?php
         }
         CloseDb();
         exit();

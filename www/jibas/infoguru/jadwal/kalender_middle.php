@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once('../require/config.php');
 require_once('../require/db_functions.php');
@@ -37,7 +37,7 @@ openDb();
 			
 			$result2=querydb($query1);		
 
-			$fetch1=mysql_fetch_array($result2);
+			$fetch1=mysqli_fetch_array($result2);
 
 			}
 			 
@@ -96,20 +96,20 @@ function hapus(){
           <tr>
             <td width="10">			<select name="kalender" id="kalender" onChange="ganti()">
 							<option value="">--Pilih Kalender--</option>
-            <? 
-					while($fetch=mysql_fetch_array($result))
+            <?php 
+					while($fetch=mysqli_fetch_array($result))
 						{
 							if($_GET['kalender']==$fetch['Replid'])
 								{
 			?>
 									  <option value="<?=$fetch['Replid'];?>" selected><?=$fetch['Kalender'];?></option>
-            <?
+            <?php
 								}
 							else
 								{
 			?>
 									  <option value="<?=$fetch['Replid'];?>"><?=$fetch['Kalender'];?></option>
-			<?
+			<?php
 								}
 						 }
 				
@@ -119,7 +119,7 @@ function hapus(){
           </tr>
       </table></td>
     </tr>
-	<?
+	<?php
 	if(!empty($_GET['kalender'])){
 	?>
     <tr>
@@ -136,35 +136,35 @@ function hapus(){
     <tr>
       <td>Status</td>
       <td>:</td>
-      <td width="101"  ><a href="proses_kalender.php?kalender=<?=$_GET['kalender'];?>&replid=<?=$fetch1['Replid'];?>&action=statusAktif&status=<?=$fetch1['StatusAktif']; ?>&departemen=<?=$_GET['departemen'];?>"><?  if($fetch1['StatusAktif']==1) echo "<img src=../images/ico/aktif.png border=0> Aktif"; else echo "<img src=../images/ico/nonaktif.png border=0> Tidak Aktif";?></a></td>
-      <td width="499"> <?
+      <td width="101"  ><a href="proses_kalender.php?kalender=<?=$_GET['kalender'];?>&replid=<?=$fetch1['Replid'];?>&action=statusAktif&status=<?=$fetch1['StatusAktif']; ?>&departemen=<?=$_GET['departemen'];?>"><?php  if($fetch1['StatusAktif']==1) echo "<img src=../images/ico/aktif.png border=0> Aktif"; else echo "<img src=../images/ico/nonaktif.png border=0> Tidak Aktif";?></a></td>
+      <td width="499"> <?php
 	  					if ($fetch1['StatusAktif']==1)
 							{
 						?>
 	  						<img src=../images/ico/visible.png border=0> <b>Terlihat</b>
-						<?
+						<?php
 							}
 						else
 							{
 						?>		
-								<a href="proses_kalender.php?kalender=<?=$_GET['kalender'];?>&replid=<?=$fetch1['Replid'];?>&action=statusTerlihat&status=<?=$fetch1['StatusTerlihat']; ?>&departemen=<?=$_GET['departemen'];?>"><?  if($fetch1['StatusTerlihat']==1)echo "<img src=../images/ico/visible.png border=0> Terlihat"; else echo "<img src=../images/ico/invisible.png border=0> Tidak Terlihat";?></a></td>
-    					<?
+								<a href="proses_kalender.php?kalender=<?=$_GET['kalender'];?>&replid=<?=$fetch1['Replid'];?>&action=statusTerlihat&status=<?=$fetch1['StatusTerlihat']; ?>&departemen=<?=$_GET['departemen'];?>"><?php  if($fetch1['StatusTerlihat']==1)echo "<img src=../images/ico/visible.png border=0> Terlihat"; else echo "<img src=../images/ico/invisible.png border=0> Tidak Terlihat";?></a></td>
+    					<?php
 							}
 						?>
 	</tr>
-	<?
+	<?php
 	}
 	?>
   </table>
 </form>
 <script language="javascript">
-<?
+<?php
 if(empty($_GET['kalender']))
 	{
 ?>
 	document.getElementById('com1').style.display='none';
 	parent.bawah.window.location='blank.php';
-<?
+<?php
 	}
 ?>
 </script>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 OpenDb();
 
 $dep_asal="";
@@ -30,82 +30,82 @@ $idtahunajaran=$_REQUEST['tahunajaran'];
 $departemen=$_REQUEST['departemen'];
 $cek = 0;
 
-$nis = trim($_REQUEST['nis']);
-$nik = trim($_REQUEST['nik']);
-$noun = trim($_REQUEST['noun']);
-$nisn = trim($_REQUEST['nisn']);
+$nis = trim((string) $_REQUEST['nis']);
+$nik = trim((string) $_REQUEST['nik']);
+$noun = trim((string) $_REQUEST['noun']);
+$nisn = trim((string) $_REQUEST['nisn']);
 $idangkatan = $_REQUEST['idangkatan'];
 $tahunmasuk = $_REQUEST['tahunmasuk'];
-$nama = trim($_REQUEST['nama']);
-$panggilan = trim($_REQUEST['panggilan']);
+$nama = trim((string) $_REQUEST['nama']);
+$panggilan = trim((string) $_REQUEST['panggilan']);
 $kelamin = $_REQUEST['kelamin'];
-$tmplahir = trim($_REQUEST['tmplahir']);
-$tgllahir = strlen($_REQUEST['tgllahir']) == 0 ? "1" : $_REQUEST['tgllahir']; 
-$blnlahir = strlen($_REQUEST['blnlahir']) == 0 ? "1" : $_REQUEST['blnlahir'];
-$thnlahir = strlen($_REQUEST['thnlahir']) == 0 ? "1970" : $_REQUEST['thnlahir'];
+$tmplahir = trim((string) $_REQUEST['tmplahir']);
+$tgllahir = strlen((string) $_REQUEST['tgllahir']) == 0 ? "1" : $_REQUEST['tgllahir']; 
+$blnlahir = strlen((string) $_REQUEST['blnlahir']) == 0 ? "1" : $_REQUEST['blnlahir'];
+$thnlahir = strlen((string) $_REQUEST['thnlahir']) == 0 ? "1970" : $_REQUEST['thnlahir'];
 $lahir = $thnlahir . "-" . $blnlahir . "-" . $tgllahir;
 $suku = $_REQUEST['suku'];
 $agama = $_REQUEST['agama'];
 $status = $_REQUEST['status'];
 $kondisi = $_REQUEST['kondisi'];
-$warga = isset($_REQUEST['warga']) ? $_REQUEST['warga'] : "WNI";
-$urutananak = strlen($_REQUEST['urutananak']) == 0 ? 0 : $_REQUEST['urutananak'];
-$jumlahanak = strlen($_REQUEST['jumlahanak']) == 0 ? 0 : $_REQUEST['jumlahanak'];
+$warga = $_REQUEST['warga'] ?? "WNI";
+$urutananak = strlen((string) $_REQUEST['urutananak']) == 0 ? 0 : $_REQUEST['urutananak'];
+$jumlahanak = strlen((string) $_REQUEST['jumlahanak']) == 0 ? 0 : $_REQUEST['jumlahanak'];
 $statusanak = $_REQUEST['statusanak'];
-$jkandung = strlen($_REQUEST['jkandung']) == 0 ? 0 : $_REQUEST['jkandung'];
-$jtiri = strlen($_REQUEST['jtiri']) == 0 ? 0 : $_REQUEST['jtiri'];
+$jkandung = strlen((string) $_REQUEST['jkandung']) == 0 ? 0 : $_REQUEST['jkandung'];
+$jtiri = strlen((string) $_REQUEST['jtiri']) == 0 ? 0 : $_REQUEST['jtiri'];
 
-$bahasa = trim($_REQUEST['bahasa']);
-$alamatsiswa = trim($_REQUEST['alamatsiswa']);
-$kodepos = trim($_REQUEST['kodepos']);
+$bahasa = trim((string) $_REQUEST['bahasa']);
+$alamatsiswa = trim((string) $_REQUEST['alamatsiswa']);
+$kodepos = trim((string) $_REQUEST['kodepos']);
 $jarak = (float)$_REQUEST['jarak'];
-$telponsiswa = trim($_REQUEST['telponsiswa']);
-$hpsiswa = trim(($_REQUEST['hpsiswa']));
+$telponsiswa = trim((string) $_REQUEST['telponsiswa']);
+$hpsiswa = trim(((string) $_REQUEST['hpsiswa']));
 $hpsiswa = str_replace(' ','',$hpsiswa);
-$emailsiswa = trim($_REQUEST['emailsiswa']);
+$emailsiswa = trim((string) $_REQUEST['emailsiswa']);
 $dep_asal = $_REQUEST['dep_asal'];
 
 $sekolah = $_REQUEST['sekolah'];
-$noijasah = trim($_REQUEST['noijasah']);
-$tglijasah = trim($_REQUEST['tglijasah']);
-$ketsekolah = trim($_REQUEST['ketsekolah']);
+$noijasah = trim((string) $_REQUEST['noijasah']);
+$tglijasah = trim((string) $_REQUEST['tglijasah']);
+$ketsekolah = trim((string) $_REQUEST['ketsekolah']);
 
 $gol = $_REQUEST['gol'];
-$berat = isset($_REQUEST['berat']) ? $_REQUEST['berat'] : "0";
-$tinggi = isset($_REQUEST['tinggi']) ? $_REQUEST['tinggi'] : "0";
-$kesehatan=trim($_REQUEST['kesehatan']);
+$berat = $_REQUEST['berat'] ?? "0";
+$tinggi = $_REQUEST['tinggi'] ?? "0";
+$kesehatan=trim((string) $_REQUEST['kesehatan']);
 
-$namaayah = trim($_REQUEST['namaayah']);
-$namaibu = trim($_REQUEST['namaibu']);
+$namaayah = trim((string) $_REQUEST['namaayah']);
+$namaibu = trim((string) $_REQUEST['namaibu']);
 $statusayah = $_REQUEST['statusayah'];
 $statusibu = $_REQUEST['statusibu'];
-$tmplahirayah = trim($_REQUEST['tmplahirayah']);
-$tmplahiribu = trim($_REQUEST['tmplahiribu']);
-$tgllahirayah = trim($_REQUEST['tgllahirayah']);
-$tgllahiribu = trim($_REQUEST['tgllahiribu']);
+$tmplahirayah = trim((string) $_REQUEST['tmplahirayah']);
+$tmplahiribu = trim((string) $_REQUEST['tmplahiribu']);
+$tgllahirayah = trim((string) $_REQUEST['tgllahirayah']);
+$tgllahiribu = trim((string) $_REQUEST['tgllahiribu']);
 $pendidikanayah = $_REQUEST['pendidikanayah'];
 $pendidikanibu = $_REQUEST['pendidikanibu'];
 $pekerjaanayah = $_REQUEST['pekerjaanayah'];
 $pekerjaanibu = $_REQUEST['pekerjaanibu'];
-$penghasilanayah = (isset($_REQUEST['penghasilanayah']))?$_REQUEST['penghasilanayah']:"0";
-$penghasilanibu = (isset($_REQUEST['penghasilanibu']))?$_REQUEST['penghasilanibu']:"0";
+$penghasilanayah = $_REQUEST['penghasilanayah'] ?? "0";
+$penghasilanibu = $_REQUEST['penghasilanibu'] ?? "0";
 
-$namawali=trim($_REQUEST['namawali']);
-$alamatortu=trim($_REQUEST['alamatortu']);
-$telponortu=trim($_REQUEST['telponortu']);
-$hportu=trim($_REQUEST['hportu']);
+$namawali=trim((string) $_REQUEST['namawali']);
+$alamatortu=trim((string) $_REQUEST['alamatortu']);
+$telponortu=trim((string) $_REQUEST['telponortu']);
+$hportu=trim((string) $_REQUEST['hportu']);
 $hportu=str_replace(' ','',$hportu);
-$hportu2=trim($_REQUEST['hportu2']);
+$hportu2=trim((string) $_REQUEST['hportu2']);
 $hportu2=str_replace(' ','',$hportu2);
-$hportu3=trim($_REQUEST['hportu3']);
+$hportu3=trim((string) $_REQUEST['hportu3']);
 $hportu3=str_replace(' ','',$hportu3);
-$emailayah=trim($_REQUEST['emailayah']);
-$emailibu=trim($_REQUEST['emailibu']);
-$alamatsurat=trim($_REQUEST['alamatsurat']);
-$keterangan=trim($_REQUEST['keterangan']);
-$hobi=trim($_REQUEST['hobi']);
-$almayah = (isset($_REQUEST['almayah']))?$_REQUEST['almayah']:"0";
-$almibu = (isset($_REQUEST['almibu']))?$_REQUEST['almibu']:"0";
+$emailayah=trim((string) $_REQUEST['emailayah']);
+$emailibu=trim((string) $_REQUEST['emailibu']);
+$alamatsurat=trim((string) $_REQUEST['alamatsurat']);
+$keterangan=trim((string) $_REQUEST['keterangan']);
+$hobi=trim((string) $_REQUEST['hobi']);
+$almayah = $_REQUEST['almayah'] ?? "0";
+$almibu = $_REQUEST['almibu'] ?? "0";
 $idtambahan = $_REQUEST['idtambahan'];
 
 $ERROR_MSG = "";
@@ -113,35 +113,35 @@ if (isset($_REQUEST['Simpan']))
 {
 	$sql_cek = "SELECT nis,nama from jbsakad.siswa where nis ='$nis'";
 	$hasil_cek=QueryDb($sql_cek);
-	$row=@mysql_num_rows($hasil_cek);
-	if (mysql_num_rows($hasil_cek) > 0)
+	$row=@mysqli_num_rows($hasil_cek);
+	if (mysqli_num_rows($hasil_cek) > 0)
 	{
 		$cek = 1;
 		$ERROR_MSG = "NIS $nis sudah digunakan!";
 	} 
 	else 
 	{	
-		$date=date(j);
-		$month=date(m);
-		$year=date(Y);
-		$kumplit = date(Y)."-".date(m)."-".date(j);
+		$date=date('j');
+		$month=date('m');
+		$year=date('Y');
+		$kumplit = date('Y')."-".date('m')."-".date('j');
 		
-        $suku_sql = ($suku == "") ? "suku = NULL" : "suku = '$suku'";
-        $agama_sql = ($agama == "") ? "agama = NULL" : "agama = '$agama'";
-        $status_sql = ($status == "") ? "status = NULL" : "status = '$status'";
-        $kondisi_sql = ($kondisi == "") ? "kondisi = NULL" : "kondisi = '$kondisi'";
-		$sekolah_sql = ($sekolah == "") ? "asalsekolah = NULL" : "asalsekolah = '$sekolah'";
-		$pendidikanayah_sql = ($pendidikanayah == "") ? "pendidikanayah = NULL" : "pendidikanayah = '$pendidikanayah'";
-		$pendidikanibu_sql = ($pendidikanibu == "") ? "pendidikanibu = NULL" : "pendidikanibu = '$pendidikanibu'";
-		$pekerjaanayah_sql = ($pekerjaanayah == "") ? "pekerjaanayah = NULL" : "pekerjaanayah = '$pekerjaanayah'";
-		$pekerjaanibu_sql = ($pekerjaanibu == "") ? "pekerjaanibu = NULL" : "pekerjaanibu = '$pekerjaanibu'";
-		$kodepos_sql = ($kodepos == "") ? "kodepossiswa = NULL" : "kodepossiswa = '$kodepos'";
+        $suku_sql = ($suku == "") ? "suku = NULL" : "suku = '".$suku."'";
+        $agama_sql = ($agama == "") ? "agama = NULL" : "agama = '".$agama."'";
+        $status_sql = ($status == "") ? "status = NULL" : "status = '".$status."'";
+        $kondisi_sql = ($kondisi == "") ? "kondisi = NULL" : "kondisi = '".$kondisi."'";
+		$sekolah_sql = ($sekolah == "") ? "asalsekolah = NULL" : "asalsekolah = '".$sekolah."'";
+		$pendidikanayah_sql = ($pendidikanayah == "") ? "pendidikanayah = NULL" : "pendidikanayah = '".$pendidikanayah."'";
+		$pendidikanibu_sql = ($pendidikanibu == "") ? "pendidikanibu = NULL" : "pendidikanibu = '".$pendidikanibu."'";
+		$pekerjaanayah_sql = ($pekerjaanayah == "") ? "pekerjaanayah = NULL" : "pekerjaanayah = '".$pekerjaanayah."'";
+		$pekerjaanibu_sql = ($pekerjaanibu == "") ? "pekerjaanibu = NULL" : "pekerjaanibu = '".$pekerjaanibu."'";
+		$kodepos_sql = ($kodepos == "") ? "kodepossiswa = NULL" : "kodepossiswa = '".$kodepos."'";
 			
 		$foto=$_FILES["file_data"];
 		$uploadedfile = $foto['tmp_name'];
 		$uploadedtypefile = $foto['type'];
 		$uploadedsizefile = $foto['size'];
-		if (strlen($uploadedfile)!=0)
+		if (strlen((string) $uploadedfile)!=0)
 		{
 			$tmp_path = realpath(".") . "/../../temp";
 			$tmp_exists = file_exists($tmp_path) && is_dir($tmp_path);
@@ -179,7 +179,7 @@ if (isset($_REQUEST['Simpan']))
                               $pendidikanayah_sql, $pendidikanibu_sql, $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali',
                               penghasilanayah=$penghasilanayah, penghasilanibu=$penghasilanibu, alamatortu='$alamatortu', telponortu='$telponortu',
                               hportu='$hportu', info1='$hportu2', info2='$hportu3', emailayah='$emailayah', emailibu='$emailibu', alamatsurat='$alamatsurat',
-                              keterangan='$keterangan', hobi='$hobi', pinsiswa = '$pinsiswa', pinortu = '$pinortu', pinortuibu = '$pinortuibu'";
+                              keterangan='$keterangan', hobi='$hobi', pinsiswa = '$pinsiswa', pinortu = '$pinortu', pinortuibu = '".$pinortuibu."'";
 		QueryDbTrans($sql_simpan,$success);
 		
 		if ($success)
@@ -203,12 +203,12 @@ if (isset($_REQUEST['Simpan']))
             }
         }
 
-		if ($success && strlen($idtambahan) > 0)
+		if ($success && strlen((string) $idtambahan) > 0)
         {
-            if (strpos($idtambahan, ",") === false)
-                $arridtambahan = array($idtambahan);
+            if (!str_contains((string) $idtambahan, ","))
+                $arridtambahan = [$idtambahan];
             else
-                $arridtambahan = explode(",", $idtambahan);
+                $arridtambahan = explode(",", (string) $idtambahan);
 
             // READ WARNING IMAGE
             $warnimg = "../images/warningimg.jpg";
@@ -238,7 +238,7 @@ if (isset($_REQUEST['Simpan']))
                     $teks = CQ($teks);
 
                     $sql = "INSERT INTO jbsakad.tambahandatasiswa
-                               SET nis = '$nis', idtambahan = '$replid', jenis = '$jenis', teks = '$teks'";
+                               SET nis = '$nis', idtambahan = '$replid', jenis = '$jenis', teks = '".$teks."'";
                     QueryDbTrans($sql, $success);
                 }
                 else if ($jenis == 2)
@@ -250,7 +250,7 @@ if (isset($_REQUEST['Simpan']))
                     $file = $_FILES[$param];
                     $tmpfile = $file['tmp_name'];
 
-                    if (strlen($tmpfile) != 0)
+                    if (strlen((string) $tmpfile) != 0)
                     {
                         if (filesize($tmpfile) <= 256000)
                         {
@@ -272,7 +272,7 @@ if (isset($_REQUEST['Simpan']))
 
                         $sql = "INSERT INTO jbsakad.tambahandatasiswa
                                    SET nis = '$nis', idtambahan = '$replid', jenis = '2', 
-                                       filedata = '$datafile', filename = '$namefile', filemime = '$typefile', filesize = '$sizefile'";
+                                       filedata = '$datafile', filename = '$namefile', filemime = '$typefile', filesize = '".$sizefile."'";
                         QueryDbTrans($sql, $success);
                     }
                 }
@@ -288,7 +288,7 @@ if (isset($_REQUEST['Simpan']))
 				parent.opener.refresh_after_add();
 				window.close();
 			</script>
-		<?		
+		<?php 	
 		} 
 		else 
 		{
@@ -296,7 +296,7 @@ if (isset($_REQUEST['Simpan']))
 			<script language="javascript">
 				alert ('Data gagal disimpan');
 			</script>
-<?		}
+<?php 	}
 	}
 }
 ?>

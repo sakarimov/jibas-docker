@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -41,7 +41,7 @@ $sql = "SELECT s.nama, k.kelas, t.tingkat, t.departemen
           FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
 			WHERE s.nis = '$nis' AND s.idkelas = k.replid AND k.idtingkat = t.replid";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namasiswa = $row[0];
 $kelas = $row[1];
 $tingkat = $row[2];
@@ -65,7 +65,7 @@ $departemen = $row[3];
 
 <center><font size="4"><strong>DATA PEMBAYARAN SISWA</strong></font><br /> </center><br /><br />
 
-<?
+<?php
 
 ?>
 <table border="0">
@@ -85,7 +85,7 @@ $departemen = $row[3];
 <br />
 
 <table border="1" style="border-collapse:collapse" width="100%" bordercolor="#000000">
-<?
+<?php
 $sql = "SELECT DISTINCT b.replid AS id, b.besar, b.lunas, b.keterangan, d.nama 
           FROM besarjtt b, penerimaanjtt p, datapenerimaan d 
 		   WHERE p.idbesarjtt = b.replid AND b.idpenerimaan = d.replid AND b.nis='$nis' AND b.info2='$idtahunbuku'
@@ -97,7 +97,7 @@ $totaldiskonwjb = 0;
 $totalsisawjb = 0;
 
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 	$idbesarjtt = $row['id'];
 	$namapenerimaan = $row['nama']; 
@@ -105,7 +105,7 @@ while ($row = mysql_fetch_array($result))
 	$lunas = $row['lunas'];
 	$keterangan = $row['keterangan'];
 	
-	$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+	$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
 	$row = FetchSingleRow($sql);
 	$pembayaran = $row[0] + $row[1];
 	$diskon = $row[1];
@@ -127,9 +127,9 @@ while ($row = mysql_fetch_array($result))
 	$dknakhir = 0;
 	$tglakhir = "";
 	$nojurnal = "";
-	if (mysql_num_rows($result2))
+	if (mysqli_num_rows($result2))
 	{
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 		$dknakhir = $row2[2];
@@ -161,7 +161,7 @@ while ($row = mysql_fetch_array($result))
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<? 
+<?php 
 } //while iuran wajib
 
 $totalbayarskr = 0;
@@ -171,7 +171,7 @@ $sql = "SELECT DISTINCT p.idpenerimaan, d.nama
 		   WHERE p.idpenerimaan = d.replid AND j.replid = p.idjurnal AND j.idtahunbuku = '$idtahunbuku'
 			  AND p.nis='$nis' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY nama";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 	$idpenerimaan = $row['idpenerimaan'];
 	$namapenerimaan = $row['nama'];
@@ -184,8 +184,8 @@ while ($row = mysql_fetch_array($result))
 	$result2 = QueryDb($sql);
 	$byrakhir = 0;
 	$tglakhir = "";
-	if (mysql_num_rows($result2)) {
-		$row2 = mysql_fetch_row($result2);
+	if (mysqli_num_rows($result2)) {
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 	};	
@@ -206,7 +206,7 @@ while ($row = mysql_fetch_array($result))
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<?
+<?php
 } //while iuran sukarela
 ?>
 </table>
@@ -252,7 +252,7 @@ while ($row = mysql_fetch_array($result))
 </tr>
 </table>
 
-<?
+<?php
 CloseDb();
 ?>
 

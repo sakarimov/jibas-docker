@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -32,11 +32,11 @@ $bulan=$_REQUEST['bulan'];
 $tahun=$_REQUEST['tahun'];
 
 $judul = CQ($_REQUEST['judul']);
-$tgl = explode("-",$_REQUEST['tanggal']);
+$tgl = explode("-",(string) $_REQUEST['tanggal']);
 $tanggaltampil = $tgl[2]."-".$tgl[1]."-".$tgl[0];
 
 $pesan = $_REQUEST['pesan'];
-$pesan = str_replace("'", "#sq;", $pesan);
+$pesan = str_replace("'", "#sq;", (string) $pesan);
 
 $idguru = SI_USER_ID();
 
@@ -54,7 +54,7 @@ if ($success)
 {
 	$sql = "SELECT LAST_INSERT_ID()";
 	$result = QueryDbTrans($sql, $success);
-	$row = @mysql_fetch_row($result);
+	$row = @mysqli_fetch_row($result);
 	$lastid = $row[0];
 }
 
@@ -67,7 +67,7 @@ if ($success)
 $jum = (int)$_REQUEST['jum']-1;
 $receiverall = $_REQUEST['receiver'];
 $x = 0;
-$receiver = explode("|",$receiverall);
+$receiver = explode("|",(string) $receiverall);
 while ($x <= $jum && $success)
 {
 	if ($receiver[$x] != "")
@@ -86,7 +86,7 @@ if ($success)
 	alert ('Pesan telah dikirim');
 	document.location.href="pesanguru_footer.php";
 </script>
-<?
+<?php
 }
 else
 {
@@ -96,7 +96,7 @@ else
 	alert ('Gagal mengirimkan pesan');
 	document.location.href="pesanguru_footer.php";
 </script>
-<?	
+<?php 
 }
 ?>
 

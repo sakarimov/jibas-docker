@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  **[N]**/ ?>
 <fieldset>
     <legend><strong>Deskripsi Nilai Pelajaran</strong></legend>
-<?	$sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
+<?php $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
               FROM infonap i, nap n, aturannhb a, dasarpenilaian d
              WHERE i.replid = n.idinfo AND n.nis = '$nis' 
                AND i.idsemester = '$semester' 
@@ -32,9 +32,9 @@
                AND d.aktif = 1";
     $res = QueryDb($sql);
     $i = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $aspekarr[$i++] = array($row[0], $row[1]);
+        $aspekarr[$i++] = [$row[0], $row[1]];
     }
     $naspek = count($aspekarr);
     $colwidth = $naspek == 0 ? "*" : round(55 / count($aspekarr)) . "%"; ?>
@@ -45,7 +45,7 @@
         <td width="15%" class="headerlong"><div align="center">Aspek</div></td>
         <td width="*" class="headerlong"><div align="center">Deskripsi</div></td>
     </tr>
-<?	$sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
+<?php $sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
               FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel, kelompokpelajaran kpel 
              WHERE uji.replid = niluji.idujian 
                AND niluji.nis = sis.nis 
@@ -58,7 +58,7 @@
     $respel = QueryDb($sql);
     $previdkpel = 0;
     $no = 0;
-    while($rowpel = mysql_fetch_row($respel))
+    while($rowpel = mysqli_fetch_row($respel))
     {
         $no += 1;
         $idpel = $rowpel[0];
@@ -94,11 +94,11 @@
                        AND i.idsemester = '$semester' 
                        AND i.idkelas = '$kelas'
                        AND n.idaturan = a.replid 	   
-                       AND a.dasarpenilaian = '$asp'";
+                       AND a.dasarpenilaian = '".$asp."'";
             $res = QueryDb($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 $komentar = $row[2];
             }
 

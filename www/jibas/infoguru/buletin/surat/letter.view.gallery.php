@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 require_once("../../include/config.php");
@@ -29,14 +29,14 @@ OpenDb();
         </select>
     </td>
     <td width='50%' align='right'>
-<?      ShowControl() ?>
+<?php      ShowControl() ?>
     &nbsp;&nbsp;
     </td>
 </tr>    
 </table>    
 </div>
 <div id='container' style='background-color: #aaa; overflow: auto'>
-<?
+<?php
 ShowImage();
 ?>
 <div id='infobox' style='background-color: #000; opacity: 0.7; height: 32px; width: 75%; position: fixed'>
@@ -52,6 +52,6 @@ ShowImage();
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

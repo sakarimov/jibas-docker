@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,15 +50,15 @@ function tampil(id,nip) {
 </script>
 </head>
 <body topmargin="5" leftmargin="5">
-	<?
+	<?php
 	OpenDb();
-	$sql = "SELECT d.departemen,pg.nama FROM guru g, pelajaran p, departemen d,jbssdm.pegawai pg WHERE g.idpelajaran = p.replid AND d.departemen = p.departemen AND g.nip ='$_REQUEST[nip]' AND pg.nip=g.nip GROUP BY d.departemen ORDER BY d.urutan";	
+	$sql = "SELECT d.departemen,pg.nama FROM guru g, pelajaran p, departemen d,jbssdm.pegawai pg WHERE g.idpelajaran = p.replid AND d.departemen = p.departemen AND g.nip ='".$_REQUEST['nip']."' AND pg.nip=g.nip GROUP BY d.departemen ORDER BY d.urutan";	
 	
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result)>0){
+	if (@mysqli_num_rows($result)>0){
 		echo "<div align='left'><strong>Pelajaran yang diajar oleh guru ".$_REQUEST['nama']."</strong><br></div>";
 		$count = 0;
-		while ($row = @mysql_fetch_row($result)) {				
+		while ($row = @mysqli_fetch_row($result)) {				
 		$count++;
 	?>
    
@@ -72,10 +72,10 @@ function tampil(id,nip) {
     <tr height="30">    	
     	<td width="100%" class="header" align="center"><?=$row[0];?></td>
     </tr>
-    <?		
-		$sql1 = "SELECT p.nama,p.replid FROM guru g, pelajaran p WHERE g.idpelajaran = p.replid AND g.nip='$_REQUEST[nip]' AND p.departemen = '$row[0]' GROUP BY p.nama";	
+    <?php 	
+		$sql1 = "SELECT p.nama,p.replid FROM guru g, pelajaran p WHERE g.idpelajaran = p.replid AND g.nip='".$_REQUEST['nip']."' AND p.departemen = '".$row[0]."' GROUP BY p.nama";	
 		$result1 = QueryDb($sql1); 				
-		while ($row1 = @mysql_fetch_array($result1)) {
+		while ($row1 = @mysqli_fetch_array($result1)) {
 	?>
     <tr>   	
        	<td align="left" height="25" onclick="tampil('<?=$row1[1]?>','<?=$_REQUEST['nip']?>')" style="cursor:pointer">
@@ -83,7 +83,7 @@ function tampil(id,nip) {
 		</td>
     </tr>
     <!-- END TABLE CONTENT -->
-    <? 		} ?>
+    <?php 		} ?>
 	</table>
 		 <script language='JavaScript'>
 	    Tables('table<?=$count?>', 1, 0);
@@ -91,7 +91,7 @@ function tampil(id,nip) {
     </td></tr>
 <!-- END TABLE CENTER -->    
 </table> 
-<?	
+<?php 
 		}
 	CloseDb(); 
 	} else { 
@@ -103,7 +103,7 @@ function tampil(id,nip) {
     </td>
 </tr>
 </table> 
-<? } ?> 
+<?php } ?> 
 
 
    

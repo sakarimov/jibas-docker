@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class NumberToText
 {
-	private $number;
-	private $fraction;
-	private $dictionary = "0123456789.";
+	private ?string $number = null;
+	private ?string $fraction = null;
+	private string $dictionary = "0123456789.";
 	
 	public function Convert($number)
 	{
-		$number = trim($number);
+		$number = trim((string) $number);
 		if (!$this->IsValidNumber($number))
 			throw new Exception("Invalid number");
 		
@@ -81,7 +81,7 @@ class NumberToText
 	
 	private function ParseNumber(&$index, $numlen)
 	{
-		$digit = substr($this->number, $index, 1);
+		$digit = substr((string) $this->number, $index, 1);
 		$position = $numlen - $index;
 		
 		//echo "ix $index d $digit p $position";
@@ -106,7 +106,7 @@ class NumberToText
 		}
 		elseif ($position == 2 || $position == 5 || $position == 8 || $position == 11 || $position == 14)
 		{
-			$nextdigit = substr($this->number, $index + 1, 1);
+			$nextdigit = substr((string) $this->number, $index + 1, 1);
 			if ($digit == "1")
 			{
 				if ($nextdigit == "0")
@@ -142,7 +142,7 @@ class NumberToText
 			else
 				$result = $this->DigitToText($digit) . " Ratus";
 			
-			if (substr($this->number, $index + 1, 2) == "00")
+			if (substr((string) $this->number, $index + 1, 2) == "00")
 			{
 				if ($position == 6)
 					$result = $result . " Ribu";
@@ -155,7 +155,7 @@ class NumberToText
 					
 				$index += 2;
 			}
-			elseif (substr($this->number, $index + 1, 1) == "0") 
+			elseif (substr((string) $this->number, $index + 1, 1) == "0") 
 			{
 				$index++;
 			}
@@ -176,12 +176,12 @@ class NumberToText
 	private function IsValidNumber($number)
 	{
 		$valid = true;
-		$numlen = strlen($number);
+		$numlen = strlen((string) $number);
 		
 		for($i = 0; $valid && $i < $numlen; $i++)
 		{
-			$digit = substr($number, $i, 1);
-			$valid = strpos($this->dictionary, $digit) !== FALSE;
+			$digit = substr((string) $number, $i, 1);
+			$valid = str_contains((string) $this->dictionary, $digit);
 		}
 		
 		return $valid;

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -38,7 +38,7 @@ require_once("notes.index.func.php");
 </tr>    
 </table>
 <br>
-Bulan: <? ShowComboBulan(); ?><? ShowComboTahun(); ?>
+Bulan: <?php ShowComboBulan(); ?><?php ShowComboTahun(); ?>
 <table id='not_NotesIndexTableList' border='0' width='100%' cellspacing='0' cellpadding='5'>
 <thead>
 <tr height='25' class='NotesTableHeader'>

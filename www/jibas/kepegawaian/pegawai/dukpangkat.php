@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ function ChangeSatKer() {
 </head>
 
 <body>
-<?
+<?php
 OpenDb();
 
 $arridpeg;
@@ -127,10 +127,10 @@ $sql = "SELECT p.replid FROM pegawai p, peglastdata pl, peggol pg, golongan g, p
 }
 
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) 
+while ($row = mysqli_fetch_row($result)) 
 	$arridpeg[] = $row[0];
 
-$ndata = mysql_num_rows($result);
+$ndata = mysqli_num_rows($result);
 $npage = floor($ndata / $PAGING_SIZE);
 if (($ndata % $PAGING_SIZE) != 0) 
 	$npage++;
@@ -156,28 +156,28 @@ $maxrownum = $pagenum * $PAGING_SIZE;
 	Satuan Kerja:    
     <select name="satker" id="satker" onchange="JavaScript:ChangeSatKer()">
 	    <option value="all" <?=StringIsSelected("all", $satker)?> >(semua)</option>
-<?	$sql = "SELECT satker, nama FROM satker ORDER BY replid";    
+<?php $sql = "SELECT satker, nama FROM satker ORDER BY replid";    
 	$result = QueryDb($sql);
-	while($row = mysql_fetch_row($result)) { ?>
+	while($row = mysqli_fetch_row($result)) { ?>
 		<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $satker)?> ><?=$row[1]?></option>
-<?	} ?>
+<?php } ?>
     </select>
     </td>
 </tr>
 <tr>
 <td  width="50%" align="left">
 Halaman
-<? if ($pagenum != 1) { ?>
+<?php if ($pagenum != 1) { ?>
 <input type="button" id="Left" class="but" onclick="MoveToPage(<?=$pagenum-1?>)" value=" < ">
-<? } ?>
+<?php } ?>
 <select id="pagenum" onchange="ChangePage()">
-<? for($i = 1; $i <= $npage; $i++) { ?>
+<?php for($i = 1; $i <= $npage; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $pagenum)?>><?=$i?></option>
-<? } ?>
+<?php } ?>
 </select>
-<? if ($pagenum != $npage) { ?>
+<?php if ($pagenum != $npage) { ?>
 <input type="button" id="Left" class="but" onclick="MoveToPage(<?=$pagenum+1?>)" value=" > ">
-<? } ?>
+<?php } ?>
  dari <?= $npage ?>&nbsp;&nbsp;&nbsp;(banyaknya data: <?=$ndata?>)
 </td>
 <td width="50%" align="right">
@@ -220,11 +220,11 @@ Halaman
     <td class="header"  width="30" align="center" valign="middle">Tk</td>
 </tr>
 
-<?
+<?php
 for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
 {
 	$idpeg = $arridpeg[$i];
-	if (strlen(trim($idpeg)) == 0)
+	if (strlen(trim((string) $idpeg)) == 0)
 		continue;
 	
 	$cnt = $i;
@@ -254,7 +254,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
 			 ORDER BY g.urutan DESC, p.nama ASC";
 	
 	$result = QueryDb($sql);			
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 ?>
 <tr>
 	<td align="center" valign="middle"><?=++$cnt?></td>
@@ -265,25 +265,25 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="left" valign="middle"><?=$row['jenis'] . " " . $row['jabatan']?></td>
     <td align="center" valign="middle"><?=$row['tmtjab']?></td>
     <td align="center" valign="middle">
-<? 		$thn = floor($row['tmtgol'] / 365);
+<?php 		$thn = floor($row['tmtgol'] / 365);
 		$bln = $row['tmtgol'] % 365;
 		$bln = floor($bln / 30);
 		echo "$thn-$bln"; ?>
     </td>
     <td align="center" valign="middle">
-<?		$thn = floor($row['tglmulai'] / 365);
+<?php 	$thn = floor($row['tglmulai'] / 365);
 		$bln = $row['tglmulai'] % 365;
 		$bln = floor($bln / 30);
 		echo "$thn-$bln"; ?>
     </td>
-    <?
+    <?php
 	$diklat = "&nbsp;";
 	$thndiklat = "&nbsp;";
 	if ($row['idpegdiklat'] != NULL) {
 		$idpegdiklat = $row['idpegdiklat'];
 		$sql = "SELECT d.diklat, pd.tahun FROM pegdiklat pd, diklat d WHERE pd.replid=$idpegdiklat AND pd.iddiklat=d.replid";
 		$rs = QueryDb($sql);
-		$rw = mysql_fetch_row($rs);
+		$rw = mysqli_fetch_row($rs);
 		$diklat = $rw[0];
 		$thndiklat = $rw[1];
 	};
@@ -294,7 +294,7 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="center" valign="middle"><?=$row['lulus']?></td>
     <td align="center" valign="middle"><?=$row['tingkat']?></td>
     <td align="center" valign="middle">
-	<?	$thn = floor($row['difflahir'] / 365);
+	<?php $thn = floor($row['difflahir'] / 365);
 		$bln = $row['difflahir'] % 365;
 		$bln = floor($bln / 30);
 		echo "$thn,$bln";
@@ -303,18 +303,18 @@ for($i = $minrownum - 1; $i < $maxrownum && $i < $ndata; $i++)
     <td align="left" valign="middle"><?=$row['tmplahir'] . ", " . $row['tgllahir'] ?></td>
 	<td align="left" valign="middle"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
 <span class="style1">Tampilkan</span> 
 <select name="PAGING_SIZE" id="PAGING_SIZE" onchange="chg_paging_size()">
-<?
+<?php
 $i=5;
 while ($i<=50){
 ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i,$PAGING_SIZE)?> ><?=$i?></option>
-<?
+<?php
 $i=$i+5;
 }
 ?>

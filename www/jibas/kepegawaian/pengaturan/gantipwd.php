@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -30,30 +30,30 @@ require_once('../include/theme.php');
 if (isset($_REQUEST['simpan'])) {
 	OpenDb();
 	
-	$sql_c = "SELECT password FROM pengguna WHERE login='$_REQUEST[login]'";
+	$sql_c = "SELECT password FROM pengguna WHERE login='".$_REQUEST['login']."'";
 	$result_c = QueryDb($sql_c);
-	$row_c = @mysql_fetch_row($result_c);
+	$row_c = @mysqli_fetch_row($result_c);
 	
-	if ($row_c[0]!=md5($_REQUEST[pwlama])) { ?>
+	if ($row_c[0]!=md5((string) $_REQUEST['pwlama'])) { ?>
 	    <script language="javascript">
 	    	alert ('Password Lama Anda Salah !');
 	    	document.location.href="gantipwd.php";
 	    </script>
-	<?
+	<?php
 	} else {
-		$sql_u="UPDATE pengguna SET password='".md5($_REQUEST[pwbaru])."'";
+		$sql_u="UPDATE pengguna SET password='".md5((string) $_REQUEST['pwbaru'])."'";
 		$result_u=QueryDb($sql_u);
 		if ($result_u) { ?>
 			<script language="javascript">
                 alert ('Password Anda telah berubah !');
                 document.location.href="gantipwd.php";
             </script>
-<?		} else { ?>
+<?php 	} else { ?>
 		<script language="javascript">
 			alert ('Password Anda Gagal diubah !');
 			document.location.href="gantipwd.php";
 		</script>
-<?		}
+<?php 	}
 	}
 	CloseDb();
 } else {
@@ -154,4 +154,4 @@ return true;
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -42,17 +42,17 @@ require_once('../include/db_functions.php');
     <table width="100%" border="0" height="100%">
   	<tr>
   		<td align="center">
-    <? 	OpenDb();		
+    <?php 	OpenDb();		
 		$sql = "SELECT * FROM departemen";    
 		$result = QueryDb($sql);
-		if (@mysql_num_rows($result) > 0){
+		if (@mysqli_num_rows($result) > 0){
 	?>
     	<font size="2" color="#757575"><b>Klik pada icon <img src="../images/ico/view_x.png" border="0"> di atas untuk melakukan penempatan calon siswa</font>
-    <? } else { ?>
+    <?php } else { ?>
       	<font size = "2" color ="red"><b>Belum ada data Departemen.
         <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
         </b></font> 
-   	<? } ?> 
+   	<?php } ?> 
     	</td>
   </tr>
 </table>

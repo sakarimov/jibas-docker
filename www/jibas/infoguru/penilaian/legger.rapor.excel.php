@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,24 +45,24 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
 OpenDb();
 
-$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '$tahunajaran'";
+$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '".$tahunajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ta  = $row[0];
 
-$sql = "SELECT kelas FROM kelas WHERE replid = '$kelas'";
+$sql = "SELECT kelas FROM kelas WHERE replid = '".$kelas."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $kls = $row[0];
 
-$sql = "SELECT semester FROM semester WHERE replid = '$semester'";
+$sql = "SELECT semester FROM semester WHERE replid = '".$semester."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $sem = $row[0];
 
-$sql = "SELECT nama FROM pelajaran WHERE replid = '$pelajaran'";
+$sql = "SELECT nama FROM pelajaran WHERE replid = '".$pelajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $pel = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -107,21 +107,21 @@ $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
            AND a.dasarpenilaian = d.dasarpenilaian
            AND i.idpelajaran = '$pelajaran'  
            AND i.idsemester = '$semester' 
-           AND i.idkelas = '$kelas'";
+           AND i.idkelas = '".$kelas."'";
 $res = QueryDb($sql);
-$aspekarr = array();
-while($row = mysql_fetch_row($res))
+$aspekarr = [];
+while($row = mysqli_fetch_row($res))
 {
-    $aspekarr[] = array($row[0], $row[1]);
+    $aspekarr[] = [$row[0], $row[1]];
 }
 $naspek = count($aspekarr);
 $colwidth = $naspek == 0 ? "*" : round(600 / $naspek);
 
 $sql = "SELECT aktif
           FROM tahunajaran
-         WHERE replid = '$tahunajaran'";
+         WHERE replid = '".$tahunajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ta_aktif = (int)$row[0];
 
 if ($ta_aktif == 0)
@@ -138,10 +138,10 @@ else
              ORDER BY nama";
 
 $res = QueryDb($sql);
-$siswa = array();
-while($row = mysql_fetch_row($res))
+$siswa = [];
+while($row = mysqli_fetch_row($res))
 {
-    $siswa[] = array($row[0], $row[1]);
+    $siswa[] = [$row[0], $row[1]];
 }
 $nsiswa = count($siswa);
 ?>
@@ -150,25 +150,25 @@ $nsiswa = count($siswa);
         <td width="30" class="header" rowspan="2">No</td>
         <td width="100" class="header" rowspan="2">NIS</td>
         <td width="240" class="header" rowspan="2">Nama</td>
-        <?  for($i = 0; $i < $naspek; $i++)
+        <?php  for($i = 0; $i < $naspek; $i++)
         { ?>
             <td width="<?=$colwidth?>" align="center" colspan="2" class="header"><?=$aspekarr[$i][1]?></td>
-        <?  } ?>
+        <?php  } ?>
         <td width="100" class="header" align="center"  rowspan="2">Rata-Rata<br>Siswa</td>
     </tr>
     <tr>
-        <?  $colwidth2 = $colwidth / 2;
+        <?php  $colwidth2 = $colwidth / 2;
         for($i = 0; $i < $naspek; $i++)
         { ?>
             <td width="<?=$colwidth2?>" align="center" class="header">Nilai Angka</td>
             <td width="<?=$colwidth2?>" align="center" class="header">Nilai Huruf</td>
-        <?  } ?>
+        <?php  } ?>
     </tr>
-    <?
-    $ratapel = array();
+    <?php
+    $ratapel = [];
     for($j = 0; $j < $naspek; $j++)
     {
-        $ratapel[] = array(0, 0); // totna, divna
+        $ratapel[] = [0, 0]; // totna, divna
     }
 
     $totratasis = 0;
@@ -203,11 +203,11 @@ $nsiswa = count($siswa);
                        AND i.idsemester = '$semester' 
                        AND i.idkelas = '$kelas'
                        AND n.idaturan = a.replid 	   
-                       AND a.dasarpenilaian = '$asp'";
+                       AND a.dasarpenilaian = '".$asp."'";
             $res = QueryDb($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 $na = $row[0];
                 $nh = $row[1];
                 $komentar = $row[2];
@@ -254,7 +254,7 @@ $nsiswa = count($siswa);
     ?>
 </table>
 
-<?
+<?php
 CloseDb();
 ?>
 </body>

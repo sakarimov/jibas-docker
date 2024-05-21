@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CK
 {
-	var $nis, $db_name_fina;
+	public $nis, $db_name_fina;
 	
 	private $departemen;
-	private $arrdept;
+	private ?array $arrdept = null;
 	
 	private $idtahunbuku;
 	private $arrta;
@@ -52,13 +52,13 @@ class CK
 					  FROM riwayatdeptsiswa
 					 WHERE nis='$check_nis'";
 			$result = QueryDb($sql);
-			$nrow = mysql_num_rows($result);
+			$nrow = mysqli_num_rows($result);
 			if ($nrow > 0)
 			{
-				$row = mysql_fetch_array($result);
-				$this->arrdept[] = array($row['departemen'], $check_nis);
+				$row = mysqli_fetch_array($result);
+				$this->arrdept[] = [$row['departemen'], $check_nis];
 				
-				if (strlen($row['nislama']) > 0)
+				if (strlen((string) $row['nislama']) > 0)
 					$check_nis = $row['nislama'];
 				else
 					$nrow = 0;
@@ -104,12 +104,12 @@ class CK
 		$result = QueryDb($sql);
 		
 		echo "Tahun Buku: <select name='idtahunbuku' class='cmbfrm' id='idtahunbuku' style='width:150px' onChange=\"ChangeKeuOption('tahunbuku')\">";
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
 			if ($this->idtahunbuku == 0)
 				$this->idtahunbuku = $row[0];
 				
-			echo "<option value='$row[0]' " . IntIsSelected($row[0], $this->idtahunbuku) . " > " . $row[1] . "</option>";
+			echo "<option value='".$row[0]."' " . IntIsSelected($row[0], $this->idtahunbuku) . " > " . $row[1] . "</option>";
 		}
 		echo "</select>";				
 	}
@@ -124,7 +124,7 @@ class CK
 				   FROM siswa s, kelas k
 				  WHERE s.nis = '$nis' AND s.idkelas = k.replid ";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namasiswa = $row[0];
 		$kelas = $row[1]; ?>
 		
@@ -136,7 +136,7 @@ class CK
 		<tr>
 			<td valign="top" background="" style="background-repeat:no-repeat; background-attachment:fixed">
 
-<?
+<?php
 			$sql =	"SELECT DISTINCT b.replid, b.besar, b.lunas, b.keterangan, d.nama
 					   FROM jbsfina.besarjtt b, jbsfina.penerimaanjtt p, jbsfina.datapenerimaan d
 					  WHERE p.idbesarjtt = b.replid
@@ -146,7 +146,7 @@ class CK
 					  ORDER BY nama";
 			$result = QueryDb($sql);
 
-			while ($row = mysql_fetch_array($result))
+			while ($row = mysqli_fetch_array($result))
 			{
 				$idbesarjtt = $row['replid'];
 				$namapenerimaan = $row['nama']; 
@@ -154,13 +154,13 @@ class CK
 				$lunas = $row['lunas'];
 				$keterangan = $row['keterangan'];
 			
-				$sql = "SELECT SUM(jumlah), SUM(info1) FROM jbsfina.penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+				$sql = "SELECT SUM(jumlah), SUM(info1) FROM jbsfina.penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
 				$result2 = QueryDb($sql);
 				$pembayaran = 0;
 				$diskon = 0;
-				if (mysql_num_rows($result2))
+				if (mysqli_num_rows($result2))
 				{
-					$row2 = mysql_fetch_row($result2);
+					$row2 = mysqli_fetch_row($result2);
 					$pembayaran = $row2[0] + $row2[1];
 					$diskon = $row2[1];
 				};
@@ -178,9 +178,9 @@ class CK
 				$tglakhir = "";
 				$dknakhir = 0;
 				$nojurnal = "";
-				if (mysql_num_rows($result2))
+				if (mysqli_num_rows($result2))
 				{
-					$row2 = mysql_fetch_row($result2);
+					$row2 = mysqli_fetch_row($result2);
 					$byrakhir = $row2[0];
 					$tglakhir = $row2[1];
 					$dknakhir = $row2[2];
@@ -215,7 +215,7 @@ class CK
 					<td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
 				</tr>
                 </table>
-<? 			} //while iuran wajib
+<?php 			} //while iuran wajib
 		
 			$sql =	"SELECT DISTINCT p.idpenerimaan, d.nama
 					   FROM jbsfina.penerimaaniuran p, jbsfina.jurnal j, jbsfina.datapenerimaan d
@@ -226,7 +226,7 @@ class CK
 					  ORDER BY nama";
 			
 			$result = QueryDb($sql);
-			while ($row = mysql_fetch_array($result))
+			while ($row = mysqli_fetch_array($result))
 			{
 				$idpenerimaan = $row['idpenerimaan'];
 				$namapenerimaan = $row['nama'];
@@ -237,9 +237,9 @@ class CK
 						   AND nis='$nis'";
 				$result2 = QueryDb($sql);
 				$pembayaran = 0;
-				if (mysql_num_rows($result2))
+				if (mysqli_num_rows($result2))
 				{
-					$row2 = mysql_fetch_row($result2);
+					$row2 = mysqli_fetch_row($result2);
 					$pembayaran = $row2[0];
 				};
 		
@@ -253,9 +253,9 @@ class CK
 				$result2 = QueryDb($sql);
 				$byrakhir = 0;
 				$tglakhir = "";
-				if (mysql_num_rows($result2))
+				if (mysqli_num_rows($result2))
 				{
-					$row2 = mysql_fetch_row($result2);
+					$row2 = mysqli_fetch_row($result2);
 					$byrakhir = $row2[0];
 					$tglakhir = $row2[1];
 				};	?>
@@ -278,9 +278,9 @@ class CK
 					<td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
 				</tr>
                 </table>
-<?			} //while iuran sukarela ?>
+<?php 		} //while iuran sukarela ?>
 
-<?
+<?php
             // TABUNGAN SISWA
             $sql =	"SELECT DISTINCT t.idtabungan, d.nama
 					   FROM jbsfina.tabungan t, jbsfina.jurnal j, jbsfina.datatabungan d
@@ -291,7 +291,7 @@ class CK
 					  ORDER BY nama";
 
             $result = QueryDb($sql);
-            while ($row = mysql_fetch_array($result))
+            while ($row = mysqli_fetch_array($result))
             {
                 $idTab = $row['idtabungan'];
                 $nmTab = $row['nama'];
@@ -302,9 +302,9 @@ class CK
                 $sql = "SELECT SUM(debet), SUM(kredit)
                           FROM jbsfina.tabungan
                          WHERE idtabungan = '$idTab'
-                           AND nis = '$nis'";
+                           AND nis = '".$nis."'";
                 $res = QueryDb($sql);
-                if ($row = mysql_fetch_row($res))
+                if ($row = mysqli_fetch_row($res))
                 {
                     $tottarik = $row[0];
                     $totsetor = $row[1];
@@ -321,7 +321,7 @@ class CK
                          ORDER BY replid DESC
                          LIMIT 1";
                 $res = QueryDb($sql);
-                if ($row = mysql_fetch_row($res))
+                if ($row = mysqli_fetch_row($res))
                 {
                     $lastsetor = $row[0];
                     $tgllastsetor = $row[1];
@@ -337,7 +337,7 @@ class CK
                          ORDER BY replid DESC
                          LIMIT 1";
                 $res = QueryDb($sql);
-                if ($row = mysql_fetch_row($res))
+                if ($row = mysqli_fetch_row($res))
                 {
                     $lasttarik = $row[0];
                     $tgllasttarik = $row[1];
@@ -377,13 +377,13 @@ class CK
                     <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
                 </tr>
                 </table>
-<?			} //while tabungan ?>
+<?php 		} //while tabungan ?>
 
 
 			</tr>
 		</td>
 		</table>
-        <?
+<?php
 			}
 }
 ?>

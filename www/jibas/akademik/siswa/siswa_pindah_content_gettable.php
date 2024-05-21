@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,13 +31,13 @@ $idkelas=$_REQUEST['idkelas'];
 ?>
 <script language="javascript" src="../script/tables.js"></script>
 <table width="50%" border="0" cellspacing="0" class="tab" id="table">
-  <?
+  <?php
   			if ($urutan=="") {
 			$urutan="nis"; }
 	
 	?>
 		
-	<?
+	<?php
 	//$jenis=$_REQUEST['jenis'];
 	
     OpenDb();
@@ -45,7 +45,7 @@ $idkelas=$_REQUEST['idkelas'];
 		echo $sql_siswa;
 		$result_siswa = QueryDb($sql_siswa);
 		$cnt_siswa = 1;
-		if ($jumlah = mysql_num_rows($result_siswa)>0) {
+		if ($jumlah = mysqli_num_rows($result_siswa)>0) {
 			?>
 			<tr>
     <td width="70" class="header">No</td>
@@ -54,11 +54,11 @@ $idkelas=$_REQUEST['idkelas'];
    
 
   </tr>
-			<?
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {
+			<?php
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {
 		$nis=$row_siswa['nis'];
 		$nama=$row_siswa['nama'];
-		$idkelas=$row_siswa[idkelas];
+		$idkelas=$row_siswa['idkelas'];
 				
 				
 		?>
@@ -69,7 +69,7 @@ $idkelas=$_REQUEST['idkelas'];
    
     
   </tr>
-  <?
+  <?php
 			
 			
 		}
@@ -77,7 +77,7 @@ $idkelas=$_REQUEST['idkelas'];
 		} else {
 			?>
 <tr><td align="center" class="header">Tidak ada data yang sesuai dengan pencarian</td></tr>
-<?
+<?php
 		
  }
 		CloseDb();

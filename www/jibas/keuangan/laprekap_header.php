@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -37,7 +37,7 @@ OpenDb();
 $sql = "SELECT day(now()), month(now()), year(now()), 
                day(date_sub(now(), INTERVAL 30 DAY)), month(date_sub(now(), INTERVAL 30 DAY)), year(date_sub(now(), INTERVAL 30 DAY))";		
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tgl2 = $row[0];
 $bln2 = $row[1];
 $thn2 = $row[2];
@@ -136,7 +136,7 @@ function change_date()
         <td width="15%"><strong>Departemen </strong></td>
         <td colspan="4">
     	<select id="departemen" name="departemen" style="width:188px" onchange="change_sel()">
-   <?   if (getAccess() == "ALL")
+   <?php   if (getAccess() == "ALL")
    		    echo  "<option value='ALL' selected>(Semua)</option>";
 			
         $dep = getDepartemen(getAccess());
@@ -144,16 +144,16 @@ function change_date()
 		{
 			$sel = $dept == $value ? "selected" : ""; ?>
             <option value="<?=$value ?>" <?=$sel?>><?=$value ?></option>
-        <? } ?>  
+        <?php } ?>  
     	</select>&nbsp;<strong>Jenis</strong>&nbsp;
         <select name="idkategori" id="idkategori" style="width:188px;" onchange="change_sel()" >
-        <?  $sql = "SELECT kode, kategori FROM kategoripenerimaan ORDER BY urutan";
+        <?php  $sql = "SELECT kode, kategori FROM kategoripenerimaan ORDER BY urutan";
             $result = QueryDb($sql);
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 if ($idkategori == "")
                     $idkategori = $row['kode']  ?>
                 <option value="<?=$row['kode'] ?>" <?=StringIsSelected($idkategori, $row['kode']) ?> > <?=$row['kategori'] ?></option>
-        <? } ?>
+        <?php } ?>
         </select> 
         </td>
  	</tr>
@@ -163,44 +163,44 @@ function change_date()
         	<div id="InfoTgl1">      
             <select name="tgl1" id = "tgl1" onchange="change_date()" >
             <option value="">[Tgl]</option>
-            <? for($i = 1; $i <= $n1; $i++) { ?>
+            <?php for($i = 1; $i <= $n1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
          	</div>
      	</td>
         <td width="160">
             <select name="bln1" id="bln1" onchange="change_date()" >
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln1) ?> > <?=$bulan[$i] ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn1" id="thn1" onchange="change_date()" >
-            <? for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select> s/d
        	</td>
         <td width="10">
          	<div id="InfoTgl2">
         	<select name="tgl2" id="tgl2" onchange="change_date()" >
             <option value="">[Tgl]</option>
-			<? for($i = 1; $i <= $n2; $i++) { ?>
+			<?php for($i = 1; $i <= $n2; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             </div>
         </td>
         <td>
             <select name="bln2" id="bln2" onchange="change_date()" >
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln2) ?> > <?=$bulan[$i] ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn2" id="thn2" onchange="change_date()" >
-            <? for($i = $G_START_YEAR; $i <= $thn2+2; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn2+2; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
     	</td>
    	</tr>
@@ -216,16 +216,16 @@ function change_date()
 		<select name="petugas" id="petugas" style="width:148px;" onchange="change_sel()" >
 			<option value="ALL">(Semua Petugas)</option>
 			<option value="landlord">Administrator JIBAS</option>
-<?			$sql = "SELECT p.nip, p.nama
+<?php 		$sql = "SELECT p.nip, p.nama
 					  FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l
 					 WHERE h.modul = 'KEUANGAN'
 					   AND h.login = l.login
 					   AND l.login = p.nip
 					 ORDER BY p.nama";
 			$res = QueryDb($sql);
-			while($row = mysql_fetch_row($res))
+			while($row = mysqli_fetch_row($res))
 			{
-				echo "<option value='$row[0]'>$row[1]</option>";
+				echo "<option value='".$row[0]."'>".$row[1]."</option>";
 			} ?>			
 		</select>
         </td>
@@ -252,7 +252,7 @@ function change_date()
 </table>
 </form>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

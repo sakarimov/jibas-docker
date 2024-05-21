@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -37,26 +37,26 @@ $sql_year = "SELECT DISTINCT YEAR(tanggal) as tahun
 $res_year = QueryDb($sql_year);
 
 $tahun = "";
-$bulan_pjg = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+$bulan_pjg = [1=>'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 ?>
 <table width="100%" border="0" cellspacing="5">
 <tr>
     <td width="150" height="30" valign="top">
     <div id="thn_catatan">Tahun
     <select name="tahun" id="tahun" onChange="ChangeTahunCatatanSiswa('<?=$nis?>')">
-<?	if (@mysql_num_rows($res_year) > 0)
+<?php if (@mysqli_num_rows($res_year) > 0)
     {
-        while ($row_year=@mysql_fetch_array($res_year))
+        while ($row_year=@mysqli_fetch_array($res_year))
         {
             if ($tahun == "")
-                $tahun=$row_year[tahun]; ?>
-            <option value="<?=$row_year[tahun]?>"><?=$row_year[tahun]?></option>
-<?  	}
+                $tahun=$row_year['tahun']; ?>
+            <option value="<?=$row_year['tahun']?>"><?=$row_year['tahun']?></option>
+<?php  	}
 	}
     else
     {	?>
         <option value="">Tidak ada data</option>
-<?	}	?>
+<?php }	?>
     </select>
     </div>
     <br />
@@ -66,32 +66,32 @@ $bulan_pjg = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','
         <td width="50"><div align="center">Bulan</div></td>
         <td width="35%"><div align="center">#</div></td>
     </tr>
-<?  $sql = "SELECT MONTH(tanggal) AS bulan
+<?php  $sql = "SELECT MONTH(tanggal) AS bulan
               FROM jbsvcr.catatansiswa
              WHERE YEAR(tanggal)='$tahun' AND nis='$nis'
              GROUP BY MONTH(tanggal)";
     $result=QueryDb($sql);
-    if (@mysql_num_rows($result)>0)
+    if (@mysqli_num_rows($result)>0)
     {
-       	while ($row=@mysql_fetch_array($result))
+       	while ($row=@mysqli_fetch_array($result))
         {
 		  	$sql_cnt = "SELECT COUNT(*)
                           FROM jbsvcr.catatansiswa
-                         WHERE nis='$nis' AND MONTH(tanggal)='$row[bulan]' AND YEAR(tanggal)='$tahun'";
+                         WHERE nis== '".$nis."' AND MONTH(tanggal)='".$row['bulan']."' AND YEAR(tanggal)='$tahun'";
 		  	$res_cnt = QueryDb($sql_cnt);
-			$row_cnt = @mysql_fetch_row($res_cnt); ?>
-            <tr onClick="ShowCatatanSiswa('<?=$nis?>', '<?=$row[bulan]?>', '<?=$tahun?>')" style="cursor:pointer;" title="Klik untuk menampilkan daftar Catatan Siswa">
-                <td width="50"><?=$bulan_pjg[$row[bulan]]?></td>
+			$row_cnt = @mysqli_fetch_row($res_cnt); ?>
+            <tr onClick="ShowCatatanSiswa('<?=$nis?>', '<?=$row['bulan']?>', '<?=$tahun?>')" style="cursor:pointer;" title="Klik untuk menampilkan daftar Catatan Siswa">
+                <td width="50"><?=$bulan_pjg[$row['bulan']]?></td>
                 <td><div align="center"><?=$row_cnt[0]?></div></td>
             </tr>
-<?   	}
+<?php   	}
 	}
     else
     {  ?>
             <tr>
                 <td colspan="2" align="center">Tidak ada Data</td>
             </tr>
-<?  } ?>
+<?php  } ?>
     </table>
     </div>
     </td>
@@ -101,6 +101,6 @@ $bulan_pjg = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','
     <td valign="top"></td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

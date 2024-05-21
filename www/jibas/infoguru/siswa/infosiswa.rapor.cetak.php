@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -36,10 +36,10 @@ $nis = $_REQUEST['nis'];
 $semester = $_REQUEST['semester'];
 
 OpenDb();
-$sql = "SELECT t.departemen, a.tahunajaran, k.kelas, t.tingkat, s.nama, a.tglmulai, a.tglakhir FROM tahunajaran a, kelas k, tingkat t, siswa s WHERE k.idtingkat = t.replid AND k.idtahunajaran = a.replid AND k.replid = '$kelas' AND s.nis = '$nis'";  
+$sql = "SELECT t.departemen, a.tahunajaran, k.kelas, t.tingkat, s.nama, a.tglmulai, a.tglakhir FROM tahunajaran a, kelas k, tingkat t, siswa s WHERE k.idtingkat = t.replid AND k.idtahunajaran = a.replid AND k.replid = '$kelas' AND s.nis = '".$nis."'";  
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $tglmulai = $row['tglmulai'];
 $tglakhir = $row['tglakhir'];
 $nama = $row['nama'];
@@ -51,8 +51,8 @@ $kls = $row['kelas'];
 $sql = "SELECT replid FROM semester WHERE departemen = '$departemen' AND aktif=1";  
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
-$semester = $row[replid];
+$row = mysqli_fetch_array($result);
+$semester = $row['replid'];
 */
 
 $sql_get_pelajaran_laporan=	"SELECT pel.replid as replid,pel.nama as nama FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel WHERE uji.replid=niluji.idujian AND niluji.nis=sis.nis AND uji.idpelajaran=pel.replid AND uji.idsemester='$semester' AND uji.idkelas='$kelas' AND sis.nis='$nis' ".
@@ -73,7 +73,7 @@ $result_get_pelajaran_laporan=QueryDb($sql_get_pelajaran_laporan);
 <table border="0" cellpadding="10" cellspacing="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<? getHeader($departemen) ?>
+<?php getHeader($departemen) ?>
 	
 <center>
   <font size="4"><strong>LAPORAN HASIL BELAJAR</strong></font><br />
@@ -104,13 +104,13 @@ $result_get_pelajaran_laporan=QueryDb($sql_get_pelajaran_laporan);
 <table width="100%" border="0" cellspacing="0" cellpadding="2">
 <tr>
     <td>
-        <?	ShowKomentar() ?>
+        <?php ShowKomentar() ?>
     </td>
 </tr>
 <tr>
     <td>
     <fieldset><legend class="news_title2"><strong>Nilai Pelajaran</strong></legend>
-<?			ShowRapor() ?>		
+<?php 		ShowRapor() ?>		
     </fieldset>
     <br>
     </td>
@@ -118,7 +118,7 @@ $result_get_pelajaran_laporan=QueryDb($sql_get_pelajaran_laporan);
 <tr>
     <td>
         <fieldset><legend class="news_title2"><strong>Deskripsi Nilai Pelajaran</strong></legend>
-<?			ShowRaporDeskripsi() ?>
+<?php 		ShowRaporDeskripsi() ?>
         </fieldset>
         <br>
     </td>
@@ -134,14 +134,14 @@ $result_get_pelajaran_laporan=QueryDb($sql_get_pelajaran_laporan);
 window.print();
 </script>
 </html>
-<?
+<?php
 
 function ShowKomentar()
 {
 	global $semester, $kelas, $nis;
 
-    $arrjenis = array('SPI', 'SOS');
-    $arrnmjenis = array('Spiritual', 'Sosial');
+    $arrjenis = ['SPI', 'SOS'];
+    $arrnmjenis = ['Spiritual', 'Sosial'];
     for($i = 0; $i < count($arrjenis); $i++)
     {
         $jenis = $arrjenis[$i];
@@ -152,12 +152,12 @@ function ShowKomentar()
                  WHERE k.nis = '$nis' 
                    AND k.idsemester = '$semester' 
                    AND k.idkelas = '$kelas'
-                   AND k.jenis = '$jenis'";
+                   AND k.jenis = '".$jenis."'";
         $res2 = QueryDb($sql);
         $komentar = "";
         $predikat = "";
         $nilaiExist = false;
-        if ($row2 = mysql_fetch_row($res2))
+        if ($row2 = mysqli_fetch_row($res2))
         {
             $nilaiExist = true;
             $komentar = $row2[0];
@@ -190,7 +190,7 @@ function ShowRapor()
 			   AND a.dasarpenilaian = d.dasarpenilaian
 			   AND d.aktif = 1";
 	$res = QueryDb($sql);
-	$naspek = mysql_num_rows($res); 
+	$naspek = mysqli_num_rows($res); 
 	
 
     ShowRaporColumn();
@@ -228,9 +228,9 @@ function ShowRaporDeskripsi()
                AND d.aktif = 1";
     $res = QueryDb($sql);
     $i = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $aspekarr[$i++] = array($row[0], $row[1]);
+        $aspekarr[$i++] = [$row[0], $row[1]];
     }
     $naspek = count($aspekarr);
     $colwidth = $naspek == 0 ? "*" : round(55 / count($aspekarr)) . "%"; ?>
@@ -241,7 +241,7 @@ function ShowRaporDeskripsi()
         <td width="15%" class="headerlong"><div align="center">Aspek</div></td>
         <td width="*" class="headerlong"><div align="center">Deskripsi</div></td>
     </tr>
-    <?	$sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
+    <?php $sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
               FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel, kelompokpelajaran kpel 
              WHERE uji.replid = niluji.idujian 
                AND niluji.nis = sis.nis 
@@ -254,7 +254,7 @@ function ShowRaporDeskripsi()
     $respel = QueryDb($sql);
     $previdkpel = 0;
     $no = 0;
-    while($rowpel = mysql_fetch_row($respel))
+    while($rowpel = mysqli_fetch_row($respel))
     {
         $no += 1;
         $idpel = $rowpel[0];
@@ -290,11 +290,11 @@ function ShowRaporDeskripsi()
                    AND i.idsemester = '$semester' 
                    AND i.idkelas = '$kelas'
                    AND n.idaturan = a.replid 	   
-                   AND a.dasarpenilaian = '$asp'";
+                   AND a.dasarpenilaian = '".$asp."'";
             $res = QueryDb($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 $komentar = $row[2];
             }
 
@@ -326,9 +326,9 @@ function ShowRaporColumn()
 
     $res = QueryDb($sql);
     $i = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $aspekarr[$i++] = array($row[0], $row[1]);
+        $aspekarr[$i++] = [$row[0], $row[1]];
     }
     $naspek = count($aspekarr);
     $colwidth = $naspek == 0 ? "*" : round(50 / count($aspekarr)) . "%";
@@ -338,17 +338,17 @@ function ShowRaporColumn()
             <td width="5%" rowspan="2" class="header"><div align="center">No</div></td>
             <td width="35%" rowspan="2" class="header"><div align="center">Pelajaran</div></td>
             <td width="10%" rowspan="2" class="header"><div align="center">KKM</div></td>
-            <?		for($i = 0; $i < count($aspekarr); $i++)
+            <?php 	for($i = 0; $i < count($aspekarr); $i++)
                 echo "<td class='header' colspan='3' align='center' width='$colwidth'>" . $aspekarr[$i][1] . "</td>"; ?>
         </tr>
         <tr>
-            <?	      $colwidth = $naspek == 0 ? "*" : round(50 / (2 * $naspek)) . "%";
+            <?php       $colwidth = $naspek == 0 ? "*" : round(50 / (2 * $naspek)) . "%";
             for($i = 0; $i < count($aspekarr); $i++)
                 echo "<td class='header' align='center' width='7%'>Nilai</td>
                     <td class='header' align='center' width='7%'>Predikat</td>"; ?>
         </tr>
 
-        <?	$sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
+        <?php $sql = "SELECT pel.replid, pel.nama, pel.idkelompok, kpel.kelompok
                       FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel, kelompokpelajaran kpel 
                      WHERE uji.replid = niluji.idujian 
                        AND niluji.nis = sis.nis 
@@ -361,7 +361,7 @@ function ShowRaporColumn()
         $respel = QueryDb($sql);
         $previdkpel = 0;
         $no = 0;
-        while($rowpel = mysql_fetch_row($respel))
+        while($rowpel = mysqli_fetch_row($respel))
         {
             $no += 1;
 
@@ -385,7 +385,7 @@ function ShowRaporColumn()
                        AND idsemester = $semester
                        AND idkelas = $kelas";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $nilaimin = $row[0];
 
             echo "<tr height='30'>";
@@ -409,11 +409,11 @@ function ShowRaporColumn()
                    AND i.idsemester = '$semester' 
                    AND i.idkelas = '$kelas'
                    AND n.idaturan = a.replid 	   
-                   AND a.dasarpenilaian = '$asp'";
+                   AND a.dasarpenilaian = '".$asp."'";
                 $res = QueryDb($sql);
-                if (mysql_num_rows($res) > 0)
+                if (mysqli_num_rows($res) > 0)
                 {
-                    $row = mysql_fetch_row($res);
+                    $row = mysqli_fetch_row($res);
                     $na = $row[0];
                     $nh = $row[1];
                     $komentar = $row[2];
@@ -426,7 +426,7 @@ function ShowRaporColumn()
         }
         ?>
     </table>
-    <?
+    <?php
 }
 
 function ShowRaporRow()
@@ -446,7 +446,7 @@ function ShowRaporRow()
         <td width="15%" class="header"><div align="center">Terbilang</div></td>
     </tr>
    
-<? 	$sql = "SELECT pel.replid, pel.nama
+<?php 	$sql = "SELECT pel.replid, pel.nama
               FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel 
              WHERE uji.replid = niluji.idujian 
                AND niluji.nis = sis.nis 
@@ -457,9 +457,9 @@ function ShowRaporRow()
          GROUP BY pel.nama";    
     $res = QueryDb($sql);
     $i = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $pelarr[$i++] = array($row[0], $row[1]);
+        $pelarr[$i++] = [$row[0], $row[1]];
     }
     
     for($i = 0; $i < count($pelarr); $i++)
@@ -471,9 +471,9 @@ function ShowRaporRow()
                  FROM infonap
                 WHERE idpelajaran = '$idpel'
                   AND idsemester = '$semester'
-                  AND idkelas = '$kelas'";
+                  AND idkelas = '".$kelas."'";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $nilaimin = $row[0];
         
         $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan 
@@ -486,9 +486,9 @@ function ShowRaporRow()
                  AND a.dasarpenilaian = d.dasarpenilaian
                  AND d.aktif = 1";
         $res = QueryDb($sql);				 
-        $aspekarr = array();				 
+        $aspekarr = [];				 
         $j = 0;
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $na = "";
             $nh = "";
@@ -502,16 +502,16 @@ function ShowRaporRow()
                        AND i.idsemester = '$semester' 
                        AND i.idkelas = '$kelas'
                        AND n.idaturan = a.replid 	   
-                       AND a.dasarpenilaian = '$asp'";
+                       AND a.dasarpenilaian = '".$asp."'";
             $res2 = QueryDb($sql);
-            if (mysql_num_rows($res2) > 0)
+            if (mysqli_num_rows($res2) > 0)
             {
-                $row2 = mysql_fetch_row($res2);
+                $row2 = mysqli_fetch_row($res2);
                 $na = $row2[0];
                 $nh = $row2[1];
             }
             
-            $aspekarr[$j++] = array($row[0], $row[1], $na, $nh);
+            $aspekarr[$j++] = [$row[0], $row[1], $na, $nh];
         } 
         $naspek = count($aspekarr);
         
@@ -526,7 +526,7 @@ function ShowRaporRow()
                 <td align="center"><?=$aspekarr[0][3]?></td>
                 <td align="left"><?=$NTT->Convert($aspekarr[0][2])?></td>
             </tr>
-<?			for($k = 1; $k < $naspek; $k++)
+<?php 		for($k = 1; $k < $naspek; $k++)
             { ?>
                 <tr height="20">
                     <td align="left"><?=$aspekarr[$k][1]?></td>
@@ -534,7 +534,7 @@ function ShowRaporRow()
                     <td align="center"><?=$aspekarr[$k][3]?></td>
                     <td align="left"><?=$NTT->Convert($aspekarr[$k][2])?></td>
                 </tr>
-<?			} // end for
+<?php 		} // end for
         } 
         else
         { ?>
@@ -547,12 +547,12 @@ function ShowRaporRow()
                 <td align="center">&nbsp;</td>
                 <td align="center">&nbsp;</td>
             </tr>		
-<?		}// end if
+<?php 	}// end if
     } 
 	 echo "</table>";
 }
 ?>
 
-<?
+<?php
 CloseDb();
 ?>

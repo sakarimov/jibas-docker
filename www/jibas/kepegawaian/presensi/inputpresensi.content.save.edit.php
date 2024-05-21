@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -37,7 +37,7 @@ try
     $jampulang = DateArith::FormatDigit($_REQUEST['jampulang']);
     $menitpulang = DateArith::FormatDigit($_REQUEST['menitpulang']);
     $keterangan = $_REQUEST['keterangan'];
-	$keterangan = str_replace("'", "`", $keterangan);
+	$keterangan = str_replace("'", "`", (string) $keterangan);
 	$status = $_REQUEST['status'];
 	$tglpresensi = $_REQUEST['tglpresensi'];
     
@@ -60,7 +60,7 @@ try
 				   SET nip = '$nip', tanggal = '$tglpresensi',
 					   jammasuk = '$jmasuk', jampulang = '$jpulang',
 					   jamwaktukerja = '$jkerja', menitwaktukerja = '$mkerja',
-					   status = '$status', keterangan = '$keterangan'";
+					   status = '$status', keterangan = '".$keterangan."'";
 		QueryDbEx($sql);
 		
 		$sql = "SELECT LAST_INSERT_ID()";
@@ -73,7 +73,7 @@ try
 					   jammasuk = '$jmasuk', jampulang = '$jpulang',
 					   jamwaktukerja = '$jkerja', menitwaktukerja = '$mkerja',
 					   status = '$status', keterangan = '$keterangan'
-				 WHERE replid = '$replid'";
+				 WHERE replid = '".$replid."'";
 		QueryDbEx($sql);		 
     }
     

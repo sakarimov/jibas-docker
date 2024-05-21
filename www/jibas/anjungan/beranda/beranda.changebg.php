@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("beranda.session.php");
 require_once("beranda.security.php");
 require_once("beranda.listbg.php");
@@ -33,7 +33,7 @@ Jeda waktu: <input type='text' class='inputbox' style='width: 40px; height: 32px
 <input type='hidden' name='b_ngambar' id='b_ngambar' value='<?= $nbg ?>'>
 <table id='b_tabGambar' cellpadding='0' cellspacing='0'>
 <tbody>
-<?
+<?php
 for($i = 1; $i <= $nbg; $i++)
 {
     $bgFile = $bgList[$i - 1];
@@ -60,7 +60,7 @@ for($i = 1; $i <= $nbg; $i++)
             </a> 
         </td>
     </tr>
-<?
+<?php
 }
 ?>
 </tbody>

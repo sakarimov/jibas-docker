@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ function ShowCbSearchDepartemen()
     $res = QueryDb($sql);
     echo "<select id='searchDept' style='font-size: 12px; height: 27px; width: 160px;'>";
     echo "<option value='ALLDEPT'>(all departement)</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[0]</option>";
+        echo "<option value='".$row[0]."'>".$row[0]."</option>";
     }
     echo "</select>";
 }
@@ -76,7 +76,7 @@ function ShowDefaultMenu()
 
 function CheckLogin($login, $password)
 {
-    $login = str_replace("'", "\'", $login);
+    $login = str_replace("'", "\'", (string) $login);
     $login = str_replace("--", " ", $login);
     $loginValue = "'$login'";
 
@@ -85,7 +85,7 @@ function CheckLogin($login, $password)
              WHERE l.login = p.nip 
                AND l.login = $loginValue";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         // PEGAWAI
         $aktif = $row[0];
@@ -95,9 +95,9 @@ function CheckLogin($login, $password)
         if ($aktif == 0)
             return GenericReturn::createJson(-1, "Status pengguna tidak aktif", "");
 
-        if (md5($password) != $passmd5)
+        if (md5((string) $password) != $passmd5)
         {
-            $info = md5($password) . " vs " . $passmd5;
+            $info = md5((string) $password) . " vs " . $passmd5;
             return GenericReturn::createJson(-1, $info, "");
         }
 
@@ -115,7 +115,7 @@ function CheckLogin($login, $password)
                   FROM jbsakad.siswa
                  WHERE nis = $loginValue";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
         {
             $aktif = $row[0];
             $pinsiswa = $row[1];
@@ -152,30 +152,30 @@ function ShowUserPict()
     {
         $sql = "SELECT IF(foto IS NULL, 0, 1), foto
                   FROM jbssdm.pegawai
-                 WHERE nip = '$userId'";
+                 WHERE nip = '".$userId."'";
     }
     else
     {
         $sql = "SELECT IF(foto IS NULL, 0, 1), foto
                   FROM jbsakad.siswa
-                 WHERE nis = '$userId'";
+                 WHERE nis = '".$userId."'";
     }
 
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<img src='images/nofoto.png' title='tidak ada gambar foto'>";
     }
     else
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
         {
             echo "<img src='images/nofoto.png' title='tidak ada gambar foto'>";
         }
         else
         {
-            $imgSrc = "data:image/png;base64," . base64_encode($row[1]);
+            $imgSrc = "data:image/png;base64," . base64_encode((string) $row[1]);
             echo "<img src='$imgSrc'>";
         }
     }

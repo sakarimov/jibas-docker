@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,20 +38,20 @@ $urutan = $_REQUEST['urutan'];
 
 OpenDb();
 
-$filter1 = "AND t.departemen = '$departemen'";
+$filter1 = "AND t.departemen = '".$departemen."'";
 if ($tingkat <> -1) 
-	$filter1 = "AND k.idtingkat = '$tingkat'";
+	$filter1 = "AND k.idtingkat = '".$tingkat."'";
 
 $filter2 = "";
 if ($kelas <> -1) 
-	$filter2 = "AND k.replid = '$kelas'";
+	$filter2 = "AND k.replid = '".$kelas."'";
 
 	
 OpenDb();
 $sql = "SELECT t.departemen, a.tahunajaran, s.semester, k.kelas, t.tingkat FROM tahunajaran a, kelas k, tingkat t, semester s, presensiharian p WHERE p.idkelas = k.replid AND k.idtingkat = t.replid AND k.idtahunajaran = a.replid AND p.idsemester = s.replid AND s.replid = '$semester' $filter1 $filter2";  
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -67,7 +67,7 @@ $row = mysql_fetch_array($result);
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<?=getHeader($row[departemen])?>
+<?=getHeader($row['departemen'])?>
 	
 <center>
   <font size="4"><strong>LAPORAN DATA SISWA YANG TIDAK HADIR</strong></font><br />
@@ -87,11 +87,11 @@ $row = mysql_fetch_array($result);
 </tr>
 <tr>
 	<td><strong>Tingkat</strong></td>
-    <td><strong>: <? if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?></strong></td>
+    <td><strong>: <?php if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?></strong></td>
 </tr>
 <tr>
 	<td><strong>Kelas</strong></td>
-    <td><strong>: <? if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?></strong></td>
+    <td><strong>: <?php if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?></strong></td>
 </tr>
 <tr>
 	<td><strong>Periode Presensi</strong></td>
@@ -99,12 +99,12 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	
 	$sql = "SELECT DISTINCT s.nis, s.nama, l.nama, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), pp.statushadir, pp.catatan, s.telponsiswa, s.hpsiswa, s.namaayah, s.telponortu, s.hportu, k.kelas FROM siswa s, presensipelajaran p, ppsiswa pp, pelajaran l, kelas k, tingkat t WHERE pp.idpp = p.replid AND s.idkelas = k.replid AND p.idsemester = '$semester' AND pp.nis = s.nis AND k.idtingkat = t.replid $filter1 $filter2 AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = l.replid AND pp.statushadir <> 0 ORDER BY $urut $urutan";
 	//echo $sql;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 	
 ?>      
@@ -114,9 +114,9 @@ $row = mysql_fetch_array($result);
     	<td class="header" align="center" width="5%">No</td>
 		<td class="header" align="center" width="8%">N I S</td>
 		<td class="header" align="center" width="15%">Nama</td>
-        <? if ($kelas == -1) { ?>
+        <?php if ($kelas == -1) { ?>
         <td class="header" align="center" width="8%">Kelas</td>
-       	<? } ?>            
+       	<?php } ?>            
 		<td class="header" align="center" width="10%">Pelajaran</td>
         <td class="header" align="center" width="5%">Tanggal</td>
         <td class="header" align="center">Presensi</td>
@@ -127,9 +127,9 @@ $row = mysql_fetch_array($result);
         <td class="header" align="center" width="7%">Tlp Ortu</td>
         <td class="header" align="center" width="10%">HP Ortu</td>     
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { 
+	while ($row = mysqli_fetch_row($result)) { 
 		switch ($row[6]){
 			case 1 : $st="Ijin";
 			break;
@@ -145,11 +145,11 @@ $row = mysql_fetch_array($result);
     	<td align="center"><?=++$cnt?></td>
 		<td align="center"><?=$row[0]?></td>
         <td><?=$row[1]?></td>
-          <? if ($kelas == -1) { ?>
+          <?php if ($kelas == -1) { ?>
             <td align="center"><?=$row[13]?></td>
-            <? } ?>
+            <?php } ?>
         <td><?=$row[2]?></td>
-        <td align="center"><?=$row[3].'-'.$row[4].'-'.substr($row[5],2,2)?></td>
+        <td align="center"><?=$row[3].'-'.$row[4].'-'.substr((string) $row[5],2,2)?></td>
         <td align="center"><?=$st ?></td>
         <td><?=$row[7] ?></td>
         <td><?=$row[8]?></td>
@@ -158,11 +158,11 @@ $row = mysql_fetch_array($result);
         <td><?=$row[11]?></td>
         <td><?=$row[12]?></td>     
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>
-<? 	} ?>	
+<?php 	} ?>	
 	</td>
 </tr>
 </table>

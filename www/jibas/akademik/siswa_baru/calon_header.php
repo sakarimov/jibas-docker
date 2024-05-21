@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -48,7 +48,7 @@ OpenDb();
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Pendataan Calon Siswa</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript">
 var win = null;
@@ -169,25 +169,25 @@ function panggil(elem){
       	<td align="left" width = "30%"><strong>Departemen</strong>
       	<td width="*">
         <select name="departemen" id="departemen" onchange="change_dep()" style="width:280px" onKeyPress="return focusNext('kelompok', event)" onfocus="panggil('departemen')">
-<? 		$dep = getDepartemen(SI_USER_ACCESS());    
+<?php 		$dep = getDepartemen(SI_USER_ACCESS());    
 		foreach($dep as $value) 
 		{
 			if ($departemen == "")
 				$departemen = $value; ?>
         	<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-<?		} ?>
+<?php 	} ?>
         </select></td>
   	</tr>
 	<tr>
     	<td align="left"><strong>Proses Penerimaan</strong>
         <td>
-<?			$sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
+<?php 		$sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
 			$result = QueryDb($sql);
 			$proses = 0;
 			$namaproses = "";
-			if (mysql_num_rows($result) > 0)
+			if (mysqli_num_rows($result) > 0)
 			{
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				$proses = $row['replid'];
 				$namaproses = $row['proses'];
 			} ?>
@@ -199,22 +199,22 @@ function panggil(elem){
     	<td align="left" valign="top" ><strong>Kelompok</strong></td>
         <td>
         	<select name="kelompok" id="kelompok" onchange="change_kelompok(0)" style="width:280px" onKeyPress="return focusNext('tabel', event)" onfocus="panggil('kelompok')">
-<?			$sql = "SELECT replid,kelompok,kapasitas FROM kelompokcalonsiswa WHERE idproses = '$proses' ORDER BY kelompok";
+<?php 		$sql = "SELECT replid,kelompok,kapasitas FROM kelompokcalonsiswa WHERE idproses = '$proses' ORDER BY kelompok";
 			$result = QueryDb($sql);	
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($kelompok == "") 
 					$kelompok = $row['replid'];
 				
-				$sql1 = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = '$row[replid]' AND aktif = 1";
+				$sql1 = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = '".$row['replid']."' AND aktif = 1";
 				$result1 = QueryDb($sql1);				
-				$row1 = mysql_fetch_row($result1);	?>
-	    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelompok)?> ><?=$row['kelompok'].', kapasitas: '.$row['kapasitas'] .', terisi: '.$row1[0]?></option>
-<?			}	?>
+				$row1 = mysqli_fetch_row($result1);	?>
+	    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelompok)?> ><?=$row['kelompok'].', kapasitas: '.$row['kapasitas'] .', terisi: '.$row1[0]?></option>
+<?php 		}	?>
     		</select>&nbsp;
-<?			if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php 		if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
 	            <img src="../images/ico/tambah.png" onclick="tampil_kelompok();" onMouseOver="showhint('Tambah Kelompok!', this, event, '60px')"/>  
-<? 			} ?>
+<?php 			} ?>
     	</td>
     </tr>
     </table>
@@ -234,6 +234,6 @@ function panggil(elem){
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class Pengumuman{
 	function MainMessage(){
 		?>
@@ -89,7 +89,7 @@ class Pengumuman{
             </td>
           </tr>
         </table>
-        <?
+        <?php
 	}
 	
 	function SendingTime(){
@@ -97,7 +97,7 @@ class Pengumuman{
 	OpenDb();
 	$sql = "SELECT DATE_FORMAT(now(),'%H'),DATE_FORMAT(now(),'%i')";
 	$res = QueryDb($sql);
-	$row = @mysql_fetch_row($res);
+	$row = @mysqli_fetch_row($res);
 	$hour = $row[0];
 	$min = $row[1];
 	?>
@@ -122,33 +122,33 @@ class Pengumuman{
                               <tr>
                                 <td style="padding-right:2px">
                                 <select name="SendDate" id="SendDate" class="Cmb">
-                                    <?
+                                    <?php
                                     for ($i=1; $i<=31; $i++){
                                         ?>
-                                        <option value="<?=$i?>" <?=StringIsSelected($i,date(d))?>><?=$i?></option>
-                                        <?
+                                        <option value="<?=$i?>" <?=StringIsSelected($i,date('d'))?>><?=$i?></option>
+                                        <?php
                                     }
                                     ?>
                                 </select>
                                 </td>
                                 <td style="padding-right:2px">
                                 <select name="SendMonth" id="SendMonth" class="Cmb">
-                                    <?
+                                    <?php
                                     for ($i=1; $i<=12; $i++){
                                         ?>
-                                        <option value="<?=$i?>" <?=StringIsSelected($i,date(m))?>><?=$LMonth[$i-1]?></option>
-                                        <?
+                                        <option value="<?=$i?>" <?=StringIsSelected($i,date('m'))?>><?=$LMonth[$i-1]?></option>
+                                        <?php
                                     }
                                     ?>
                                 </select>
                                 </td>
                                 <td style="padding-right:2px">
                                 <select name="SendYear" id="SendYear" class="Cmb">
-                                    <?
-                                    for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                                    <?php
+                                    for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                                         ?>
-                                        <option value="<?=$i?>" <?=StringIsSelected($i,date(Y))?>><?=$i?></option>
-                                        <?
+                                        <option value="<?=$i?>" <?=StringIsSelected($i,date('Y'))?>><?=$i?></option>
+                                        <?php
                                     }
                                     ?>
                                 </select>
@@ -185,7 +185,7 @@ class Pengumuman{
     </div>
     -->
     </fieldset>
-	<?
+	<?php
 	}
 	
 	function SelectReceiver(){
@@ -226,7 +226,7 @@ class Pengumuman{
     </div>
 	-->
     </fieldset>
-    <?
+    <?php
 	}
 	
 	function ReceiverList(){
@@ -263,7 +263,7 @@ class Pengumuman{
     -->
     
     </fieldset>
-    <?
+    <?php
 	}
 	
 	function OnFinish()
@@ -326,7 +326,7 @@ class Pengumuman{
 		}
 	//-->
 	</script>
-    <?
+    <?php
 	}
 }
 ?>

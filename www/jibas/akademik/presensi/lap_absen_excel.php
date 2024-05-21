@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $urutan = $_REQUEST['urutan'];
 
 OpenDb();
 
-$filter1 = "AND t.departemen = '$departemen'";
+$filter1 = "AND t.departemen = '".$departemen."'";
 if ($tingkat <> -1) 
 	$filter1 = "AND k.idtingkat = $tingkat";
 
@@ -56,7 +56,7 @@ OpenDb();
 $sql = "SELECT t.departemen, a.tahunajaran, s.semester, k.kelas, t.tingkat FROM tahunajaran a, kelas k, tingkat t, semester s, presensiharian p WHERE p.idkelas = k.replid AND k.idtingkat = t.replid AND k.idtahunajaran = a.replid AND p.idsemester = s.replid AND s.replid = $semester $filter1 $filter2";  
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -100,11 +100,11 @@ $row = mysql_fetch_array($result);
 </tr>
 <tr>
 	<td><span class="style4">Tingkat</span></td>
-    <td colspan="12"><span class="style4">: <? if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?></span></td>
+    <td colspan="12"><span class="style4">: <?php if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?></span></td>
 </tr>
 <tr>
 	<td><span class="style4">Kelas</span></td>
-    <td colspan="12"><span class="style4">: <? if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?></span></td>
+    <td colspan="12"><span class="style4">: <?php if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?></span></td>
 </tr>
 <tr>
 	<td><span class="style4">Periode Presensi</span></td>
@@ -112,11 +112,11 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	$sql = "SELECT DISTINCT s.nis, s.nama, l.nama, DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), pp.statushadir, pp.catatan, s.telponsiswa, s.hpsiswa, s.namaayah, s.telponortu, s.hportu, k.kelas FROM siswa s, presensipelajaran p, ppsiswa pp, pelajaran l, kelas k, tingkat t WHERE pp.idpp = p.replid AND s.idkelas = k.replid AND p.idsemester = $semester AND pp.nis = s.nis AND k.idtingkat = t.replid $filter1 $filter2 AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = l.replid AND pp.statushadir <> 0 ORDER BY $urut $urutan";
 	//echo $sql;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 	
 ?>      
@@ -137,9 +137,9 @@ $row = mysql_fetch_array($result);
         <td width="7%">Tlp Ortu</td>
         <td width="10%">HP Ortu</td>     
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { 
+	while ($row = mysqli_fetch_row($result)) { 
 		switch ($row[6]){
 			case 1 : $st="Ijin";
 			break;
@@ -155,11 +155,11 @@ $row = mysql_fetch_array($result);
     	<td align="center"><span class="style7"><?=++$cnt?></span></td>
 		<td align="center"><span class="style7"><?=$row[0]?></span></td>
         <td><span class="style7"><?=$row[1]?></span></td>
-        <? if ($kelas == -1) { ?>
+        <?php if ($kelas == -1) { ?>
         <td align="center"><span class="style7"><?=$row[13]?></span></td>
-        <? } ?>
+        <?php } ?>
         <td><span class="style7"><?=$row[2]?></span></td>
-        <td align="center"><span class="style7"><?=$row[3].'-'.$row[4].'-'.substr($row[5],2,2)?></span></td>
+        <td align="center"><span class="style7"><?=$row[3].'-'.$row[4].'-'.substr((string) $row[5],2,2)?></span></td>
         <td align="center"><span class="style7"><?=$st ?></span></td>
         <td><span class="style7"><?=$row[7] ?></span></td>
         <td><span class="style7"><?=$row[8]?></span></td>
@@ -168,11 +168,11 @@ $row = mysql_fetch_array($result);
         <td><span class="style7"><?=$row[11]?></span></td>
         <td><span class="style7"><?=$row[12]?></span></td>     
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>
-<? 	} ?>	
+<?php 	} ?>	
 	</td>
 </tr>
 </table>

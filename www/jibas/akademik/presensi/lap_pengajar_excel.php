@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,7 +45,7 @@ OpenDb();
 $sql = "SELECT p.nama, t.tahunajaran, t.departemen FROM jbssdm.pegawai p, jbsakad.tahunajaran t WHERE nip = '$nip' AND t.replid = '$tahunajaran'" ;   
 $result = QueryDB($sql);
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -96,12 +96,12 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	OpenDb();
 	$sql = "SELECT DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, k.kelas, l.nama, s.status, p.keterlambatan, p.jumlahjam, p.materi, p.keterangan, p.replid FROM presensipelajaran p, kelas k, pelajaran l, statusguru s WHERE p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = '$nip' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.jenisguru = s.replid AND k.idtahunajaran = '$tahunajaran' ORDER BY $urut $urutan";
 	
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 ?>      
     <table class="tab" id="table" border="1" cellpadding="2" style="border-collapse:collapse" cellspacing="2" width="100%" align="left">
@@ -117,13 +117,13 @@ $row = mysql_fetch_array($result);
         <td width="17%">Materi</td>
         <td width="25%">Keterangan</td>              
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { ?>
+	while ($row = mysqli_fetch_row($result)) { ?>
     <tr height="25" valign="middle">    	
     	<td align="center"><span class="style7"><?=++$cnt?></span></td>
-		<td align="center"><span class="style7"><?=$row[0].'-'.$row[1].'-'.substr($row[2],2,2)?></span></td>
-        <td align="center"><span class="style7"><?=substr($row[3],0,5)?></span></td>
+		<td align="center"><span class="style7"><?=$row[0].'-'.$row[1].'-'.substr((string) $row[2],2,2)?></span></td>
+        <td align="center"><span class="style7"><?=substr((string) $row[3],0,5)?></span></td>
         <td align="center"><span class="style7"><?=$row[4]?></span></td>
         <td><span class="style7"><?=$row[5]?></span></td>
         <td><span class="style7"><?=$row[6]?></span></td>
@@ -132,7 +132,7 @@ $row = mysql_fetch_array($result);
         <td><span class="style7"><?=$row[9]?></span></td>
         <td><span class="style7"><?=$row[10]?></span></td>  
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>
    	</table>
  	<br>
@@ -142,24 +142,24 @@ $row = mysql_fetch_array($result);
 		<td width="100">Pertemuan</td>
 		<td width="100">Jumlah Jam</td>
 	</tr>
-<? 	OpenDb();	
+<?php 	OpenDb();	
 	$sql = "SELECT replid, status FROM statusguru ORDER BY status" ;
 	$result = QueryDb($sql);	
-	while ($row = @mysql_fetch_array($result)) {
+	while ($row = @mysqli_fetch_array($result)) {
 		$replid = $row['replid'];
 		
 		$sql1 = "SELECT COUNT(*), SUM(p.jumlahjam) FROM presensipelajaran p, pelajaran l, kelas k WHERE p.gurupelajaran = '$nip' AND tanggal BETWEEN '$tglawal' AND '$tglakhir' AND jenisguru = '$replid' AND p.idpelajaran = l.replid AND p.idkelas = k.replid AND k.idtahunajaran = '$tahunajaran' ";
 		$result1 = QueryDb($sql1);	
-		$row1 = @mysql_fetch_row($result1);
+		$row1 = @mysqli_fetch_row($result1);
 ?>
 	<tr height="25" valign="middle">	
     	<td><span class="style7"><strong><?=$row['status']?></strong></span></td>
     	<td align="center"><span class="style7"><?=$row1[0]?></span></td> 	
 		<td align="center"><span class="style7"><?=$row1[1]?></span></td>    
 	</tr>
-<? 	} CloseDb(); ?>
+<?php 	} CloseDb(); ?>
 	</table>    
-<? 	} ?>
+<?php 	} ?>
 	</td>
 </tr>
 </table>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -43,16 +43,16 @@ $notesid = $_REQUEST['notesid'];
 
 $sql = "SELECT *
           FROM jbsvcr.notes
-         WHERE replid = '$notesid'";
+         WHERE replid = '".$notesid."'";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     
     echo "Tidak ditemukan notes!";
     exit();
 }
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 ?>
 <table border='0' cellpadding='2' cellspacing='0' width='98%'>
 <tr>
@@ -118,7 +118,7 @@ $row = mysql_fetch_array($res);
     </td>
     <td width="*" align="left">
         <table id='not_edit_tabGambar' cellpadding='0' cellspacing='0'>
-<?
+<?php
         $sql = "SELECT replid, filename, fileinfo, location
                   FROM jbsvcr.notesfile
                  WHERE notesid = '$notesid'
@@ -127,10 +127,10 @@ $row = mysql_fetch_array($res);
         
         $n = 0;
         echo "<thead>";
-        while($row2 = mysql_fetch_array($res2))
+        while($row2 = mysqli_fetch_array($res2))
         {
             $file = $row2['location'] . "/" . $row2['filename'];
-            $info = str_replace("'", "`", $row2['fileinfo']);
+            $info = str_replace("'", "`", (string) $row2['fileinfo']);
             
             $n += 1; ?>
             <input type='hidden' id='not_edit_gambar_replid<?=$n?>' name='not_edit_gambar_replid<?=$n?>' value="<?=$row2['replid']?>">
@@ -154,7 +154,7 @@ $row = mysql_fetch_array($res);
                     </a>       
                 </td>
             </tr>            
-<?      }
+<?php      }
         echo "</thead>";
         echo "<input type='hidden' id='not_edit_ngambar' name='not_edit_ngambar' value='$n'>";
         ?>
@@ -184,7 +184,7 @@ $row = mysql_fetch_array($res);
     </td>
     <td width="*" align="left">
         <table id='not_edit_tabFile' cellpadding='0' cellspacing='0'>
-<?
+<?php
         $sql = "SELECT replid, filename, fileinfo
                   FROM jbsvcr.notesfile
                  WHERE notesid = '$notesid'
@@ -193,7 +193,7 @@ $row = mysql_fetch_array($res);
         
         $n = 0;
         echo "<thead>";
-        while($row2 = mysql_fetch_array($res2))
+        while($row2 = mysqli_fetch_array($res2))
         {
             $n += 1; ?>
             <input type='hidden' id='not_edit_file_replid<?=$n?>' name='not_edit_file_replid<?=$n?>' value="<?=$row2['replid']?>">
@@ -212,7 +212,7 @@ $row = mysql_fetch_array($res);
                     <a onclick="not_edit_DeleteEditDoc(<?=$n?>)" title="hapus dokumen ini"><img src='../images/hapus.png' border='0'></a>       
                 </td>
             </tr>            
-<?      }
+<?php      }
         echo "</thead>";
         echo "<input type='hidden' id='not_edit_nfile' name='not_edit_nfile' value='$n'>";
         ?>        
@@ -251,6 +251,6 @@ $row = mysql_fetch_array($res);
 </table>
 <br><br><br>
 </form>    
-<?
+<?php
 CloseDb();
 ?>

@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ $jsonPen = $_REQUEST["jsonpen"];
 $jsonTgl = $_REQUEST["jsontgl"];
 $page = $_REQUEST["page"];
 
-$jsonPen2 = str_replace("`", "\"", $jsonPen);
-$lsPen = json_decode($jsonPen2);
+$jsonPen2 = str_replace("`", "\"", (string) $jsonPen);
+$lsPen = json_decode($jsonPen2, null, 512, JSON_THROW_ON_ERROR);
 
 $stPenerimaan = "";
 $penQl = "";
@@ -70,12 +70,12 @@ for($i = 0; $i < count($lsPen); $i++)
     }
     else
     {
-        $penQl .= " pd.kategori = '$kategori'";
+        $penQl .= " pd.kategori = '".$kategori."'";
     }
 }
 
-$jsonTgl2 = str_replace("`", "\"", $jsonTgl);
-$lsTgl = json_decode($jsonTgl2);
+$jsonTgl2 = str_replace("`", "\"", (string) $jsonTgl);
+$lsTgl = json_decode($jsonTgl2, null, 512, JSON_THROW_ON_ERROR);
 
 $stTanggal = "";
 $tglQl = "";
@@ -84,7 +84,7 @@ for($i = 0; $i < count($lsTgl); $i++)
     $tgl = $lsTgl[$i];
 
     if ($tglQl != "") $tglQl .= " OR ";
-    $tglQl .= " p.tanggal = '$tgl'";
+    $tglQl .= " p.tanggal = '".$tgl."'";
 
     if ($i == 0)
     {
@@ -98,7 +98,7 @@ for($i = 0; $i < count($lsTgl); $i++)
 }
 
 $stCurIdPgTrans = "";
-if (!isset($_REQUEST{"stcuridpgtrans"}))
+if (!isset($_REQUEST["stcuridpgtrans"]))
 {
     $sql = "SELECT DISTINCT p.replid
               FROM jbsfina.pgtrans p, jbsfina.pgtransdata pd
@@ -107,7 +107,7 @@ if (!isset($_REQUEST{"stcuridpgtrans"}))
                AND ($tglQl) AND ($penQl)";
     $res = QueryDb($sql);
 
-    while ($row = mysql_fetch_row($res))
+    while ($row = mysqli_fetch_row($res))
     {
         if ($stCurIdPgTrans != "") $stCurIdPgTrans .= ",";
         $stCurIdPgTrans .= $row[0];
@@ -118,7 +118,7 @@ else
     $stCurIdPgTrans = $_REQUEST["stcuridpgtrans"];
 }
 
-$lsIdPgTrans = explode(",", $stCurIdPgTrans);
+$lsIdPgTrans = explode(",", (string) $stCurIdPgTrans);
 $nData = count($lsIdPgTrans);
 $nPage = ceil($nData / $nRowPerPage);
 $nStart = ($page - 1) * $nRowPerPage;
@@ -216,7 +216,7 @@ for($i = 0; $i < $nData; $i++)
 
         $no = ($page - 1) * $nRowPerPage;
         $res = QueryDb($sql);
-        while ($row = mysql_fetch_array($res))
+        while ($row = mysqli_fetch_array($res))
         {
             $idPgTrans = $row["replid"];
 
@@ -226,28 +226,28 @@ for($i = 0; $i < $nData; $i++)
                 $sql = "SELECT ts.nomor
                           FROM jbsfina.tagihansiswainfo tsi, jbsfina.tagihanset ts
                          WHERE tsi.idtagihanset = ts.replid
-                           AND tsi.notagihan = '$row[nomor]'";
+                           AND tsi.notagihan = '".$row['nomor']."'";
                 $res2 = QueryDb($sql);
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                     $nomorTs = $row2[0];
             }
 
             $no += 1;
             echo "<tr>";
             echo "<td align='center' style='background-color: #efefef;' rowspan='3' valign='top'>$no</td>";
-            echo "<td align='left' style='background-color: #e5fdff;' colspan='4'><b>$row[transaksi]</b></td>";
+            echo "<td align='left' style='background-color: #e5fdff;' colspan='4'><b>".$row['transaksi']."</b></td>";
             echo "</tr>";
 
             echo "<tr>";
-            echo "<td align='left' style='background-color: #fff;'>$row[fwaktu]</td>";
-            echo "<td align='left' style='background-color: #fff;'><b>$row[nama]</b><br>$row[nis]</td>";
+            echo "<td align='left' style='background-color: #fff;'>".$row['fwaktu']."</td>";
+            echo "<td align='left' style='background-color: #fff;'><b>".$row['nama']."</b><br>".$row['nis']."</td>";
             echo "<td align='left' style='background-color: #fff;' valign='top'>";
             if ($row["jenis"] == 1)
-                echo "<b>$row[nomor]</b><br><i>$nomorTs</i><br><i>$row[paymentid]</i>";
+                echo "<b>".$row['nomor']."</b><br><i>$nomorTs</i><br><i>".$row['paymentid']."</i>";
             else
-                echo "<b>$row[nomor]</b><br><i>$row[paymentid]</i>";
+                echo "<b>".$row['nomor']."</b><br><i>".$row['paymentid']."</i>";
             echo "</td>";
-            echo "<td align='left' style='background-color: #fff;'>$row[bank]<br>$row[bankno]</td>";
+            echo "<td align='left' style='background-color: #fff;'>".$row['bank']."<br>".$row['bankno']."</td>";
             echo "</tr>";
 
             echo "<tr>";
@@ -260,7 +260,7 @@ for($i = 0; $i < $nData; $i++)
                      WHERE pd.idpgtrans = $idPgTrans
                        AND ($penQl)";
             $res2 = QueryDb($sql);
-            while($row2 = mysql_fetch_array($res2))
+            while($row2 = mysqli_fetch_array($res2))
             {
                 $kategori = $row2["kategori"];
 
@@ -297,7 +297,7 @@ for($i = 0; $i < $nData; $i++)
                        AND p.replid IN ($stIdPgTrans)
                        AND ($tglQl) AND ($penQl)";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $total = $row[0];
             $rp = FormatRupiah($total);
 

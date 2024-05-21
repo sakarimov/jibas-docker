@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/db_functions.php');
@@ -38,7 +38,7 @@ if (isset($_REQUEST['op']))
 
 if ($op == "xm8r389xemx23xb2378e23") 
 {
-	$sql = "DELETE FROM jbsakad.dasarpenilaian WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbsakad.dasarpenilaian WHERE replid = '".$_REQUEST['replid']."'";
 	$result = QueryDb($sql);
 }
 ?>
@@ -91,11 +91,11 @@ function cetak() {
       </tr>
 	</table>
 	<br /><br />
-    <?
+    <?php
 	$sql = "SELECT replid, dasarpenilaian, keterangan 
 			  FROM dasarpenilaian WHERE aktif = 1";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0)
+	if (@mysqli_num_rows($result) > 0)
 	{
 	?>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
@@ -112,15 +112,15 @@ function cetak() {
         <td width="15%" class="header" align="center">Kode</td>
         <td width="*" class="header" align="center">Aspek Penilaian</td>
     </tr>
-<? 	
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { ?>
+	while ($row = mysqli_fetch_row($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
       <td align="center"><?=$row[1] ?></td>
       <td><?=$row[2] ?></td>
     </tr>
-<?	} ?>
+<?php } ?>
     <!-- END TABLE CONTENT -->
     </table>
     <script language='JavaScript'>
@@ -130,7 +130,7 @@ function cetak() {
 	</td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">
 
@@ -140,11 +140,11 @@ function cetak() {
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>    
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

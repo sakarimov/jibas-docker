@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ if(isset($_REQUEST["pelajaran"]))
 OpenDb();
 $sql="SELECT k.kelas, p.nama FROM kelas k, pelajaran p WHERE p.replid='$pelajaran' AND k.replid='$kelas'";
 $result=QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $namakelas = $row['tingkat'];
 $namapelajaran = $row['nama'];
 
@@ -49,8 +49,8 @@ $namapelajaran = $row['nama'];
 <title>Menu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript">
 
 function pilih(kelas,rpp){
 	parent.content.location.href="ujian_rpp_siswa_content.php?kelas="+kelas+"&rpp="+rpp;
@@ -58,13 +58,13 @@ function pilih(kelas,rpp){
 </script>
 </head>
 <body  topmargin="5" leftmargin="5" style="background-color: #f5f5f5; line-height: 22px;">
-<?
+<?php
 //$query_aturan = "SELECT DISTINCT u.idrpp, r.rpp FROM ujian u, rpp r, kelas k WHERE u.idrpp = r.replid AND r.idtingkat = k.idtingkat AND k.replid = $kelas AND r.idsemester = $semester AND r.idpelajaran = $pelajaran AND r.aktif = 1 ORDER BY koderpp";
 
 $query_aturan = "SELECT r.replid, r.rpp FROM rpp r, kelas k WHERE r.idtingkat = k.idtingkat AND k.replid = '$kelas' AND r.idsemester = '$semester' AND r.idpelajaran = '$pelajaran' AND r.aktif = 1 ORDER BY koderpp";
 
 $result_aturan = QueryDb($query_aturan);
-if (!mysql_num_rows($result_aturan)==0){ ?>
+if (!mysqli_num_rows($result_aturan)==0){ ?>
 
 <strong>RPP:</strong>
 <table class="tab" id="table" border="1" style="border-collapse:collapse; border-width: 1px; border-color: #f5f5f5;" width="100%" align="left" bordercolor="#000000">
@@ -73,10 +73,10 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
 <tr style="height: 2px;">
     <td></td>
 </tr>
-<? 
+<?php 
 	$i=0;
 	$cnt = 0;
-	while ($row_aturan=@mysql_fetch_array($result_aturan)){
+	while ($row_aturan=@mysqli_fetch_array($result_aturan)){
 		if ($i>=5)
 			$i=0;
 		
@@ -87,7 +87,7 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
     </td>
 </tr>
 <!-- END TABLE CONTENT -->
-<?
+<?php
   		$i++;
  	} 
 ?>	
@@ -95,7 +95,7 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
 <script language='JavaScript'>
 	Tables('table', 1, 0);
 </script>
-<? 
+<?php 
 	CloseDb(); 
 	} else { 
 ?>
@@ -106,6 +106,6 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
     </td>
 </tr>
 </table> 
-<? } ?> 
+<?php } ?> 
 </body>
 </html>

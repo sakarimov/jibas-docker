@@ -9,7 +9,7 @@ function LoadValue()
 
     $sql = "SELECT * FROM jbsfina.userpos WHERE replid = $userReplid";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $userId = $row["userid"];
         $userName = $row["nama"];
@@ -17,7 +17,7 @@ function LoadValue()
         $passLen = $row["passlength"];
 
         $origPass = $row["password"];
-        $origPass = substr($origPass, 0, $passLen);
+        $origPass = substr((string) $origPass, 0, $passLen);
 
         $keterangan = $row["keterangan"];
     }
@@ -36,7 +36,7 @@ function SimpanPetugas()
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsfina.userpos 
-                 WHERE userid = '$userId'";
+                 WHERE userid = '".$userId."'";
         $nData = FetchSingle($sql);
         if ($nData > 0)
         {
@@ -81,8 +81,8 @@ function SimpanPetugas()
 
 function createJsonReturn($status, $message)
 {
-    $ret = array($status, $message);
-    return json_encode($ret);
+    $ret = [$status, $message];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 
 ?>

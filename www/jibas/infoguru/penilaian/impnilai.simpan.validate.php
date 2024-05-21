@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,43 +21,43 @@
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
 <?php
-$errmsg = array();
+$errmsg = [];
 
 // Validasi DEPARTEMEN -----------------------------
-$departemen = trim($_REQUEST['departemen']);
+$departemen = trim((string) $_REQUEST['departemen']);
 if (strlen($departemen) == 0)
 {
     $errmsg[] = "Departemen belum ditentukan!";
 }
 else
 {
-    $sql = "SELECT COUNT(replid) FROM jbsakad.departemen WHERE departemen = '$departemen'";
+    $sql = "SELECT COUNT(replid) FROM jbsakad.departemen WHERE departemen = '".$departemen."'";
     if (0 == (int) FetchSingle($sql))
         $errmsg[] = "Departemen $departemen tidak ditemukan!";
 }
 
 // Validasi Id Kelas -------------------------------
-$idkelas = trim($_REQUEST['idkelas']);
+$idkelas = trim((string) $_REQUEST['idkelas']);
 if (strlen($idkelas) == 0)
 {
     $errmsg[] = "Id Kelas belum ditentukan!";
 }
 else
 {
-    $sql = "SELECT COUNT(replid) FROM jbsakad.kelas WHERE replid = '$idkelas'";
+    $sql = "SELECT COUNT(replid) FROM jbsakad.kelas WHERE replid = '".$idkelas."'";
     if (0 == (int) FetchSingle($sql))
         $errmsg[] = "Id Kelas $idkelas tidak ditemukan!";
 }
 
 // Validasi NIP ------------------------------------
-$nip = trim($_REQUEST['nip']);
+$nip = trim((string) $_REQUEST['nip']);
 if (strlen($nip) == 0)
 {
     $errmsg[] = "NIP Guru belum ditentukan!";
 }
 else
 {
-    $sql = "SELECT COUNT(replid) FROM jbssdm.pegawai WHERE nip = '$nip'";
+    $sql = "SELECT COUNT(replid) FROM jbssdm.pegawai WHERE nip = '".$nip."'";
     if (0 == (int) FetchSingle($sql))
         $errmsg[] = "NIP Guru $nip tidak ditemukan!";
 }
@@ -66,14 +66,14 @@ if ($nip != SI_USER_ID())
     $errmsg[] = "Hanya bisa mengimpor nilai dari guru dengan NIP " . SI_USER_ID() . "!";
 
 // Validasi Kode Ujian -------------------------------
-$kodeujian = trim($_REQUEST['kodeujian']);
+$kodeujian = trim((string) $_REQUEST['kodeujian']);
 if (strlen($kodeujian) == 0)
 {
     $errmsg[] = "Kode ujian belum ditentukan!";
 }
 
 // Validasi Tahun ------------------------------------
-$tahun = trim($_REQUEST['tahun']);
+$tahun = trim((string) $_REQUEST['tahun']);
 if (strlen($tahun) != 4)
 {
     $errmsg[] = "Tahun ujian belum ditentukan!";
@@ -85,7 +85,7 @@ else
 }
 
 // Validasi Bulan ------------------------------------
-$bulan = trim($_REQUEST['bulan']);
+$bulan = trim((string) $_REQUEST['bulan']);
 if (strlen($bulan) == 0 || strlen($bulan) > 2)
 {
     $errmsg[] = "Bulan ujian belum ditentukan!";
@@ -100,7 +100,7 @@ else
 }
 
 // Validasi Tanggal ----------------------------------
-$tanggal = trim($_REQUEST['tanggal']);
+$tanggal = trim((string) $_REQUEST['tanggal']);
 if (strlen($tanggal) == 0 || strlen($tanggal) > 2)
 {
     $errmsg[] = "Tanggal ujian belum ditentukan!";
@@ -115,27 +115,27 @@ else
         $errmsg[] = "Tanggal ujian harus antara 1 dan $nday!";
 }
 
-$nData = trim($_REQUEST['nnilai']);
+$nData = trim((string) $_REQUEST['nnilai']);
 if ($nData == 0)
     $errmsg[] = "Data nilai ujian siswa tidak ditemukan!";
 
 for($i = 1; $i <= $nData; $i++)
 {
     $param = "nis$i";
-    $nis = trim($_REQUEST[$param]);
+    $nis = trim((string) $_REQUEST[$param]);
     if (strlen($nis) == 0) {
         $errmsg[] = "NIS Siswa baris ke-$i belum ditentukan";
     }
     else {
         $nis = str_replace("'", "`", $nis);
-        $sql = "SELECT aktif FROM jbsakad.siswa WHERE nis = '$nis'";
+        $sql = "SELECT aktif FROM jbsakad.siswa WHERE nis = '".$nis."'";
         $res2 = QueryDb($sql);
-        if (mysql_num_rows($res2) == 0) {
+        if (mysqli_num_rows($res2) == 0) {
             $errmsg[] = "NIS Siswa {$nis} baris ke-$i tidak ditemukan!";
         }
         else
         {
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $aktif = $row2[0];
             if ($aktif != 1)
                 $errmsg[] = "NIS Siswa {$nis} baris ke-$i tidak aktif!";
@@ -143,7 +143,7 @@ for($i = 1; $i <= $nData; $i++)
     }
 
     $param = "nilai$i";
-    $nilai = trim($_REQUEST[$param]);
+    $nilai = trim((string) $_REQUEST[$param]);
     if (strlen($nilai) == 0)
         $errmsg[] = "Nilai siswa baris ke-$i belum ditentukan";
 

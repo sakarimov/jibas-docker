@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ if (!isset($_REQUEST["stnojurnal"]))
 
 OpenDb();
 
-$stNoJurnal = urldecode($_REQUEST["stnojurnal"]);
+$stNoJurnal = urldecode((string) $_REQUEST["stnojurnal"]);
 //echo "$stNoJurnal<br>";
 $lsJurnal = explode(",", $stNoJurnal);
 ?>
@@ -86,18 +86,18 @@ for($i = 0; $i < count($lsJurnal); $i++)
 
     $sql = "SELECT replid, transaksi, DATE_FORMAT(tanggal, '%d %b %Y') AS ftanggal, idpetugas, petugas
               FROM jbsfina.jurnal
-             WHERE nokas = '$noJurnal'";
+             WHERE nokas = '".$noJurnal."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         continue;
 
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
     $idJurnal = $row["replid"];
     echo "<tr>";
     echo "<td style='background-color: #efefef' align='center' valign='top' rowspan='2'>$no</td>";
-    echo "<td valign='top' align='left'><b>$noJurnal</b><br>$row[ftanggal]</td>";
-    echo "<td valign='top' align='left'><b>$row[petugas]</b><br>$row[idpetugas]</td>";
-    echo "<td valign='top' align='left'>$row[transaksi]</td>";
+    echo "<td valign='top' align='left'><b>".$noJurnal."</b><br>".$row['ftanggal']."</td>";
+    echo "<td valign='top' align='left'><b>".$row['petugas']."</b><br>".$row['idpetugas']."</td>";
+    echo "<td valign='top' align='left'>".$row['transaksi']."</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td colspan='3' style='background-color: #fff'>";
@@ -108,11 +108,11 @@ for($i = 0; $i < count($lsJurnal); $i++)
              WHERE jd.koderek = rk.kode
                AND idjurnal = $idJurnal";
     $res2 = QueryDb($sql);
-    while($row2 = mysql_fetch_array($res2))
+    while($row2 = mysqli_fetch_array($res2))
     {
         echo "<tr>";
-        echo "<td width='50' align='center'>$row2[koderek]</td>";
-        echo "<td width='250'>$row2[nama]</td>";
+        echo "<td width='50' align='center'>".$row2['koderek']."</td>";
+        echo "<td width='250'>".$row2['nama']."</td>";
 
         $rp = FormatRupiah($row2["debet"]);
         echo "<td width='120' align='right'>$rp</td>";

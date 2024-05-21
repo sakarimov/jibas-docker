@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -34,11 +34,11 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "dw8dxn8w9ms8zs22") {
-	$sql = "UPDATE jbsvcr.catatankategori SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE jbsvcr.catatankategori SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 } 
 if ($op == "xm8r389xemx23xb2378e23") {
-	$sql = "DELETE FROM jbsvcr.catatankategori WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbsvcr.catatankategori WHERE replid = '".$_REQUEST['replid']."'";
 	$result = QueryDb($sql);
 }
 
@@ -121,11 +121,11 @@ function cetak() {
       </tr>
 	</table>
 	<br /><br />
-    <?
+    <?php
 	$sql = "SELECT * FROM jbsvcr.catatankategori ORDER BY replid";
 	//echo $sql;    
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 	?>
     <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
     <!-- TABLE CONTENT -->
@@ -133,9 +133,9 @@ function cetak() {
     
     <a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
     <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;    
-<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
 	    <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah</a>
-<?	} ?>    
+<?php } ?>    
     </td></tr>
     </table><br />
     <table class="tab" id="table" border="1" cellpadding="2" style="border-collapse:collapse" cellspacing="2" width="95%" align="center" bordercolor="#000000">
@@ -144,42 +144,42 @@ function cetak() {
         <td width="49%" class="header" align="center">Kategori</td>
         <td width="7%" class="header" align="center">Aktif</td>
         <td width="30%" class="header" align="center">Keterangan</td>
-        <?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> <td width="10%" class="header" align="center"></td><? } ?>
+        <?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> <td width="10%" class="header" align="center"></td><?php } ?>
     </tr>
-<? 	
+<?php 	
 	
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
-        <td><?=$row[kategori] ?></td>
+        <td><?=$row['kategori'] ?></td>
         
         <td align="center">
         
-<?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
-			if ($row[aktif] == 1) { ?> 
+<?php 	if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+			if ($row['aktif'] == 1) { ?> 
             	<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/>
-<?			} else { ?>                
+<?php 		} else { ?>                
 				<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/>
-<?			}
+<?php 		}
 		} else { 
-			if ($row[aktif] == 1) { ?>
-				<a href="JavaScript:setaktif(<?=$row[replid] ?>, <?=$row[aktif] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/></a>
-<?			} else { ?>
-				<a href="JavaScript:setaktif(<?=$row[replid] ?>, <?=$row[aktif] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/></a>
-<?			} //end if
+			if ($row['aktif'] == 1) { ?>
+				<a href="JavaScript:setaktif(<?=$row['replid'] ?>, <?=$row['aktif'] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '50px')"/></a>
+<?php 		} else { ?>
+				<a href="JavaScript:setaktif(<?=$row['replid'] ?>, <?=$row['aktif'] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '50px')"/></a>
+<?php 		} //end if
 		} //end if ?>        
         
         </td>
-        <td><?=$row[keterangan] ?></td>
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>         
+        <td><?=$row['keterangan'] ?></td>
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>         
 		<td align="center">
-            <a href="JavaScript:edit(<?=$row[replid] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Kategori!', this, event, '75px')" /></a>&nbsp;
-            <a href="JavaScript:hapus(<?=$row[replid] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Kategori!', this, event, '75px')"/></a>
+            <a href="JavaScript:edit(<?=$row['replid'] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Kategori!', this, event, '75px')" /></a>&nbsp;
+            <a href="JavaScript:hapus(<?=$row['replid'] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Kategori!', this, event, '75px')"/></a>
         </td>
-<?		} ?>  
+<?php 	} ?>  
     </tr>
-<?	} 
+<?php } 
 	 ?>	
 	
     
@@ -195,25 +195,25 @@ function cetak() {
 	</td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">
 
 <tr>
 	<td align="center" valign="middle" height="250" colspan="2">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-       <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+       <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-        <? } ?>
+        <?php } ?>
         </p></b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>    
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

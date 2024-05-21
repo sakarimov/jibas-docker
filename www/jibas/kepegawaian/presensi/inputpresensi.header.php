@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../library/datearith.php");
 
-$tahun = isset($_REQUEST['tahun']) ? $_REQUEST['tahun'] : date('Y');
-$bulan = isset($_REQUEST['bulan']) ? $_REQUEST['bulan'] : date('n');
-$tanggal = isset($_REQUEST['tanggal']) ? $_REQUEST['tanggal'] : date('j');
+$tahun = $_REQUEST['tahun'] ?? date('Y');
+$bulan = $_REQUEST['bulan'] ?? date('n');
+$tanggal = $_REQUEST['tanggal'] ?? date('j');
 
 $maxDay = DateArith::DaysInMonth($bulan, $tahun);
 ?>
@@ -71,7 +71,7 @@ showPresence = function()
 		
 Tanggal:
 <select name="tahun" id="tahun" onchange="changeDate()">
-<?
+<?php
 for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 {
 	$sel = $i == $tahun ? "selected" : "";
@@ -80,7 +80,7 @@ for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 ?>
 </select>
 <select name="bulan" id="bulan" onchange="changeDate()">
-<?
+<?php
 for($i = 1; $i <= 12; $i++)
 {
 	$sel = $i == $bulan ? "selected" : "";
@@ -89,7 +89,7 @@ for($i = 1; $i <= 12; $i++)
 ?>
 </select>
 <select name="tanggal" id="tanggal" onchange="changeDay()">
-<?
+<?php
 for($i = 1; $i <= $maxDay; $i++)
 {
 	$sel = $i == $tanggal ? "selected" : "";

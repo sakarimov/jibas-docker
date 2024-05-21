@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -104,16 +104,16 @@ try
         mkdir($uploadPath, 0755);
     
     // == Save Video
-    $text = trim($_REQUEST['judul']);
+    $text = trim((string) $_REQUEST['judul']);
     $judul = $text;
     $fjudul = FormattedText($text);
     
-    $text = trim($_REQUEST['keterangan']);
+    $text = trim((string) $_REQUEST['keterangan']);
     $keterangan = RecodeNewLine($text);
     $fketerangan = FormattedText($text);
     $fprevketerangan = FormattedPreviewText($text, $previewTextLength);
     
-    $text = trim($_REQUEST["video_info"]);
+    $text = trim((string) $_REQUEST["video_info"]);
     $fileinfo = $text;
     $ffileinfo = FormattedText($text);
     
@@ -133,19 +133,19 @@ try
     $sql = "SELECT LAST_INSERT_ID()";
     echo "$sql<br>";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $videoid = $row[0];
     
-    $rnd = rand(10000, 99999);
+    $rnd = random_int(10000, 99999);
     $name = $file['name'];
-    $vidname = $videoid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+    $vidname = $videoid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
     $dest = "$FILESHARE_UPLOAD_DIR/$location/$vidname";
     
     move_uploaded_file($file['tmp_name'], $dest);
     
     $sql = "UPDATE jbsvcr.video
                SET filename = '$vidname'
-             WHERE replid = '$videoid'";
+             WHERE replid = '".$videoid."'";
     echo "$sql<br>";
     QueryDbEx($sql);         
     

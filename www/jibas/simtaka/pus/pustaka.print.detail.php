@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,26 +20,26 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/common.php');
 require_once('../inc/config.php');
 require_once('../inc/rupiah.php');
 require_once('../inc/db_functions.php');
-$replid=$_REQUEST[replid];
+$replid=$_REQUEST['replid'];
 OpenDb();
 $sql = "SELECT * FROM pustaka WHERE replid=$replid";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$judul = stripslashes($row[judul]);
-$harga = $row[harga];
-$katalog = $row[katalog];
-$penerbit = $row[penerbit];
-$penulis = $row[penulis];
-$tahun = $row[tahun];
-$format = stripslashes($row[format]);
-$keyword = stripslashes($row[keyword]);
-$keteranganfisik = stripslashes($row[keteranganfisik]);
-$abstraksi = stripslashes($row[abstraksi]);
+$row = @mysqli_fetch_array($result);
+$judul = stripslashes((string) $row['judul']);
+$harga = $row['harga'];
+$katalog = $row['katalog'];
+$penerbit = $row['penerbit'];
+$penulis = $row['penulis'];
+$tahun = $row['tahun'];
+$format = stripslashes((string) $row['format']);
+$keyword = stripslashes((string) $row['keyword']);
+$keteranganfisik = stripslashes((string) $row['keteranganfisik']);
+$abstraksi = stripslashes((string) $row['abstraksi']);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -58,7 +58,7 @@ $abstraksi = stripslashes($row[abstraksi]);
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? include("../lib/headercetak.php") ?>
+<?php include("../lib/headercetak.php") ?>
 
 <center>
   <font size="4"><strong>DATA PUSTAKA</strong></font><br /> 
@@ -86,30 +86,30 @@ $abstraksi = stripslashes($row[abstraksi]);
   <tr>
     <td align="right" valign="top"><strong class="style1">Katalog</strong></td>
     <td>
-	<? 
+	<?php 
 		$sql = "SELECT kode,nama FROM katalog WHERE replid=$katalog";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		echo $row[0]." - ".$row[1];
 	?>    </td>
   </tr>
   <tr>
     <td align="right" valign="top"><strong class="style1">Penerbit</strong></td>
     <td>
-	<? 
+	<?php 
 		$sql = "SELECT kode,nama FROM penerbit WHERE replid=$penerbit";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		echo $row[0]." - ".$row[1];
 	?>    </td>
   </tr>
   <tr>
     <td align="right" valign="top"><strong class="style1">Penulis</strong></td>
     <td>
-	<? 
+	<?php 
 		$sql = "SELECT kode,nama FROM penulis WHERE replid=$penulis";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		echo $row[0]." - ".$row[1];
 	?>    </td>
   </tr>
@@ -120,10 +120,10 @@ $abstraksi = stripslashes($row[abstraksi]);
   <tr>
     <td align="right" valign="top"><strong class="style1">Format</strong></td>
     <td>
-	<? 
+	<?php 
 		$sql = "SELECT kode,nama FROM format WHERE replid=$format";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		echo $row[0]." - ".$row[1];
 	?>    </td>
   </tr>
@@ -142,10 +142,10 @@ $abstraksi = stripslashes($row[abstraksi]);
   <tr>
     <td align="right" valign="top"><strong class="style1">Alokasi&nbsp;Jumlah</strong></td>
 <td>
-        <?
+        <?php
 		$sql = "SELECT p.nama,COUNT(d.replid) FROM daftarpustaka d, perpustakaan p WHERE d.pustaka='$replid' AND d.perpustakaan=p.replid GROUP BY d.perpustakaan ORDER BY p.nama";
 		$result = QueryDb($sql);
-		$num = @mysql_num_rows($result);
+		$num = @mysqli_num_rows($result);
 		if ($num>0){
 		?>
         <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab">
@@ -153,18 +153,18 @@ $abstraksi = stripslashes($row[abstraksi]);
             <td height="25" align="center" class="header">Perpustakaan</td>
             <td height="25" align="center" class="header">Jumlah</td>
           </tr>
-          <?
-		  while ($row = @mysql_fetch_row($result)){
+          <?php
+		  while ($row = @mysqli_fetch_row($result)){
 		  ?>
           <tr>
             <td height="20" align="center"><?=$row[0]?></td>
             <td height="20" align="center"><?=$row[1]?></td>
           </tr>
-          <?
+          <?php
 		  }
 		  ?>
       </table>
-        <?
+        <?php
 		}
 		?>
 

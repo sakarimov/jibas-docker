@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/mainconfig.php');
 require_once('include/db_functions.php');
 
@@ -33,27 +33,27 @@ session_name("jbsmain");
 session_start();
 
 $lid = -1; // current liveupdate id
-$dbconnect = @mysql_connect($db_host, $db_user, $db_pass);
+$dbconnect = @mysqli_connect($db_host, $db_user, $db_pass);
 if ($dbconnect)
 {
-	$dbselect = @mysql_select_db("jbsclient", $dbconnect);
+	$dbselect = @mysqli_select_db($dbconnect, "jbsclient");
 	
 	if ($dbselect)
 	{
 		$sql = "SELECT nilai FROM jbsclient.liveupdateconfig WHERE tipe='MIN_UPDATE_ID'";
-		$result = @mysql_query($sql, $dbconnect);
-		$row = @mysql_fetch_row($result);
+		$result = @mysqli_query($dbconnect, $sql);
+		$row = @mysqli_fetch_row($result);
 		$minid = $row[0];
 		
 		$sql = "SELECT MAX(liveupdateid) FROM jbsclient.liveupdate";
-		$result = @mysql_query($sql, $dbconnect);
-		$row = @mysql_fetch_row($result);
+		$result = @mysqli_query($dbconnect, $sql);
+		$row = @mysqli_fetch_row($result);
 		$maxinstalled  = is_null($row[0]) ? 0 : $row[0];
 		
 		$lid = $minid >= $maxinstalled ? $minid : $maxinstalled;
 	}
 	
-	@mysql_close($dbconnect);
+	@mysqli_close($dbconnect);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -124,7 +124,7 @@ if ($dbconnect)
             </a	>
         </td>
         <td align="center" width="140">
-            <a href="http://www.jibas.net/content/jsema/jsema.php" target="_blank">
+            <a href="ema/index.php" target="_blank">
                 <img id="btJsEma" src="images/btnmenu_green_p_32.png" onMouseOver="changeImage('btJsEma','images/btnmenu_green_a_32.png')"
                      onMouseOut="changeImage('btJsEma','images/btnmenu_green_p_32.png')" border="0"
                      title="Jendela Informasi Sekolah e-Management bagi Eksekutif dan Staf Sekolah">
@@ -323,7 +323,7 @@ if ($dbconnect)
 </div>
 
 <div id="dvPartner" style="color:#fff; width:120px; font-size:11px; font-family:Tahoma; position:absolute; background-image:url(images/bgdiv_black.png);">
-<?
+<?php
 include('info.php');
 ?>
 </div>
@@ -341,8 +341,8 @@ else
 </body>
 </html>
 
-<? if (!$_SESSION['lugetstatus'] || $_SESSION['lugetlid'] != $lid) { ?>
+<?php if (!$_SESSION['lugetstatus'] ?? false || $_SESSION['lugetlid'] != $lid) { ?>
 <script type="text/javascript" language="javascript">
 getLuStatus(<?=$lid?>);
 </script>
-<? } ?>
+<?php } ?>

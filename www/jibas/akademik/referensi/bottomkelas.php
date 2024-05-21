@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -55,12 +55,12 @@ if (isset($_REQUEST['hal']))
 OpenDb();
 $sql_get_tingkat="SELECT tingkat FROM tingkat WHERE replid='$tingkat'";
 $result_get_tingkat = QueryDB($sql_get_tingkat);
-$row_get_tingkat = @mysql_fetch_row($result_get_tingkat);  
+$row_get_tingkat = @mysqli_fetch_row($result_get_tingkat);  
 $nama_tingkat=$row_get_tingkat[0];
 	
 $sql_get_tahunajaran = "SELECT tahunajaran FROM tahunajaran WHERE replid='$tahunajaran'";  
 $result_get_tahunajaran = QueryDB($sql_get_tahunajaran);
-$row_get_tahunajaran = @mysql_fetch_row($result_get_tahunajaran); 
+$row_get_tahunajaran = @mysqli_fetch_row($result_get_tahunajaran); 
 $nama_tahunajaran=$row_get_tahunajaran[0];
 CloseDb();
 
@@ -75,7 +75,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
 		$replid = $_REQUEST['replid'];
 		
 	OpenDb();
-	$sql = "UPDATE kelas SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE kelas SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	$result=QueryDb($sql);
 	if ($result)
 		CloseDb();
@@ -85,7 +85,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
 		if (isset($_REQUEST['replid']))
 		$replid = $_REQUEST['replid'];
 	OpenDb();
-	$sql = "DELETE FROM kelas WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM kelas WHERE replid = '".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	$result=QueryDb($sql);
 	if ($result) { 
@@ -94,7 +94,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
     <script language="javascript">
     document.location.href="bottomkelas.php?departemen=<?=$departemen?>&tingkat=<?=$tingkat?>&tahunajaran=<?=$tahunajaran?>";
     </script>
-	<?			 }
+	<?php 		 }
 	
 }
 
@@ -242,18 +242,18 @@ function change_baris() {
 <table width="100%" border="0" width=""="100%">
 <tr><td>
 	<!--<td background="../images/ico/b_kelas.png" style="background-repeat:no-repeat; background-attachment:fixed; margin-left:10">-->
-<? 
+<?php 
 	OpenDb();
 	$sql_tot = "SELECT k.replid, k.kelas, k.idtahunajaran, k.kapasitas, k.nipwali, k.aktif, k.keterangan, t.replid, t.tahunajaran, t.departemen, p.nama FROM kelas k, tahunajaran t, jbssdm.pegawai p WHERE t.replid='$tahunajaran' AND k.idtahunajaran=t.replid AND k.nipwali=p.nip AND t.departemen='$departemen' AND k.idtingkat='$tingkat' GROUP BY k.replid";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql_kelas = "SELECT k.replid, k.kelas, k.idtahunajaran, k.kapasitas, k.nipwali, k.aktif, k.keterangan, t.replid, t.tahunajaran, t.departemen, p.nama FROM kelas k, tahunajaran t, jbssdm.pegawai p WHERE t.replid='$tahunajaran' AND k.idtahunajaran=t.replid AND k.nipwali=p.nip AND t.departemen='$departemen' AND k.idtingkat='$tingkat' GROUP BY k.replid ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result_kelas = QueryDb($sql_kelas);
 	
-	if (@mysql_num_rows($result_kelas) > 0){ 
+	if (@mysqli_num_rows($result_kelas) > 0){ 
 ?>
 <input type="hidden" name="total" id="total" value="<?=$total?>"/>
 <table width="100%" border="0" align="center">          
@@ -261,9 +261,9 @@ function change_baris() {
 	<td align="right">            
     	<a href="JavaScript:refresh()" ><img src="../images/ico/refresh.png" border="0" name="refresh" id="refresh" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
         <a href="JavaScript:cetak('<?=$urut?>','<?=$urutan?>')" ><img src="../images/ico/print.png" border="0" name="cetak" id="cetak" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;
-   	<? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+   	<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:tambah()" ><img src="../images/ico/tambah.png" border="0" name="tambah" id="tambah" onMouseOver="showhint('Tambah!', this, event, '50px')"/>&nbsp;Tambah Kelas</a>
- 	<?	} ?>
+ 	<?php } ?>
      	</td>
 	</tr>
 </table>
@@ -279,21 +279,21 @@ function change_baris() {
 	<td width="8%">Terisi</td>
 	<td width="*">Keterangan</td>
     <td width="10%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('k.aktif','<?=$urutan?>')">Status <?=change_urut('k.aktif',$urut,$urutan)?></td>
-    <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+    <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
     <td width="*" class="header">&nbsp;</td>
-    <?	} ?>
+    <?php } ?>
 </tr>
- <?	
+ <?php 
 	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 
-	while ($row_kelas = @mysql_fetch_row($result_kelas)) {
+	while ($row_kelas = @mysqli_fetch_row($result_kelas)) {
 		$kelas=$row_kelas[0];
 		$sql_get_jumsiswa = "SELECT COUNT(*) FROM jbsakad.siswa s WHERE s.idkelas='$kelas' AND s.aktif=1";
 		$result_get_jumsiswa = QueryDB($sql_get_jumsiswa);
-		if ($row_get_jumsiswa = mysql_fetch_row($result_get_jumsiswa)){
+		if ($row_get_jumsiswa = mysqli_fetch_row($result_get_jumsiswa)){
 			$terisi = $row_get_jumsiswa[0];
 		} else {
 			$terisi = 0;
@@ -305,40 +305,40 @@ function change_baris() {
     <td><?=$row_kelas[4] . " " . $row_kelas[10] ?></td>
 	<td align="center"><?=$row_kelas[3] ?></td>
 	<td align="center"><?=$terisi ?>
-    	<? if ($terisi > 0) { ?>
+    	<?php if ($terisi > 0) { ?>
    	&nbsp;<a href="JavaScript:carisiswa(<?=$row_kelas[0]?>)"><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Lihat Siswa!', this, event, '65px')"/></a>
-    	<? } ?>
+    	<?php } ?>
     </td>
 	<td><?=$row_kelas[6] ?></td>
     <td align="center">  
-<?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+<?php 	if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
 			if ($row_kelas[5] == 1) { ?> 
      	<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
-<?			} else { ?>                
+<?php 		} else { ?>                
         <img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
-<?			}
+<?php 		}
 		} else { 
 			if ($row_kelas[5] == 1) { ?>
         <a href="JavaScript:setaktif(<?=$row_kelas[0] ?>, <?=$row_kelas[5] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/></a>
-<?			} else { ?>
+<?php 		} else { ?>
         <a href="JavaScript:setaktif(<?=$row_kelas[0] ?>, <?=$row_kelas[5] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/></a>
-<?			} //end if
+<?php 		} //end if
 		} //end if ?>        
 	</td>
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>     
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>     
 	<td align="center">
     	<a href="JavaScript:edit(<?=$row_kelas[0] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Kelas!', this, event, '80px')"/></a>&nbsp;
         <a href="JavaScript:hapus(<?=$row_kelas[0] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Kelas!', this, event, '80px')"/></a>
       
 	</td>
-<?		} ?> 
+<?php 	} ?> 
 </tr>
-<?	} ?>
+<?php } ?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script></div>
-	<?	if ($page==0){ 
+	<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -363,19 +363,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -389,28 +389,28 @@ function change_baris() {
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
 
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-       <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+       <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-        <? } ?>
+        <?php } ?>
         </p></b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 </table>

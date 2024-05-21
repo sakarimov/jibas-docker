@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -64,7 +64,7 @@ if (isset($_REQUEST['simpan'])) {
 			opener.parent.footer.location.href = "presensi_footer.php?replid="+id;
 			window.close();
 		</script>
-<?	}
+<?php }
 }
 
 //$status = 0;
@@ -155,7 +155,7 @@ function show(x) {
         <td class="header" align="center" width="65%">Catatan</td>
     </tr>
 		       
-	<? 
+	<?php 
     for ($j=1;$j<=10;$j++) { 
         //	$nis = $nis.$j;
         //	$nama = $nama.$j;	
@@ -181,7 +181,7 @@ function show(x) {
        
     </tr>
     
-    <? } ?>
+<?php } ?>
     </table>
     <script language='JavaScript'>
         Tables('table', 1, 0);

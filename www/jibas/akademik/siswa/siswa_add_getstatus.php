@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -35,18 +35,18 @@ $status_kiriman=$_REQUEST['status'];
 
 <select name="status" id="status" class="ukuran" onKeyPress="return focusNext('kondisi', event)">
 	<option value="">[Pilih Status]</option>
-    <? // Olah untuk combo status
+    <?php // Olah untuk combo status
 	OpenDb();
 	$sql_status="SELECT replid,status,urutan FROM jbsakad.statussiswa ORDER BY urutan";
 	$result_status=QueryDB($sql_status);
-	while ($row_status = mysql_fetch_array($result_status)) {
+	while ($row_status = mysqli_fetch_array($result_status)) {
 	//tambahan
 	//if($status_kiriman=="")
 	//$status_kiriman=$row_status['status'];
 	// end of tambahan
 	?>
     <option value="<?=$row_status['status']?>"<?=StringIsSelected($row_status['status'],$status_kiriman)?> ><?=$row_status['status']?></option>
-	<?
+<?php
     } 
 	CloseDb();
 	// Akhir Olah Data status

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("galeri.input.config.php");
 require_once("galeri.list.config.php");
 
@@ -50,27 +50,27 @@ CreateGalleryListConfigJavaScript();
 <script type="text/javascript" src="infosekolah.common.func.js"></script>
 <div id='gal_container' style="position: relative; width: 100%;">
     <div id="galinp_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;">
-<?
+<?php
     //require_once("galeri.input.php");
 ?>                                
     </div>
     <div id="gallst_content" style="position: absolute; width: 100%; background-color: #fff; visibility: visible;">
-<?
+<?php
     require_once("galeri.list.php");
 ?>                                
     </div>
     <div id="galvw_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;">
-<?
+<?php
     //require_once("galeri.view.php");
 ?>
     </div>
     <div id="galed_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;">
-<?
+<?php
     //require_once("galeri.edit.php");
 ?>
     </div>
     <div id="galidx_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;">
-<?
+<?php
     //require_once("galeri.index.php");
 ?>
     </div>     

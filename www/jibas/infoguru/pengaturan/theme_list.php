@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/sessioninfo.php');
 require_once('../sessionchecker.php');
@@ -34,15 +34,15 @@ if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD"){
 	alert ('Maaf, Administrator tidak berhak mengganti tema');
 	document.location.href="../blank.php";
 </script>
-<?
+<?php
 }
 OpenDb();
 $theme="";
 $replid="";
 $res=QueryDb("SELECT replid,theme FROM jbsuser.hakakses WHERE modul='INFOGURU' AND login='".SI_USER_ID()."'");
-$row=@mysql_fetch_array($res);
-$theme=$row[theme];
-$replid=$row[replid];
+$row=@mysqli_fetch_array($res);
+$theme=$row['theme'];
+$replid=$row['replid'];
 CloseDb();
 $op="";
 if (isset($_REQUEST['op']))
@@ -70,7 +70,7 @@ if ($op=='dfuh8347hw87ddu293'){
 			parent.frametop.get_fresh();
 			document.location.href="theme_list.php";
 		</script>
-        <? 
+        <?php 
 			}	
 	CloseDb();
 }
@@ -89,7 +89,7 @@ if (isset($_REQUEST['5623bu9nfd98932jhkd'])){
 			parent.frametop.get_fresh();
 			//document.location.href="../home.php";
 		</script>
-        <?
+<?php
 }
 function GetThemeImage($theme) {
 	// Change this variable with user's SESSION theme
@@ -177,7 +177,7 @@ function thm_fresh() {
   <tr>
     <td colspan="2" align="left" valign="bottom"><div id="active_theme" style="width:320px; height:240px;"><img src="<?=GetThemeImage($theme)?>" width="320" height="240" align="left"/></div></td>
     <td colspan="2" align="left" valign="middle"><span class="style2">Tema yang aktif &nbsp;&quot;
-	<? 
+	<?php 
 	switch($theme){
 		case 1 :
 			echo " Red ";
@@ -229,43 +229,43 @@ function thm_fresh() {
   </tr>
   <tr>
     <td width="20%"><div align="center"><img src="../design/InfoGuru4_RED.jpg" width="176" height="132" onClick="chg_theme(1,'<?=GetThemeImage(1)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="1" <? if ($theme==1) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="1" <?php if ($theme==1) echo "checked"; ?>/>-->
     Red</div></td>
     <td width="20%"><div align="center"><img src="../design/InfoGuru4_BLUE.jpg" width="176" height="132" onClick="chg_theme(2,'<?=GetThemeImage(2)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="2" <? if ($theme==2) echo "checked"; ?>/>-->Blue</div></td>
+    <!--<input name="tema" id="tema" type="radio" value="2" <?php if ($theme==2) echo "checked"; ?>/>-->Blue</div></td>
     <td width="20%"><div align="center"><img src="../design/InfoGuru4_BLACK.jpg" width="176" height="132" onClick="chg_theme(3,'<?=GetThemeImage(3)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="3" <? if ($theme==3) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="3" <?php if ($theme==3) echo "checked"; ?>/>-->
     Black</div></td>
     <td width="20%"><div align="center"><img src="../design/InfoGuru4_GREEN.jpg" width="176" height="132" onClick="chg_theme(4,'<?=GetThemeImage(4)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="4" <? if ($theme==4) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="4" <?php if ($theme==4) echo "checked"; ?>/>-->
     Green</div></td>
     <td width="20%"><div align="center"><img src="../design/InfoGuru4_LAVENDER.jpg" width="176" height="132" onClick="chg_theme(5,'<?=GetThemeImage(5)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="5" <? if ($theme==5) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="5" <?php if ($theme==5) echo "checked"; ?>/>-->
     Lavender</div></td>
   </tr>
   <tr>
     <td><div align="center"><img src="../design/InfoGuru4_BLUE_SEA.jpg" width="176" height="132" onClick="chg_theme(6,'<?=GetThemeImage(6)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="6" <? if ($theme==6) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="6" <?php if ($theme==6) echo "checked"; ?>/>-->
     Sea</div></td>
     <td><div align="center"><img src="../design/InfoGuru4_GREEN_PADI.jpg" width="176" height="132" onClick="chg_theme(7,'<?=GetThemeImage(7)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="7" <? if ($theme==7) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="7" <?php if ($theme==7) echo "checked"; ?>/>-->
     Padi</div></td>
     <td><div align="center"><img src="../design/InfoGuru4_REDDOT.jpg" width="176" height="132" onClick="chg_theme(8,'<?=GetThemeImage(8)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="8" <? if ($theme==8) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="8" <?php if ($theme==8) echo "checked"; ?>/>-->
     Red v2</div></td>
     <td><div align="center"><img src="../design/InfoGuru4_SUNSET.jpg" width="176" height="132" onClick="chg_theme(9,'<?=GetThemeImage(9)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="9" <? if ($theme==9) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="9" <?php if ($theme==9) echo "checked"; ?>/>-->
     Sunset</div></td>
     <td><div align="center"><img src="../design/InfoGuru4_ORANGE.jpg" width="176" height="132" onClick="chg_theme(10,'<?=GetThemeImage(10)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="10" <? if ($theme==10) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="10" <?php if ($theme==10) echo "checked"; ?>/>-->
     Orange</div></td>
   </tr>
    <tr>
     <td><div align="center"><img src="../design/InfoGuru4_DIRT.jpg" width="176" height="132" onClick="chg_theme(11,'<?=GetThemeImage(11)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="6" <? if ($theme==6) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="6" <?php if ($theme==6) echo "checked"; ?>/>-->
     Dirt</div></td>
     <td><div align="center"><img src="../design/InfoGuru4_PURPLE.jpg" width="176" height="132" onClick="chg_theme(12,'<?=GetThemeImage(12)?>')" style="cursor:pointer;" title="Klik untuk ganti tema"/><br />
-    <!--<input name="tema" id="tema" type="radio" value="6" <? if ($theme==6) echo "checked"; ?>/>-->
+    <!--<input name="tema" id="tema" type="radio" value="6" <?php if ($theme==6) echo "checked"; ?>/>-->
     Purple</div></td>
     <td></td><td></td><td></td>
     </tr>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,9 +41,9 @@ $op = $_REQUEST['op'];
 if ($op == "dw8dxn8w9ms8zs22") {
 	$pin = random(5);
 	OpenDb();
-	$sql	= "SELECT pinsiswa,pinortu FROM jbsakad.siswa WHERE nis='$_REQUEST[nis]'";
+	$sql	= "SELECT pinsiswa,pinortu FROM jbsakad.siswa WHERE nis='".$_REQUEST['nis']."'";
 	$result = QueryDb($sql);
-	$row	= @mysql_fetch_array($result);
+	$row	= @mysqli_fetch_array($result);
 	if ($field=='pinsiswa'){
 		if ($row['pinortu']==$pin){
 			while ($row['pinortu']==$pin || $row['pinortuibu']==$pin)
@@ -58,7 +58,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
 		}
 	}
 
-	$sql = "UPDATE jbsakad.siswa SET $_REQUEST[field] = '$pin' WHERE nis = '$_REQUEST[nis]'";
+	$sql = "UPDATE jbsakad.siswa SET {$_REQUEST['field']} = '$pin' WHERE nis = '".$_REQUEST['nis']."'";
 	QueryDb($sql);
 	CloseDb();
 }
@@ -117,12 +117,12 @@ function change_urut(urut,urutan) {
 <table width="100%" border="0" height="100%">
 <tr>
 	<td>	
-<? 	
+<?php 	
 	OpenDb();
 	$sql = "SELECT * FROM jbsakad.siswa s WHERE s.idkelas = '$kelas' AND s.aktif = 1 ORDER BY $urut $urutan ";
 	
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){ 
+	if (@mysqli_num_rows($result) > 0){ 
 ?>
 
 	<table width="100%" border="0" align="center">          
@@ -145,37 +145,37 @@ function change_urut(urut,urutan) {
         <td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('pinortu','<?=$urutan?>')">PIN Ayah <?=change_urut('pinortu',$urut,$urutan)?></td>
 		<td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('pinortuibu','<?=$urutan?>')">PIN Ibu <?=change_urut('pinortuibu',$urut,$urutan)?></td>
     </tr>
-    <?
-		while ($row = @mysql_fetch_array($result)) {
+    <?php
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25">   	
         <td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['nis']?></td>
         <td><?=$row['nama'] ?></td>      
         <td align="center"><?=$row['pinsiswa'] ?>&nbsp;
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:gantipin('pinsiswa','<?=$row['nis']?>')" ><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Ganti PIN!', this, event, '50px')"/></a>
-        <? } ?>
+        <?php } ?>
         </td>      
         <td align="center"><?=$row['pinortu'] ?>&nbsp;
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:gantipin('pinortu','<?=$row['nis']?>')" ><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Ganti PIN Ayah!', this, event, '50px')"/></a>
-        <? } ?>
+        <?php } ?>
         </td>
 		<td align="center"><?=$row['pinortuibu'] ?>&nbsp;
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:gantipin('pinortuibu','<?=$row['nis']?>')" ><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Ganti PIN Ibu!', this, event, '50px')"/></a>
-        <? } ?>
+        <?php } ?>
         </td>
     </tr>
-	<?	} ?>
+	<?php } ?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script></div>
 
 
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
@@ -185,7 +185,7 @@ function change_urut(urut,urutan) {
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 </table>

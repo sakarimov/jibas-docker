@@ -1,4 +1,4 @@
-<?
+<?php
 function ReadRequest()
 {
     global $nip, $nama, $tahun30, $bulan30, $tanggal30, $tahun, $bulan, $tanggal, $maxDay30, $maxDay;
@@ -9,7 +9,7 @@ function ReadRequest()
               FROM jbssdm.pegawai
              WHERE nip='$nip'";
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
     $nama = $row[0];
     
     if (!isset($_REQUEST['tahun30']) || !isset($_REQUEST['tahun']))
@@ -19,7 +19,7 @@ function ReadRequest()
                        DAY(DATE_SUB(NOW(), INTERVAL 30 DAY)),
                        YEAR(NOW()), MONTH(NOW()), DAY(NOW())";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $tahun30 = $row[0];
         $bulan30 = $row[1];
         $tanggal30 = $row[2];
@@ -47,7 +47,7 @@ function ShowSelectDate()
     
     Tanggal:
 	<select name="tahun30" id="tahun30" onchange="changeDate()">
-	<?
+	<?php
 	for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 	{
 		$sel = $i == $tahun30 ? "selected" : "";
@@ -56,7 +56,7 @@ function ShowSelectDate()
 	?>
 	</select>
 	<select name="bulan30" id="bulan30" onchange="changeDate()">
-	<?
+	<?php
 	for($i = 1; $i <= 12; $i++)
 	{
 		$sel = $i == $bulan30 ? "selected" : "";
@@ -65,7 +65,7 @@ function ShowSelectDate()
 	?>
 	</select>
 	<select name="tanggal30" id="tanggal30" onchange="changeDate()">
-	<?
+	<?php
 	for($i = 1; $i <= $maxDay30; $i++)
 	{
 		$sel = $i == $tanggal30 ? "selected" : "";
@@ -75,7 +75,7 @@ function ShowSelectDate()
 	</select>
 	&nbsp;s/d&nbsp;
 	<select name="tahun" id="tahun" onchange="changeDate()">
-	<?
+	<?php
 	for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 	{
 		$sel = $i == $tahun ? "selected" : "";
@@ -84,7 +84,7 @@ function ShowSelectDate()
 	?>
 	</select>
 	<select name="bulan" id="bulan" onchange="changeDate()">
-	<?
+	<?php
 	for($i = 1; $i <= 12; $i++)
 	{
 		$sel = $i == $bulan ? "selected" : "";
@@ -93,7 +93,7 @@ function ShowSelectDate()
 	?>
 	</select>
 	<select name="tanggal" id="tanggal" onchange="changeDate()">
-	<?
+	<?php
 	for($i = 1; $i <= $maxDay; $i++)
 	{
 		$sel = $i == $tanggal ? "selected" : "";
@@ -101,7 +101,7 @@ function ShowSelectDate()
 	}
 	?>
 	</select>
-<?    
+<?php    
 }
 
 
@@ -122,7 +122,7 @@ function ShowStatistics()
     </tr>    
     </table>
     
-<?    
+<?php    
 }
 
 function ShowDetail()
@@ -142,7 +142,7 @@ function ShowDetail()
         <td width="200" align="center" class="header">Keterangan</td>
         <td width="100" align="center" class="header">Sumber</td>
     </tr>  
-    <?
+    <?php
     $sql = "SELECT tanggal, DATE_FORMAT(tanggal, '%d %M %Y') AS tanggalview, jammasuk, jampulang,
                    jamwaktukerja, menitwaktukerja, status, keterangan, source, WEEKDAY(tanggal) AS hari
               FROM jbssdm.presensi
@@ -153,7 +153,7 @@ function ShowDetail()
     $no = 0;
     $totjkerja = 0;
     $totmkerja = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
         $status = $row["status"];
@@ -203,13 +203,13 @@ function ShowDetail()
         <td align="left"><?=$row["keterangan"]?></td>
         <td align="left"><?=$row["source"]?></td>
     </tr>
-    <?
+    <?php
     }
     ?>
     <tr height="30">
         <td style="background-color: #DDD" colspan="6">&nbsp;</td>
         <td style="background-color: #DDD; font-weight: bold;" align="left">
-    <?
+    <?php
         if ($totmkerja >= 60)
         {
             $totjkerja += floor($totmkerja / 60);
@@ -221,6 +221,6 @@ function ShowDetail()
         <td style="background-color: #DDD" colspan="2">&nbsp;</td>
     </tr>
     </table>
-<?
+<?php
 }
 ?>

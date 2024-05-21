@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -54,15 +54,15 @@ function refresh() {
 </tr>
 <tr>
 	<td>
-	<?
+	<?php
 	OpenDb();
-	$sql = "SELECT d.departemen FROM guru g, pelajaran p, departemen d WHERE g.idpelajaran = p.replid AND d.departemen = p.departemen AND g.nip ='$_REQUEST[nip]' GROUP BY d.departemen ORDER BY d.urutan";	
+	$sql = "SELECT d.departemen FROM guru g, pelajaran p, departemen d WHERE g.idpelajaran = p.replid AND d.departemen = p.departemen AND g.nip ='".$_REQUEST['nip']."' GROUP BY d.departemen ORDER BY d.urutan";	
 	
 	$result = QueryDb($sql);
-	$jumlah = mysql_num_rows($result);
+	$jumlah = mysqli_num_rows($result);
 	
 	if ($jumlah > 0) {			
-		while ($row = @mysql_fetch_row($result)) {		
+		while ($row = @mysqli_fetch_row($result)) {		
 	?>
 	</td>
     <tr><td>&nbsp;</td></tr>
@@ -72,10 +72,10 @@ function refresh() {
     <tr height="30">    	
     	<td width="100%" class="header" align="center"><?=$row[0];?></td>
     </tr>
-    <?		
-		$sql1 = "SELECT p.nama,p.replid FROM guru g, pelajaran p WHERE g.idpelajaran = p.replid AND g.nip ='$_REQUEST[nip]' AND p.departemen = '$row[0]' GROUP BY p.nama";
+    <?php 	
+		$sql1 = "SELECT p.nama,p.replid FROM guru g, pelajaran p WHERE g.idpelajaran = p.replid AND g.nip ='".$_REQUEST['nip']."' AND p.departemen = '".$row[0]."' GROUP BY p.nama";
 		$result1 = QueryDb($sql1); 				
-		while ($row1 = @mysql_fetch_array($result1)) {
+		while ($row1 = @mysqli_fetch_array($result1)) {
 	?>
     <tr>   	
        	<td align="center">
@@ -83,12 +83,12 @@ function refresh() {
 		</td>
     </tr>
     <!-- END TABLE CONTENT -->
-    <? 		} ?>
+    <?php 		} ?>
 	</table>
 		 <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-<?	
+<?php 
 	}
 } 
 	CloseDb(); 

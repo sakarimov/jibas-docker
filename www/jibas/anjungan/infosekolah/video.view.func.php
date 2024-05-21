@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetOwnerName($ownerid, $ownertype)
 {
     $sql = $ownertype == "S" ?
            "SELECT nama FROM jbsakad.siswa WHERE nis = '$ownerid'" :
-           "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+           "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -46,9 +46,9 @@ function GetMaxCommentId($videoid)
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     
@@ -61,7 +61,7 @@ function ShowPrevCommentLink($videoid)
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.videocomment
-             WHERE videoid = '$videoid'";
+             WHERE videoid = '".$videoid."'";
     $nCmt = (int)FetchSingle($sql);
     if ($nCmt <= $VideoViewActiveComment)
         return;
@@ -79,7 +79,7 @@ function ShowPrevCommentLink($videoid)
             </span>
         </td>
     </tr>
-<?
+<?php
 }
 
 function ShowPrevComment($videoid)
@@ -88,7 +88,7 @@ function ShowPrevComment($videoid)
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.videocomment
-             WHERE videoid = '$videoid'";
+             WHERE videoid = '".$videoid."'";
     $nCmt = (int)FetchSingleEx($sql);
     $sqlLimit = "LIMIT " . ($nCmt - $VideoViewActiveComment);
     
@@ -101,10 +101,10 @@ function ShowPrevComment($videoid)
                    $sqlLimit";
     
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -119,7 +119,7 @@ function ShowPrevComment($videoid)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='VideoViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='VideoViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -139,7 +139,7 @@ function ShowPrevComment($videoid)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -152,7 +152,7 @@ function ShowComment($videoid, $maxCommentId)
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.videocomment
-                 WHERE videoid = '$videoid'";
+                 WHERE videoid = '".$videoid."'";
         $nCmt = (int)FetchSingleEx($sql);
         if ($nCmt > $VideoViewActiveComment)
             $sqlLimit = "LIMIT " . ($nCmt - $VideoViewActiveComment) . ", $VideoViewActiveComment";
@@ -173,10 +173,10 @@ function ShowComment($videoid, $maxCommentId)
                AND replid > '$maxCommentId'
                    $sqlLimit";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -191,7 +191,7 @@ function ShowComment($videoid, $maxCommentId)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='VideoViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='VideoViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -211,7 +211,7 @@ function ShowComment($videoid, $maxCommentId)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     } // while
 }
 
@@ -264,12 +264,12 @@ function ShowCommentBox($videoid)
     </table>
     </fieldset>
 
-<?    
+<?php    
 }
 
 function ValidateDelCmtLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsuser.landlord
@@ -291,7 +291,7 @@ function ValidateDelCmtLogin($login, $password, &$type, &$info)
 
 function ValidateVideoOwner($videoid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -307,7 +307,7 @@ function ValidateVideoOwner($videoid, $login)
 
 function ValidateCommentOwner($replid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -333,13 +333,13 @@ function ValidateCommentOwner($replid, $login)
 function DeleteComment($replid)
 {
     $sql = "DELETE FROM jbsvcr.videocomment
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     QueryDbEx($sql);         
 }
 
 function ValidateEditVideoLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
     {
         $info = "Anda tidak berhak mengubah video ini!";
         return false;
@@ -350,7 +350,7 @@ function ValidateEditVideoLogin($login, $password, &$type, &$info)
 
 function ValidateDeleteVideoLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsuser.landlord
@@ -376,9 +376,9 @@ function DeleteVideo($videoid)
     
     $sql = "SELECT *
               FROM jbsvcr.video
-             WHERE replid = '$videoid'";
+             WHERE replid = '".$videoid."'";
     $res = QueryDbEx($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $floc = $row['location'] . "/" . $row['filename'];
         $floc = "$FILESHARE_UPLOAD_DIR/$floc";
@@ -389,7 +389,7 @@ function DeleteVideo($videoid)
     }
     
     $sql = "DELETE FROM jbsvcr.video
-             WHERE replid = '$videoid'";
+             WHERE replid = '".$videoid."'";
     echo "$sql<br>";         
     QueryDbEx($sql);
 }

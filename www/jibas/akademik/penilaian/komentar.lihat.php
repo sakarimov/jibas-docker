@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -39,7 +39,7 @@ ReadParams();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Komentar Nilai Rapor</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -67,7 +67,7 @@ ReadParams();
 <br>
 
 <?php
-$aspekarr = array();
+$aspekarr = [];
 
 $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
           FROM infonap i, nap n, aturannhb a, dasarpenilaian d
@@ -79,16 +79,16 @@ $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
            AND d.aktif = 1";
 $res = QueryDb($sql);
 $i = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $aspekarr[$i++] = array($row[0], $row[1]);
+    $aspekarr[$i++] = [$row[0], $row[1]];
 }
 $naspek = count($aspekarr);
 $ncolumn = $naspek + 2;
 $colwidth = round(75 / $ncolumn) . "%";
 
-$arrjenis = array('SPI', 'SOS');
-$arrnmjenis = array("Spiritual", "Sosial");
+$arrjenis = ['SPI', 'SOS'];
+$arrnmjenis = ["Spiritual", "Sosial"];
 ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="2" class="tab" id="table" style="border-width: 1px; border-collapse: collapse;">
 <tr style="height: 26px;">
@@ -100,8 +100,9 @@ $arrnmjenis = array("Spiritual", "Sosial");
         $nmaspek = $aspekarr[$i][1];
         echo "<td class='header' width='$colwidth' align='center'>$nmaspek</td>";
     }
+$counter = count($arrnmjenis);
 
-    for($i = 0; $i < count($arrnmjenis); $i++)
+    for($i = 0; $i < $counter; $i++)
     {
         $nmjenis = $arrnmjenis[$i];
         echo "<td class='header' width='$colwidth' align='center'>$nmjenis</td>";
@@ -116,7 +117,7 @@ $sql = "SELECT s.nis, s.nama
          ORDER BY s.nama";
 $res = QueryDb($sql);
 $no = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $no += 1;
     $nis = $row[0];
@@ -139,16 +140,16 @@ while($row = mysql_fetch_row($res))
                    AND i.idpelajaran = '$pelajaran' 
                    AND i.idsemester = '$semester' 
                    AND i.idkelas = '$kelas'	   
-                   AND a.dasarpenilaian = '$kdaspek'";
+                   AND a.dasarpenilaian = '".$kdaspek."'";
         $res2 = QueryDb($sql);
         $nilaiExist = false;
         $na = "";
         $nh = "";
         $idnap = 0;
         $komentar = "";
-        if (mysql_num_rows($res2) > 0)
+        if (mysqli_num_rows($res2) > 0)
         {
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $na = $row2[0];
             $nh = $row2[1];
             $idnap = $row2[2];
@@ -156,13 +157,15 @@ while($row = mysql_fetch_row($res))
             $nilaiExist = true;
         }
 
-        if ($nilaiExist)
+        if ($nilaiExist) {
             echo "<td align='left' valign='top'>$komentar<br><strong>Nilai: $na, Predikat: $nh</strong></td>";
-        else
+        } else {
             echo "<td align='center' valign='middle'><i>(belum ada data)</i></td>";
+        }
     }
+    $counter = count($arrjenis);
 
-    for($i = 0; $i < count($arrjenis); $i++)
+    for($i = 0; $i < $counter; $i++)
     {
         $jenis = $arrjenis[$i];
 
@@ -171,22 +174,23 @@ while($row = mysql_fetch_row($res))
                  WHERE nis = '$nis' 
                    AND idsemester = '$semester' 
                    AND idkelas = '$kelas'
-                   AND jenis = '$jenis'";
+                   AND jenis = '".$jenis."'";
         $res2 = QueryDb($sql);
         $komentar = "";
         $predikat = "";
         $nilaiExist = false;
-        if ($row2 = mysql_fetch_row($res2))
+        if ($row2 = mysqli_fetch_row($res2))
         {
             $nilaiExist = true;
             $komentar = $row2[1];
             $predikat = PredikatNama($row2[0]);
         }
 
-        if ($nilaiExist)
+        if ($nilaiExist) {
             echo "<td align='left' valign='top'>$komentar<br><strong>Predikat: $predikat</strong></td>";
-        else
+        } else {
             echo "<td align='center' valign='middle'><i>(belum ada data)</i></td>";
+        }
     }
     echo "</tr>";
 }
@@ -199,6 +203,6 @@ while($row = mysql_fetch_row($res))
 </body>
 </html>
 
-<?
+<?php
 CloseDb();
 ?>

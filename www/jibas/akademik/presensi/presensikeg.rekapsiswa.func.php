@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetCbDepartemen($default, $elmName = "cbDepartemen")
 {
     $depList = getDepartemenStringList(SI_USER_ACCESS());
@@ -35,13 +35,13 @@ function GetCbDepartemen($default, $elmName = "cbDepartemen")
              ORDER BY urutan";
     $res = QueryDb($sql);
     $selection = "<select id='$elmName' style='width: 140px;' onchange='changeCbDepartemen()'>\r\n";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($default == "")
             $default = $row[0];
             
         $selected = $default == $row[0] ? "selected" : "";
-        $selection .= "<option value='$row[0]' $selected>$row[0]</option>\r\n";
+        $selection .= "<option value='".$row[0]."' $selected>".$row[0]."</option>\r\n";
         
         if ($selected == "selected")
         {
@@ -51,9 +51,9 @@ function GetCbDepartemen($default, $elmName = "cbDepartemen")
     }
     $selection .= "</select>\r\n";
     
-    $json_array = array('selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText);
+    $json_array = ['selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText];
     
-    return json_encode($json_array);
+    return json_encode($json_array, JSON_THROW_ON_ERROR);
 }
 
 function GetCbTingkat($departemen, $default)
@@ -68,13 +68,13 @@ function GetCbTingkat($departemen, $default)
              ORDER BY urutan";
     $res = QueryDb($sql);
     $selection = "<select id='cbTingkat' style='width: 140px;' onchange='changeCbTingkat()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($default == 0)
             $default = $row[0];
             
         $selected = $default == $row[0] ? "selected" : "";
-        $selection .= "<option value='$row[0]' $selected>$row[1]</option>";
+        $selection .= "<option value='".$row[0]."' $selected>".$row[1]."</option>";
         
         if ($selected == "selected")
         {
@@ -84,9 +84,9 @@ function GetCbTingkat($departemen, $default)
     }
     $selection .= "</select>";
     
-    $json_array = array('selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText);
+    $json_array = ['selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText];
     
-    return json_encode($json_array);
+    return json_encode($json_array, JSON_THROW_ON_ERROR);
 }
 
 function GetCbKelas($idtingkat, $default)
@@ -102,13 +102,13 @@ function GetCbKelas($idtingkat, $default)
              ORDER BY kelas";
     $res = QueryDb($sql);
     $selection = "<select id='cbKelas' style='width: 140px;' onchange='changeCbKelas()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($default == 0)
             $default = $row[0];
             
         $selected = $default == $row[0] ? "selected" : "";
-        $selection .= "<option value='$row[0]' $selected>$row[1]</option>";
+        $selection .= "<option value='".$row[0]."' $selected>".$row[1]."</option>";
         
         if ($selected == "selected")
         {
@@ -118,9 +118,9 @@ function GetCbKelas($idtingkat, $default)
     }
     $selection .= "</select>";
     
-    $json_array = array('selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText);
+    $json_array = ['selection' => $selection, 'value' => $selectedValue, 'text' => $selectedText];
     
-    return json_encode($json_array);
+    return json_encode($json_array, JSON_THROW_ON_ERROR);
 }
 
 function GetSiswa($bulan, $tahun, $idkelas)
@@ -141,13 +141,13 @@ function GetSiswa($bulan, $tahun, $idkelas)
     $table .= "<td width='12%' class='header'>&nbsp;</td>\r\n";
     $table .= "</tr>\r\n";
     $cnt = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $cnt += 1;
         $table .= "<tr>\r\n";
         $table .= "<td align='center'>$cnt</td>\r\n";
-        $table .= "<td align='left'><font style='font-size: 8px; color: green;'>$row[0]</font><br>$row[1]</td>\r\n";
-        $table .= "<td align='center'>$row[2]</td>\r\n";
+        $table .= "<td align='left'><font style='font-size: 8px; color: green;'>".$row[0]."</font><br>".$row[1]."</td>\r\n";
+        $table .= "<td align='center'>".$row[2]."</td>\r\n";
         $table .= "<td align='center'><input type='button' class='but' value=' > ' onclick=\"showReport($bulan, $tahun, '$row[0]')\"></td>\r\n";
         $table .= "</tr>\r\n";
     }
@@ -174,13 +174,13 @@ function SearchSiswa($bulan, $tahun, $filter, $keyword)
     $table .= "<td width='12%' class='header'>&nbsp;</td>\r\n";
     $table .= "</tr>\r\n";
     $cnt = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $cnt += 1;
         $table .= "<tr>\r\n";
         $table .= "<td align='center'>$cnt</td>\r\n";
-        $table .= "<td align='left'><font style='font-size: 8px; color: green;'>$row[0]</font><br>$row[1]</td>\r\n";
-        $table .= "<td align='center'>$row[2]</td>\r\n";
+        $table .= "<td align='left'><font style='font-size: 8px; color: green;'>".$row[0]."</font><br>".$row[1]."</td>\r\n";
+        $table .= "<td align='center'>".$row[2]."</td>\r\n";
         $table .= "<td align='center'><input type='button' class='but' value=' > ' onclick=\"showReport($bulan, $tahun, '$row[0]')\"></td>\r\n";
         $table .= "</tr>\r\n";
     }

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/common.php');
 require_once('include/sessioninfo.php');
 require_once('include/config.php');
@@ -39,7 +39,7 @@ $sql_berita="SELECT YEAR(tanggal) as thn,MONTH(tanggal) as bln,DAY(tanggal) as t
                FROM jbsvcr.beritasiswa
               WHERE replid='$replid'";
 $result_berita=QueryDb($sql_berita);
-$row_berita=@mysql_fetch_array($result_berita);
+$row_berita=@mysqli_fetch_array($result_berita);
 
 $jenis = $row_berita['jenis'];
 if ($jenis == "S")
@@ -55,7 +55,7 @@ else
 			 WHERE nip = '" . $row_berita['idguru'] ."'";
 }
 $res2 = QueryDb($sql);
-$row2 = mysql_fetch_row($res2);
+$row2 = mysqli_fetch_row($res2);
 $nama = $row2[0];
 
 CloseDb();
@@ -121,9 +121,9 @@ $tglberita=$row_berita['tgl']." ".NamaBulan($row_berita['bln'] - 1)." ".$row_ber
 			<tr>
 				<td align="left">
 					<font style="font-size:11px; line-height: 18px;">
-					<?
+					<?php
 					$berita = $row_berita['berita'];
-					$berita = str_replace("#sq;", "'", $berita);
+					$berita = str_replace("#sq;", "'", (string) $berita);
 					echo $berita;
 					?>
 					</font>

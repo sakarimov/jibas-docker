@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once("../include/theme.php");
 require_once('../include/db_functions.php');
@@ -32,20 +32,20 @@ if (isset($_REQUEST['simpan']))
 {
 	OpenDb();
 	$tingkat = $_REQUEST['status_user'];
-	$pass=md5($_REQUEST['password']);
+	$pass=md5((string) $_REQUEST['password']);
 		
   	//cek apakah sudah ada account yang sama di SIMAKA
 	$query_c = "SELECT *
 				  FROM jbsuser.hakakses
-				 WHERE login = '$_REQUEST[nip]' AND tingkat = $tingkat AND modul = 'SIMPEG'";
+				 WHERE login = '".$_REQUEST['nip']."' AND tingkat = $tingkat AND modul = 'SIMPEG'";
 	$result_c = QueryDb($query_c);
-    $num_c = @mysql_num_rows($result_c);
+    $num_c = @mysqli_num_rows($result_c);
 	
 	$query_cek = "SELECT *
 					FROM jbsuser.login
-				   WHERE login = '$_REQUEST[nip]'";
+				   WHERE login = '".$_REQUEST['nip']."'";
 	$result_cek = QueryDb($query_cek);
-    $num_cek = @mysql_num_rows($result_cek);
+    $num_cek = @mysqli_num_rows($result_cek);
 		
 	BeginTrans();
 	$success=1;	
@@ -57,22 +57,22 @@ if (isset($_REQUEST['simpan']))
 			//Kalo manajer
 			if ($num_cek == 0)
 			{
-				$sql_login="INSERT INTO jbsuser.login SET login='$_REQUEST[nip]', password='$pass', aktif=1";
+				$sql_login="INSERT INTO jbsuser.login SET login='".$_REQUEST['nip']."', password='$pass', aktif=1";
 				QueryDbTrans($sql_login, $success);		
 			}		
 				
-			$sql_hakakses="INSERT INTO jbsuser.hakakses SET login='$_REQUEST[nip]', tingkat=1, modul='SIMPEG', keterangan='".CQ($_REQUEST['keterangan'])."'";
+			$sql_hakakses="INSERT INTO jbsuser.hakakses SET login='".$_REQUEST['nip']."', tingkat=1, modul='SIMPEG', keterangan='".CQ($_REQUEST['keterangan'])."'";
 		}
 		elseif ($tingkat==2)
 		{
 			//Kalo staf
 			if ($num_cek == 0)
 			{
-				$sql_login="INSERT INTO jbsuser.login SET login='$_REQUEST[nip]', password='$pass', aktif=1";
+				$sql_login="INSERT INTO jbsuser.login SET login='".$_REQUEST['nip']."', password='$pass', aktif=1";
 				QueryDbTrans($sql_login, $success);		
 			}			
 			
-			$sql_hakakses="INSERT INTO jbsuser.hakakses SET login='$_REQUEST[nip]', tingkat=2, modul='SIMPEG', keterangan='".CQ($_REQUEST['keterangan'])."'";
+			$sql_hakakses="INSERT INTO jbsuser.hakakses SET login='".$_REQUEST['nip']."', tingkat=2, modul='SIMPEG', keterangan='".CQ($_REQUEST['keterangan'])."'";
 		}
 		if ($success)	
 			QueryDbTrans($sql_hakakses, $success);
@@ -87,7 +87,7 @@ if (isset($_REQUEST['simpan']))
 			parent.opener.refresh();
 			window.close();
 		</script>
-<?		exit();
+<?php 	exit();
 	}
 	else
 	{

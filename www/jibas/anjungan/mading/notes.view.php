@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -39,23 +39,23 @@ $sql = "SELECT *, IF(nip IS NULL, 'S', 'P') AS ownertype,
                DATE_FORMAT(tanggal, '%d-%m-%Y') AS tglbuat,
                TIME_TO_SEC(TIMEDIFF(NOW(), tanggal)) AS secdiff
           FROM jbsvcr.notes
-         WHERE replid = '$notesid'";
+         WHERE replid = '".$notesid."'";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     echo "Tidak ditemukan notes!";
     exit();
 }
 
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $ownertype = $row['ownertype'];
 $ownerid = $ownertype == "S" ? $row['nis'] : $row['nip'];
 $ownername = GetOwnerName($ownerid, $ownertype);
 
 $sql = "UPDATE jbsvcr.notes
            SET nread = nread + 1, lastread = NOW()
-         WHERE replid = '$notesid'";
+         WHERE replid = '".$notesid."'";
 QueryDb($sql);         
 ?>
 <table border='0' cellpadding='2' cellspacing='0' width='98%'>
@@ -78,7 +78,7 @@ QueryDb($sql);
 <tr>
 <td align='center' valign='top' width='15%'>
     <font class='NotesViewTanggal'>Dari</font><br><br>
-    <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='70'><br>
+    <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='70'><br>
     <strong><?=$ownername?></strong><br>
     <font class='NotesViewAge'><?= SecToAgeDate($row['secdiff'], $row['tglbuat']) ?></font><br><br>
     <font class='NotesViewTanggal'>Kepada</font><br><br>
@@ -88,7 +88,7 @@ QueryDb($sql);
     <font class='NotesViewJudul'><?= $row['fjudul'] ?></font>
     <br><br>
     <font class='NotesViewPesan'><?= $row['fpesan'] ?></font><br><br>
-<?
+<?php
     ShowTautan();
     ShowGambar();
     ShowDokumen();
@@ -99,12 +99,12 @@ QueryDb($sql);
     <input type='hidden' id='not_MaxCommentId' value='<?= GetMaxCommentId($notesid) ?>'>
     <table id='not_CmtList' border='0' cellpadding='2' cellspacing='2' width='80%'>
     <thead>
-<?
+<?php
     ShowPrevCommentLink($notesid);
 ?>
     </thead>    
     <tbody>
-<?
+<?php
     ShowComment($notesid, 0);
 ?>    
     </tbody>
@@ -113,7 +113,7 @@ QueryDb($sql);
         <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
         <td style='background-color: #fff' width='*' align='left' valign='top' colspan='2'>
             <div id='not_divAddComment'>
-<?
+<?php
             ShowCommentBox($notesid);
 ?>    
             </div>
@@ -129,6 +129,6 @@ QueryDb($sql);
 
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ function ShowCbVendor()
     $res = QueryDb($sql);
 
     echo "<select id='vendor' name='vendor' onchange='clearReport()' style='width: 250px'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -43,7 +43,7 @@ function ShowSelectTanggal1()
                    MONTH(DATE_SUB(NOW(), INTERVAL 7 DAY)),
                    DAY(DATE_SUB(NOW(), INTERVAL 7 DAY))";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $tahun = $row[0];
     $bulan = $row[1];
     $tanggal = $row[2];
@@ -82,7 +82,7 @@ function ShowSelectTanggal2()
                    MONTH(NOW()),
                    DAY(NOW())";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $tahun = $row[0];
     $bulan = $row[1];
     $tanggal = $row[2];
@@ -151,15 +151,15 @@ function ShowRekapTransReport($showMenu)
              ORDER BY vu.tingkat, u.nama";
     $res = QueryDb($sql);
 
-    $lsUser = array();
-    while($row = mysql_fetch_row($res))
+    $lsUser = [];
+    while($row = mysqli_fetch_row($res))
     {
         $userId = $row[0];
         $tingkat = $row[1];
         $nama = $row[2];
         if ($tingkat == 1) $nama .= " (M)";
 
-        $lsUser[] = array($userId, $nama, 0);
+        $lsUser[] = [$userId, $nama, 0];
     }
 
     if (count($lsUser) == 0)
@@ -175,10 +175,10 @@ function ShowRekapTransReport($showMenu)
              ORDER BY tanggal DESC";
     $res = QueryDb($sql);
 
-    $lsTanggal = array();
-    while($row = mysql_fetch_row($res))
+    $lsTanggal = [];
+    while($row = mysqli_fetch_row($res))
     {
-        $lsTanggal[] = array($row[0], $row[1]);
+        $lsTanggal[] = [$row[0], $row[1]];
     }
 
     if (count($lsTanggal) == 0)
@@ -230,9 +230,9 @@ function ShowRekapTransReport($showMenu)
                       FROM jbsfina.paymenttrans
                      WHERE vendorid = '$vendorId'
                        AND userid = '$userId'
-                       AND tanggal = '$tanggal'";
+                       AND tanggal = '".$tanggal."'";
             $res = QueryDb($sql);
-            if ($row = mysql_fetch_row($res))
+            if ($row = mysqli_fetch_row($res))
             {
                 $jumlah = $row[0];
                 $rp = FormatRupiah($row[0]);

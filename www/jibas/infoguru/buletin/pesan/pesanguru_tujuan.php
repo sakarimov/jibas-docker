@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/config.php');
 require_once('../../include/db_functions.php');
@@ -123,14 +123,14 @@ function cek_all() {
    <tr bgcolor="#FFFFFF">
     <th scope="row" align="right" valign="bottom"><select name="bagian" id="bagian" onchange="chg_bag()">
         	<option value="-1" <?=StringIsSelected("-1",$bagian)?>>Semua Bagian</option>
-        	<? 
+        	<?php 
 			OpenDb();
 			$sql="SELECT * FROM jbssdm.bagianpegawai ORDER BY bagian";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 			?>
             <option value="<?=$row['bagian']?>" <?=StringIsSelected($bagian,$row['bagian'])?>><?=$row['bagian']?></option>
-            <?
+            <?php
 			}
 			CloseDb();
 			?>

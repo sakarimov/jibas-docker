@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,11 +45,11 @@ function ShowBankSaldo()
               FROM jbsfina.bank b, jbsfina.banksaldo bs
              WHERE b.bankno = bs.bankno";
     if ($departemen != "ALL")
-        $sql .= " AND bs.departemen = '$departemen'";
+        $sql .= " AND bs.departemen = '".$departemen."'";
     $sql .= " GROUP BY b.bank, bs.bankno";
 
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<br>Belum ada saldo bank";
         return;
@@ -61,13 +61,13 @@ function ShowBankSaldo()
     echo "<td class='header' align='center' width='175'>Bank</td>";
     echo "<td class='header' align='center' width='175'>Saldo</td>";
     echo "</tr>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $saldo = $row["saldo"];
         $rp = FormatRupiah($saldo);
 
-        echo "<tr style='cursor: pointer;' onclick='showMutasiBank(\"$row[bank]\",\"$row[bankno]\")'>";
-        echo "<td><strong>$row[bank]</strong><br><i>$row[bankno]</i></td>";
+        echo "<tr style='cursor: pointer;' onclick='showMutasiBank(\"{$row['bank']}\",\"{$row['bankno']}\")'>";
+        echo "<td><strong>".$row['bank']."</strong><br><i>".$row['bankno']."</i></td>";
         echo "<td align='right'><span style='font-size: 13px; font-weight: bold'>$rp</span></td>";
         echo "</tr>";
     }

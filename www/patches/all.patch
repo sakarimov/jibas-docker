@@ -1,0 +1,148 @@
+diff --git a/akademik/index.php b/akademik/index.php
+index 1ddc7ed5..b79aad82 100755
+--- a/akademik/index.php
++++ b/akademik/index.php
+@@ -23,8 +23,8 @@
+ <?php
+ require_once(__DIR__ . '/include/config.php');
+ 
+-session_name("jbsakad");
+ session_start();
++session_name("jbsakad");
+ 
+ if (isset($_SESSION['namasimaka'])) {
+     include(__DIR__ . "/index2.php");
+@@ -32,4 +32,4 @@ if (isset($_SESSION['namasimaka'])) {
+     include(__DIR__ . "/login.php");
+ }
+ 	
+-?>
+\ No newline at end of file
++?>
+diff --git a/include/application.config.php b/include/application.config.php
+index ea415f3b..7c348086 100755
+--- a/include/application.config.php
++++ b/include/application.config.php
+@@ -22,7 +22,7 @@
+  **[N]**/ ?>
+ <?php
+ /* Awal tahun pendataan menggunakan SISFO JIBAS */
+-$G_START_YEAR='2011';
++$G_START_YEAR=getenv("G_START_YEAR");
+ 
+ /* Alamat Server aplikasi SISFO JIBAS 
+      Alamat ini digunakan untuk menampilkan header cetak di laporan-laporan yang disediakan SISFO JIBAS 
+@@ -32,8 +32,8 @@ $G_START_YEAR='2011';
+ $G_SERVER_ADDR='localhost/jibas';
+ 
+ /* Sistem operasi yang digunakan ( win | lin ) */
+-$G_OS='win';
++$G_OS='lin';
+ 
+ /* Lokasi Sekolah */
+ $G_LOKASI="Bandung";
+-?>
+\ No newline at end of file
++?>
+diff --git a/include/database.config.php b/include/database.config.php
+index 17878241..88208ee3 100755
+--- a/include/database.config.php
++++ b/include/database.config.php
+@@ -23,15 +23,15 @@
+ <?php
+ 
+ /* Alamat basis data MySQL JIBAS */
+-$db_host='127.0.0.1:3307';
++$db_host='database';
+ 
+ /* User basis data MySQL JIBAS */
+ $db_user='root';
+ 
+ /* Password basis data MySQL JIBAS */
+-$db_pass='rahasia';
++$db_pass=getenv("MYSQL_ROOT_PASSWORD");
+ 
+ /* Basis data default JIBAS */
+-$db_name='jbsumum';
++$db_name=getenv("MYSQL_DATABASE");
+ 
+-?>
+\ No newline at end of file
++?>
+diff --git a/include/filesharing.config.php b/include/filesharing.config.php
+index ef30cfb6..3de0373b 100755
+--- a/include/filesharing.config.php
++++ b/include/filesharing.config.php
+@@ -24,11 +24,11 @@
+ /* Direktori tempat penyimpanan file-file FileSharing
+    Direktori slashes di sistem operasi Linux menggunakan /
+    sedangkan di Windows bisa menggunakan \\ dan /   */
+-$FILESHARE_UPLOAD_DIR = "C:\\YIM\\JIBAS\\xampp\\htdocs\\filesharing\\";
++$FILESHARE_UPLOAD_DIR = "/var/www/html/jibas/filesharing";
+  
+ /* Alamat web based dari direktori tempat penyimpanan file-file FileSharing 
+    PERHATIAN:
+      UNTUK PENGGUNAAN MULTIUSER di LOCAL AREA NETWORK
+      JANGAN MENGGUNAKAN localhost TETAPI GUNAKAN IP ADDRESS atau HOSTNAME */
+-$FILESHARE_ADDR = "http://localhost/filesharing/";
+-?>
+\ No newline at end of file
++$FILESHARE_ADDR = "http://localhost/jibas/filesharing/";
++?>
+diff --git a/include/httprequest.php b/include/httprequest.php
+index dad17c30..5fa277d1 100755
+--- a/include/httprequest.php
++++ b/include/httprequest.php
+@@ -22,8 +22,8 @@
+  **[N]**/ ?>
+ <?php
+ function http_request(
+-    $verb = 'GET',             /* HTTP Request Method (GET and POST supported) */
+     $ip,                       /* Target IP/Hostname */
++    $verb = 'GET',             /* HTTP Request Method (GET and POST supported) */
+     $port = 80,                /* Target TCP port */
+     $uri = '/',                /* Target URI */
+     $getdata = array(),        /* HTTP GET Data ie. array('var1' => 'val1', 'var2' => 'val2') */
+@@ -91,4 +91,4 @@ function http_request(
+    
+     return $ret;
+ }
+-?>
+\ No newline at end of file
++?>
+diff --git a/include/school.config.php b/include/school.config.php
+index 33611b62..9c937b82 100755
+--- a/include/school.config.php
++++ b/include/school.config.php
+@@ -27,9 +27,9 @@
+    Simpan Gambar Logo di direktori images
+    Jika tidak menggunakan logo, masukkan nama gambar nologo.png
+ */
+-$G_LOGO_DEPAN_KIRI="tutwuri.png"; // nama file gambarnya, jika tidak ada gunakan nama file nologo.png
+-$G_LOGO_DEPAN_KANAN="tutwuri.png";
+-$G_JUDUL_DEPAN_1="SEKOLAH PENDIDIKAN INDONESIA";
+-$G_JUDUL_DEPAN_2="YAYASAN PENDIDIKAN INDONESIA";
+-$G_JUDUL_DEPAN_3="(atur kembali logo dan identitas sekolah di file school.config.php <br> untuk lebih jelasnya silahkan baca file readme.txt)";
+-?>
+\ No newline at end of file
++$G_LOGO_DEPAN_KIRI=getenv("G_LOGO_DEPAN_KIRI"); // nama file gambarnya, jika tidak ada gunakan nama file nologo.png
++$G_LOGO_DEPAN_KANAN=getenv("G_LOGO_DEPAN_KANAN");
++$G_JUDUL_DEPAN_1=getenv("G_JUDUL_DEPAN_1");
++$G_JUDUL_DEPAN_2=getenv("G_JUDUL_DEPAN_2");
++$G_JUDUL_DEPAN_3=getenv("G_JUDUL_DEPAN_3");
++?>
+diff --git a/include/system.config.php b/include/system.config.php
+index 3d9eba6a..d10a7c17 100755
+--- a/include/system.config.php
++++ b/include/system.config.php
+@@ -27,7 +27,7 @@
+ 	Untuk daerah Indonesa bagian tengah (WITA) gunakan Asia/Makassar
+ 	Untuk daerah Indonesa bagian timur (WIT) gunakan Asia/Jayapura
+ */
+-define('JIBAS_TIMEZONE','Asia/Jakarta');
++define('JIBAS_TIMEZONE', getenv("JIBAS_TIMEZONE"));
+ 
+ date_default_timezone_set(JIBAS_TIMEZONE);
+-?>
+\ No newline at end of file
++?>

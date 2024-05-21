@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class PengumumanListAjax{
 	function OnStart(){
 		$op = $_REQUEST['op'];
@@ -39,7 +39,7 @@ class PengumumanListAjax{
 		$this->OutboxID = $OutboxID;
 		
 		$DestNumb = $_REQUEST['DestNumb'];
-		$this->DestNumb = str_replace(' 62','0',$DestNumb);
+		$this->DestNumb = str_replace(' 62','0',(string) $DestNumb);
 		
 		$Txt = CQ($_REQUEST['Txt']);
 		$this->Txt = $Txt;
@@ -67,7 +67,7 @@ class PengumumanListAjax{
 	function ResendDetailInfoGenList2(){
 		$sql = "SELECT * FROM outboxhistory WHERE ID='".$this->OutboxID."'";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_array($res);
+		$row = @mysqli_fetch_array($res);
 		$IdInfoGen = $row['idsmsgeninfo'];
 		$SenderID = $row['SenderID'];
 		$CreatorID = $row['SenderID'];
@@ -83,7 +83,7 @@ class PengumumanListAjax{
 	function ResendDetailInfoGenList(){
 		$sql = "SELECT * FROM outboxhistory WHERE ID='".$this->OutboxID."'";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_array($res);
+		$row = @mysqli_fetch_array($res);
 		$IdInfoGen = $row['idsmsgeninfo'];
 		$SendingDateTime = $row['SendingDateTime'];
 		$Text = $row['Text'];
@@ -111,7 +111,7 @@ class PengumumanListAjax{
 	function DeleteDetailInfoGenList(){
 		$sql = "SELECT idsmsgeninfo FROM outboxhistory WHERE ID='".$this->OutboxID."'";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_row($res);
+		$row = @mysqli_fetch_row($res);
 		$this->IdInfoGen = $row[0];
 
 		$sql = "DELETE FROM outboxhistory WHERE ID='$this->OutboxID'";
@@ -129,21 +129,21 @@ class PengumumanListAjax{
 			<td>Info/Tanggal</td>
 			<td>&nbsp;</td>
 		  </tr>
-		  <?
+		  <?php
 		  $sql = "SELECT replid,info,DATE_FORMAT(tanggal,'%e %b %Y') FROM smsgeninfo WHERE tipe=2 AND YEAR(tanggal)='".$this->Thn."' AND MONTH(tanggal)='".$this->Bln."' ORDER BY replid DESC";
 		  //echo $sql;
 		  $res = QueryDb($sql);
-		  $num = @mysql_num_rows($res);
+		  $num = @mysqli_num_rows($res);
 		  if ($num>0){
 		  $cnt = 1;
-		  while ($row = @mysql_fetch_row($res)){
+		  while ($row = @mysqli_fetch_row($res)){
 			  ?>
 			  <tr class="td">
 				<td align="center" valign="top" class="td"><?=$cnt?></td>
-				<td class="td" style="cursor:pointer" onclick="SelectInfoGenList('<?=$row[0]?>')"><?="$row[1]<br><i>$row[2]</i>"?></td>
+				<td class="td" style="cursor:pointer" onclick="SelectInfoGenList('<?=$row[0]?>')"><?="$row[1]<br><i>".$row[2]."</i>"?></td>
 				<td class="td" align="center"><img onclick="DeleteInfoGenList('<?=$row[0]?>')" src="../images/ico/hapus.png" width="16" height="16" border="0" style="cursor:pointer" /></td>
 			  </tr>
-			  <?
+			  <?php
 			  $cnt++;
 		      }  
 		  } else {
@@ -151,11 +151,11 @@ class PengumumanListAjax{
 		  <tr>
 			<td class="td Ket" align="center" colspan='3' >Tidak ada data</td>
 		  </tr>
-		  <?
+		  <?php
 		  }
 		  ?>
 		</table>
-		<?
+		<?php
 	}
 	function GetDetailInfoGenList($id){
 		?>
@@ -166,55 +166,55 @@ class PengumumanListAjax{
             <td>Pesan</td>
             <td>&nbsp;</td>
           </tr>
-          <?
+          <?php
 		  $sql = "SELECT * FROM outboxhistory WHERE idsmsgeninfo=$id";
 		  $res = QueryDb($sql);
-		  $num = @mysql_num_rows($res);
+		  $num = @mysqli_num_rows($res);
 		  if ($num>0){
 		  $cnt = 1;
-		  while ($row = @mysql_fetch_array($res)){
+		  while ($row = @mysqli_fetch_array($res)){
 			  ?>
               <tr>
 				<td align="center" class="tdTop" valign="top"><?=$cnt?></td>
                 <td class="tdTop" valign="top">
-				<span id='SpanNumber<?=$row[ID]?>'>
+				<span id='SpanNumber<?=$row['ID']?>'>
 				<?=$row['DestinationNumber']?>
 				</span>
-				<input type="text" id="Input<?=$row[ID]?>" class="InputTxt" value="<?=$row['DestinationNumber']?>" style="width:95%; display:none">
+				<input type="text" id="Input<?=$row['ID']?>" class="InputTxt" value="<?=$row['DestinationNumber']?>" style="width:95%; display:none">
 				</td>
                 <td class="td">
-				<span id='SpanTxt<?=$row[ID]?>'>
+				<span id='SpanTxt<?=$row['ID']?>'>
 				<?=$row['Text']?>
 				</span>
-				<textarea id="TxtArea<?=$row[ID]?>" style="width:99%; display:none" class="AreaTxt"><?=$row['Text']?></textarea>
+				<textarea id="TxtArea<?=$row['ID']?>" style="width:99%; display:none" class="AreaTxt"><?=$row['Text']?></textarea>
 				</td>
                 <td class="td" align='center'>
-					<table border='0' cellpadding='0' cellspacing='0' id="Utility1<?=$row[ID]?>">
+					<table border='0' cellpadding='0' cellspacing='0' id="Utility1<?=$row['ID']?>">
 						<tr>
 							<td style='padding-right:2px'>
-								<img title='Ubah lalu kirim ulang' onclick="EditDetailInfoGenList('<?=$row[ID]?>','1')" src="../images/ico/ubah.png" width="16" height="16" border="0" style="cursor:pointer" />
+								<img title='Ubah lalu kirim ulang' onclick="EditDetailInfoGenList('<?=$row['ID']?>','1')" src="../images/ico/ubah.png" width="16" height="16" border="0" style="cursor:pointer" />
 							</td>
 							<td style='padding-right:2px'>
-								<img title='Kirim Ulang' onclick="ResendDetailInfoGenList('<?=$row[ID]?>')" src="../images/ico/refresh.png" width="16" height="16" border="0" style="cursor:pointer" />
+								<img title='Kirim Ulang' onclick="ResendDetailInfoGenList('<?=$row['ID']?>')" src="../images/ico/refresh.png" width="16" height="16" border="0" style="cursor:pointer" />
 							</td>
 							<td style='padding-right:2px'>
-								<img title='Hapus' onclick="DeleteDetailInfoGenList('<?=$row[ID]?>')" src="../images/ico/hapus.png" width="16" height="16" border="0" style="cursor:pointer" />
+								<img title='Hapus' onclick="DeleteDetailInfoGenList('<?=$row['ID']?>')" src="../images/ico/hapus.png" width="16" height="16" border="0" style="cursor:pointer" />
 							</td>
 						</tr>
 					</table>
-                    <table border='0' cellpadding='0' cellspacing='0' id="Utility2<?=$row[ID]?>" style="display:none">
+                    <table border='0' cellpadding='0' cellspacing='0' id="Utility2<?=$row['ID']?>" style="display:none">
 						<tr>
 							<td style='padding-right:2px'>
-								<img title='Batalkan perubahan' onclick="EditDetailInfoGenList('<?=$row[ID]?>','0')" src="../images/ico/hapusBW.png" width="12" height="12" border="0" style="cursor:pointer" />
+								<img title='Batalkan perubahan' onclick="EditDetailInfoGenList('<?=$row['ID']?>','0')" src="../images/ico/hapusBW.png" width="12" height="12" border="0" style="cursor:pointer" />
 							</td>
 							<td style='padding-right:2px'>
-							  <img title='Kirim' onclick="ResendDetailInfoGenList2('<?=$row[ID]?>')" src="../images/ico/refresh.png" width="16" height="16" border="0" style="cursor:pointer" />
+							  <img title='Kirim' onclick="ResendDetailInfoGenList2('<?=$row['ID']?>')" src="../images/ico/refresh.png" width="16" height="16" border="0" style="cursor:pointer" />
 							</td>
 						</tr>
 					</table>
 				</td>
               </tr>
-              <?
+              <?php
 			  $cnt++;
 		      }  
 		  } else {
@@ -222,11 +222,11 @@ class PengumumanListAjax{
           <tr>
             <td colspan="4" align="center" class="td Ket">Tidak ada data</td>
           </tr>
-          <?
+          <?php
 		  }
 		  ?>
         </table>
-        <?
+        <?php
 	}
 }
 ?>

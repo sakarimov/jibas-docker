@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,9 +37,9 @@ $transId = $_REQUEST["transid"];
 
 $sql = "SELECT SUM(jumlah)
           FROM jbsfina.paymenttrans
-         WHERE transactionid = '$transId'";
+         WHERE transactionid = '".$transId."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $jumlah = $row[0];
 
 $sql = "SELECT p.transactionid, DATE_FORMAT(p.waktu, '%d-%b-%Y %H:%i') AS waktu,
@@ -54,9 +54,9 @@ $sql = "SELECT p.transactionid, DATE_FORMAT(p.waktu, '%d-%b-%Y %H:%i') AS waktu,
           LEFT JOIN jbsakad.angkatan a ON s.idangkatan = a.replid
           LEFT JOIN jbssdm.pegawai pg ON p.nip = pg.nip
           LEFT JOIN jbsfina.datapenerimaan dp ON p.iddatapenerimaan = dp.replid
-         WHERE transactionid = '$transId'";
+         WHERE transactionid = '".$transId."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $tanggal = $row["waktu"];
 $petugas = $row["namauser"];
 $vendor = $row["namavendor"];
@@ -74,7 +74,7 @@ else
               FROM jbsfina.paymenttabungan
              WHERE jenis = 1";
     $res2 = QueryDb($sql);
-    if ($row2 = mysql_fetch_row($res2))
+    if ($row2 = mysqli_fetch_row($res2))
         $departemen = $row2[0];
 }
 $keterangan = $row["keterangan"];
@@ -85,7 +85,7 @@ $sql = "SELECT nokas
           FROM jbsfina.jurnal 
          WHERE replid = $idJurnal";
 $res = QueryDb($sql);
-if ($row = mysql_fetch_row($res))
+if ($row = mysqli_fetch_row($res))
     $noKas = $row[0];
 
 $rpJumlah = FormatRupiah($jumlah);
@@ -93,7 +93,7 @@ $transaksi = "pembayaran non-tunai untuk <strong>$vendor</strong> no transaksi <
 
 $sql = "SELECT replid, nama, alamat1 FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $idHeader = $row["replid"];
 $namaHeader = $row["nama"];
 $alamatHeader = $row["alamat1"];
@@ -185,13 +185,13 @@ for($i = 0; $i < 2; $i++)
 
                         </td>
                         <td align="center">
-                            <? if ($i == 0) { ?>
+                            <?php if ($i == 0) { ?>
                                 Yang menerima<br /><br /><br /><br /><br />
                                 ( <?=getUserName() ?> )
-                            <? } else { ?>
+                            <?php } else { ?>
                                 Yang menyerahkan<br /><br /><br /><br /><br />
                                 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
-                            <? } ?>
+                            <?php } ?>
                         </td>
                     </tr>
                     </table>
@@ -202,12 +202,12 @@ for($i = 0; $i < 2; $i++)
     </tr>
     <tr>
         <td align='right'>
-            <? if ($i == 0) { ?>
+            <?php if ($i == 0) { ?>
                 <hr width="350" style="border-style:dashed; line-height:1px; color:#666;" />
-            <?	} ?>
+            <?php } ?>
         </td>
     </tr>
-<? } //for ?>
+<?php } //for ?>
 </table>
 
 </body>

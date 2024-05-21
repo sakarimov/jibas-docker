@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class Kritik{
 	function Main(){
 		global $LMonth;
@@ -32,25 +32,25 @@ class Kritik{
                 <td style="padding-right:4px">Bulan</td>
                 <td style="padding-right:4px">
                 <select id="Month" class="Cmb" onchange="ChgCmb()">
-                    <?
+                    <?php
                     for ($i=1; $i<=12; $i++){
 						if ($Month=='')
-							$Month = date(m);
+							$Month = date('m');
                         ?>
                         <option value="<?=$i?>" <?=StringIsSelected($i,$Month)?>><?=$LMonth[$i-1]?></option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>                </td>
                 <td style="padding-right:2px">
                 <select id="Year" class="Cmb" onchange="ChgCmb()">
-                    <?
-                    for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                    <?php
+                    for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                         if ($Year=='')
-							$Year = date(Y);
+							$Year = date('Y');
 						?>
                         <option value="<?=$i?>" <?=StringIsSelected($i,$Year)?>><?=$i?></option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>                </td>
@@ -59,7 +59,7 @@ class Kritik{
                 <td style="padding-right:4px">Jenis</td>
                 <td colspan="2" style="padding-right:4px"><span style="padding-right:2px">
                   <select name="Type" class="Cmb" id="Type" onchange="ChgCmb()">
-                    <?
+                    <?php
 				if ($Type=="")
 					$Type="kritik";
 				?>
@@ -80,14 +80,14 @@ class Kritik{
             <td><?=ucfirst($Type) ?></td>
             <td>&nbsp;</td>
           </tr>
-          <?
+          <?php
 		  $ID  = "";
 		  $sql = "SELECT replid,senddate,sender,`from`,`type`,message FROM kritiksaran WHERE YEAR(senddate)='$Year' AND MONTH(senddate)='$Month' AND `type`='$type' ORDER BY replid DESC";
 		  $res = QueryDb($sql);
-		  $num = @mysql_num_rows($res);
+		  $num = @mysqli_num_rows($res);
 		  if ($num>0){
 		  $cnt=1;
-		  while ($row = @mysql_fetch_row($res)){
+		  while ($row = @mysqli_fetch_row($res)){
 		  if ($ID=="")
 		  	  $ID = $row[0];
 		  else		
@@ -105,17 +105,17 @@ class Kritik{
             <td class="td Link" onclick="ReadMessage('<?=$row[0]?>');"><?=$row[2]?></td>
             <td class="td" onclick="ReadMessage('<?=$row[0]?>');"><?=FullDateFormat($row[1])?></td>
             <td class="td" onclick="ReadMessage('<?=$row[0]?>');">
-			<?
+			<?php
 			//echo ucfirst($row[4])." : <br>";
-			if (strlen($row[5])>50)
-				echo substr($row[5],0,50)."...";
+			if (strlen((string) $row[5])>50)
+				echo substr((string) $row[5],0,50)."...";
 			else
 				echo $row[5];
 			?>
             </td>
             <td class="td" align="center"><img onclick="DeleteRow(this,'<?=$row[0]?>');" src="../images/ico/hapus.png" width="16" height="16" /></td>
           </tr>
-          <?
+          <?php
 		  $cnt++;
 		  }
 		  }
@@ -126,7 +126,7 @@ class Kritik{
 			</script>
           <input type="hidden" id="CurrentKritikIdList" style="width:100%" value="<?=$ID?>" />
           </div>
-        <?
+        <?php
 	}
 	
 }

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ OpenDb();
 $query = "SELECT n.idujian, n.nilaiujian, n.keterangan, u.idaturan, u.idkelas, u.idsemester, s.nama, s.nis FROM jbsakad.ujian u, jbsakad.siswa s, jbsakad.nilaiujian n WHERE n.replid = '$id' AND n.idujian = u.replid AND s.nis = n.nis";
 $result = QueryDb($query);
 
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $idkelas = $row['idkelas'];
 $idsemester = $row['idsemester'];
 $idaturan = $row['idaturan'];
@@ -61,14 +61,14 @@ if(isset($_REQUEST["ubah"]))
 {
 	BeginTrans();
 	$success = 0;	
-	$query_del_nau = "UPDATE jbsakad.nau SET nilaiAU = 0 WHERE idkelas='$idkelas' AND idsemester='$idsemester' AND idaturan='$idaturan' AND nis = '$nis'";
+	$query_del_nau = "UPDATE jbsakad.nau SET nilaiAU = 0 WHERE idkelas='$idkelas' AND idsemester='$idsemester' AND idaturan='$idaturan' AND nis = '".$nis."'";
  	QueryDbTrans($query_del_nau, $success);
 
 	if ($success)
 	{
 		$query = "SELECT replid FROM jbsakad.nilaiujian WHERE nis='$nis' AND idujian='$idujian'";
 		$res = QueryDb($query);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		$idnilai = $row[0];
 		$pengguna = SI_USER_ID() . " - ". SI_USER_NAME();
 		
@@ -78,9 +78,9 @@ if(isset($_REQUEST["ubah"]))
 					  WHERE nu.replid = '$idnilai' AND nu.idujian = u.replid AND u.idpelajaran = p.replid
 						 AND u.idjenis = ju.replid AND nu.nis = s.nis;";
 		$res = QueryDb($query);
-		if (mysql_num_rows($res) > 0)
+		if (mysqli_num_rows($res) > 0)
 		{
-			$row = mysql_fetch_array($res);
+			$row = mysqli_fetch_array($res);
 			$info = "Nilai Ujian ".$row['jenisujian']." ".$row['pelajaran']." tanggal ".$row['tanggal']." siswa ".$row['nis']." ".$row['nama'];
 		}						 
 		
@@ -104,11 +104,11 @@ if(isset($_REQUEST["ubah"]))
 	{
 		CommitTrans();	
 		CloseDb(); ?>
-		<script language="JavaScript">	
+		<script language = "javascript" type = "text/javascript">	
 			opener.refresh();
 			window.close();
 		</script>
-<? 	} 
+<?php 	} 
 	else  
 	{
 		RollbackTrans();
@@ -116,7 +116,7 @@ if(isset($_REQUEST["ubah"]))
 		<script language="javascript">
 			alert ('Data gagal disimpan');
 		</script>
-<?  }	
+<?php  }	
 }
 ?>
 
@@ -126,10 +126,10 @@ if(isset($_REQUEST["ubah"]))
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/validasi.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 function cek_form() {
   	var nilai = document.getElementById("nilai").value;
 	if(nilai.length == 0) {

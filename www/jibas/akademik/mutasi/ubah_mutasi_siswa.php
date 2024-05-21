@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -39,7 +39,7 @@ if ($tampil<>"" && $nis<>""){
 	OpenDb();
 	$sql_tampil="SELECT s.nis,s.nama,k.kelas,a.angkatan,m.jenismutasi,m.keterangan,m.tglmutasi FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.angkatan a, jbsakad.mutasisiswa m WHERE s.nis='$nis' AND k.replid=s.idkelas AND s.idangkatan=a.replid AND m.nis='$nis' ";
 	$result_tampil=QueryDb($sql_tampil);
-	$row_tampil=mysql_fetch_row($result_tampil);
+	$row_tampil=mysqli_fetch_row($result_tampil);
 	CloseDb();
 }
 
@@ -50,10 +50,10 @@ if ($Simpan=="Simpan"){
 	OpenDb();
 	BeginTrans();
 	$success=0;
-	$sql_siswa_update="UPDATE jbsakad.siswa SET aktif=0,statusmutasi='$_REQUEST[mutasi]' WHERE nis='$_REQUEST[nis]'";
+	$sql_siswa_update="UPDATE jbsakad.siswa SET aktif=0,statusmutasi='".$_REQUEST['mutasi']."' WHERE nis='".$_REQUEST['nis']."'";
 	QueryDbTrans($sql_siswa_update, $success);
 	if ($success){
-		$sql_mutasi_simpan="UPDATE jbsakad.mutasisiswa SET nis='$_REQUEST[nis]',jenismutasi='$_REQUEST[mutasi]',tglmutasi='$tglmutasi',keterangan='".CQ($_REQUEST['keterangan'])."' WHERE nis='$_REQUEST[nis]'";
+		$sql_mutasi_simpan="UPDATE jbsakad.mutasisiswa SET nis='".$_REQUEST['nis']."',jenismutasi='".$_REQUEST['mutasi']."',tglmutasi='$tglmutasi',keterangan='".CQ($_REQUEST['keterangan'])."' WHERE nis='".$_REQUEST['nis']."'";
 		QueryDbTrans($sql_mutasi_simpan, $success);
 	}
 
@@ -66,7 +66,7 @@ if ($Simpan=="Simpan"){
 			document.location.href="daftar_mutasi_siswa_footer.php?departemen=<?=$departemen?>";
 			//window.close();
 		</script>
-		<?
+		<?php
 		} else {
 		?>
 		<SCRIPT type="text/javascript" language="javascript">
@@ -74,7 +74,7 @@ if ($Simpan=="Simpan"){
 			document.location.href="daftar_mutasi_siswa_footer.php?departemen=<?=$departemen?>&from_left=1";
 			//window.close();
 		</script>
-		<?
+		<?php
 		}
 	} else {
 		RollBackTrans();
@@ -83,7 +83,7 @@ if ($Simpan=="Simpan"){
 			alert ('Gagal merubah mutasi siswa !');
 			document.location.href="ubah_mutasi.php?tampil=tampil&nis=<?=$_REQUEST['nis']?>";	
 		</script>
-	<?
+	<?php
 	}
 	CloseDb();
 }
@@ -97,7 +97,7 @@ if ($Simpan=="Simpan"){
 <script type="text/javascript" src="../script/calendar.js"></script>
 <script type="text/javascript" src="../script/lang/calendar-en.js"></script>
 <script type="text/javascript" src="../script/calendar-setup.js"></script>
-<SCRIPT type="text/javascript" language="JavaScript" src="../script/tables.js"></SCRIPT>
+<SCRIPT type="text/javascript" language="text/javascript" src="../script/tables.js"></SCRIPT>
 <SCRIPT type="text/javascript" language="javascript" src="../script/common.js"></script>
 <SCRIPT type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <link href="../style/style.css" rel="stylesheet" type="text/css">
@@ -112,7 +112,7 @@ function verifikasi(){
 
 <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="background-color:#dcdfc4">
 <form name="simpan_mutasi" id="simpan_mutasi" action="ubah_mutasi_siswa.php" method="post" onSubmit="return verifikasi();">
-<? if ($pop==1){ ?>
+<?php if ($pop==1){ ?>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr height="58">
 	<td width="28" background="../<?=GetThemeDir() ?>bgpop_01.jpg">&nbsp;</td>
@@ -127,7 +127,7 @@ function verifikasi(){
 	<td width="28" background="../<?=GetThemeDir() ?>bgpop_04a.jpg">&nbsp;</td>
     <td width="0" style="background-color:#FFFFFF">
     <!-- CONTENT GOES HERE //--->               
-<? } ?>                 
+<?php } ?>                 
 <table width="100%" border="0">
   <tr>
     <td><fieldset>
@@ -161,21 +161,21 @@ function verifikasi(){
                      <tr>
                          <td>&nbsp;&nbsp;Jenis Mutasi                         </td>
                          <td><select name="mutasi" id="mutasi">
-          <?
+          <?php
 				$sql = "SELECT * FROM jbsakad.jenismutasi ORDER BY replid";
 				OpenDb();
 				$result = QueryDb($sql);
 				CloseDb();
 			
 				$replid = "";	
-				while($row = mysql_fetch_array($result)) {
+				while($row = mysqli_fetch_array($result)) {
 					if ($replid == "")
 						$replid = $row['replid'];
 			?>
-          <option value="<?=urlencode($row['replid'])?>" <?=StringIsSelected($row['replid'], $row_tampil[4]) ?>>
+          <option value="<?=urlencode((string) $row['replid'])?>" <?=StringIsSelected($row['replid'], $row_tampil[4]) ?>>
           <?=$row['jenismutasi']?>
           </option>
-          <?
+          <?php
 				} //while
 				CloseDb();
 			?>
@@ -192,20 +192,20 @@ function verifikasi(){
                    <td colspan="2"><div align="center">
                      <input name="Simpan" type="Submit" class="but" value="Simpan">
                      &nbsp;
-	<?
+	<?php
   if ($pop==1){ ?>
   <input name="Tutup" type="button" class="but" value="Tutup" onClick="window.close()">
 
-	<? } else { ?>
+	<?php } else { ?>
   <input name="Tutup" type="button" class="but" value="Batal" onClick="window.self.history.back()">
-	<? } ?>
+	<?php } ?>
                      </div></td>
                  </tr>
                </table>
               <!-- </td>
   </tr>
 </table>-->
- <? if ($pop==1){ ?>
+ <?php if ($pop==1){ ?>
  <!-- END OF CONTENT //--->
     </td>
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_06a.jpg">&nbsp;</td>
@@ -216,7 +216,7 @@ function verifikasi(){
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? } ?>
+<?php } ?>
       </form>
             
 			</body>

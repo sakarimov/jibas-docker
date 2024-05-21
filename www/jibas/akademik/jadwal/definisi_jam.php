@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -56,7 +56,7 @@ OpenDb();
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tooltips.js"></script>
-<script type="text/javascript" language="JavaScript" src="../script/tables.js"></script>
+<script type="text/javascript" language="text/javascript" src="../script/tables.js"></script>
 <script type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
 function change_departemen(){
@@ -121,28 +121,28 @@ function hapusjam(replid){
     	<td align="right" width="35%">
 		<strong>Departemen</strong>    
         <select name="departemen" id="departemen" onChange="change_departemen()" >
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
             foreach($dep as $value) {
             if ($departemen == "")
                 $departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
             <?=$value ?> 
             </option>
-        <?	} CloseDb(); ?>
+        <?php } CloseDb(); ?>
         </select>
 		</td>
-		<?
+		<?php
         OpenDb();
         $sql_jam="SELECT replid, jamke, HOUR(jam1) As jammulai, MINUTE(jam1) As menitmulai, HOUR(jam2) As jamakhir, MINUTE(jam2) As menitakhir FROM jbsakad.jam WHERE departemen='$departemen' ORDER BY jamke ASC";
         $result_jam=QueryDb($sql_jam);
-            if (mysql_num_rows($result_jam) > 0){
+            if (mysqli_num_rows($result_jam) > 0){
         ?>
         <td align="right">
 		<a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
 		<a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
-        <?	//if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
 	    <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')"/>&nbsp;Tambah Jam Belajar</a>
-		<?	//} ?>    
+		<?php //} ?>    
 		</td></tr>	
 	</table><br>
     <table class="tab" id="table" border="1" style="border-collapse:collapse" width="95%" align="center" bordercolor="#000000" />
@@ -150,12 +150,12 @@ function hapusjam(replid){
     <tr height="30" class="header" align="center">	
 		<td width="20%">Jam ke</td>
 	  	<td width="*">Waktu</td>
-	  	<?	//if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+	  	<?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <td width="*"></td>
-        <? // }?>
+        <?php // }?>
 	</tr>
-	<? 
-		while ($row_jam=@mysql_fetch_row($result_jam)){
+	<?php 
+		while ($row_jam=@mysqli_fetch_row($result_jam)){
 			if ((int)$row_jam[2]<10) 
 				$jammulai="0".$row_jam[2]; 
 			else  
@@ -181,7 +181,7 @@ function hapusjam(replid){
 	<tr height="25">
 		<td align="center"><?=$row_jam[1] ?> </td>
 		<td><?=$jammulai.":".$menitmulai ?> - <?=$jamakhir.":".$menitakhir ?></td>
-        <?	//if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
         <td align="center" > 
 			<a href="#" onClick="newWindow('ubah_jam.php?replid=<?=$row_jam[0] ?>','UbahJamBelajar','350','300','resizable=1,scrollbars=1,status=0,toolbar=0')" onMouseOver="showhint('Ubah Jam Belajar!', this, event, '75px')">        
 			<img src="../images/ico/ubah.png" border="0" ></a>&nbsp;
@@ -189,9 +189,9 @@ function hapusjam(replid){
 			<img src="../images/ico/hapus.png" border="0"></a>					
         
        	</td>
-		<?	//} ?>     
+		<?php //} ?>     
 	</tr>
-	<?	}	CloseDb();	?> 
+<?php }	CloseDb();	?> 
 	</table>    
 	 <script language="javascript">
 		Tables('table', 1, 0);
@@ -199,7 +199,7 @@ function hapusjam(replid){
 	<!-- ============================END MAIN VIEW============================ -->
     </td></tr></table>
    
-<?	} else { ?> 
+<?php } else { ?> 
 <td width = "65%"></td>
 </tr>
 </table>
@@ -212,21 +212,21 @@ function hapusjam(replid){
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
-     <? if (isset($departemen)) {	?>	
+     <?php if (isset($departemen)) {	?>	
         <font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? //} ?>
+        <?php //} ?>
         </b></font>
-  	 <? } else { ?> 
+<?php } else { ?> 
           <font size = "2" color ="red"><b>Belum ada data Departemen.
           <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
           </b></font>
-	<? } ?>
+	<?php } ?>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

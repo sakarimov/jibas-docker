@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -71,7 +71,7 @@ if (isset($_REQUEST['tglakhir']))
 
 $sql_get_ta = "SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid='$tahunajaran'";
 $result_get_ta = QueryDb($sql_get_ta);
-$row_get_ta = @mysql_fetch_array($result_get_ta);
+$row_get_ta = @mysqli_fetch_array($result_get_ta);
 $nmtahunajaran = $row_get_ta['tahunajaran'];
 
 $sql_get_siswa="SELECT nis,nama FROM jbsakad.siswa WHERE idkelas='$kelas' AND aktif = 1 ORDER BY nama";
@@ -82,7 +82,7 @@ $result_get_siswa1=QueryDb($sql_get_siswa1);
 
 $sql = "SELECT k.kelas AS namakelas, s.semester AS namasemester, a.tahunajaran, t.tingkat, l.nama, a.departemen FROM jbsakad.kelas k, jbsakad.semester s, jbsakad.tahunajaran a, jbsakad.tingkat t, jbsakad.pelajaran l WHERE k.replid = $kelas AND s.replid = $semester AND a.replid = $tahunajaran AND k.idtahunajaran = a.replid AND k.idtingkat = t.replid";// AND l.replid = $pelajaran";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $namakelas = $row[0];
 $nmkelas = $namakelas;
 $namasemester = $row[1];
@@ -93,13 +93,13 @@ $nmtingkat = $namatingkat;
 
 $sql_get_w_kls="SELECT p.nama as namawalikelas, p.nip as nipwalikelas FROM jbssdm.pegawai p, jbsakad.kelas k WHERE k.replid='$kelas' AND k.nipwali=p.nip";
 $rslt_get_w_kls=QueryDb($sql_get_w_kls);
-$row_get_w_kls=@mysql_fetch_array($rslt_get_w_kls);
+$row_get_w_kls=@mysqli_fetch_array($rslt_get_w_kls);
 $nmwalikelas = $row_get_w_kls['namawalikelas'];
 $nipwalikelas = $row_get_w_kls['nipwalikelas'];
 
 $sql_get_kepsek="SELECT d.nipkepsek as nipkepsek,p.nama as namakepsek FROM jbssdm.pegawai p, jbsakad.departemen d WHERE  p.nip=d.nipkepsek AND d.departemen='$departemen'";
 $rslt_get_kepsek=QueryDb($sql_get_kepsek);
-$row_get_kepsek=@mysql_fetch_array($rslt_get_kepsek);
+$row_get_kepsek=@mysqli_fetch_array($rslt_get_kepsek);
 $nmkepsek = $row_get_kepsek['namakepsek'];
 $nipkepsek = $row_get_kepsek['nipkepsek'];
 ?>
@@ -121,9 +121,9 @@ require_once("rapor.word.header.php");
 
 <body lang=EN-US style='tab-interval:36.0pt'>
 
-<?
+<?php
 $cnt_siswa1 = 1;
-while ($row_siswa1=@mysql_fetch_array($result_get_siswa1))
+while ($row_siswa1=@mysqli_fetch_array($result_get_siswa1))
 {
 	$nis = $row_siswa1['nis'];
 	$nama = $row_siswa1['nama'];
@@ -143,7 +143,7 @@ require("rapor.word.title.php");
 
 <tr><td>
 <br>
-<? require("rapor.content.komentar.php"); ?>
+<?php require("rapor.content.komentar.php"); ?>
 </td></tr>
 
 <tr><td><br>
@@ -250,7 +250,7 @@ require("rapor.word.ttd.php");
 "Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:EN-US;
 mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always;
 mso-break-type:section-break'></span>
-<?
+<?php
 }
 
 	$cnt_siswa1=$cnt_siswa1+3;
@@ -258,6 +258,6 @@ mso-break-type:section-break'></span>
 ?>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

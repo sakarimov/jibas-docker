@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -29,24 +29,24 @@ require_once('../../include/fileutil.php');
 require_once('../../include/sessionchecker.php');
 
 $op = "";
-if (isset($_REQUEST[op]))
-	$op=$_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op=$_REQUEST['op'];
   
 $page = 't';
-if (isset($_REQUEST[page]))
-	$page = $_REQUEST[page];
+if (isset($_REQUEST['page']))
+	$page = $_REQUEST['page'];
 	
 OpenDb();
 $sql = "SELECT * FROM jbsvcr.galerifoto WHERE idguru='".SI_USER_ID()."'";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 $cnt = 1;
-while ($row = @mysql_fetch_array($result))
+while ($row = @mysqli_fetch_array($result))
 {
-	$ket[$cnt] = $row[keterangan];
-	$nama[$cnt] = $row[nama];
-	$fn[$cnt] = $row[filename];
-	$rep[$cnt] = $row[replid];
+	$ket[$cnt] = $row['keterangan'];
+	$nama[$cnt] = $row['nama'];
+	$fn[$cnt] = $row['filename'];
+	$rep[$cnt] = $row['replid'];
 	
 	$cnt++;
 }
@@ -55,41 +55,41 @@ CloseDb();
 if ($op == "14075BUSYCODACALLDIFF")
 {
 	OpenDb();
-	$sql = "SELECT * FROM jbsvcr.galerifoto WHERE replid = '$_REQUEST[replid]'";
+	$sql = "SELECT * FROM jbsvcr.galerifoto WHERE replid = '".$_REQUEST['replid']."'";
 	$res = QueryDb($sql);
-	$r = mysql_fetch_array($res);
+	$r = mysqli_fetch_array($res);
 	
-	$fimage = "$FILESHARE_UPLOAD_DIR/galeriguru/photos/" . $r[filename];
+	$fimage = "$FILESHARE_UPLOAD_DIR/galeriguru/photos/" . $r['filename'];
 	if (file_exists($fimage))
 	   delete($fimage);
 	   
-	$fimage = "$FILESHARE_UPLOAD_DIR/galeriguru/thumbnails/" . $r[filename];
+	$fimage = "$FILESHARE_UPLOAD_DIR/galeriguru/thumbnails/" . $r['filename'];
 	if (file_exists($fimage))
 	   delete($fimage);   
 	   
-	$sql = "DELETE FROM jbsvcr.galerifoto WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbsvcr.galerifoto WHERE replid = '".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	
 	CloseDb(); ?>
 	<script type="text/javascript">
 		document.location.href="galerifoto.php?page=t";	
 	</script>
-<?
+<?php
 }
 
 if ($op == "DIFFBUSYCODACALL14077")
 {
 	OpenDb();
 	$sql = "UPDATE jbsvcr.galerifoto
-			   SET nama='$_REQUEST[newName]', keterangan='" . CQ($_REQUEST['newKet']) . "'
-			 WHERE replid='$_REQUEST[replid]'";
+			   SET nama='".$_REQUEST['newName']."', keterangan='" . CQ($_REQUEST['newKet']) . "'
+			 WHERE replid='".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	CloseDb();
 	?>
 	<script type="text/javascript">
 		document.location.href="galerifoto.php?page=t";	
 	</script>
-	<?
+	<?php
 }
 ?>
 <html>
@@ -227,16 +227,16 @@ function simpanUbah(x,replid)
   <tr>
     <td colspan="2" align="left">
        	<table width="100%" border="0" cellspacing="0" align="center">
-			  <? if ($num>0){ ?>  
-			  <?	for ($i=1;$i<=$num;$i++)
+			  <?php if ($num>0){ ?>  
+			  <?php for ($i=1;$i<=$num;$i++)
 					{
 						$fphoto = "$FILESHARE_ADDR/galeriguru/photos/".$fn[$i];
 						$fthumb = "$FILESHARE_ADDR/galeriguru/thumbnails/".$fn[$i]; ?>
-			  <?		if ($i==1 || $i - 1 % 5==0)  { ?>
+			  <?php 	if ($i==1 || $i - 1 % 5==0)  { ?>
 							<tr>
-			  <?		} ?>
+			  <?php 	} ?>
 						<td height="125" align="center">
-							<a title="<?=$ket[$i]?>" href="<?=$fphoto?>" rel="lytebox[vacation]" >
+							<a title="<?=$ket[$i]?>" href="<?=$fphoto?>" rel="lytebox['vacation']" >
 							<img title="Klik untuk melihat ukuran sebenarnya"
 								 src="<?=$fthumb?>" width="80" style="cursor:pointer;">
 							</a>
@@ -253,16 +253,16 @@ function simpanUbah(x,replid)
                             &nbsp;
 							<img title="Ubah Nama&Keterangan" id="editIcon<?=$i?>" src="../../images/ico/ubah.png" style="cursor:pointer;" onClick="ubah('<?=$i?>','<?=$num?>')">
 							<img title="Simpan" id="saveIcon<?=$i?>" src="../../images/ico/disk.png" style="cursor:pointer; display:none" onClick="simpanUbah('<?=$i?>','<?=$rep[$i]?>')">							</td>
-			  <?		if ($i % 5==0) { ?>
+			  <?php 	if ($i % 5==0) { ?>
 							</tr>
-			  <?		} ?>
-			  <?	} ?>
-			  <? } else {?>
+			  <?php 	} ?>
+			  <?php } ?>
+			  <?php } else {?>
 				<tr>
 					<td>
 						<div align="center"><em>Tidak ada foto</em></div>					</td>
 				</tr>
-			  <? } ?>
+			  <?php } ?>
            </table>
       </td>
   </tr>

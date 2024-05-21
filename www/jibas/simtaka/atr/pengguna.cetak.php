@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/sessioninfo.php');
 require_once('../inc/common.php');
 require_once('../inc/config.php');
@@ -47,13 +47,13 @@ $departemen='yayasan';
 <center><font size="4"><strong>DATA PENGGUNA</strong></font><br /> </center><br /><br />
 
 <br />
-<?
+<?php
 $sql = "SELECT h.login, h.aktif, h.lastlogin, h.departemen, h.tingkat, h.keterangan, h.info1 AS idperpustakaan
 		  FROM ".get_db_name('user').".hakakses h, ".get_db_name('user').".login l
 		 WHERE h.modul='SIMTAKA'
 		   AND l.login=h.login";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab" id="table">
 <tr height="30" >
@@ -65,26 +65,26 @@ $num = @mysql_num_rows($result);
   <td width='15%' align="center" class="header">Departemen</td>
   <td width='*' align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 if ($num > 0)
 {
   $cnt = 0;
-  while ($row=@mysql_fetch_row($result))
+  while ($row=@mysqli_fetch_row($result))
   {
 	$cnt += 1;
 	
 	$sql = "SELECT nama
 		      FROM ".get_db_name('sdm').".pegawai
-			 WHERE nip='$row[0]'";
+			 WHERE nip='".$row[0]."'";
 	$res = QueryDb($sql);
-	$r = @mysql_fetch_row($res);
+	$r = @mysqli_fetch_row($res);
 	$namapeg = $r[0];
 	
 	if ($row[4]==2)
 	{
-		$sql = "SELECT nama FROM perpustakaan WHERE replid='$row[6]'";
+		$sql = "SELECT nama FROM perpustakaan WHERE replid='".$row[6]."'";
 		$res = QueryDb($sql);
-		$r = @mysql_fetch_row($res);
+		$r = @mysqli_fetch_row($res);
 		$namaperpus = $r[0];
 		$namatingkat = "Staf Perpustakaan";
 	}
@@ -102,7 +102,7 @@ if ($num > 0)
 	  <td align="center"><?=$row[3]?></td>
 	  <td align="left"><?=$row[5]?></td>
 	</tr>
-<?
+<?php
   } //while
 }
 else
@@ -111,13 +111,13 @@ else
   <tr>
 	<td height="25" colspan="7" align="center" class="nodata">Tidak ada data</td>
   </tr>
-<?
+<?php
 }
 ?>	
 </table>
 </td></tr></table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -87,22 +87,22 @@ function manageLock(no) {
     
     <a href="#" onclick="document.location.reload();">Refresh</a><br />
 
-	<?  OpenDb(); ?>
+	<?php  OpenDb(); ?>
 	<table border="0" cellspacing="3" cellpadding="0" width="80%">
 	<tr>
     	<td width="100">Departemen:</td>
         <td>
         
         <select id="departemen" name="departemen" style="width:120px" onchange="change_dep()">
-        	<? 
+        	<?php 
 			$sql = "SELECT departemen FROM jbsakad.departemen ORDER BY kode";
 			$result = QueryDb($sql);
-			while($row = mysql_fetch_row($result)) {
+			while($row = mysqli_fetch_row($result)) {
 				if ($departemen == "")
 					$departemen = $row[0];
 			?>
             	<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $departemen)?> > <?=$row[0]?></option>
-            <?
+            <?php
 			}
 			?>
         </select>
@@ -112,15 +112,15 @@ function manageLock(no) {
     	<td width="100">Angkatan:</td>
         <td>
         <select id="idangkatan" name="idangkatan" style="width:150px" onchange="change_ang()">
-        	<? 
+        	<?php 
 			$sql = "SELECT replid, angkatan FROM jbsakad.angkatan WHERE departemen = '$departemen' ORDER BY replid";
 			$result = QueryDb($sql);
-			while($row = mysql_fetch_row($result)) {
+			while($row = mysqli_fetch_row($result)) {
 				if ($idangkatan == 0)
 					$idangkatan = $row[0];
 			?>
             	<option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idangkatan)?> > <?=$row[1]?></option>
-            <?
+            <?php
 			}
 			?>
         </select>
@@ -130,15 +130,15 @@ function manageLock(no) {
     	<td width="100">Kelas:</td>
         <td>
         <select id="idkelas" name="idkelas" style="width:150px" onchange="change_kel()">
-        	<? 
+        	<?php 
 			$sql = "SELECT DISTINCT idkelas, kelas FROM jbsakad.siswa, jbsakad.kelas WHERE jbsakad.siswa.idkelas = jbsakad.kelas.replid AND idangkatan='$idangkatan' ORDER BY idkelas";
 			$result = QueryDb($sql);
-			while($row = mysql_fetch_row($result)) {
+			while($row = mysqli_fetch_row($result)) {
 				if ($idkelas == 0)
 					$idkelas = $row[0];
 			?>
             	<option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idkelas)?> > <?=$row[1]?></option>
-            <?
+            <?php
 			}
 			?>
         </select>
@@ -155,14 +155,14 @@ function manageLock(no) {
         <td class="header" width="15%">Biaya DSP</td>
         <td class="header" width="40%">Keterangan</td>
     </tr>
-    <? 
+    <?php 
 	$sql = "SELECT nis, nama FROM jbsakad.siswa WHERE idkelas = '$idkelas' ORDER BY nama";
 	$result = QueryDb($sql);
 	$no = 0;
-	while ($row = mysql_fetch_array($result)) {
-		$sql = "SELECT replid AS id, dsp, keterangan FROM jbsfina.datadsp WHERE nis = '$row[0]'";
+	while ($row = mysqli_fetch_array($result)) {
+		$sql = "SELECT replid AS id, dsp, keterangan FROM jbsfina.datadsp WHERE nis = '".$row[0]."'";
 		$result2 = QueryDb($sql);
-		$ndsp = mysql_num_rows($result2);
+		$ndsp = mysqli_num_rows($result2);
 		$iddsp = 0;
 		$dsp = "";
 		$ket = "";
@@ -171,7 +171,7 @@ function manageLock(no) {
 		if ($ndsp > 0) {
 			$isnew = 0;
 			$status = "disabled";
-			$row2 = mysql_fetch_row($result2);
+			$row2 = mysqli_fetch_row($result2);
 			$iddsp = $row2[0];
 			$dsp = $row2[1];
 			$ket = $row2[2];
@@ -183,14 +183,14 @@ function manageLock(no) {
         <td align="center"><?=$row['nis'] ?></td>
         <td><?=$row['nama'] ?></td>
         <td align="center">
-        <? if ($ndsp > 0) { ?>
+        <?php if ($ndsp > 0) { ?>
 	          <input type="checkbox" name="ch<?=$no?>" id="ch<?=$no?>" onchange="manageLock(<?=$no?>)" />&nbsp;edit
-        <? } ?>
+        <?php } ?>
         </td>
         <td align="center"><input type="text" name="dsp<?=$no?>" id="dsp<?=$no?>" size="15" value="<?=FormatRupiah($dsp) ?>" <?=$status ?> onblur="formatRupiah('dsp<?=$no?>')" onfocus="unformatRupiah('dsp<?=$no?>')"/></td>
         <td><input type="text" name="ket<?=$no?>" id="ket<?=$no?>" size="50" value="<?=$ket ?>" <?=$status ?> /></td>
     </tr>
-    <?
+    <?php
 	}
 	?>
     <tr height="30">
@@ -203,7 +203,7 @@ function manageLock(no) {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-    <?  CloseDb() ?>
+    <?php  CloseDb() ?>
 <!-- EOF CONTENT -->
 </td></tr>
 </table>

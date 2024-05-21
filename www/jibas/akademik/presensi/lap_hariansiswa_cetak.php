@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,15 +36,15 @@ $urutan = $_REQUEST['urutan'];
 OpenDb();
 $sql = "SELECT nama FROM siswa WHERE nis='$nis'";   
 $result = QueryDB($sql);	
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 
 OpenDb();
 $sql = "SELECT DAY(p.tanggal1), MONTH(p.tanggal1), YEAR(p.tanggal1), DAY(p.tanggal2), MONTH(p.tanggal2), YEAR(p.tanggal2), ph.hadir, ph.ijin, ph.sakit, ph.alpa, ph.cuti, ph.keterangan, s.nama, m.semester, k.kelas, m.departemen FROM presensiharian p, phsiswa ph, siswa s, semester m, kelas k WHERE ph.idpresensi = p.replid AND ph.nis = s.nis AND ph.nis = '$nis' AND p.idsemester = m.replid AND p.idkelas = k.replid AND (((p.tanggal1 BETWEEN '$tglawal' AND '$tglakhir') OR (p.tanggal2 BETWEEN '$tglawal' AND '$tglakhir')) OR (('$tglawal' BETWEEN p.tanggal1 AND p.tanggal2) OR ('$tglakhir' BETWEEN p.tanggal1 AND p.tanggal2))) ORDER BY $urut $urutan ";
 
 $result = QueryDb($sql);
-$jum = @mysql_num_rows($result);
-$r = @mysql_fetch_array($result);
-$departemen = $r[departemen];
+$jum = @mysqli_num_rows($result);
+$r = @mysqli_fetch_array($result);
+$departemen = $r['departemen'];
 CloseDb();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -80,12 +80,12 @@ CloseDb();
 </tr>
 </table>
 <br />
-<? 	
+<?php 	
 	OpenDb();
 	$sql = "SELECT DAY(p.tanggal1), MONTH(p.tanggal1), YEAR(p.tanggal1), DAY(p.tanggal2), MONTH(p.tanggal2), YEAR(p.tanggal2), ph.hadir, ph.ijin, ph.sakit, ph.alpa, ph.cuti, ph.keterangan, s.nama, m.semester, k.kelas, m.departemen FROM presensiharian p, phsiswa ph, siswa s, semester m, kelas k WHERE ph.idpresensi = p.replid AND ph.nis = s.nis AND ph.nis = '$nis' AND p.idsemester = m.replid AND p.idkelas = k.replid AND (((p.tanggal1 BETWEEN '$tglawal' AND '$tglakhir') OR (p.tanggal2 BETWEEN '$tglawal' AND '$tglakhir')) OR (('$tglawal' BETWEEN p.tanggal1 AND p.tanggal2) OR ('$tglakhir' BETWEEN p.tanggal1 AND p.tanggal2))) ORDER BY $urut $urutan ";
 
 	$result = QueryDb($sql);
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 	if ($jum > 0) { 
 ?>
 	<table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left" bordercolor="#000000">
@@ -101,14 +101,14 @@ CloseDb();
         <td width="5%" class="header">Cuti</td>      
         <td width="*" class="header">Keterangan</td>      
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
 	$h=0;
 	$i=0;
 	$s=0;
 	$a=0;
 	$c=0;
-	while ($row = mysql_fetch_row($result)) { ?>
+	while ($row = mysqli_fetch_row($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt?></td>
 		<td align="center"><?=$row[0].' '.$bulan[$row[1]].' '.$row[2].' - '.$row[3].' '.$bulan[$row[4]].' '.$row[5]?></td>
@@ -121,7 +121,7 @@ CloseDb();
         <td align="center"><?=$row[10]?></td>
         <td><?=$row[11]?></td>
     </tr>
-<?	
+<?php 
 	$h+=$row[6];
 	$i+=$row[7];
 	$s+=$row[8];
@@ -140,14 +140,14 @@ CloseDb();
     </tr>
 	<!-- END TABLE CONTENT -->
     </table>	
-<? 	} ?>
+<?php 	} ?>
 	</td>
 </tr>    
 </table>
 </body>
-<? if ($_REQUEST['lihat'] == 1) { ?>
+<?php if ($_REQUEST['lihat'] == 1) { ?>
 <script language="javascript">
 window.print();
 </script>
-<? } ?>
+<?php } ?>
 </html>

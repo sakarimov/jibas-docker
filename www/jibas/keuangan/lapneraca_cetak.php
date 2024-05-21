@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -90,7 +90,7 @@ if (isset($_REQUEST['idtahunbuku']))
 	<td width="2%">&nbsp;</td>
     <td colspan="6"><strong>AKTIVA LANCAR</strong><br /></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT jd.koderek, ra.nama, sum(jd.debet - jd.kredit) 
 	          FROM jurnal j, jurnaldetail jd, rekakun ra 
@@ -99,7 +99,7 @@ $sql = "SELECT jd.koderek, ra.nama, sum(jd.debet - jd.kredit)
 				  AND ra.kategori IN ('HARTA', 'PIUTANG') GROUP BY jd.koderek, ra.nama ORDER BY jd.koderek";
 $result = QueryDb($sql);
 $totalaktivalancar = 0;
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$totalaktivalancar += (float)$row[2];
 ?>
 <tr height="23">
@@ -111,7 +111,7 @@ while ($row = mysql_fetch_row($result)) {
     <td width="30%"  align="right">&nbsp;</td>
     <td width="13">&nbsp;</td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="23">
@@ -129,7 +129,7 @@ while ($row = mysql_fetch_row($result)) {
 	<td width="2%">&nbsp;</td>
     <td colspan="6"><strong>AKTIVA TETAP</strong><br /></td>
 </tr>
-<?
+<?php
 $sql = "SELECT jd.koderek, ra.nama, sum(jd.debet - jd.kredit) 
 			 FROM jurnal j, jurnaldetail jd, rekakun ra 
 			WHERE j.replid = jd.idjurnal AND jd.koderek = ra.kode 
@@ -137,7 +137,7 @@ $sql = "SELECT jd.koderek, ra.nama, sum(jd.debet - jd.kredit)
 			  AND ra.kategori = 'INVENTARIS' GROUP BY jd.koderek, ra.nama ORDER BY jd.koderek";
 $result = QueryDb($sql);
 $totalaktivatetap = 0;
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$totalaktivatetap += (float)$row[2];
 ?>
 <tr height="23">
@@ -149,7 +149,7 @@ while ($row = mysql_fetch_row($result)) {
     <td width="30%"  align="right">&nbsp;</td>
     <td width="13">&nbsp;</td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="23">
@@ -179,11 +179,11 @@ while ($row = mysql_fetch_row($result)) {
 	<td width="2%">&nbsp;</td>
     <td colspan="6"><strong>HUTANG</strong><br /></td>
 </tr>
-<?
+<?php
 $sql = "SELECT jd.koderek, ra.nama, sum(jd.kredit - jd.debet) FROM jurnal j, jurnaldetail jd, rekakun ra WHERE j.replid = jd.idjurnal AND jd.koderek = ra.kode AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND ra.kategori = 'UTANG' GROUP BY jd.koderek, ra.nama ORDER BY jd.koderek";
 $result = QueryDb($sql);
 $totalhutang = 0;
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$totalhutang += (float)$row[2];
 ?>
 <tr height="23">
@@ -195,7 +195,7 @@ while ($row = mysql_fetch_row($result)) {
     <td width="30%"  align="right">&nbsp;</td>
     <td width="13">&nbsp;</td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="23">
@@ -212,24 +212,24 @@ while ($row = mysql_fetch_row($result)) {
 	<td width="2%">&nbsp;</td>
     <td colspan="6"><font size="1"><strong>MODAL</strong></font><br /></td>
 </tr>
-<?
-$sql = "SELECT tanggalmulai FROM tahunbuku WHERE replid = '$idtahunbuku'";
+<?php
+$sql = "SELECT tanggalmulai FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tanggal1 = $row[0];
 
 $sql = "SELECT SUM(jd.kredit - jd.debet) FROM rekakun ra,
 jurnal j, jurnaldetail jd WHERE jd.idjurnal = j.replid AND jd.koderek = ra.kode AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND ra.kategori IN ('PENDAPATAN', 'MODAL')";
 //echo  "$sql<br>";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $totalpendapatan = (float)$row[0];
 //echo  "$totalpendapatan<br>";
 
 $sql = "SELECT SUM(jd.debet - jd.kredit) FROM rekakun ra, jurnal j, jurnaldetail jd WHERE jd.idjurnal = j.replid AND jd.koderek = ra.kode AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' AND ra.kategori = 'BIAYA'";
 //echo  "$sql<br>";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $totalbiaya = (float)$row[0];
 //echo  "$totalbiaya<br>";
 $modalusaha = $totalpendapatan - $totalbiaya;
@@ -264,7 +264,7 @@ $modalusaha = $totalpendapatan - $totalbiaya;
 
 </tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 
 </td></tr></table>
 

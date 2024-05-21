@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ function GetVendorName($vendorId)
 {
     $vendorName = "";
 
-    $sql = "SELECT nama FROM jbsfina.vendor WHERE vendorid = '$vendorId'";
+    $sql = "SELECT nama FROM jbsfina.vendor WHERE vendorid = '".$vendorId."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $vendorName = $row[0];
     }
@@ -46,9 +46,9 @@ function ShowSelectPetugas($vendorId)
                AND NOT u.userid IN (SELECT vu.userid FROM jbsfina.vendoruser vu WHERE vu.vendorid = '$vendorId')
              ORDER BY u.nama";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $sb->AppendLine("<option value='$row[0]'>$row[1]</option>");
+        $sb->AppendLine("<option value='".$row[0]."'>".$row[1]."</option>");
     }
     $sb->AppendLine("</select>");
 
@@ -57,8 +57,8 @@ function ShowSelectPetugas($vendorId)
 
 function createJsonReturn($status, $message)
 {
-    $ret = array($status, $message);
-    return json_encode($ret);
+    $ret = [$status, $message];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 
 function TambahVendorUser()
@@ -70,7 +70,7 @@ function TambahVendorUser()
     $sql = "SELECT COUNT(replid) 
               FROM jbsfina.vendoruser
              WHERE vendorid = '$vendorId'
-               AND userid = '$userId'";
+               AND userid = '".$userId."'";
     $nData = FetchSingle($sql);
     if ($nData != 0)
         return createJsonReturn(-1, "User id $userId sudah terdaftar sebagai petugas");

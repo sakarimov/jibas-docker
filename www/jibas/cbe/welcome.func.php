@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,11 +35,11 @@ function getWelcome()
     OpenDb();
     $sql = "SELECT pesan 
               FROM jbscbe.welcome
-             WHERE departemen = '$dept'";
+             WHERE departemen = '".$dept."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $welcome = $row[0];
     }
     CloseDb();
@@ -52,33 +52,20 @@ function getCurrentMonthYear()
     $bulan = date('n');
     $tahun = date('Y');
 
-    switch($bulan)
-    {
-        case 1:
-            return "Januari $tahun";
-        case 2:
-            return "Februai $tahun";
-        case 3:
-            return "Maret $tahun";
-        case 4:
-            return "April $tahun";
-        case 5:
-            return "Mei $tahun";
-        case 6:
-            return "Juni $tahun";
-        case 7:
-            return "Juli $tahun";
-        case 8:
-            return "Agustus $tahun";
-        case 9:
-            return "September $tahun";
-        case 10:
-            return "Oktober $tahun";
-        case 11:
-            return "Nopember $tahun";
-        default:
-            return "Desember $tahun";
-    }
+    return match ($bulan) {
+        1 => "Januari $tahun",
+        2 => "Februai $tahun",
+        3 => "Maret $tahun",
+        4 => "April $tahun",
+        5 => "Mei $tahun",
+        6 => "Juni $tahun",
+        7 => "Juli $tahun",
+        8 => "Agustus $tahun",
+        9 => "September $tahun",
+        10 => "Oktober $tahun",
+        11 => "Nopember $tahun",
+        default => "Desember $tahun",
+    };
 }
 
 function getLastUjian($page)
@@ -101,7 +88,7 @@ function getLastUjian($page)
              WHERE us.$userCol = '$userId'
                AND us.status IN (1,2)";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ndata = $row[0];
 
     $sql = "SELECT id, tanggal, judul, nilai, status, skalanilai, idujianremed, viewresult, belumhasil, tanggalsort FROM
@@ -129,7 +116,7 @@ function getLastUjian($page)
     $table = "";
 
     $count = $startIndex;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no = $ndata - $count;
         $viewresult = $row["viewresult"];
@@ -155,7 +142,7 @@ function getLastUjian($page)
         {
             $sql = "SELECT judul FROM jbscbe.ujian WHERE id = $idujianremed";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
                 $judul = $row2[0];
         }
 

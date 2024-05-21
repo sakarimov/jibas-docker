@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -64,26 +64,26 @@ OpenDb();
 $op = $_REQUEST['op'];
 if ($op == "dw8dxn8w9ms8zs22") 
 {
-	$sql = "UPDATE calonsiswa SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE calonsiswa SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 } 
 else if ($op == "xm8r389xemx23xb2378e23") 
 {
-    $sql = "SELECT nopendaftaran FROM calonsiswa WHERE replid = '$_REQUEST[replid]'";
+    $sql = "SELECT nopendaftaran FROM calonsiswa WHERE replid = '".$_REQUEST['replid']."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $no = $row[0];
 
-    $sql = "DELETE FROM tambahandatacalon WHERE nopendaftaran = '$no'";
+    $sql = "DELETE FROM tambahandatacalon WHERE nopendaftaran = '".$no."'";
     QueryDb($sql);
 
-	$sql = "DELETE FROM calonsiswa WHERE replid = '$_REQUEST[replid]'"; 	
+	$sql = "DELETE FROM calonsiswa WHERE replid = '".$_REQUEST['replid']."'"; 	
 	QueryDb($sql);
 
 	$page=0;
 	$hal=0;	?>
     <script>refresh_add();</script> 
-<?
+<?php
 }	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -93,7 +93,7 @@ else if ($op == "xm8r389xemx23xb2378e23")
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Pendataan Calon Siswa</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -254,14 +254,14 @@ function change_baris() {
 <!-- TABLE CENTER -->
 <tr>
 	<td align="right" >
-<?	$sql_tot = "SELECT nopendaftaran,nama,asalsekolah,tmplahir,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),". 
+<?php $sql_tot = "SELECT nopendaftaran,nama,asalsekolah,tmplahir,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),". 
 		   "c.aktif,c.replid FROM calonsiswa c, kelompokcalonsiswa k, prosespenerimaansiswa p ".
 		   "WHERE c.idproses = '$proses' AND c.idkelompok = '$kelompok' AND k.idproses = p.replid ".
 		   "AND c.idproses = p.replid AND c.idkelompok = k.replid ORDER BY $urut $urutan ";
 	
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql = "SELECT nopendaftaran,nama,c.sum1,c.sum2,c.ujian1,c.ujian2,c.ujian3,c.ujian4,c.ujian5,c.ujian6,c.ujian7,c.ujian8,c.ujian9,c.ujian10,". 
@@ -272,14 +272,14 @@ function change_baris() {
 	
 	$result = QueryDb($sql);
 	
-	if (@mysql_num_rows($result)>0)
+	if (@mysqli_num_rows($result)>0)
 	{ 
 		$sql1 = "SELECT COUNT(c.replid) AS isi FROM calonsiswa c WHERE c.idkelompok = '$kelompok' AND c.idproses = '$proses' AND c.aktif = 1";	
-		$sql2 = "SELECT kapasitas, keterangan FROM kelompokcalonsiswa k WHERE k.idproses = '$proses' AND k.replid = '$kelompok'";
+		$sql2 = "SELECT kapasitas, keterangan FROM kelompokcalonsiswa k WHERE k.idproses = '$proses' AND k.replid = '".$kelompok."'";
 		$result1 = QueryDb($sql1);
 		$result2 = QueryDb($sql2);
-		$row1 = @mysql_fetch_array($result1);
-		$row2 = @mysql_fetch_array($result2);
+		$row1 = @mysqli_fetch_array($result1);
+		$row2 = @mysqli_fetch_array($result2);
 		$kapasitas = $row2['kapasitas'];
 		$isi = $row1['isi'];
 		
@@ -304,9 +304,9 @@ function change_baris() {
 		<a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp; 		
         <a href="#" onClick="cetak_excel('<?=$urut?>','<?=$urutan?>')"><img src="../images/ico/excel.png" border="0" onMouseOver="showhint('Cetak dalam format Excel!', this, event, '80px')"/>&nbsp;Cetak Excel</a>&nbsp;&nbsp;
         <a href="JavaScript:cetak('<?=$urut?>','<?=$urutan?>')"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;
-<?  	if ($kapasitas > $isi) { ?>
+<?php  	if ($kapasitas > $isi) { ?>
 		<a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah Calon Siswa!', this, event, '50px')"/>&nbsp;Tambah Calon Siswa</a>
-<?		} ?>	
+<?php 	} ?>	
 		</td></tr>	
 		</table>
         
@@ -337,16 +337,16 @@ function change_baris() {
 		<td width="50" rowspan="2" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif"  onClick="change_urut('aktif','<?=$urutan?>')" style="cursor:pointer;">Status <?=change_urut('aktif',$urut,$urutan)?></td>
 	    <td width="50" rowspan="2" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif">&nbsp;</td>
 	</tr>
-<?		$sqlset = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = $proses";
+<?php 	$sqlset = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = $proses";
 		$resset = QueryDb($sqlset);
-		$rowset = mysql_fetch_row($resset);
+		$rowset = mysqli_fetch_row($resset);
 		$ndata = $rowset[0];
 		
 		if ($ndata > 0)
 		{
 			$sqlset = "SELECT * FROM settingpsb WHERE idproses = $proses";
 			$resset = QueryDb($sqlset);
-			$rowset = mysql_fetch_array($resset);
+			$rowset = mysqli_fetch_array($resset);
 			
 			$kdsum1 = $rowset['kdsum1']; //$nmsum1 = $rowset['nmsum1'];
 			$kdsum2 = $rowset['kdsum2']; //$nmsum2 = $rowset['nmsum2'];
@@ -376,20 +376,20 @@ function change_baris() {
 		<td onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" onClick="change_urut('ujian10','<?=$urutan?>')" style="cursor:pointer;"><?=$kdujian10?> <?=change_urut('ujian10',$urut,$urutan)?></td>
 	</tr>
         
-<? 		if ($page==0)
+<?php 		if ($page==0)
 			$cnt = 1;
 		else 
 			$cnt = (int)$page*(int)$varbaris+1;
 		
-		while ($row = @mysql_fetch_array($result)) 
+		while ($row = @mysqli_fetch_array($result)) 
 		{
 			$siswa = "";
 			$pjg = "80px";
 			if ($row["replidsiswa"] <> 0) 
 			{
-				$sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = '$row[replidsiswa]'";
+				$sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = '".$row['replidsiswa']."'";
 				$result3 = QueryDb($sql3);
-				$row3 = @mysql_fetch_array($result3);
+				$row3 = @mysqli_fetch_array($result3);
 				$siswa = "<br>NIS Siswa: <b>".$row3['nis']."</b>";
 				$pjg = "125px";
 			}
@@ -418,31 +418,31 @@ function change_baris() {
 			<td height="25" align="center"><?=$row["ujian9"]?></td>
 			<td height="25" align="center"><?=$row["ujian10"]?></td>
             <td height="25" align="center">
-<?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+<?php 	if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
 			if ($row["aktif"] == 1) { ?> 
             	<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif<?=$siswa?>', this, event, '<?=$pjg?>')"/>
-<?			} else { ?>                
+<?php 		} else { ?>                
 				<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif<?=$siswa?>', this, event, '<?=$pjg?>')"/>
-<?			}
+<?php 		}
 		} else { 
 			if ($row["aktif"] == 1) { ?>
 				<a href="JavaScript:setaktif(<?=$row["replid"] ?>, <?=$row["aktif"] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif<?=$siswa?>', this, event, '<?=$pjg?>')" /></a>
-<?			} else { 
+<?php 		} else { 
 				if ($kapasitas > $isi) {?>
 				<a href="JavaScript:setaktif(<?=$row["replid"] ?>, <?=$row["aktif"] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif<?=$siswa?>', this, event, '<?=$pjg?>')"/></a>
-           	<?  } else { ?>
+           	<?php  } else { ?>
                 <img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Calon siswa tidak dapat diaktifkan karena kapasitas kelompok tidak mencukupi<?=$siswa?>', this, event, '165px')"/>
-<?				}
+<?php 			}
 			} //end if
 		} //end if ?>        	
         	</td>
             <td height="25" align="center">
-     <? if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>            
+     <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>            
             <a href="JavaScript:hapus(<?=$row["replid"] ?>)" ><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Data Calon Siswa!', this, event, '80px')"/></a>
-<?		} ?>
+<?php 	} ?>
 			</td>
         </tr>
-<?		$cnt++; } ?>	
+<?php 	$cnt++; } ?>	
 		 
     <!-- END TABLE CONTENT -->
     </table>
@@ -451,7 +451,7 @@ function change_baris() {
 	    Tables('table', 1, 0);
     </script>
     
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -476,42 +476,42 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
         </td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=10; $m <= 100; $m=$m+10) { ?>
+        <?php 	for ($m=10; $m <= 100; $m=$m+10) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>      
+        <?php 	} ?>      
       	</select></td>
     </tr>
     </table>	
     </td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="300">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-       	 <? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+       	 <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? //} ?>        
+        <?php //} ?>        
         </b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>    
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

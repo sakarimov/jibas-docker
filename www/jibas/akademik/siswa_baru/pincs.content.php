@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -46,7 +46,7 @@ if ($op == "dw8dxn8w9ms8zs22")
 {
 	$pin = random(5);
    
-	$sql = "UPDATE jbsakad.calonsiswa SET pinsiswa = '$pin' WHERE nopendaftaran = '$_REQUEST[nopendaftaran]'";
+	$sql = "UPDATE jbsakad.calonsiswa SET pinsiswa = '$pin' WHERE nopendaftaran = '".$_REQUEST['nopendaftaran']."'";
 	QueryDb($sql);
 }
 ?>
@@ -101,13 +101,13 @@ function change_urut(urut,urutan) {
 <table width="100%" border="0" height="100%">
 <tr>
 	<td>	
-<? $sql = "SELECT *
+<?php $sql = "SELECT *
              FROM jbsakad.calonsiswa 
             WHERE idkelompok = '$idkelompok'
               AND aktif = 1
             ORDER BY $urut $urutan ";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0)
+	if (@mysqli_num_rows($result) > 0)
    {  ?>
 
 	<table width="100%" border="0" align="center">          
@@ -144,26 +144,26 @@ function change_urut(urut,urutan) {
             onClick="change_urut('pinsiswa','<?=$urutan?>')">PIN Calon Siswa <?=change_urut('pinsiswa',$urut,$urutan)?>
          </td>
     </tr>
-<?  while ($row = @mysql_fetch_array($result))
+<?php  while ($row = @mysqli_fetch_array($result))
     { ?>
     <tr height="25">   	
         <td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['nopendaftaran']?></td>
         <td><?=$row['nama'] ?></td>      
         <td align="center"><?=$row['pinsiswa'] ?>&nbsp;
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:gantipin('<?=$row['nopendaftaran']?>')" ><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Ganti PIN!', this, event, '50px')"/></a>
-        <? } ?>
+        <?php } ?>
         </td>      
     </tr>
-<?	 } ?>
+<?php  } ?>
     </table>
    
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script></div>
 
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center">          
 <tr>
@@ -173,12 +173,12 @@ function change_urut(urut,urutan) {
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

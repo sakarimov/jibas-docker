@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../../include/sessionchecker.php");
 require_once("../../include/sessioninfo.php");
 require_once("../../include/config.php");
@@ -21,20 +21,20 @@ try
     for($i = 1; $i <= $ncomment; $i++)
     {
         $id = "comment_$i";
-        $text = trim($_REQUEST[$id]);
+        $text = trim((string) $_REQUEST[$id]);
         $comment = $text;
         $fcomment = FormattedText($text);
         
         $sql = "INSERT INTO jbsletter.comment
                    SET nip = '$nip', ";
-        $sql .= "idsurat = '$idsurat', tanggal = NOW(), komen = '$comment', fkomen = '$fcomment'";
+        $sql .= "idsurat = '$idsurat', tanggal = NOW(), komen = '$comment', fkomen = '".$fcomment."'";
         
         QueryDbEx($sql);
     }
     
     $sql = "UPDATE jbsletter.surat
                SET lastactive = NOW()
-             WHERE replid = '$idsurat'";
+             WHERE replid = '".$idsurat."'";
     QueryDbEx($sql);         
     
     CommitTrans();

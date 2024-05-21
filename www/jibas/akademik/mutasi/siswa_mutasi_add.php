@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -48,7 +48,7 @@ OpenDb();
 $sql = "SELECT s.nama,a.angkatan,t.tingkat,k.kelas,t.departemen,k.idtingkat,s.idkelas FROM siswa s, angkatan a, tingkat t, kelas k WHERE s.nis = '$nis' AND t.replid = k.idtingkat AND k.replid = s.idkelas AND s.idangkatan = a.replid"; 
 
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nama = $row[0];
 $angkatan = $row[1];
 $tingkat = $row[2];
@@ -78,12 +78,12 @@ if (isset($_REQUEST['Simpan'])) {
 	}
 	
 	if ($success){
-		$sql="INSERT INTO jbsakad.alumni SET nis='$nis', tgllulus='$tglmutasi', tktakhir='$idtingkat', klsakhir='$idkelas', departemen = '$departemen'";
+		$sql="INSERT INTO jbsakad.alumni SET nis='$nis', tgllulus='$tglmutasi', tktakhir='$idtingkat', klsakhir='$idkelas', departemen = '".$departemen."'";
 		QueryDbTrans($sql,$success);
 	}
 	
 	if ($success){
-		$sql="INSERT INTO jbsakad.mutasisiswa SET nis='$nis', jenismutasi='$mutasi', tglmutasi='$tglmutasi', keterangan='$keterangan', departemen = '$departemen'";
+		$sql="INSERT INTO jbsakad.mutasisiswa SET nis='$nis', jenismutasi='$mutasi', tglmutasi='$tglmutasi', keterangan='$keterangan', departemen = '".$departemen."'";
 		QueryDbTrans($sql, $success);
 		//echo $sql; 
 		//RollBackTrans();
@@ -97,7 +97,7 @@ if (isset($_REQUEST['Simpan'])) {
 		parent.opener.refresh_daftar();
 		window.close();
 	</script>
-	<?
+	<?php
 	} else {
 		RollBackTrans();
 		?>	
@@ -106,7 +106,7 @@ if (isset($_REQUEST['Simpan'])) {
 			parent.opener.refresh_daftar();
             window.close();
         </script>
-        <?
+        <?php
 	}
 	CloseDb();
 }
@@ -118,7 +118,7 @@ if (isset($_REQUEST['Simpan'])) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<SCRIPT type="text/javascript" language="JavaScript" src="../script/tables.js"></SCRIPT>
+<SCRIPT type="text/javascript" language="text/javascript" src="../script/tables.js"></SCRIPT>
 <SCRIPT type="text/javascript" language="javascript" src="../script/common.js"></script>
 <SCRIPT type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <link rel="stylesheet" type="text/css" href="../style/calendar-system.css">
@@ -203,17 +203,17 @@ function focusNext(elemName, evt) {
 <tr>
  	<td><strong>Jenis Mutasi </strong></td>
 	<td colspan="2"><select name="mutasi" id="mutasi" onKeyPress="return focusNext('keterangan', event)">
-	<?  OpenDb();
+	<?php  OpenDb();
 		$sql = "SELECT * FROM jbsakad.jenismutasi ORDER BY replid";
        	$result = QueryDb($sql);
-    	while($row = mysql_fetch_array($result)) {
+    	while($row = mysqli_fetch_array($result)) {
     		if ($mutasi == "")
    				 $mutasi = $row['replid'];
     ?>
-		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $mutasi) ?>>
+		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $mutasi) ?>>
 		<?=$row['jenismutasi']?>
 		</option>
-	<?
+	<?php
 	} //while
 	CloseDb();
 	?>
@@ -242,11 +242,11 @@ function focusNext(elemName, evt) {
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script type="text/javascript">

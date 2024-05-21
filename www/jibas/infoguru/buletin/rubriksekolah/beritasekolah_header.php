@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 27.0 (May 16, 2022)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/sessionchecker.php');
@@ -87,29 +87,29 @@ function prev(){
       <a href="../../home.php" target="framecenter"> <font size="1" color="#000000"><b>Home</b></font></a>&nbsp>&nbsp<strong><font color="#000000" size="1">Berita Sekolah</font></strong></th>
   </tr>
   <tr>
-    <td colspan="2" scope="row"><? if (SI_USER_ID()!="LANDLORD" && SI_USER_ID()!="landlord"){ ?><input type="button" name="beritabaru" id="beritabaru" value="Berita Baru" class="but" title="Tambah Berita Baru" onclick="parent.beritasekolah_footer.location.href='beritasekolah_add.php';"/><? } ?></th>
+    <td colspan="2" scope="row"><?php if (SI_USER_ID()!="LANDLORD" && SI_USER_ID()!="landlord"){ ?><input type="button" name="beritabaru" id="beritabaru" value="Berita Baru" class="but" title="Tambah Berita Baru" onclick="parent.beritasekolah_footer.location.href='beritasekolah_add.php';"/><?php } ?></th>
     
     Berita Bulan : 
       <input type="button" name="prevmonth" id="prevmonth" value=" < " class="but" title="Bulan Sebelumnya" onclick="prev()"/>
       <select name="bulan" id="bulan" onchange="chg()">
-    <?
+    <?php
     if ($bulan == "")
         $bulan = date('n');
 	for ($i=1;$i<=12;$i++){
 	?>
         <option value="<?=(int)$i?>" <?=StringIsSelected($i,$bulan)?>><?=NamaBulan($i)?></option>
-    <?
+    <?php
 	}
 	?>
     </select>
     <select name="tahun" id="tahun" onchange="chg()">
-        <?
+        <?php
         if ($tahun == "")
             $tahun = date('Y');
 	for ($y=2006;$y<=date('Y') + 1;$y++){
 	?>
         <option value="<?=(int)$y?>" <?=StringIsSelected($y,$tahun)?>><?=$y?></option>
-        <?
+        <?php
 	}
 	?>
         </select>

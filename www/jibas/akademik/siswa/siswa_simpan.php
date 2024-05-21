@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -30,7 +30,7 @@ require_once('../include/db_functions.php');
 $no = $_REQUEST['no'];
 $tahunmasuk = $_REQUEST['tahunmasuk'];
 $nama=$_REQUEST['nama'];
-$nama=str_replace("'", "`", $nama);
+$nama=str_replace("'", "`", (string) $nama);
 $panggilan=$_REQUEST['panggilan'];
 $kelamin=$_REQUEST['kelamin'];
 $tmplahir=$_REQUEST['tmplahir'];
@@ -58,7 +58,7 @@ $emailsiswa=$_REQUEST['emailsiswa'];
 $dep_asal=$_REQUEST['dep_asal'];
 
 $sekolah=$_REQUEST['sekolah'];
-$sekolah_sql = "asalsekolah = '$sekolah'";
+$sekolah_sql = "asalsekolah = '".$sekolah."'";
 if ($sekolah == "")
 	$sekolah_sql = "asalsekolah = NULL";
 
@@ -81,19 +81,19 @@ $almibu = $_REQUEST['almibu'];
 if ($_REQUEST['almibu']<> "1")
 	$almibu=0;
 $pendidikanayah=$_REQUEST['pendidikanayah'];
-$pendidikanayah_sql = "pendidikanayah = '$pendidikanayah'";
+$pendidikanayah_sql = "pendidikanayah = '".$pendidikanayah."'";
 if ($pendidikanayah == "")
 	$pendidikanayah_sql = "pendidikanayah = NULL";
 $pendidikanibu=$_REQUEST['pendidikanibu'];
-$pendidikanibu_sql = "pendidikanibu = '$pendidikanibu'";
+$pendidikanibu_sql = "pendidikanibu = '".$pendidikanibu."'";
 if ($pendidikanibu == "")
 	$pendidikanibu_sql = "pendidikanibu = NULL";
 $pekerjaanayah=$_REQUEST['pekerjaanayah'];
-$pekerjaanayah_sql = "pekerjaanayah = '$pekerjaanayah'";
+$pekerjaanayah_sql = "pekerjaanayah = '".$pekerjaanayah."'";
 if ($pekerjaanayah == "")
 	$pekerjaanayah_sql = "pekerjaanayah = NULL";
 $pekerjaanibu=$_REQUEST['pekerjaanibu'];
-$pekerjaanibu_sql = "pekerjaanibu = '$pekerjaanibu'";
+$pekerjaanibu_sql = "pekerjaanibu = '".$pekerjaanibu."'";
 if ($pekerjaanibu == "")
 	$pekerjaanibu_sql = "pekerjaanibu = NULL";
 $penghasilanayah = $_REQUEST['penghasilanayah'];
@@ -132,13 +132,13 @@ if($file_data != "") {
 <input type="hidden" name="departemen" id="departemen" value="<?=$departemen ?>" />
 <input type="hidden" name="proses" id="proses" value="<?=$proses ?>" />
 <input type="hidden" name="kelompok" id="kelompok" value="<?=$kelompok ?>" />
-<?
+<?php
 OpenDb();
 if ($_REQUEST['action'] == 'ubah') {	
 	if ($file_data <> "") {
-		$sql="UPDATE jbsakad.calonsiswa SET nama='$nama', panggilan='$panggilan', idproses=$proses, idkelompok=$kelompok, suku='$suku', agama='$agama, status='$status', kondisi='$kondisi', kelamin='$kelamin', tmplahir='$tmplahir', tgllahir='$lahir', warga='$warga', anakke=$urutananak, jsaudara=$jumlahanak, bahasa='$bahasa', berat=$berat, tinggi=$tinggi, darah='$gol', foto='$foto', alamatsiswa='$alamatsiswa', kodepossiswa='$kodepos', telponsiswa='$telponsiswa', hpsiswa='$hpsiswa', emailsiswa='$emailsiswa', kesehatan='$kesehatan', $sekolah_sql, ketsekolah='$ketsekolah', namaayah='$namaayah', namaibu='$namaibu', almayah=$almayah, almibu=$almibu, $pendidikanayah_sql, $pendidikanibu_sql,  $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali', penghasilanayah=$penghasilanayah, penghasilanibu=$penghasilanibu, alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu', emailortu='$emailortu', alamatsurat='$alamatsurat', keterangan='$keterangan' WHERE replid=$_REQUEST[replid]";
+		$sql="UPDATE jbsakad.calonsiswa SET nama='$nama', panggilan='$panggilan', idproses=$proses, idkelompok=$kelompok, suku='$suku', agama='$agama, status='$status', kondisi='$kondisi', kelamin='$kelamin', tmplahir='$tmplahir', tgllahir='$lahir', warga='$warga', anakke=$urutananak, jsaudara=$jumlahanak, bahasa='$bahasa', berat=$berat, tinggi=$tinggi, darah='$gol', foto='$foto', alamatsiswa='$alamatsiswa', kodepossiswa='$kodepos', telponsiswa='$telponsiswa', hpsiswa='$hpsiswa', emailsiswa='$emailsiswa', kesehatan='$kesehatan', $sekolah_sql, ketsekolah='$ketsekolah', namaayah='$namaayah', namaibu='$namaibu', almayah=$almayah, almibu=$almibu, $pendidikanayah_sql, $pendidikanibu_sql,  $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali', penghasilanayah=$penghasilanayah, penghasilanibu=$penghasilanibu, alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu', emailortu='$emailortu', alamatsurat='$alamatsurat', keterangan='$keterangan' WHERE replid= '".$_REQUEST['replid']."'";
 	} else {
-		$sql="UPDATE jbsakad.calonsiswa SET nama='$nama', panggilan='$panggilan', idproses=$proses, idkelompok=$kelompok, suku='$suku', agama='$agama', status='$status', kondisi='$kondisi', kelamin='$kelamin', tmplahir='$tmplahir', tgllahir='$lahir', warga='$warga', anakke=$urutananak, jsaudara=$jumlahanak, bahasa='$bahasa', berat=$berat, tinggi=$tinggi, darah='$gol', alamatsiswa='$alamatsiswa', kodepossiswa='$kodepos', telponsiswa='$telponsiswa', hpsiswa='$hpsiswa', emailsiswa='$emailsiswa', kesehatan='$kesehatan', $sekolah_sql, ketsekolah='$ketsekolah', namaayah='$namaayah', namaibu='$namaibu', almayah=$almayah, almibu=$almibu, $pendidikanayah_sql, $pendidikanibu_sql, $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali', penghasilanayah=$penghasilanayah, penghasilanibu=$penghasilanibu, alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu', emailortu='$emailortu', alamatsurat='$alamatsurat', keterangan='$keterangan' WHERE replid=$_REQUEST[replid]";
+		$sql="UPDATE jbsakad.calonsiswa SET nama='$nama', panggilan='$panggilan', idproses=$proses, idkelompok=$kelompok, suku='$suku', agama='$agama', status='$status', kondisi='$kondisi', kelamin='$kelamin', tmplahir='$tmplahir', tgllahir='$lahir', warga='$warga', anakke=$urutananak, jsaudara=$jumlahanak, bahasa='$bahasa', berat=$berat, tinggi=$tinggi, darah='$gol', alamatsiswa='$alamatsiswa', kodepossiswa='$kodepos', telponsiswa='$telponsiswa', hpsiswa='$hpsiswa', emailsiswa='$emailsiswa', kesehatan='$kesehatan', $sekolah_sql, ketsekolah='$ketsekolah', namaayah='$namaayah', namaibu='$namaibu', almayah=$almayah, almibu=$almibu, $pendidikanayah_sql, $pendidikanibu_sql, $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali', penghasilanayah=$penghasilanayah, penghasilanibu=$penghasilanibu, alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu', emailortu='$emailortu', alamatsurat='$alamatsurat', keterangan='$keterangan' WHERE replid= ".$_REQUEST['replid'];
 	}
 } else { 
 	$sql="INSERT INTO jbsakad.calonsiswa SET nopendaftaran='$no', nama='$nama', panggilan='$panggilan', tahunmasuk='$tahunmasuk', idproses='$proses', idkelompok='$kelompok', suku='$suku', agama='$agama', status='$status', kondisi='$kondisi', kelamin='$kelamin', tmplahir='$tmplahir', tgllahir='$lahir', warga='$warga',  anakke='$urutananak', jsaudara='$jumlahanak', bahasa='$bahasa', berat='$berat', tinggi='$tinggi', darah='$gol', foto='$foto', alamatsiswa='$alamatsiswa', kodepossiswa='$kodepos', telponsiswa='$telponsiswa', hpsiswa='$hpsiswa', emailsiswa='$emailsiswa', kesehatan='$kesehatan', $sekolah_sql, ketsekolah='$ketsekolah', namaayah='$namaayah', namaibu='$namaibu', almayah='$almayah', almibu='$almibu', $pendidikanayah_sql, $pendidikanibu_sql, $pekerjaanayah_sql, $pekerjaanibu_sql, wali='$namawali', penghasilanayah='$penghasilanayah', penghasilanibu='$penghasilanibu', alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu', emailortu='$emailortu', alamatsurat='$alamatsurat', keterangan='$keterangan'";
@@ -153,7 +153,7 @@ if ($result) { ?>
 	parent.opener.refresh_simpan('<?=$departemen?>','<?=$proses?>','<?=$kelompok?>');
 	window.close();
 </script> 
-<?  } 
+<?php  } 
 //} 
 //}
 

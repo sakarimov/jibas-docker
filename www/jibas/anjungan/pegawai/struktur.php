@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -44,13 +44,13 @@ $iddel = "";
 function getIdDel($idroot) {
 	global $iddel;
 	
-	if (strlen($iddel) > 0) 
+	if (strlen((string) $iddel) > 0) 
 		$iddel = $iddel . ",";
 	$iddel = $iddel . $idroot;	
 	
 	$sql = "SELECT replid FROM jbssdm.jabatan WHERE rootid = $idroot";
 	$result = QueryDb($sql);
-	while ($row = mysql_fetch_row($result)) 
+	while ($row = mysqli_fetch_row($result)) 
 		getIdDel($row[0]);
 }
 
@@ -58,7 +58,7 @@ function getNSubDir($idroot)
 {
 	$sql = "SELECT count(*) FROM jbssdm.jabatan WHERE rootid = $idroot";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	return $row[0];
 }
 
@@ -80,7 +80,7 @@ function getEmployee($idjab)
                AND pj.terakhir = 1 AND pj.idjabatan = '$idjab'
              ORDER BY p.nama";
     $result = QueryDb($sql);
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
 	{
         if ($employee != "")
             $employee .= ", ";
@@ -97,9 +97,9 @@ function getNEmployee($idjab)
     $sql = "SELECT COUNT(replid)
               FROM jbssdm.pegjab
              WHERE terakhir = 1
-               AND idjabatan = '$idjab'";
+               AND idjabatan = '".$idjab."'";
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
 	
     return $row[0];
 }
@@ -112,7 +112,7 @@ function traverse($idroot, $count)
 	$result = QueryDb($sql);
 	$space = spacing($count);
 	
-	while ($row = mysql_fetch_row($result))
+	while ($row = mysqli_fetch_row($result))
 	{
 		$idjab = $row[0];
 		$sing  = $row[1];
@@ -127,7 +127,7 @@ function traverse($idroot, $count)
 			echo "<li class='liBullet' style='margin-left:20px;'>";
 			
 			echo "<span style='border:1px solid black; background-color:black; color:white; font-size:11px; font-weight:bold;'>&nbsp;&nbsp;";
-			echo strtoupper($jab) . " [" . getNEmployee($idjab) . "]";
+			echo strtoupper((string) $jab) . " [" . getNEmployee($idjab) . "]";
 			echo "&nbsp;&nbsp;</span><br>";
 			echo "<table border='0' cellpadding='0' cellspacing='0' width='450px'>";
 			echo "<tr><td width='20'>&nbsp;</td>";
@@ -144,7 +144,7 @@ function traverse($idroot, $count)
 			echo "$space<li class='liClosed' style='margin-left:20px'>";
             
 			echo "<span style='border:1px solid black; background-color:black; color:white; font-size:11px; font-weight:bold;'>&nbsp;&nbsp;";
-			echo strtoupper($jab) . " [" . getNEmployee($idjab) . "]";
+			echo strtoupper((string) $jab) . " [" . getNEmployee($idjab) . "]";
 			echo "&nbsp;&nbsp;</span><br>";
 			echo "<table border='0' cellpadding='0' cellspacing='0' width='450px'>";
 			echo "<tr><td width='20'>&nbsp;</td>";
@@ -168,17 +168,17 @@ function traverse($idroot, $count)
 <a href="#" onclick="collapseTree('tree1'); return false;"><img src="images/collapse.png" border="0">&nbsp;Collapse</a>&nbsp;|&nbsp;
 <a href="#" onclick="sp_Refresh(); return false;"><img src="images/refresh.png" border="0">&nbsp;Refresh</a>
 <br /><br />
-<?
+<?php
 $sql = "SELECT replid, singkatan, jabatan FROM jbssdm.jabatan WHERE rootid=0";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	echo "Belum ada data";
 } 
 else 
 {
 	$ntree = 0;
-	while($row = mysql_fetch_row($result))
+	while($row = mysqli_fetch_row($result))
 	{
 		$ntree++;
 		$idjab = $row[0];

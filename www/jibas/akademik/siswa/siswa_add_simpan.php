@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,8 +31,8 @@ require_once('../library/departemen.php');
 $idangkatan=(int)$_POST['angkatan'];
 $tahunmasuk=(int)$_POST['tahunmasuk'];
 $nis=$_POST['nis'];
-$nama=str_replace("'","`",$_POST['nama']);
-$nama=str_replace("""","`",$nama);
+$nama=str_replace("'","`",(string) $_POST['nama']);
+$nama=str_replace('"',"`",$nama);
 $panggilan=$_POST['panggilan'];
 $kelamin=$_POST['kelamin'];
 $tmplahir=$_POST['tmplahir'];
@@ -75,10 +75,10 @@ $pendidikanibu=$_POST['pendidikanibu'];
 $pekerjaanayah=$_POST['pekerjaanayah'];
 $pekerjaanibu=$_POST['pekerjaanibu'];
 $penghasilanayah=(int)$_POST['penghasilanayah'];
-if ($penghasilanayah=="")
+if ($penghasilanayah==0)
 $penghasilanayah=0;
 $penghasilanibu=(int)$_POST['penghasilanibu'];
-if ($penghasilanibu=="")
+if ($penghasilanibu==0)
 $penghasilanibu=0;
 $namawali=$_POST['namawali'];
 $alamatortu=$_POST['alamatortu'];
@@ -106,12 +106,12 @@ $departemen=$_POST['departemen'];
 		$uploadedfile = $foto['tmp_name'];
 		$uploadedtypefile = $foto['type'];
 		$uploadedsizefile = $foto['size'];
-		if (strlen($uploadedfile)!=0){
+		if (strlen((string) $uploadedfile)!=0){
 			//$gantifoto=", foto='$foto_data'";
 		if($uploadedtypefile=='image/jpeg')
 		$src = imagecreatefromjpeg($uploadedfile);
 		$filename = "x.jpg";
-		list($width,$height)=getimagesize($uploadedfile);
+		[$width, $height]=getimagesize($uploadedfile);
 		if ($width<$height){
 		$newheight=170;
 		$newwidth=113;
@@ -136,22 +136,22 @@ $departemen=$_POST['departemen'];
 			$foto_data = addslashes(fread(fopen($file_data, "r"), filesize($file_data)));
 		}*/
 
-$date=date(j);
-$month=date(m);
-$year=date(Y);
+$date=date('j');
+$month=date('m');
+$year=date('Y');
 $kumplit=$year."-".$month."-".$date;
 OpenDb();
 BeginTrans();
 $success=0;
 $sql_cek ="SELECT nis from jbsakad.siswa  where nis ='$nis'";
 $hasil_cek=QueryDb($sql_cek);
-if (mysql_fetch_row($hasil_cek)>0){
+if (mysqli_fetch_row($hasil_cek)>0){
 ?>
 <script language="javascript">
 alert ('Maaf nis <?=$nis?> sudah digunakan');
 //opener.close();
 </script>
-<?
+<?php
 } else {
 
 $sql="INSERT INTO jbsakad.siswa SET nis='$nis',nama='$nama',panggilan='$panggilan',tahunmasuk='$tahunmasuk',idangkatan='$idangkatan',idkelas=$idkelas,suku='$suku',agama='$agama',status='$status',kondisi='$kondisi',kelamin='$kelamin',tmplahir='$tmplahir',tgllahir='$lahir',warga='$warga',anakke=$urutananak,jsaudara=$jumlahanak,bahasa='$bahasa',berat=$berat,tinggi=$tinggi,darah='$gol',foto='$foto_data',alamatsiswa='$alamatsiswa',kodepossiswa='$kodepos',telponsiswa='$telponsiswa',hpsiswa='$hpsiswa',emailsiswa='$emailsiswa',kesehatan='$kesehatan',asalsekolah='$sekolah',ketsekolah='$ketsekolah',namaayah='$namaayah',namaibu='$namaibu',almayah=$almayah,almibu=$almibu,pendidikanayah='$pendidikanayah',pendidikanibu='$pendidikanibu',pekerjaanayah='$pekerjaanayah',pekerjaanibu='$pekerjaanibu',wali='$namawali',penghasilanayah=$penghasilanayah,penghasilanibu=$penghasilanibu,alamatortu='$alamatortu',telponortu='$telponortu',hportu='$hportu',emailortu='$emailortu',alamatsurat='$alamatsurat',keterangan='$keterangan'";
@@ -174,14 +174,14 @@ if ($success){
 		parent.opener.refresh_after_add();
 		window.close();
 			</script>
-	<?
+	<?php
 }Else{
 		RollbackTrans();
 		?>
 		<script language="javascript">
 		alert ('Gagal simpan data');
 		</script>
-<?
+<?php
 	}
 	}
 	CloseDb();
@@ -195,7 +195,7 @@ if ($success){
 <title>Pendataan Siswa[ADD]</title>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript">
 var angkatan=document.main.angkatan.value;

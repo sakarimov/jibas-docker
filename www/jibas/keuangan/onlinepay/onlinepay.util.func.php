@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,38 +23,25 @@
 <?php
 function inaMonthName($month)
 {
-    switch ($month)
-    {
-        case 1:
-            return "Jan";
-        case 2:
-            return "Feb";
-        case 3:
-            return "Mar";
-        case 4:
-            return "Apr";
-        case 5:
-            return "Mei";
-        case 6:
-            return "Jun";
-        case 7:
-            return "Jul";
-        case 8:
-            return "Agt";
-        case 9:
-            return "Sep";
-        case 10:
-            return "Okt";
-        case 11:
-            return "Nop";
-        default:
-            return "Des";
-    }
+    return match ($month) {
+        1 => "Jan",
+        2 => "Feb",
+        3 => "Mar",
+        4 => "Apr",
+        5 => "Mei",
+        6 => "Jun",
+        7 => "Jul",
+        8 => "Agt",
+        9 => "Sep",
+        10 => "Okt",
+        11 => "Nop",
+        default => "Des",
+    };
 }
 
 function formatInaMySqlDate($date)
 {
-    $lsDate = explode("-", $date);
+    $lsDate = explode("-", (string) $date);
     $d = str_pad($lsDate[2], 2, "0", STR_PAD_LEFT);
     $m = inaMonthName($lsDate[1]);
     $y = $lsDate[0];
@@ -116,7 +103,7 @@ function NamaPenerimaan($kategori, $idPenerimaan)
                   FROM jbsfina.datapenerimaan
                  WHERE replid = $idPenerimaan";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             return $row[0];
 
         return "-";
@@ -128,7 +115,7 @@ function NamaPenerimaan($kategori, $idPenerimaan)
                   FROM jbsfina.datatabungan
                  WHERE replid = $idPenerimaan";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             return $row[0];
 
         return "-";
@@ -140,7 +127,7 @@ function NamaPenerimaan($kategori, $idPenerimaan)
                   FROM jbsfina.datatabunganp
                  WHERE replid = $idPenerimaan";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             return $row[0];
 
         return "-";
@@ -152,7 +139,7 @@ function NamaPenerimaan($kategori, $idPenerimaan)
                   FROM jbsfina.bankdeposit
                  WHERE replid = $idPenerimaan";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             return $row[0];
 
         return "-";
@@ -175,7 +162,7 @@ function EchoBr($data)
 
 function SafeInput($data)
 {
-    $data = str_replace("\"", "`", $data);
+    $data = str_replace("\"", "`", (string) $data);
     $data = str_replace("<", "&lt;", $data);
     return str_replace(">", "&gt;", $data);
 }

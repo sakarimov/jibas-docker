@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +39,11 @@ function ShowCbDepartemen()
     $res = QueryDb($sql);
 
     $ret = "<select id='departemen' name='departemen' style='width: 200px;' onchange='ch_changeDept()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($selDept == "")
             $selDept = $row[0];
-        $ret .= "<option value='$row[0]'>$row[0]</option>";
+        $ret .= "<option value='".$row[0]."'>".$row[0]."</option>";
     }
     $ret .= "</select>";
 
@@ -72,9 +72,9 @@ function ShowCbPelajaran($dept)
     $res = QueryDb($sql);
 
     $ret = "<select id='pelajaran' name='pelajaran' style='width: 250px;' onchange='ch_changePel()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $ret .= "<option value='$row[0]'>$row[1]</option>";
+        $ret .= "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     $ret .= "</select>";
 

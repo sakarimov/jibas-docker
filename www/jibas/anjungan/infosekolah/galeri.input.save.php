@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -118,11 +118,11 @@ try
         $nip = "'$login'";
     }
     
-    $text = trim($_REQUEST['judul']);
+    $text = trim((string) $_REQUEST['judul']);
     $judul = $text;
     $fjudul = FormattedText($text);
     
-    $text = trim($_REQUEST['keterangan']);
+    $text = trim((string) $_REQUEST['keterangan']);
     $keterangan = RecodeNewLine($text);
     $fketerangan = FormattedText($text);
     $fprevketerangan = FormattedPreviewText($text, $previewTextLength);
@@ -138,18 +138,18 @@ try
     $sql = "SELECT LAST_INSERT_ID()";
     echo "$sql<br>";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $galleryid = $row[0];
     
     // == Save Cover
     $file = $_FILES["cover_file"];
-    $text = trim($_REQUEST["cover_info"]);
+    $text = trim((string) $_REQUEST["cover_info"]);
     $fileinfo = $text;
     $ffileinfo = FormattedText($text);
     
-    $rnd = rand(10000, 99999);
+    $rnd = random_int(10000, 99999);
     $name = $file['name'];
-    $pict = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+    $pict = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
     $type = $file['type'];
     $size = $file['size'];
     $location = "anjungan/galeri/" . date('Y');
@@ -164,7 +164,7 @@ try
     $sql = "INSERT INTO jbsvcr.galleryfile
                SET galleryid = $galleryid, filename = '$pict', filesize = '$size',
                    filetype = '$type', fileinfo = '$fileinfo', ffileinfo = '$ffileinfo', location = '$location',
-                   iscover = 1, width = '$width', height = '$height'";
+                   iscover = 1, width = '$width', height = '".$height."'";
     echo "$sql<br>";
     QueryDbEx($sql);
 
@@ -176,14 +176,14 @@ try
         $file = $_FILES[$doc];
         
         $reqid = "gambar_info_$i";
-        $text = trim($_REQUEST[$reqid]);
+        $text = trim((string) $_REQUEST[$reqid]);
         $gbrinfo = $text;
         $fgbrinfo = FormattedText($text);
         
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         
         $name = $file['name'];
-        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $type = $file['type'];
         $size = $file['size'];
         $location = "anjungan/galeri/" . date('Y');
@@ -199,7 +199,7 @@ try
         $sql = "INSERT INTO jbsvcr.galleryfile
                    SET galleryid = $galleryid, filename = '$name', filesize = '$size',
                        filetype = '$type', fileinfo = '$gbrinfo', ffileinfo = '$fgbrinfo', location = '$location',
-                       iscover = 0, width = '$width', height = '$height'";
+                       iscover = 0, width = '$width', height = '".$height."'";
         echo "$sql<br>";
         QueryDbEx($sql);
     }

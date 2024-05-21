@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -63,11 +63,11 @@ $total = $_REQUEST['total'];
 </tr>
 <tr>
 	<td><strong>Tahun Ajaran</strong></td>
-	<td><strong>:&nbsp;<?=$_REQUEST[namatahunajaran]?></strong></td>
+	<td><strong>:&nbsp;<?=$_REQUEST['namatahunajaran']?></strong></td>
 </tr>
 <tr>
 	<td><strong>Tingkat</strong></td>
-	<td><strong>:&nbsp;<?=$_REQUEST[namatingkat]?></strong></td>
+	<td><strong>:&nbsp;<?=$_REQUEST['namatingkat']?></strong></td>
 </tr>
 </table>
 <br />
@@ -82,7 +82,7 @@ $total = $_REQUEST['total'];
 		<td width="*" class="header" align="center">Keterangan</td>
         <td width="10%" class="header" align="center">Status</td>
     </tr>
-<? OpenDb();
+<?php OpenDb();
 	$sql = "SELECT k.replid,k.kelas,k.idtahunajaran,k.kapasitas,k.nipwali,k.aktif,k.keterangan,t.replid,t.tahunajaran,t.departemen,p.nama,tkt.replid,k.idtingkat FROM kelas k, tahunajaran t, tingkat tkt, jbssdm.pegawai p WHERE t.replid='$tahunajaran' AND tkt.replid='$tingkat' AND k.idtahunajaran=t.replid AND t.departemen='$departemen' AND tkt.replid=k.idtingkat AND p.nip=k.nipwali ORDER BY $urut $urutan ";//LIMIT ".(int)$page*(int)$varbaris.",$varbaris";  
 
 	$result = QueryDB($sql);
@@ -91,24 +91,24 @@ $total = $_REQUEST['total'];
 	//else
 		//$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row = mysql_fetch_row($result)) { 
+	while ($row = mysqli_fetch_row($result)) { 
 		?>
     <tr height="25">    	
     	<td align="center"><?=$cnt ?></td>
         <td><?=$row[1] ?></td>        
-        <td><?
-		$sql3 = "SELECT p.nip,p.nama FROM jbssdm.pegawai p WHERE p.nip='$row[4]'";
+        <td><?php
+		$sql3 = "SELECT p.nip,p.nama FROM jbssdm.pegawai p WHERE p.nip='".$row[4]."'";
 		$result3 = QueryDB($sql3);
-		while ($row3 = mysql_fetch_row($result3)){
+		while ($row3 = mysqli_fetch_row($result3)){
 		echo $row3[0]." - ".$row3[1];
 		}	
 		?></td>
 		<td align="center"><?=$row[3] ?></td>        
-        <td align="center"><? 
+        <td align="center"><?php 
 			$kelasterpilih=$row[0];
 		$sql2 = "SELECT COUNT(*) FROM jbsakad.siswa s WHERE s.idkelas='$kelasterpilih' AND s.aktif=1";
 		$result2 = QueryDB($sql2);
-		if ($row2 = mysql_fetch_row($result2)){
+		if ($row2 = mysqli_fetch_row($result2)){
 		$terisi = $row2[0];
 		} else {
 		$terisi = 0;
@@ -116,14 +116,14 @@ $total = $_REQUEST['total'];
 		echo $terisi; ?></td>
 		<td><?=$row[6] ?></td>  
         <td align="center">
-			<? if ($row[5] == 1) 
+			<?php if ($row[5] == 1) 
 					echo 'Aktif';
 				else
 					echo 'Tidak Aktif';
 			?>		
         </td>      
     </tr>
-<?	$cnt++;
+<?php $cnt++;
 			} 
 	CloseDb() ?>	
     </table>

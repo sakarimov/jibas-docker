@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -32,15 +32,15 @@ require_once('library/departemen.php');
 $login = getIdUser();
 
 if (isset($_REQUEST['simpan'])) {
-	$nip=trim($_REQUEST['nip']);
+	$nip=trim((string) $_REQUEST['nip']);
 	OpenDb();
-	$sql = "SELECT login FROM jbsuser.login WHERE password='".md5($_REQUEST[passlama])."' AND login='$nip'";
+	$sql = "SELECT login FROM jbsuser.login WHERE password='".md5((string) $_REQUEST['passlama'])."' AND login='$nip'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb(); 
-		$MYSQL_ERROR_MSG = "Password lama anda tidak cocok!";
+		$mysqli_ERROR_MSG = "Password lama anda tidak cocok!";
 	} else {
-		$sql = "UPDATE jbsuser.login SET password='".md5($_REQUEST[pass1])."' WHERE login='".trim($_REQUEST['nip'])."'";
+		$sql = "UPDATE jbsuser.login SET password='".md5((string) $_REQUEST['pass1'])."' WHERE login='".trim((string) $_REQUEST['nip'])."'";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -49,15 +49,15 @@ if (isset($_REQUEST['simpan'])) {
 				alert("Password anda telah berubah");
 				window.close();
 			</script> 
-<?		}	
+<?php 	}	
 		exit();
 	}
 }
 
 OpenDb();
-$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p WHERE p.nip = '$login'";     
+$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p WHERE p.nip = '".$login."'";     
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nip = $row[0];
 $nama = $row[1];
 CloseDb();
@@ -133,10 +133,10 @@ function validasi() {
 	</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-    alert('<?=$MYSQL_ERROR_MSG ?>');
+    alert('<?=$mysqli_ERROR_MSG ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

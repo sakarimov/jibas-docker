@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ if (!isset($_REQUEST["stidpgtrans"]))
         $sql .= " AND p.jenis = $metode";
 
     if ($pembayaran != "ALL")
-        $sql .= " AND pd.kategori = '$pembayaran'";
+        $sql .= " AND pd.kategori = '".$pembayaran."'";
 
     if ($idPembayaran != "0")
     {
@@ -77,13 +77,13 @@ if (!isset($_REQUEST["stidpgtrans"]))
     }
 
     if ($siswa != "ALL")
-        $sql .= " AND p.nis = '$nis'";
+        $sql .= " AND p.nis = '".$nis."'";
 
     if ($bankNo <> "ALL")
-        $sql .= " AND p.bankno = '$bankNo'";
+        $sql .= " AND p.bankno = '".$bankNo."'";
 
     if ($idPetugas != "ALL")
-        $sql .= " AND p.idpetugas = '$idPetugas'";
+        $sql .= " AND p.idpetugas = '".$idPetugas."'";
 
     //$sql .= " ORDER BY p.tanggal DESC";
     //echo "$sql<br>";
@@ -91,7 +91,7 @@ if (!isset($_REQUEST["stidpgtrans"]))
     $nData = 0;
     $stIdPgTrans = "";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $nData++;
 
@@ -166,7 +166,7 @@ $nPage = ceil($nData / $nRowPerPage);
 <?php
         $res = QueryDb($sql);
         $cnt = ($page - 1) * $nRowPerPage;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $cnt += 1;
             $idPgTrans = $row['replid'];
@@ -176,7 +176,7 @@ $nPage = ceil($nData / $nRowPerPage);
                      WHERE idpgtrans = $idPgTrans
                        AND kategori <> 'LB'";
             $res2 = QueryDb($sql);
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $jTransaksi = $row2[0];
             $rpTransaksi = FormatRupiah($jTransaksi);
 
@@ -185,7 +185,7 @@ $nPage = ceil($nData / $nRowPerPage);
                      WHERE idpgtrans = $idPgTrans
                        AND kategori = 'LB'";
             $res2 = QueryDb($sql);
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $jLebih = $row2[0];
 
             $jenis = $row["jenis"];
@@ -197,9 +197,9 @@ $nPage = ceil($nData / $nRowPerPage);
                 $sql = "SELECT ts.nomor
                           FROM jbsfina.tagihansiswainfo tsi, jbsfina.tagihanset ts
                          WHERE tsi.idtagihanset = ts.replid
-                           AND tsi.notagihan = '$row[nomor]'";
+                           AND tsi.notagihan = '".$row['nomor']."'";
                 $res2 = QueryDb($sql);
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                     $nomorTs = $row2[0];
             }
 
@@ -210,11 +210,11 @@ $nPage = ceil($nData / $nRowPerPage);
             echo "<table border='0' cellpadding='2' cellspacing='0' width='100%'>";
             echo "<tr>";
             echo "<td width='80%'>";
-            echo "<strong>$row[namasiswa]</strong>  |  $row[nis]<br>";
-            echo "<strong>$row[transaksi]</strong>";
+            echo "<strong>".$row['namasiswa']."</strong>  |  ".$row['nis']."<br>";
+            echo "<strong>".$row['transaksi']."</strong>";
             echo "</td>";
             echo "<td width='20%' align='right'>";
-            echo "<i>$row[fwaktu]</i>";
+            echo "<i>".$row['fwaktu']."</i>";
             echo "</td>";
             echo "</tr>";
             echo "</table>";
@@ -231,7 +231,7 @@ $nPage = ceil($nData / $nRowPerPage);
                      ORDER BY kelompok;";
             $res2 = QueryDb($sql);
             $stNoJurnal = "";
-            while($row2 = mysql_fetch_array($res2))
+            while($row2 = mysqli_fetch_array($res2))
             {
                 $kategori = $row2["kategori"];
 
@@ -256,7 +256,7 @@ $nPage = ceil($nData / $nRowPerPage);
                 echo "<td width='220px' align='left'>$nama</td>";
                 echo "<td width='110px' align='right'>$rp</td>";
                 echo "<td width='110px' align='center'>";
-                echo "<a href='#' style='color: #0000ff; text-decoration: underline; font-weight: normal;' onclick='showRincianJurnal($cnt)'>$row2[nokas]</a>";
+                echo "<a href='#' style='color: #0000ff; text-decoration: underline; font-weight: normal;' onclick='showRincianJurnal($cnt)'>".$row2['nokas']."</a>";
                 echo "</td>";
                 echo "</tr>";
             }
@@ -279,12 +279,12 @@ $nPage = ceil($nData / $nRowPerPage);
             echo "</td>";
             echo "<td align='left' valign='top'>";
             if ($jenis == 1)
-                echo "<b>$row[nomor]</b><br><i>$nomorTs</i><br><i>$row[paymentid]</i>";
+                echo "<b>".$row['nomor']."</b><br><i>$nomorTs</i><br><i>".$row['paymentid']."</i>";
             else
-                echo "<b>$row[nomor]</b><br><i>$row[paymentid]</i>";
+                echo "<b>".$row['nomor']."</b><br><i>".$row['paymentid']."</i>";
             echo "</td>";
-            echo "<td align='left' valign='top'><strong>$row[bank]</strong><br><i>$row[bankno]</i></td>";
-            echo "<td align='left' valign='top'>$row[petugas]<br>$row[idpetugas]<br><i>$row[ketver]</i></td>";
+            echo "<td align='left' valign='top'><strong>".$row['bank']."</strong><br><i>".$row['bankno']."</i></td>";
+            echo "<td align='left' valign='top'>".$row['petugas']."<br>".$row['idpetugas']."<br><i>".$row['ketver']."</i></td>";
 
             echo "</tr>";
         }

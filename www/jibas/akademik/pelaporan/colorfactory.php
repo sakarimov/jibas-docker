@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,28 +23,17 @@
 <?php
 class ColorFactory
 {
-    private $minValue;
-    private $maxValue;
+    private array $baseMinColor;
+    private array $baseMaxColor;
 
-    private $baseMinColor;
-    private $baseMaxColor;
+    private array $zeroColor = [209, 209, 209];  // gray
 
-    private $zeroColor = array(209, 209, 209);  // gray
+    private array $homogenColor = [0, 166, 255];
 
-    private $homogenColor = array(0, 166, 255); // blue?
-
-    private $weight = 1;
-    private $reverseColor = false;
-
-    public function __construct($minValue, $maxValue, $weight = 1, $reverseColor = false)
+    public function __construct(private $minValue, private $maxValue, private $weight = 1, $reverseColor = false)
     {
-        $this->minValue = $minValue;
-        $this->maxValue = $maxValue;
-        $this->weight = $weight;
-        $this->reverseColor = $reverseColor;
-
-        $this->baseMinColor = $this->rgb2hsv(array(183, 13, 13));
-        $this->baseMaxColor = $this->rgb2hsv(array(35, 166, 46));
+        $this->baseMinColor = $this->rgb2hsv([183, 13, 13]);
+        $this->baseMaxColor = $this->rgb2hsv([35, 166, 46]);
 
         //$this->baseMinColor = $this->rgb2hsv(array(18, 12, 9));
         //$this->baseMaxColor = $this->rgb2hsv(array(105, 195, 18));
@@ -57,9 +46,9 @@ class ColorFactory
         }
     }
 
-    private function rgb2hsv($c)
+    private function rgb2hsv($c): array
     {
-        list($r, $g, $b) = $c;
+        [$r, $g, $b] = $c;
 
         $v = max($r, $g, $b);
         $t = min($r, $g, $b);
@@ -79,63 +68,63 @@ class ColorFactory
             $h = ($h < 0) ? $h + 360 : $h;
         }
 
-        return array($h, $s, $v);
+        return [$h, $s, $v];
     }
 
-    private function hsv2rgb($c)
+    private function hsv2rgb($c): array
     {
-        list($h, $s, $v) = $c;
+        [$h, $s, $v] = $c;
 
         if ($s == 0)
         {
-            return array($v, $v, $v);
+            return [$v, $v, $v];
         }
-        else
-        {
-            $h = ($h %= 360) / 60;
-            $i = floor($h);
-            $f = $h - $i;
-            $q[0] = $q[1] = $v * (1 - $s);
-            $q[2] = $v * (1 - $s * (1 - $f));
-            $q[3] = $q[4] = $v;
-            $q[5] = $v * (1 - $s * $f);
+        $h = ($h %= 360) / 60;
+        $i = floor($h);
+        $f = $h - $i;
+        $q[0] = $q[1] = $v * (1 - $s);
+        $q[2] = $v * (1 - $s * (1 - $f));
+        $q[3] = $q[4] = $v;
+        $q[5] = $v * (1 - $s * $f);
+        return([$q[($i + 4) % 6], $q[($i + 2) % 6], $q[$i % 6]]);
+        //[1]
 
-            return(array($q[($i + 4) % 6], $q[($i + 2) % 6], $q[$i % 6])); //[1]
-        }
     }
 
-    private function transition($value, $startValue, $endValue)
+    private function transition($value, $startValue, $endValue): int|float
     {
-        if ($value < $this->minValue)
+        if ($value < $this->minValue) {
             $value = $this->minValue;
-        elseif ($value > $this->maxValue)
+        } elseif ($value > $this->maxValue) {
             $value = $this->maxValue;
+        }
 
         //echo "$value $this->minValue $this->maxValue => ";
-        $value = $value - $this->minValue;
+        $value -= $this->minValue;
         $maxValue = $this->maxValue - $this->minValue;
         //echo "$value 0 $maxValue<br>";
 
         return $startValue + ($endValue - $startValue) * $value / $maxValue;
     }
 
-    private function transition3($value)
+    private function transition3(int|float $value): array
     {
         $r1 = $this->transition($value, $this->baseMinColor[0], $this->baseMaxColor[0]);
         $r2 = $this->transition($value, $this->baseMinColor[1], $this->baseMaxColor[1]);
         $r3 = $this->transition($value, $this->baseMinColor[2], $this->baseMaxColor[2]);
 
-        return array($r1, $r2, $r3);
+        return [$r1, $r2, $r3];
     }
 
-    private function rgb2html($r, $g =- 1, $b =- 1)
+    private function rgb2html($r, $g =- 1, $b =- 1): string
     {
-        if (is_array($r) && sizeof($r) == 3)
-            list($r, $g, $b) = $r;
+        if (is_array($r) && count($r) == 3) {
+            [$r, $g, $b] = $r;
+        }
 
-        $r = intval($r);
-        $g = intval($g);
-        $b = intval($b);
+        $r = (int) $r;
+        $g = (int) $g;
+        $b = (int) $b;
 
         $r = dechex($r < 0 ? 0 : ($r > 255 ? 255 : $r));
         $g = dechex($g < 0 ? 0 : ($g > 255 ? 255 : $g));
@@ -171,20 +160,22 @@ class ColorFactory
 
     public function GetHomogenColorRGB($dividen, $divisor, $value)
     {
-        if ($divisor == 0 && $dividen == 0)
+        if ($divisor == 0 && $dividen == 0) {
             return $this->zeroColor;
-        else
+        } else {
             return $this->homogenColor;
+        }
     }
 
     public function GetHomogenColorHTML($dividen, $divisor, $value)
     {
-        if ($divisor == 0 && $dividen == 0)
+        if ($divisor == 0 && $dividen == 0) {
             return $this->rgb2html($this->zeroColor);
-        else
+        } else {
             return $this->rgb2html($this->homogenColor[0],
                 $this->homogenColor[1],
                 $this->homogenColor[2]);
+        }
     }
 
     public function GetColorCodeHTML($dividen, $divisor, $value)
@@ -198,15 +189,12 @@ class ColorFactory
             $value = $this->maxValue;
         */
 
-        if ($divisor == 0 && $dividen == 0)
-            $resultRGB = $this->zeroColor;
-        else
-            $resultRGB = $this->hsv2rgb($this->transition3($value));
+        $resultRGB = $divisor == 0 && $dividen == 0 ? $this->zeroColor : $this->hsv2rgb($this->transition3($value));
 
         return $this->rgb2html($resultRGB[0], $resultRGB[1], $resultRGB[2]);
     }
 
-    public function GetColorCodeRGB($dividen, $divisor, $value)
+    public function GetColorCodeRGB($dividen, $divisor, $value): array
     {
         $value = $this->weight * $value;
 
@@ -217,12 +205,9 @@ class ColorFactory
             $value = $this->maxValue;
         */
 
-        if ($divisor == 0 && $deviden == 0)
-            $resultRGB = $this->zeroColor;
-        else
-            $resultRGB = $this->hsv2rgb($this->transition3($value));
+        $resultRGB = $divisor == 0 && $deviden == 0 ? $this->zeroColor : $this->hsv2rgb($this->transition3($value));
 
-        return array(floor($resultRGB[0]), floor($resultRGB[1]), floor($resultRGB[2]));
+        return [floor($resultRGB[0]), floor($resultRGB[1]), floor($resultRGB[2])];
     }
 }
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,36 +20,36 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("config.php");
 require_once("errorhandler.php");
 require_once("dbexception.class.php");
 
-$mysqlconnection = NULL;
+$mysqlconnection = @mysqli_init();
 
 //Buka koneksi ke Database
 function OpenDb() 
 {
 	global $db_host, $db_user, $db_pass, $db_name, $mysqlconnection;
 	
-	$mysqlconnection = @mysql_connect($db_host, $db_user, $db_pass);
+	$mysqlconnection = @mysqli_connect($db_host, $db_user, $db_pass);
 	if (!$mysqlconnection)
 	{
 		HandleQueryError("Tidak dapat terhubung dengan server database JIBAS di $db_host", 
-						 mysql_errno(), mysql_error(), false);
+						 mysqli_errno($mysqlconnection), mysqli_error($mysqlconnection), false);
 		exit();
 	} 
 	else 
 	{
-		$select = @mysql_select_db($db_name, $mysqlconnection);
+		$select = @mysqli_select_db($mysqlconnection, $db_name);
 		if (!$select)
 		{
 			HandleQueryError("Tidak dapat membuka database $db_name", 
-							 mysql_errno(), mysql_error(), false);
+							 mysqli_errno($mysqlconnection), mysqli_error($mysqlconnection), false);
 			exit();
 		}
 				  
-		mysql_query("SET lc_time_names = 'id_ID';");
+		mysqli_query($mysqlconnection, "SET lc_time_names = 'id_ID';");
 		
 		return $mysqlconnection;
 	}
@@ -68,7 +68,8 @@ function OpenDbi()
 //Buat query
 function QueryDbi($sql) 
 {
-	$result = mysqli_query($sql) or trigger_error("Failed to execute sql query: $sql", E_USER_ERROR);
+global $mysqlconnection;
+	$result = mysqli_query($mysqlconnection, $sql) or trigger_error("Failed to execute sql query: $sql", E_USER_ERROR);
 	
 	return $result;
 }
@@ -78,7 +79,7 @@ function CloseDb()
 {
 	global $mysqlconnection;
 	
-	@mysql_close($mysqlconnection);
+	@mysqli_close($mysqlconnection);
 }
 
 function HandleQueryError($sql, $errno, $errmsg, $issend)
@@ -104,13 +105,13 @@ function QueryDb($sql)
 {
 	global $mysqlconnection;
 	
-	$result = @mysql_query($sql, $mysqlconnection);
+	$result = @mysqli_query($mysqlconnection, $sql);
 	
-	if (mysql_errno() > 0)
+	if (mysqli_errno($mysqlconnection) > 0)
 	{
 		// Save Error Information
-		$errmsg = mysql_error();
-		$errno = mysql_errno();
+		$errmsg = mysqli_error($mysqlconnection);
+		$errno = mysqli_errno($mysqlconnection);
 		
 		// Force Closing Database Connection
 		CloseDb();
@@ -127,14 +128,14 @@ function QueryDbTrans($sql, &$success)
 {
 	global $mysqlconnection;
 	
-	$result = @mysql_query($sql, $mysqlconnection);
+	$result = @mysqli_query($mysqlconnection, $sql);
 	$success = ($result && 1); 
 	
 	if (!$success)
 	{
 		// Save Error Information
-		$errmsg = mysql_error();
-		$errno = mysql_errno();
+		$errmsg = mysqli_error($mysqlconnection);
+		$errno = mysqli_errno($mysqlconnection);
 		
 		// Force Rolling Back and Closing Database Connection
 		RollbackTrans();
@@ -155,12 +156,12 @@ function LogError($sql, $errno, $error)
 	if (!$G_ENABLE_QUERY_ERROR_LOG)
 		return;
 		
-	$logPath = @realpath(@dirname(__FILE__)) . "/../../log";
+	$logPath = @realpath(@__DIR__) . "/../../log";
 	$logExists = @file_exists($logPath) && @is_dir($logPath);
 	if (!$logExists)
 		@mkdir($logPath, 0740, true);
 	
-	$logFile = @realpath(@dirname(__FILE__)) . "/../../log/infoguru-error.log";
+	$logFile = @realpath(@__DIR__) . "/../../log/infoguru-error.log";
 	$modeFile = (@file_exists($logFile) && @filesize($logFile) > 1024 * 1024) ? "w" : "a";
 	
 	$fp = @fopen($logFile, $modeFile);
@@ -177,31 +178,31 @@ function BeginTrans()
 {
 	global $mysqlconnection;
 	
-	@mysql_query("SET AUTOCOMMIT=0", $mysqlconnection);
-	@mysql_query("BEGIN", $mysqlconnection);
+	@mysqli_query($mysqlconnection, "SET AUTOCOMMIT=0");
+	@mysqli_query($mysqlconnection, "BEGIN");
 }
 
 function CommitTrans() 
 {
 	global $mysqlconnection;
 	
-	@mysql_query("COMMIT", $mysqlconnection);
-	@mysql_query("SET AUTOCOMMIT=1", $mysqlconnection);
+	@mysqli_query($mysqlconnection, "COMMIT");
+	@mysqli_query($mysqlconnection, "SET AUTOCOMMIT=1");
 }
 
 function RollbackTrans() 
 {
 	global $mysqlconnection;
 	
-	@mysql_query("ROLLBACK", $mysqlconnection);
-	@mysql_query("SET AUTOCOMMIT=1", $mysqlconnection);
+	@mysqli_query($mysqlconnection, "ROLLBACK", $mysqlconnection);
+	@mysqli_query($mysqlconnection, "SET AUTOCOMMIT=1");
 }
 
 function GetValue($tablename, $column, $where) 
 {
 	$sql = "SELECT $column FROM $tablename WHERE $where";
 	$result_get_value = QueryDb($sql);
-	$row_get_value = mysql_fetch_row($result_get_value);
+	$row_get_value = mysqli_fetch_row($result_get_value);
 	
 	return $row_get_value[0];
 }
@@ -211,7 +212,7 @@ function FetchSingle($sql)
 	global $mysqlconnection;
 	
 	$res = QueryDb($sql);
-	$row = @mysql_fetch_row($res);
+	$row = @mysqli_fetch_row($res);
 	return $row[0];
 }
 
@@ -220,7 +221,7 @@ function FetchRow($sql)
 	global $mysqlconnection;
 	
 	$res = QueryDb($sql);
-	$row = @mysql_fetch_row($res);
+	$row = @mysqli_fetch_row($res);
 	return $row;
 }
 
@@ -228,13 +229,13 @@ function QueryDbEx($sql)
 {
 	global $mysqlconnection;
 		
-    $result = @mysql_query($sql, $mysqlconnection);
+    $result = @mysqli_query($mysqlconnection, $sql);
 	LogQuery($sql);
 	
-	if (mysql_errno() > 0)
+	if (mysqli_errno($mysqlconnection) > 0)
 	{
 		LogIfError($sql);
-		throw new DbException(mysql_error(), mysql_errno());
+		throw new DbException(mysqli_error($mysqlconnection), mysqli_errno($mysqlconnection));
 	}
 		
     return $result;
@@ -246,9 +247,9 @@ function FetchSingleEx($sql)
 	LogQuery($sql);
 	LogIfError($sql);
 	
-	if (mysql_num_rows($res) > 0)
+	if (mysqli_num_rows($res) > 0)
 	{
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		return $row[0];
 	}
 	else
@@ -264,12 +265,12 @@ function LogQuery($sql)
 	if (!$G_ENABLE_QUERY_LOG)
 		return;
 		
-	$logPath = @realpath(@dirname(__FILE__)) . "/../../log";
+	$logPath = @realpath(@__DIR__) . "/../../log";
 	$logExists = @file_exists($logPath) && @is_dir($logPath);
 	if (!$logExists)
 		@mkdir($logPath, 0644);
 	
-	$logFile = @realpath(@dirname(__FILE__)) . "/../../log/" . $G_FILE_LOG_QUERY;
+	$logFile = @realpath(@__DIR__) . "/../../log/" . $G_FILE_LOG_QUERY;
 	$modeFile = (@file_exists($logFile) && @filesize($logFile) > 1024 * 1024) ? "w" : "a";
 	
 	$fp = @fopen($logFile, $modeFile);
@@ -282,24 +283,24 @@ function LogQuery($sql)
 
 function LogIfError($sql)
 {
-    if (mysql_errno() == 0)
+    if (mysqli_errno($mysqlconnection) == 0)
         return;
 
     echo "<font style='color:red; font-weight:boldl'>SQL Error Logged</font><br>";
-    LogError($sql, mysql_errno(), mysql_error());
+    LogError($sql, mysqli_errno($mysqlconnection), mysqli_error($mysqlconnection));
 }
 
 function QueryDbEx2($sql)
 {
     global $mysqlconnection;
 
-    $result = @mysql_query($sql, $mysqlconnection);
+    $result = @mysqli_query($mysqlconnection, $sql);
     LogQuery($sql);
 
-    if (mysql_errno() > 0)
+    if (mysqli_errno($mysqlconnection) > 0)
     {
-        LogError($sql, mysql_errno(), mysql_error());
-        throw new DbException(mysql_error(), mysql_errno());
+        LogError($sql, mysqli_errno($mysqlconnection), mysqli_error($mysqlconnection));
+        throw new DbException(mysqli_error($mysqlconnection), mysqli_errno($mysqlconnection));
     }
 
     return $result;

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,7 +36,7 @@ $sql="SELECT c.nopendaftaran, c.nama, c.panggilan, c.tahunmasuk, c.idproses, c.i
 
 $result=QueryDB($sql);
 CloseDb();
-$row_siswa = mysql_fetch_array($result); 
+$row_siswa = mysqli_fetch_array($result); 
 
 $departemen = $row_siswa['departemen'];
 $proses=$row_siswa['proses'];
@@ -48,19 +48,19 @@ $blnlahir = (int)$row_siswa['bulan'];
 $thnlahir = (int)$row_siswa['tahun'];
 
 /*OpenDb();
-$query = "SELECT urutan FROM jbsakad.departemen WHERE departemen = '$departemen'";	
+$query = "SELECT urutan FROM jbsakad.departemen WHERE departemen = '".$departemen."'";	
 $hasil = QueryDb($query);	
 CloseDb();
-$row = mysql_fetch_array($hasil);
+$row = mysqli_fetch_array($hasil);
 $urutan = $row['urutan'];
 */
 
 if ($row_siswa['asalsekolah'] <> NULL) {
 	OpenDb();
-	$query = "SELECT departemen FROM asalsekolah WHERE sekolah = '$row_siswa[asalsekolah]'";
+	$query = "SELECT departemen FROM asalsekolah WHERE sekolah = '".$row_siswa['asalsekolah']."'";
 	$hasil = QueryDb($query);	
 	CloseDb();
-	$row = mysql_fetch_array($hasil);
+	$row = mysqli_fetch_array($hasil);
 	$dep_asal = $row['departemen'];
 	$sekolah = $row_siswa['asalsekolah'];
 } else {	
@@ -97,7 +97,7 @@ OpenDb();
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript">
@@ -754,14 +754,14 @@ function focusNext(elemName, evt) {
     		<td width="27%"><strong>Departemen</strong></td>
     		<td width="*"><div id="InfoDepartemen">
             <select name="departemen" id="departemen" onchange="change_dep()" style="width:250px">
-              <?	$dep = getDepartemen(SI_USER_ACCESS());    
+              <?php $dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
 					if ($departemen == "")
 						$departemen = $value; ?>
               <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
               <?=$value ?>
               </option>
-              <?	} ?>
+              <?php } ?>
             </select>
             </div>
             </td>          
@@ -770,9 +770,9 @@ function focusNext(elemName, evt) {
         <tr>
         	<td><strong>Proses Penerimaan</strong></td>
     		<td><div id="InfoProses">
-            <?	$sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
+            <?php $sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
 				$result = QueryDb($sql);				
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				$proses = $row['replid'];
 			?>
             <input type="text" name="nama_proses" id="nama_proses" style="width:240px;" class="disabled" value="<?=$row['proses']?>" readonly />
@@ -784,22 +784,22 @@ function focusNext(elemName, evt) {
     		<td>
             	<div id = "InfoKelompok">
             	<select name="kelompok" id="kelompok" onchange="change_kel()" style="width:250px">
-   		 	<?	
+   		 	<?php 
 				$sql = "SELECT replid,kelompok,kapasitas FROM kelompokcalonsiswa WHERE idproses = $proses ORDER BY kelompok";
 				$result = QueryDb($sql);
 				
-				while ($row = @mysql_fetch_array($result)) {
+				while ($row = @mysqli_fetch_array($result)) {
 					if ($kelompok == "")
 						$kelompok = $row['replid'];
 										
-					$sql1 = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = $row[replid]";
+					$sql1 = "SELECT COUNT(replid) FROM calonsiswa WHERE idkelompok = ".$row['replid']."";
 					$result1 = QueryDb($sql1);				
-					$row1 = mysql_fetch_row($result1);
+					$row1 = mysqli_fetch_row($result1);
 					
 			?>
-    			<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelompok)?> ><?=$row['kelompok'].', kapasitas: '.$row['kapasitas'] .', terisi: '.$row1[0]?>
+    			<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelompok)?> ><?=$row['kelompok'].', kapasitas: '.$row['kapasitas'] .', terisi: '.$row1[0]?>
                 </option>
-    		<?
+    		<?php
 				//$cnt++; 
 				}	
     		?>
@@ -812,11 +812,11 @@ function focusNext(elemName, evt) {
     		<td valign="top"><strong>Keterangan</strong></td>
     		<td>
             	<div id = "InfoKeterangan">
-			<?	OpenDb();
+			<?php OpenDb();
 				$sql = "SELECT keterangan FROM kelompokcalonsiswa WHERE replid = $kelompok";
 				$result = QueryDb($sql);
 				CloseDb();
-				$row = @mysql_fetch_array($result);			
+				$row = @mysqli_fetch_array($result);			
 			?>
               <textarea name="keterangan" id="keterangan" rows="2" cols="60" readonly style="background-color:#E5F7FF" ><?=$row['keterangan'] ?>
               </textarea>
@@ -862,12 +862,12 @@ function focusNext(elemName, evt) {
     		<td><strong>Jenis Kelamin</strong></td>
     		<td colspan="3">
     		<input type="radio" id="kelamin" name="kelamin" value="l"
-			<? if ($row_siswa['kelamin']=="l") 
+			<?php if ($row_siswa['kelamin']=="l") 
 				echo "checked='checked'";
 			?>
 			 onKeyPress="return focusNext('tmplahir', event)" />&nbsp;Laki-laki&nbsp;&nbsp;
         	<input type="radio" id="kelamin" name="kelamin" value="p" 
-        	<? if ($row_siswa['kelamin']=="p") 
+        	<?php if ($row_siswa['kelamin']=="p") 
 				echo "checked ='checked'";
 			?>
 			 onKeyPress="return focusNext('tmplahir', event)" />&nbsp;Perempuan			</td>
@@ -881,15 +881,15 @@ function focusNext(elemName, evt) {
     		<td colspan="3">
     			<select name="tgllahir" id="tgllahir" onKeyPress="return focusNext('blnlahir', event)" >                              
                 <option value="">[Tgl]</option>
-				<? 	for ($tgl=1;$tgl<=$n;$tgl++){ ?>
+				<?php 	for ($tgl=1;$tgl<=$n;$tgl++){ ?>
                    	<option value="<?=$tgl?>" <?=IntIsSelected($tgl, $row_siswa['tanggal'])?>><?=$tgl?></option>
-                <?	}	?>
+                <?php }	?>
                 </select>
                 <select name="blnlahir" id="blnlahir" onKeyPress="return focusNext('thnlahir', event)" onChange="change_bln()" />
                	 <option value="">[Bln]</option>
-                <? 	for ($i=1;$i<=12;$i++) { ?>
+                <?php 	for ($i=1;$i<=12;$i++) { ?>
                    	<option value="<?=$i?>" <?=IntIsSelected($i, $row_siswa['bulan'] )?>><?=NamaBulan($i)?></option>	
-				<?	} ?>
+				<?php } ?>
                 </select>
                 <input type="text" name="thnlahir" id="thnlahir" size="5" maxlength="4" onFocus="showhint('Tahun Lahir tidak boleh kosong!', this, event, '120px')" value="<?=$row_siswa['tahun']?>" onKeyPress="return focusNext('agama', event)"/></strong>
             </td>
@@ -900,22 +900,22 @@ function focusNext(elemName, evt) {
     		<div id="InfoAgama">
     		<select name="agama" id="agama" class="ukuran"  onKeyPress="return focusNext('suku', event)" >
     		<option value="">[Pilih Agama]</option>
-			<? // Olah untuk combo agama
+			<?php // Olah untuk combo agama
 			OpenDb();
 			$sql_agama="SELECT replid,agama,urutan FROM jbsumum.agama ORDER BY urutan";
 			$result_agama=QueryDB($sql_agama);
-			while ($row_agama = mysql_fetch_array($result_agama)) {
+			while ($row_agama = mysqli_fetch_array($result_agama)) {
 			?>
 			<option value="<?=$row_agama['agama']?>" <?=StringIsSelected($row_agama['agama'], $row_siswa['agama'])?>><?=$row_agama['agama']?></option>
-			<?
+			<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data agama
 			?>
     		</select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onclick="tambah_agama();"  onMouseOver="showhint('Tambah Agama!', this, event, '50px')"/>
-            <? } ?>
+            <?php } ?>
             </div>
             </td>
   		</tr>
@@ -925,22 +925,22 @@ function focusNext(elemName, evt) {
     		<div id="InfoSuku">
     		<select name="suku" id="suku" class="ukuran" onKeyPress="return focusNext('status', event)" >            
     		<option value="">[Pilih Suku]</option>
-			<? // Olah untuk combo suku
+			<?php // Olah untuk combo suku
 			OpenDb();
 			$sql_suku="SELECT suku,urutan,replid FROM jbsumum.suku ORDER BY urutan";
 			$result_suku=QueryDB($sql_suku);
-			while ($row_suku = mysql_fetch_array($result_suku)) {				
+			while ($row_suku = mysqli_fetch_array($result_suku)) {				
 			?>
 			<option value="<?=$row_suku['suku']?>" <?=StringIsSelected($row_suku['suku'], $row_siswa['suku'])?>><?=$row_suku['suku']?></option>
-			<?
+			<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data suku
 			?>
     		</select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onclick="tambah_suku();"  onMouseOver="showhint('Tambah Suku!', this, event, '50px')"/>
-            <? } ?></div></td>
+            <?php } ?></div></td>
   		</tr>
   		
   		<tr>
@@ -949,22 +949,22 @@ function focusNext(elemName, evt) {
     		<div id="InfoStatus">
     		<select name="status" id="status" class="ukuran"  onKeyPress="return focusNext('kondisi', event)" >
     		<option value="">[Pilih Status]</option>
-			<? // Olah untuk combo status
+			<?php // Olah untuk combo status
 			OpenDb();
 			$sql_status="SELECT replid,status,urutan FROM jbsakad.statussiswa ORDER BY urutan";
 			$result_status=QueryDB($sql_status);
-			while ($row_status = mysql_fetch_array($result_status)) {
+			while ($row_status = mysqli_fetch_array($result_status)) {
 			?>
 			<option value="<?=$row_status['status']?>" <?=StringIsSelected($row_status['status'], $row_siswa['status'])?>><?=$row_status['status']?></option>
-			<?
+			<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data status
 			?>
     		</select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onclick="tambah_status();"  onMouseOver="showhint('Tambah Status!', this, event, '50px')"/>
-            <? } ?>
+            <?php } ?>
             </div>  </td>
  		</tr>
   		<tr>
@@ -973,43 +973,43 @@ function focusNext(elemName, evt) {
     		<div id="InfoKondisi">
     		<select name="kondisi" id="kondisi" class="ukuran"  onKeyPress="return focusNext('warga', event)" >
             <option value="">[Pilih Kondisi]</option>
-                <? // Olah untuk combo kondisi
+                <?php // Olah untuk combo kondisi
 			OpenDb();
 			$sql_kondisi="SELECT kondisi,urutan FROM jbsakad.kondisisiswa ORDER BY urutan";
 			$result_kondisi=QueryDB($sql_kondisi);
-			while ($row_kondisi = mysql_fetch_array($result_kondisi)) {
+			while ($row_kondisi = mysqli_fetch_array($result_kondisi)) {
 			?>
                 <option value="<?=$row_kondisi['kondisi']?>" <?=StringIsSelected($row_kondisi['kondisi'], $row_siswa['kondisi'])?>>
                   <?=$row_kondisi['kondisi']?>
                   </option>
-                <?
+                <?php
     		} 
 			CloseDb();
 			// Akhir Olah Data kondisi
 			?>
             </select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
     		<img src="../images/ico/tambah.png" onclick="tambah_kondisi();" onMouseOver="showhint('Tambah Kondisi!', this, event, '50px')"/>
-            <? } ?>
+            <?php } ?>
             </div></td>
   		</tr>
   		<tr>
     		<td>Kewarganegaraan</td>
     		<td colspan="3">
     		<input type="radio" name="warga" id="warga" value="WNI"
-			<? if ($row_siswa['warga']=="WNI") 
+			<?php if ($row_siswa['warga']=="WNI") 
 				echo "checked='checked'";
 			?>
 			 onKeyPress="return focusNext('urutananak', event)" />&nbsp;WNI&nbsp;&nbsp;
     		<input type="radio" name="warga" id="warga" value="WNA" 
-			<? if ($row_siswa['warga']=="WNA") 
+			<?php if ($row_siswa['warga']=="WNA") 
 				echo "checked='checked'";
 			?>
 			 onKeyPress="return focusNext('urutananak', event)" />&nbsp;WNA</td>
   		</tr>
   		<tr>
     		<td>Anak ke</td>
-    		<td colspan="3"><input type="text" name="urutananak" id="urutananak" size="3" maxlength="3" onFocus="showhint('Urutan anak tidak boleh lebih dari 3 angka!', this, event, '120px')" <? if($row_siswa['anakke']!=0){ ?>value="<?=$row_siswa['anakke'];?>" <? } else { ?>value=""<? } ?> onKeyPress="return focusNext('jumlahanak', event)" />
+    		<td colspan="3"><input type="text" name="urutananak" id="urutananak" size="3" maxlength="3" onFocus="showhint('Urutan anak tidak boleh lebih dari 3 angka!', this, event, '120px')" <?php if($row_siswa['anakke']!=0){ ?>value="<?=$row_siswa['anakke'];?>" <?php } else { ?>value=""<?php } ?> onKeyPress="return focusNext('jumlahanak', event)" />
 			&nbsp;&nbsp;dari&nbsp;&nbsp;<input type="text" name="jumlahanak" id="jumlahanak" size="3" maxlength="3" onFocus="showhint('Jumlah saudara tidak boleh lebih dari 3 angka!', this, event, '120px')" value="<?=$row_siswa['jsaudara'];?>"  onKeyPress="return focusNext('bahasa', event)" />&nbsp;&nbsp;bersaudara</td>
   		</tr>
   		<tr>
@@ -1045,19 +1045,19 @@ function focusNext(elemName, evt) {
     		<td width="11%"><!--<div id = "InfoSekolah">-->
     		<select name="dep_asal" id="dep_asal" onchange="change_departemen(0)" onKeyPress="return focusNext('sekolah', event)">
     		<option value="">[Pilih]</option>	
-			<? // Olah untuk combo departemen
+			<?php // Olah untuk combo departemen
 			OpenDb();
 			$sql_departemen="SELECT departemen,urutan FROM jbsakad.departemen WHERE departemen <> '$departemen' ORDER BY urutan";			
 			$result_departemen=QueryDB($sql_departemen);
-			//$row_departemen = @mysql_fetch_array($result_departemen);
+			//$row_departemen = @mysqli_fetch_array($result_departemen);
 			//$dep_asal = $row_departemen['departemen'];
 			//if ($dep_asal == "") 
 			//	$dep_asal = $row_departemen['departemen'];
-			while ($row_departemen = mysql_fetch_array($result_departemen)) {			
+			while ($row_departemen = mysqli_fetch_array($result_departemen)) {			
 							
 			?>
 			<option value="<?=$row_departemen['departemen']?>" <?=StringIsSelected($row_departemen['departemen'], $dep_asal)?>><?=$row_departemen['departemen']?></option>
-			<? 	} 
+			<?php 	} 
 			CloseDb();
 			// Akhir Olah Data kondisi
 			?>
@@ -1066,18 +1066,18 @@ function focusNext(elemName, evt) {
             <td width="16%"><div id="sekolahInfo">
            	<select name="sekolah" id="sekolah"  onKeyPress="return focusNext('ketsekolah', event)" >
             <option value="">[Pilih Asal Sekolah]</option>	
-    		<? // Olah untuk combo sekolah
+    		<?php // Olah untuk combo sekolah
 			OpenDb();
 			$sql_sekolah="SELECT sekolah FROM jbsakad.asalsekolah WHERE departemen='$dep_asal' ORDER BY sekolah";
 			$result_sekolah=QueryDB($sql_sekolah);
-			while ($row_sekolah = mysql_fetch_array($result_sekolah)) {
+			while ($row_sekolah = mysqli_fetch_array($result_sekolah)) {
 				 //if ($sekolah=="")
             		//$sekolah=$row_sekolah['sekolah'];
 			?>
       		<option value="<?=$row_sekolah['sekolah']?>" <?=StringIsSelected($row_sekolah['sekolah'], $sekolah)?>>
         	<?=$row_sekolah['sekolah']?>
         	</option>
-      		<? } 
+<?php } 
 			CloseDb();
 			// Akhir Olah Data sekolah
 			?>
@@ -1103,23 +1103,23 @@ function focusNext(elemName, evt) {
   		<tr>
     		<td width="20%" valign="top">Golongan Darah</td>
     		<td colspan="2">
-                <input type="radio" name="gol" id="gol" value"A" <? 
+                <input type="radio" name="gol" id="gol" value"A" <?php 
                 if ($row_siswa['darah']=="A")
                 echo "checked='checked'";
                 ?> onKeyPress="return focusNext('berat', event)" />&nbsp;A&nbsp;&nbsp;
-                <input type="radio" name="gol" id="gol" value="AB" <? 
+                <input type="radio" name="gol" id="gol" value="AB" <?php 
                 if ($row_siswa['darah']=="AB")
                 echo "checked='checked'";
                 ?> onKeyPress="return focusNext('berat', event)" />&nbsp;AB&nbsp;&nbsp;
-                <input type="radio" name="gol" id="gol" value="B" <? 
+                <input type="radio" name="gol" id="gol" value="B" <?php 
                 if ($row_siswa['darah']=="B")
                 echo "checked='checked'";
                 ?> onKeyPress="return focusNext('berat', event)" />&nbsp;B&nbsp;&nbsp;
-                <input type="radio" name="gol" id="gol" value="O" <? 
+                <input type="radio" name="gol" id="gol" value="O" <?php 
                 if ($row_siswa['darah']=="O")
                 echo "checked='checked'";
                 ?> onKeyPress="return focusNext('berat', event)" />&nbsp;O&nbsp;&nbsp;	
-                <input type="radio" name="gol" id="gol" value="" <? 
+                <input type="radio" name="gol" id="gol" value="" <?php 
                 if ($row_siswa['darah']=="")
                 echo "checked='checked'";
                 ?> onKeyPress="return focusNext('berat', event)" />&nbsp;<em>(belum ada data)</em>&nbsp;         	
@@ -1151,12 +1151,12 @@ function focusNext(elemName, evt) {
             <td><input name="namaayah" type="text" size="15" maxlength="100" id="namaayah" onFocus="showhint('Nama Ayah tidak boleh lebih dari 100 karakter!', this, event, '120px')"  value="<?=$row_siswa['namaayah']?>" class="ukuran"  onKeyPress="return focusNext('namaibu', event)" />
             	<br />
                 <input type="checkbox" name="almayah" id="almayah" value="1" title="Klik disini jika Ayah Almarhum"  
-        		<? if ($row_siswa['almayah']=="1") echo "checked";?> />
+        		<?php if ($row_siswa['almayah']=="1") echo "checked";?> />
                 &nbsp;&nbsp;<font color="#990000" size="1">(Almarhum)</font> </td>
           	<td colspan="2"><input name="namaibu" type="text" size="15" maxlength="100" id="namaibu" onFocus="showhint('Nama Ibu tidak boleh lebih dari 100 karakter!', this, event, '120px')" value="<?=$row_siswa['namaibu']?>" class="ukuran"  onKeyPress="return focusNext('Infopendidikanayah', event)" />
             	<br />
                 <input type="checkbox" name="almibu" id="almibu" value="1" title="Klik disini jika Ibu Almarhumah"
-        		<? if ($row_siswa['almibu']=="1") echo "checked";?>/>
+        		<?php if ($row_siswa['almibu']=="1") echo "checked";?>/>
                 &nbsp;&nbsp;<font color="#990000" size="1">(Almarhumah)</font> </td>
         </tr>
   		<tr>
@@ -1164,14 +1164,14 @@ function focusNext(elemName, evt) {
     		<td>			
 			<select name="pendidikanayah" id="Infopendidikanayah" class="ukuran"  onKeyPress="return focusNext('Infopendidikanibu', event)" >
       		<option value="">[Pilih Pendidikan]</option>
-			<? // Olah untuk combo pendidikan ayah
+			<?php // Olah untuk combo pendidikan ayah
 			OpenDb();
 			$sql_pend_ayah="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
 			$result_pend_ayah=QueryDB($sql_pend_ayah);
-			while ($row_pend_ayah = mysql_fetch_array($result_pend_ayah)) {
+			while ($row_pend_ayah = mysqli_fetch_array($result_pend_ayah)) {
 			?>
       		<option value="<?=$row_pend_ayah['pendidikan']?>" <?=StringIsSelected($row_pend_ayah['pendidikan'], $row_siswa['pendidikanayah'])?>><?=$row_pend_ayah['pendidikan']?></option>
-      		<?
+      		<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data sekolah
@@ -1180,22 +1180,22 @@ function focusNext(elemName, evt) {
     		<td width="49%">			
 			<select name="pendidikanibu" id="Infopendidikanibu" class="ukuran"  onKeyPress="return focusNext('Infopekerjaanayah', event)" >
       		<option value="">[Pilih Pendidikan]</option>
-			<? // Olah untuk combo sekolah
+			<?php // Olah untuk combo sekolah
 			OpenDb();
 			$sql_pend_ibu="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
 			$result_pend_ibu=QueryDB($sql_pend_ibu);
-			while ($row_pend_ibu = mysql_fetch_array($result_pend_ibu)) {
+			while ($row_pend_ibu = mysqli_fetch_array($result_pend_ibu)) {
 			?>
       		<option value="<?=$row_pend_ibu['pendidikan']?>" <?=StringIsSelected($row_pend_ibu['pendidikan'], $row_siswa['pendidikanibu'])?>><?=$row_pend_ibu['pendidikan']?></option>
-      		<?
+      		<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data sekolah
 			?>
     		</select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onclick="tambah_pendidikan();" onMouseOver="showhint('Tambah Tingkat Pendidikan!', this, event, '80px')" />
-            <? } ?>
+            <?php } ?>
             </td>
   		</tr>
   		<tr>
@@ -1204,14 +1204,14 @@ function focusNext(elemName, evt) {
 			
 			<select name="pekerjaanayah" id="Infopekerjaanayah" class="ukuran"  onKeyPress="return focusNext('Infopekerjaanibu', event)" >
       		<option value="">[Pilih Pekerjaan]</option>
-			<? // Olah untuk combo sekolah
+			<?php // Olah untuk combo sekolah
 			OpenDb();
 			$sql_kerja_ayah="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan";
 			$result_kerja_ayah=QueryDB($sql_kerja_ayah);
-			while ($row_kerja_ayah = mysql_fetch_array($result_kerja_ayah)) {
+			while ($row_kerja_ayah = mysqli_fetch_array($result_kerja_ayah)) {
 			?>
       		<option value="<?=$row_kerja_ayah['pekerjaan']?>" <?=StringIsSelected($row_kerja_ayah['pekerjaan'], $row_siswa['pekerjaanayah'])?>><?=$row_kerja_ayah['pekerjaan']?></option>
-      		<?
+      		<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data sekolah
@@ -1220,22 +1220,22 @@ function focusNext(elemName, evt) {
     		<td>			
 			<select name="pekerjaanibu" id="Infopekerjaanibu" class="ukuran"  onKeyPress="return focusNext('penghasilanayah', event)" >
       		<option value="">[Pilih Pekerjaan]</option>
-			<? // Olah untuk combo sekolah
+			<?php // Olah untuk combo sekolah
 			OpenDb();
 			$sql_kerja_ibu="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan";
 			$result_kerja_ibu=QueryDB($sql_kerja_ibu);
-			while ($row_kerja_ibu = mysql_fetch_array($result_kerja_ibu)) {
+			while ($row_kerja_ibu = mysqli_fetch_array($result_kerja_ibu)) {
 			?>
       		<option value="<?=$row_kerja_ibu['pekerjaan']?>" <?=StringIsSelected($row_kerja_ibu['pekerjaan'], $row_siswa['pekerjaanibu'])?>><?=$row_kerja_ibu['pekerjaan']?></option>
-      		<?
+      		<?php
     		} 
 			CloseDb();
 			// Akhir Olah Data sekolah
 			?>
     		</select>
-             <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+             <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onclick="tambah_pekerjaan();" onMouseOver="showhint('Tambah Jenis Pekerjaan!', this, event, '80px')" />
-            <? } ?>
+            <?php } ?>
             </td>
   		</tr>
   		<tr>

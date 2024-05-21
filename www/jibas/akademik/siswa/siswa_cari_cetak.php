@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,7 +31,7 @@ $jenis=$_REQUEST['jenis'];
 $departemen=$_REQUEST['departemen'];
 $cari=$_REQUEST['cari'];
 
-$tipe = array("nisn" => "N I S N","nis" => "NIS", "nama" => "Nama","panggilan" => "Nama Panggilan", "agama" =>"Agama", "suku" => "Suku", "status" => "Status", "kondisi"=>"Kondisi Siswa", "darah"=>"Golongan Darah", "alamatsiswa" => "Alamat Siswa", "asalsekolah" => "Asal Sekolah", "namaayah" => "Nama Ayah", "namaibu" => "Nama Ibu", "alamatortu" => "Alamat Orang Tua", "keterangan" => "Keterangan");
+$tipe = ["nisn" => "N I S N", "nis" => "NIS", "nama" => "Nama", "panggilan" => "Nama Panggilan", "agama" =>"Agama", "suku" => "Suku", "status" => "Status", "kondisi"=>"Kondisi Siswa", "darah"=>"Golongan Darah", "alamatsiswa" => "Alamat Siswa", "asalsekolah" => "Asal Sekolah", "namaayah" => "Nama Ayah", "namaibu" => "Nama Ibu", "alamatortu" => "Alamat Orang Tua", "keterangan" => "Keterangan"];
 
 $urut = $_REQUEST['urut'];
 $urutan = $_REQUEST['urutan'];
@@ -78,7 +78,7 @@ $total = $_REQUEST['total'];
         <td width="8%" class="header" align="center">Kelas</td>
         <td width="8%" class="header" align="center">Status</td>
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	if ($jenis != "kondisi" && $jenis != "status" && $jenis != "agama" && $jenis != "suku" && $jenis != "darah") {		
 		//$sql_siswa = "SELECT s.replid, s.nis, s.nama, s.idkelas, k.kelas, s.tmplahir, s.tgllahir, s.statusmutasi, s.aktif, s.alumni, t.tingkat from jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t WHERE s.$jenis LIKE '%$cari%' AND k.replid=s.idkelas AND k.idtingkat=t.replid AND t.departemen='$departemen' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		//$sql_siswa = "SELECT s.replid, s.nis, s.nama, s.idkelas, k.kelas, s.tmplahir, s.tgllahir, s.statusmutasi, s.aktif, s.alumni, t.tingkat from jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t WHERE s.$jenis LIKE '%$cari%' AND k.replid=s.idkelas AND k.idtingkat=t.replid AND t.departemen='$departemen' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
@@ -95,7 +95,7 @@ $total = $_REQUEST['total'];
 	else
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row_siswa = mysql_fetch_array($result)) { 
+	while ($row_siswa = mysqli_fetch_array($result)) { 
 		?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt?></td>
@@ -106,28 +106,28 @@ $total = $_REQUEST['total'];
     	<td align="center"><?=$row_siswa ['tingkat']?></td>
     	<td align="center"><?=$row_siswa['kelas']?></td>
         <td align="center">
-		<?
+		<?php
 		if ($row_siswa['aktif']==1){
 			echo "Aktif";
 		} elseif ($row_siswa['aktif']==0){
 			echo "Tidak Aktif ";
 			if ($row_siswa['alumni']==1){
-				$sql_get_al="SELECT a.tgllulus FROM jbsakad.alumni a WHERE a.nis='$row_siswa[nis]'";	
+				$sql_get_al="SELECT a.tgllulus FROM jbsakad.alumni a WHERE a.nis='".$row_siswa['nis']."'";	
 				$res_get_al=QueryDb($sql_get_al);
-				$row_get_al=@mysql_fetch_array($res_get_al);
-				echo "<br><a style='cursor:pointer;' title='Lulus Tgl: ".LongDateFormat($row_get_al[tgllulus])."'>[Alumnus]</a>";
+				$row_get_al=@mysqli_fetch_array($res_get_al);
+				echo "<br><a style='cursor:pointer;' title='Lulus Tgl: ".LongDateFormat($row_get_al['tgllulus'])."'>['Alumnus']</a>";
 			}
 			if ($row_siswa['statusmutasi']!=NULL){
-				$sql_get_mut="SELECT m.tglmutasi,j.jenismutasi FROM jbsakad.jenismutasi j, jbsakad.mutasisiswa m WHERE j.replid='$row_siswa[statusmutasi]' AND m.nis='$row_siswa[nis]' AND j.replid=m.jenismutasi";	
+				$sql_get_mut="SELECT m.tglmutasi,j.jenismutasi FROM jbsakad.jenismutasi j, jbsakad.mutasisiswa m WHERE j.replid='".$row_siswa['statusmutasi']."' AND m.nis='".$row_siswa['nis']."' AND j.replid=m.jenismutasi";	
 				$res_get_mut=QueryDb($sql_get_mut);
-				$row_get_mut=@mysql_fetch_array($res_get_mut);
-				//echo "<br><a href=\"NULL\" onmouseover=\"showhint('".$row_get_mut[jenismutasi]."<br>".$row_get_mut['tglmutasi']."', this, event, '50px')\"><u>[Termutasi]</u></a>";
-				echo "<br><a style='cursor:pointer;' title='".$row_get_mut[jenismutasi]."\n Tgl ".LongDateFormat($row_get_mut['tglmutasi'])."'>[Termutasi]</a>";
+				$row_get_mut=@mysqli_fetch_array($res_get_mut);
+				//echo "<br><a href=\"NULL\" onmouseover=\"showhint('".$row_get_mut['jenismutasi']."<br>".$row_get_mut['tglmutasi']."', this, event, '50px')\"><u>['Termutasi']</u></a>";
+				echo "<br><a style='cursor:pointer;' title='".$row_get_mut['jenismutasi']."\n Tgl ".LongDateFormat($row_get_mut['tglmutasi'])."'>['Termutasi']</a>";
 			}
 		}
 		?></td>  
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     </table>
 <!--<tr>

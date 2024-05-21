@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
  
 $sql = "SELECT DISTINCT t.idtabungan, dt.nama
           FROM jbsfina.tabungan t, jbsfina.datatabungan dt
@@ -29,9 +29,9 @@ $sql = "SELECT DISTINCT t.idtabungan, dt.nama
            AND t.tanggal BETWEEN '$datetime1' AND '$datetime2'";
            
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-   $lsTab[] = array($row[0], $row[1]);
+   $lsTab[] = [$row[0], $row[1]];
 }
 
 if (count($lsTab) == 0)
@@ -51,9 +51,9 @@ else
        $sql = "SELECT SUM(debet), SUM(kredit)
                  FROM jbsfina.tabungan
                 WHERE idtabungan = '$idTab'
-                  AND nis = '$nis'";
+                  AND nis = '".$nis."'";
        $res = QueryDb($sql);
-       if ($row = mysql_fetch_row($res))
+       if ($row = mysqli_fetch_row($res))
        {
            $tottarik = $row[0];
            $totsetor = $row[1];
@@ -68,7 +68,7 @@ else
                   AND nis = '$nis'
                   AND tanggal BETWEEN '$datetime1' AND '$datetime2'";
        $res = QueryDb($sql);
-       if ($row = mysql_fetch_row($res))
+       if ($row = mysqli_fetch_row($res))
        {
            $subtarik = $row[0];
            $subsetor = $row[1];
@@ -85,7 +85,7 @@ else
                 ORDER BY replid DESC
                 LIMIT 1";
        $res = QueryDb($sql);
-       if ($row = mysql_fetch_row($res))
+       if ($row = mysqli_fetch_row($res))
        {
            $lastsetor = $row[0];
            $tgllastsetor = $row[1];
@@ -102,7 +102,7 @@ else
                 ORDER BY replid DESC
                 LIMIT 1";
        $res = QueryDb($sql);
-       if ($row = mysql_fetch_row($res))
+       if ($row = mysqli_fetch_row($res))
        {
            $lasttarik = $row[0];
            $tgllasttarik = $row[1];
@@ -144,8 +144,7 @@ else
         </tr>
         </table>
         <br>
-        <?
+<?php
     }
  }
  ?>
- 

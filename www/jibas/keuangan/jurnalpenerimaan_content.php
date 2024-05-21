@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -154,17 +154,17 @@ function change_urut(urut,urutan) {
 <table border="0" width="100%" align="center">
 <tr>
 	<td>
-<? 	OpenDb();
+<?php 	OpenDb();
 
 	$sql_tot = "SELECT * FROM jurnal WHERE idtahunbuku = '$idtahunbuku' $sumber AND tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY tanggal";
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql = "SELECT * FROM jurnal WHERE idtahunbuku = '$idtahunbuku' $sumber AND tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 
 ?>  
 	<input type="hidden" name="total" id="total" value="<?=$total?>"/>  
@@ -186,13 +186,13 @@ function change_urut(urut,urutan) {
         <td align="center" class="header">Detail Jurnal</td>  
     </tr>
 
-<?
+<?php
 	if ($page==0)
 		$cnt = 1;
 	else	
 		$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		if ($cnt % 2 == 0)
 			$bgcolor = "#FFFFB7";
 		else
@@ -202,23 +202,23 @@ function change_urut(urut,urutan) {
         <td align="center" rowspan="2" bgcolor="<?=$bgcolor ?>"><font size="4"><strong><?=$cnt ?></strong></font></td>
         <td align="center" bgcolor="<?=$bgcolor ?>"><strong><?=$row['nokas']?></strong><br /><em><?=LongDateFormat($row['tanggal'])?></em></td>
         <td valign="top" bgcolor="<?=$bgcolor ?>"><?=$row['transaksi'] ?>
-    <?	if (strlen($row['keterangan']) > 0 )  { ?>
+    <?php if (strlen((string) $row['keterangan']) > 0 )  { ?>
             <br /><strong>Keterangan:</strong><?=$row['keterangan'] ?> 
-    <?	} ?>    
+    <?php } ?>    
         </td>
         <td rowspan="2" valign="top" bgcolor="#E8FFE8">
             <table border="1" style="border-collapse:collapse;" width="100%" height="100%" cellpadding="2" bgcolor="#FFFFFF" bordercolor="#000000">    
-        <?	$idjurnal = $row['replid'];
+        <?php $idjurnal = $row['replid'];
             $sql = "SELECT jd.koderek,ra.nama,jd.debet,jd.kredit FROM jurnaldetail jd, rekakun ra WHERE jd.idjurnal = '$idjurnal' AND jd.koderek = ra.kode ORDER BY jd.replid";    
             $result2 = QueryDb($sql); 
-            while ($row2 = mysql_fetch_array($result2)) { ?>
+            while ($row2 = mysqli_fetch_array($result2)) { ?>
             <tr height="25">
                 <td width="12%" align="center"><?=$row2['koderek'] ?></td>
                 <td width="*" align="left"><?=$row2['nama'] ?></td>
                 <td width="23%" align="right"><?=FormatRupiah($row2['debet']) ?></td>
                 <td width="23%" align="right"><?=FormatRupiah($row2['kredit']) ?></td>
             </tr>
-        <?	} ?>    
+        <?php } ?>    
             </table>
         </td>
     </tr>
@@ -226,7 +226,7 @@ function change_urut(urut,urutan) {
         <td valign="top"><strong>Petugas: </strong><?=$row['petugas'] ?></td>
         <td valign="top">
         <strong>Sumber: </strong>
-    <? 	switch($row['sumber']) {	
+    <?php 	switch($row['sumber']) {	
             case 'penerimaanjtt':
                 echo  "Penerimaan Iuran Wajib Siswa"; break;
             case 'penerimaaniuran':
@@ -242,13 +242,13 @@ function change_urut(urut,urutan) {
     <tr style="height:2px">
         <td colspan="5" bgcolor="#EFEFDE"></td>
     </tr>
-    <?
+    <?php
             $cnt++;
     }
     CloseDb();
     ?>
     </table>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='display:none;'";
 		$disnext="style=''";
 		}
@@ -274,18 +274,18 @@ function change_urut(urut,urutan) {
        	<td width="30%" align="left" colspan="2">Halaman
         <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
         <input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
        
-            <?
+            <?php
             //for($a=0;$a<$total;$a++){
             //       if ($page==$a){
             //            echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -299,14 +299,14 @@ function change_urut(urut,urutan) {
              
   		<td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
     <table width="100%" border="0" align="center">          
     <tr>
         <td align="center" valign="middle" height="300">
@@ -318,7 +318,7 @@ function change_urut(urut,urutan) {
             di menu Penerimaan Pembayaran pada bagian Penerimaan.</font>        </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
 	</td>
 </tr>
 </table>

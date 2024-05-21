@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -56,7 +56,7 @@ if (isset($_REQUEST['Simpan'])) {
 	$sql1 = "SELECT * FROM guru g, pelajaran p WHERE p.departemen = '$departemen' AND g.nip = '$nipguru' AND g.idpelajaran = '$pelajaran' AND g.statusguru = '$status' AND g.idpelajaran = p.replid AND g.replid <> '$replid' ";	
 	$result1 = QueryDb($sql1);
 
-	if (mysql_num_rows($result1) > 0) {
+	if (mysqli_num_rows($result1) > 0) {
 		CloseDb();		
 		$ERROR_MSG = "Nama guru $nama sudah digunakan!";
 	} else {	
@@ -68,7 +68,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?
+<?php
 		}
 	}
 }
@@ -76,7 +76,7 @@ if (isset($_REQUEST['Simpan'])) {
 OpenDb();
 $sql = "SELECT g.nip,g.statusguru,g.keterangan,l.departemen,p.nama,g.idpelajaran,l.nama AS pelajar FROM guru g, pelajaran l, jbssdm.pegawai p WHERE g.replid='$replid' AND p.nip = g.nip AND l.replid = g.idpelajaran";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $keterangan = $row['keterangan'];
 $departemen = $row['departemen'];
 $nipguru = $row['nip'];
@@ -106,7 +106,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Guru]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -188,27 +188,27 @@ function panggil(elem){
 <tr>
 	<td><strong>Pelajaran</strong></td>
 	<td> 
-	<?	if ($_REQUEST['aktif'] == 1) { ?>
+	<?php if ($_REQUEST['aktif'] == 1) { ?>
     	<input type="text" name="pelajaran" id="pelajaran" size="40" maxlength="50" readonly value="<?=$pelajar ?>" class="disabled"/>
         <input type="hidden" name="pelajaran" id="pelajaran" value="<?=$pelajaran ?>" /> 
 	  
-	<? 	} else { ?>    	
+	<?php 	} else { ?>    	
     	<select name="pelajaran" id="pelajaran" onKeyPress="return focusNext('nip', event)" onFocus="panggil('pelajaran')" style="width:255px">
-          <?
+          <?php
           	OpenDb();
 			$sql = "SELECT kode,nama,replid FROM pelajaran WHERE departemen = '$departemen' AND aktif =1 ORDER BY nama ASC";    
 			$result = QueryDb($sql);	
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 		?>				
           <option value="<?=$row['replid'] ?>" <?=IntIsSelected($row['replid'], $pelajaran) ?> >
 		  <?=$row['nama'] ?>
           </option>
-          <?	
+          <?php 
 		  	} 
 		?>
         </select>
-        <? } ?>
+        <?php } ?>
 	</td>
 </tr>
 <tr>
@@ -225,18 +225,18 @@ function panggil(elem){
 	<td><strong>Status</strong></td>
 	<td>
     	<select name="status" id="status" onKeyPress="focusNext('keterangan',event)" onFocus="panggil('status')" style="width:255px">
-          <?
+          <?php
           	OpenDb();
 			$sql = "SELECT status FROM statusguru ORDER BY status ASC";    
 			$result = QueryDb($sql);	
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($status == "")
 					$status = $row['status'];?>
           <option value="<?=$row['status'] ?>" <?=StringIsSelected($row['status'], $status) ?> >
 		  <?=$row['status'] ?>
           </option>
-          <?	
+          <?php 
 		  	} 
 		?>
         </select>    </td>
@@ -267,11 +267,11 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 

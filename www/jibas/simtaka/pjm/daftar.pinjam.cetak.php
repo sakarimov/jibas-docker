@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/sessioninfo.php');
 require_once('../inc/common.php');
 require_once('../inc/config.php');
@@ -30,20 +30,20 @@ require_once('../lib/GetHeaderCetak.php');
 OpenDb();
 
 $departemen = 'yayasan';
-$kriteria = $_REQUEST[kriteria];
-$noanggota = $_REQUEST[noanggota];
-$nama = $_REQUEST[nama];
+$kriteria = $_REQUEST['kriteria'];
+$noanggota = $_REQUEST['noanggota'];
+$nama = $_REQUEST['nama'];
 $sqlDate = "SELECT DAY(now()),MONTH(now()),YEAR(now())";
 $resultDate = QueryDb($sqlDate);
-$rDate = @mysql_fetch_row($resultDate);
+$rDate = @mysqli_fetch_row($resultDate);
 
 $tglAwal = $rDate[0]."-".$rDate[1]."-".$rDate[2];
-if (isset($_REQUEST[tglAwal]))
-	$tglAwal = $_REQUEST[tglAwal];
+if (isset($_REQUEST['tglAwal']))
+	$tglAwal = $_REQUEST['tglAwal'];
 
 $tglAkhir = $rDate[0]."-".$rDate[1]."-".$rDate[2];	
-if (isset($_REQUEST[tglAkhir]))
-	$tglAkhir = $_REQUEST[tglAkhir];
+if (isset($_REQUEST['tglAkhir']))
+	$tglAkhir = $_REQUEST['tglAkhir'];
 	
 if ($kriteria == 'all' || $kriteria == '')
 {
@@ -93,10 +93,10 @@ elseif ($kriteria == 'nis')
 </table>
 <br>
 	
-<?
+<?php
 $sql = "SELECT DATE_FORMAT(now(),'%Y-%m-%d')";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $now = $row[0];
 
 if ($kriteria=='all' || $kriteria=='')
@@ -124,7 +124,7 @@ else
 			   AND (nis = '$noanggota' OR nip = '$noanggota')
 		     ORDER BY tglpinjam DESC";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result); ?>
+$num = @mysqli_num_rows($result); ?>
 		
 <table width="100%" border="1" cellspacing="0" cellpadding="5" class="tab" id="table">
 <tr height="30">
@@ -135,9 +135,9 @@ $num = @mysql_num_rows($result); ?>
 	<td width='*' align="center" class="header">Pustaka</td>
 	<td width='8%' align="center" class="header">Telat<br>(<em>hari</em>)</td>
 </tr>
-<?  if ($num > 0)
+<?php  if ($num > 0)
 	{
-		while ($row=@mysql_fetch_array($result))
+		while ($row=@mysqli_fetch_array($result))
 		{
 			$jenisanggota = $row['info1'];
 			$idanggota = $row['idanggota'];
@@ -146,32 +146,32 @@ $num = @mysql_num_rows($result); ?>
 				$idanggota = $row['nis'];
 				$sql = "SELECT nama
 						  FROM jbsakad.siswa
-						 WHERE nis = '$idanggota'";
+						 WHERE nis = '".$idanggota."'";
 			}
 			elseif ($jenisanggota == "pegawai")
 			{
 				$idanggota = $row['nip'];
 				$sql = "SELECT nama
 						  FROM jbssdm.pegawai
-						 WHERE nip = '$idanggota'";
+						 WHERE nip = '".$idanggota."'";
 			}
 			else
 			{
 				$idanggota = $row['idmember'];
 				$sql = "SELECT nama
 						  FROM jbsperpus.anggota
-						 WHERE noregistrasi = '$idanggota'";
+						 WHERE noregistrasi = '".$idanggota."'";
 			}
 			$res3 = QueryDb($sql);
-			$row3 = mysql_fetch_row($res3);
+			$row3 = mysqli_fetch_row($res3);
 			$namaanggota = $row3[0];
 		
 			$sql = "SELECT judul
 					  FROM pustaka p, daftarpustaka d
 					 WHERE d.pustaka = p.replid
-					   AND d.kodepustaka = '$row[kodepustaka]'";
+					   AND d.kodepustaka = '".$row['kodepustaka']."'";
 			$res = QueryDb($sql);
-			$r = @mysql_fetch_row($res);
+			$r = @mysqli_fetch_row($res);
 			$judul = $r[0];
 			
 			$color = '#000000';
@@ -179,18 +179,18 @@ $num = @mysql_num_rows($result); ?>
 			$alt = 'OK';
 			$img = '<img src="../img/ico/Valid.png" width="16" height="16" title='.$alt.' />';
 			
-			if ($row[tglkembali] <= $now)
+			if ($row['tglkembali'] <= $now)
 			{
-			  	if ($row[tglkembali] == $now)
+			  	if ($row['tglkembali'] == $now)
 				{
 					$alt = 'Hari&nbsp;ini&nbsp;batas&nbsp;pengembalian&nbsp;terakhir';
 					$color = '#cb6e01';
 					$weight = 'font-weight:bold';
 					$telat = '';
 				}
-				elseif ($row[tglkembali] < $now)
+				elseif ($row['tglkembali'] < $now)
 				{
-					$diff = @mysql_fetch_row(QueryDb("SELECT DATEDIFF('".$now."','".$row[tglkembali]."')"));
+					$diff = @mysqli_fetch_row(QueryDb("SELECT DATEDIFF('".$now."','".$row['tglkembali']."')"));
 					$alt = 'Terlambat&nbsp;'.$diff[0].'&nbsp;hari';
 					$color='red';
 					$weight='font-weight:bold';
@@ -203,13 +203,13 @@ $num = @mysql_num_rows($result); ?>
 			?>
 			<tr style="color:<?=$color?>; <?=$weight?>">
 				<td align='center'><?=$cnt?></td>
-				<td align="center"><?=LongDateFormat($row[tglpinjam])?></td>
-				<td align="center"><?=LongDateFormat($row[tglkembali])?></td>
+				<td align="center"><?=LongDateFormat($row['tglpinjam'])?></td>
+				<td align="center"><?=LongDateFormat($row['tglkembali'])?></td>
 				<td align="left"><?=$idanggota?><br><?=$namaanggota?></td>
-				<td align="left"><?=$row[kodepustaka] . "<br>$judul" ?></td>
+				<td align="left"><?=$row['kodepustaka'] . "<br>$judul" ?></td>
 		        <td align="center"><?=$telat?></td>
 			</tr>
-<?
+<?php
 		} // while
 	}
 	else
@@ -217,7 +217,7 @@ $num = @mysql_num_rows($result); ?>
         <tr>
 			<td height="25" colspan="6" align="center" class="nodata">Tidak ada data</td>
         </tr>
-<?	}  ?>	
+<?php }  ?>	
     </table>
     <br />
 	
@@ -228,7 +228,7 @@ $num = @mysql_num_rows($result); ?>
 	
 </td></tr></table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

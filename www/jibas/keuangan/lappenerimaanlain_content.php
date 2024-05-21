@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/sessioninfo.php');
 require_once('include/common.php');
@@ -71,7 +71,7 @@ if (isset($_REQUEST['urutan']))
 OpenDb();	
 $sql = "SELECT nama FROM datapenerimaan WHERE replid='$idpenerimaan'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -151,7 +151,7 @@ function change_baris() {
 <!-- TABLE CENTER -->
 <tr>
 	<td>
-<? 
+<?php 
    
 	$sql_tot = "SELECT p.replid AS id, j.nokas, p.sumber, date_format(p.tanggal, '%d-%b-%Y') AS tanggal, p.keterangan, p.jumlah, p.petugas 
 	              FROM penerimaanlain p, jurnal j, datapenerimaan dp 
@@ -167,17 +167,17 @@ function change_baris() {
 		   ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 
 	
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$totalB = 0;
-	while ($rowB = mysql_fetch_array($result_tot)) {
+	while ($rowB = mysqli_fetch_array($result_tot)) {
 		$totalB += $rowB['jumlah'];
 	}
 
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
 	<table width="100%" border="0" align="center">
     <tr>
@@ -198,7 +198,7 @@ function change_baris() {
         <td width="25%">Keterangan</td>
         <td width="10%"  onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('petugas','<?=$urutan?>')">Petugas <?=change_urut('petugas',$urut,$urutan)?></td>
     </tr>
-<? 
+<?php 
 
 if ($page==0)
 	$cnt = 0;
@@ -206,7 +206,7 @@ else
 	$cnt = (int)$page*(int)$varbaris;
 
 $tot = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$tot += $row['jumlah'];
 ?>
     <tr height="25">
@@ -217,22 +217,22 @@ while ($row = mysql_fetch_array($result)) {
         <td><?=$row['keterangan'] ?></td>
         <td><?=$row['petugas'] ?></td>
     </tr>
-<?
+<?php
 }
 ?>
     <input type="hidden" name="tes" id="tes" value="<?=$total?>"/>
-    <? if ($page==$total-1){ ?>
+    <?php if ($page==$total-1){ ?>
 	<tr height="35">
         <td bgcolor="#996600" colspan="3" align="center"><font color="#FFFFFF"><strong>T O T A L</strong></font></td>
         <td bgcolor="#996600" align="right" ><font color="#FFFFFF"><strong><?=FormatRupiah($totalB) ?></strong></font></td>
         <td bgcolor="#996600" colspan="3">&nbsp;</td>
     </tr>
-	<? } ?>
+	<?php } ?>
     </table>
     <script language='JavaScript'>
     Tables('table', 1, 0);
     </script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='display:none;'";
 		$disnext="style=''";
 		}
@@ -258,9 +258,9 @@ while ($row = mysql_fetch_array($result)) {
        	<td width="30%" align="left" colspan="2">Halaman
 		<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 		<input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 	  	dari <?=$total?> halaman
@@ -268,14 +268,14 @@ while ($row = mysql_fetch_array($result)) {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
     <table width="100%" border="0" align="center">          
     <tr>
         <td align="center" valign="middle" height="250">
@@ -285,7 +285,7 @@ while ($row = mysql_fetch_array($result)) {
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
     </td>
 </tr>
 </table>

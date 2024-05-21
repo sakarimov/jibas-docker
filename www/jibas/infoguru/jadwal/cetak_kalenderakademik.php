@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -48,7 +48,7 @@ $result=QueryDb($query);
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? include("../library/headercetak.php") ?>
+<?php include("../library/headercetak.php") ?>
 
 <center>
   <font size="3"><strong>Kalender Akademik</strong></font><br />
@@ -60,17 +60,17 @@ $result=QueryDb($query);
     <td width="22%" height="30" class="header"><div align="center">Tanggal Selesai</div></td>
     <td width="56%" height="30" class="header"><div align="center">Kegiatan</div></td>
   </tr>
-  <?
+  <?php
   $cnt=1;
-  while ($row=@mysql_fetch_array($result)){
+  while ($row=@mysqli_fetch_array($result)){
   ?>
   <tr>
     <td height="25"><?=$cnt?></td>
-    <td height="25"><?=format_tgl($row[tanggalawal])?></td>
-    <td height="25"><?=format_tgl($row[tanggalakhir])?></td>
+    <td height="25"><?=format_tgl($row['tanggalawal'])?></td>
+    <td height="25"><?=format_tgl($row['tanggalakhir'])?></td>
     <td height="25"><?=$row['kegiatan']?></td>
   </tr>
-  <?
+  <?php
   $cnt++;
   }
   CloseDb();

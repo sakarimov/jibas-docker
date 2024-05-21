@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/sessioninfo.php');
 require_once('../inc/common.php');
 require_once('../inc/config.php');
@@ -32,32 +32,32 @@ OpenDb();
 
 $departemen='yayasan';
 $kriteria='all';
-if (isset($_REQUEST[kriteria]))
-	$kriteria=$_REQUEST[kriteria];
+if (isset($_REQUEST['kriteria']))
+	$kriteria=$_REQUEST['kriteria'];
 	
 if ($kriteria=='nip')
 	$statuspeminjam=0;
 elseif ($kriteria=='nis')
 	$statuspeminjam=1;
 	
-$noanggota = $_REQUEST[noanggota];
-$nama = $_REQUEST[nama];
+$noanggota = $_REQUEST['noanggota'];
+$nama = $_REQUEST['nama'];
 
 $sqlDate="SELECT DAY(now()),MONTH(now()),YEAR(now())";
 $resultDate = QueryDb($sqlDate);
-$rDate = @mysql_fetch_row($resultDate);
+$rDate = @mysqli_fetch_row($resultDate);
 
 $tglAwal = $rDate[0]."-".$rDate[1]."-".$rDate[2];
-if (isset($_REQUEST[tglAwal]))
-	$tglAwal = $_REQUEST[tglAwal];
+if (isset($_REQUEST['tglAwal']))
+	$tglAwal = $_REQUEST['tglAwal'];
 	
 $tglAkhir = $rDate[0]."-".$rDate[1]."-".$rDate[2];	
-if (isset($_REQUEST[tglAkhir]))
-	$tglAkhir = $_REQUEST[tglAkhir];
+if (isset($_REQUEST['tglAkhir']))
+	$tglAkhir = $_REQUEST['tglAkhir'];
 	
 $denda=0;
-if (isset($_REQUEST[denda]))
-	$denda=$_REQUEST[denda];
+if (isset($_REQUEST['denda']))
+	$denda=$_REQUEST['denda'];
 	
 if ($kriteria=='all' || $kriteria=='')
 {
@@ -119,10 +119,10 @@ elseif ($kriteria=='denda')
 </table>
 <br>
 		
-<?
+<?php
 $sql = "SELECT DATE_FORMAT(now(),'%Y-%m-%d')";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $now = $row[0];
 
 if ($kriteria=='all')
@@ -184,7 +184,7 @@ elseif ($kriteria=='denda')
 				 ORDER BY p.tglditerima DESC";			
 }
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="5" class="tab" id="table">
 <tr height="30">
@@ -196,60 +196,60 @@ $num = @mysql_num_rows($result);
 	<td width='*' align="center" class="header">Kode Pustaka</td>
 	<td width='15%' align="center" class="header">Denda</td>
 </tr>
-<?
+<?php
 	if ($num>0)
 	{
 		$cnt = 0;
-		while ($row = @mysql_fetch_array($result))
+		while ($row = @mysqli_fetch_array($result))
 		{
 			$cnt += 1;
 			
 			$sql = "SELECT denda
 					  FROM denda
-					 WHERE idpinjam='$row[replid]'";
+					 WHERE idpinjam='".$row['replid']."'";
 			$res2 = QueryDb($sql);
-			$row2 = @mysql_fetch_array($res2);
+			$row2 = @mysqli_fetch_array($res2);
 			$denda = $row2['denda'];
 			
 			$kodepustaka = $row['kodepustaka'];
 			$sql = "SELECT p.judul
 					  FROM daftarpustaka dp, pustaka p
 					 WHERE dp.pustaka = p.replid
-					   AND dp.kodepustaka = '$kodepustaka'";
+					   AND dp.kodepustaka = '".$kodepustaka."'";
 			$res2 = QueryDb($sql);
-			$row2 = @mysql_fetch_array($res2);
+			$row2 = @mysqli_fetch_array($res2);
 			$judul = $row2['judul'];
 			
-			$idanggota = $row[idanggota];
-			$jenisanggota = $row[info1];
+			$idanggota = $row['idanggota'];
+			$jenisanggota = $row['info1'];
 			
 			if ($jenisanggota == "siswa")
 			{
 				$sql = "SELECT nama
 						  FROM jbsakad.siswa
-						 WHERE nis = '$idanggota'";
+						 WHERE nis = '".$idanggota."'";
 			}
 			elseif ($jenisanggota == "pegawai")
 			{
 				$sql = "SELECT nama
 						  FROM jbssdm.pegawai
-						 WHERE nip = '$idanggota'";
+						 WHERE nip = '".$idanggota."'";
 			}
 			else
 			{
 				$sql = "SELECT nama
 						  FROM jbsperpus.anggota
-						 WHERE noregistrasi = '$idanggota'";
+						 WHERE noregistrasi = '".$idanggota."'";
 			}
 			$res2 = QueryDb($sql);
-			$row2 = mysql_fetch_row($res2);
+			$row2 = mysqli_fetch_row($res2);
 			$namaanggota = $row2[0];  ?>
 			
 			<tr style="color:<?=$color?>; <?=$weight?>">
 				<td align='center'><?=$cnt?></td>
-				<td align="center"><?=LongDateFormat($row[tglditerima])?></td>
-				<td align="center"><?=LongDateFormat($row[tglkembali])?></td>
-				<td align="center"><?=LongDateFormat($row[tglpinjam])?></td>
+				<td align="center"><?=LongDateFormat($row['tglditerima'])?></td>
+				<td align="center"><?=LongDateFormat($row['tglkembali'])?></td>
+				<td align="center"><?=LongDateFormat($row['tglpinjam'])?></td>
 				<td align="left">
 					<font style='font-size: 9px'><?=$idanggota?></font><br>
 					<font style='font-size: 11px; font-weight: bold;'><?=$namaanggota?></font>
@@ -260,7 +260,7 @@ $num = @mysql_num_rows($result);
 				</td>				
                 <td align="right"><?=FormatRupiah($denda)?></td>
 			</tr>
-<?
+<?php
 		}
 	}
 	else
@@ -269,14 +269,14 @@ $num = @mysql_num_rows($result);
         <tr>
 			<td height="25" colspan="8" align="center" class="nodata">Tidak ada data</td>
         </tr>
-<?
+<?php
 	}
 		?>	
     </table>
 
 </td></tr></table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

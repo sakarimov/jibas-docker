@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -35,15 +35,15 @@ OpenDb();
             <td style="padding-right:4px">Kelas</td>
             <td class="td">
               <select id="CmbDepSis" name="CmbDepSis" class="Cmb" onchange="ChgCmbDepSis()">
-                	<?
+                	<?php
                     $sql = "SELECT departemen FROM $db_name_akad.departemen WHERE aktif=1 ORDER BY urutan";
                     $res = QueryDb($sql);
-                    while ($row = @mysql_fetch_row($res)){
+                    while ($row = @mysqli_fetch_row($res)){
                     if ($dep=="")
 						$dep=$row[0];
 					?>
                 <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$dep)?>><?=$row[0]?></option>
-                	<?
+                	<?php
                     }
                     ?>
                 </select>
@@ -51,17 +51,17 @@ OpenDb();
             <td class="td">
 				<div id="DivCmbKelas">
 					<select id="CmbKlsSis" name="CmbKlsSis" class="Cmb" onchange="ChgCmbKlsSis()">
-						<?
+						<?php
 						$sql = "SELECT DISTINCT k.replid, CONCAT(ti.tingkat, ' - ', k.kelas) FROM $db_name_akad.kelas k, $db_name_akad.tingkat ti, $db_name_akad.tahunajaran ta ".
 							   "WHERE k.aktif=1 AND ta.aktif=1 AND ti.aktif=1 AND k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid ".
 							   "AND ta.departemen='$dep' AND ti.departemen='$dep' ORDER BY ti.urutan, k.kelas";
 						$res = QueryDb($sql);
-						while ($row = @mysql_fetch_row($res)){
+						while ($row = @mysqli_fetch_row($res)){
 						if ($kls=="")
 							$kls=$row[0];
 						?>
 					<option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-						<?
+						<?php
 						}
 						?>
 					</select>
@@ -106,19 +106,19 @@ OpenDb();
         <td>No. HP Siswa</td>
         <td><input type="checkbox" id="CheckAllSiswa"></td>
       </tr>
-      <?
+      <?php
 		$sql = "SELECT * FROM $db_name_akad.siswa WHERE aktif=1 AND idkelas='$kls' ORDER BY nama";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		if ($num>0)
 		{
 			$cnt=1;
-			while ($row = @mysql_fetch_array($res))
+			while ($row = @mysqli_fetch_array($res))
 			{
-				$hp = trim($row['hpsiswa']);
+				$hp = trim((string) $row['hpsiswa']);
 				if (strlen($hp) < 7)
 				  continue;
-				if (substr($hp, 0, 1) == "#")
+				if (str_starts_with($hp, "#"))
 				  continue;
 	  ?>
       <tr>
@@ -131,7 +131,7 @@ OpenDb();
 				 pin="<?=$row['pinsiswa']?>">
         </td>
       </tr>
-      <?
+      <?php
 			$cnt++;
 			}
 		} else {
@@ -139,7 +139,7 @@ OpenDb();
       <tr>
         <td colspan="5" class="Ket" align="center">Tidak ada data</td>
       </tr>
-      <?
+      <?php
 		}
 			?>
     </table>
@@ -147,6 +147,6 @@ OpenDb();
     </td>
   </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

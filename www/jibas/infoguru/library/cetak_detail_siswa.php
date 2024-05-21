@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,7 +41,7 @@ $replid=$_REQUEST['replid'];
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? include("../library/headercetak.php") ?>
+<?php include("../library/headercetak.php") ?>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr height="30">
@@ -52,13 +52,13 @@ $replid=$_REQUEST['replid'];
             <td width="5%" rowspan="14" bgcolor="#FFFFFF" ></td>
             <td width="5%">1.</td>
             <td colspan="2">Nama Peserta Didik</td>
-            <?
+            <?php
 			OpenDb();
 			$sql="SELECT c.nis, c.nama, c.panggilan, c.tahunmasuk, c.idkelas, c.suku, c.agama, c.status, c.kondisi, c.kelamin, c.tmplahir, c.tgllahir, c.warga, c.anakke, c.jsaudara, c.bahasa, c.berat, c.tinggi, c.darah, c.foto, c.alamatsiswa, c.kodepossiswa, c.telponsiswa, c.hpsiswa, c.emailsiswa, c.kesehatan, c.asalsekolah, c.ketsekolah, c.namaayah, c.namaibu, c.almayah, c.almibu, c.pendidikanayah, c.pendidikanibu, c.pekerjaanayah, c.pekerjaanibu, c.wali, c.penghasilanayah, c.penghasilanibu, c.alamatortu, c.telponortu, c.hportu, c.emailortu, c.alamatsurat, c.keterangan,t.departemen, t.tahunajaran, k.kelas FROM jbsakad.siswa c, jbsakad.kelas k, jbsakad.tahunajaran t WHERE c.replid=$replid AND k.replid = c.idkelas AND k.idtahunajaran = t.replid";
 			//echo $sql; 
 			//exit;
 			$result = QueryDb($sql);
-			$row_siswa = @mysql_fetch_array($result); 
+			$row_siswa = @mysqli_fetch_array($result); 
 			?>
             <td rowspan="14" bgcolor="#FFFFFF"><div align="center"><img src="gambar.php?replid=<?=$replid?>&table=siswa" width="120" height="139" /></div></td>
           </tr>
@@ -78,7 +78,7 @@ $replid=$_REQUEST['replid'];
             <td >2.</td>
             <td>Jenis Kelamin</td>
             <td >:
-              <? 	if ($row_siswa['kelamin']=="l")
+              <?php 	if ($row_siswa['kelamin']=="l")
                         echo "Laki-laki"; 
                     if ($row_siswa['kelamin']=="p")
                         echo "Perempuan"; 
@@ -112,13 +112,13 @@ $replid=$_REQUEST['replid'];
             <td>7.</td>
             <td>Anak ke berapa</td>
             <td>:
-              <? if ($row_siswa['anakke']!=0) { echo $row_siswa['anakke']; }?></td>
+              <?php if ($row_siswa['anakke']!=0) { echo $row_siswa['anakke']; }?></td>
           </tr>
           <tr height="20">
             <td>8.</td>
             <td>Jumlah Saudara</td>
             <td>:
-              <? if ($row_siswa['jsaudara']!=0) { echo $row_siswa['jsaudara']; }?></td>
+              <?php if ($row_siswa['jsaudara']!=0) { echo $row_siswa['jsaudara']; }?></td>
           </tr>
           <tr height="20">
             <td>9.</td>
@@ -182,13 +182,13 @@ $replid=$_REQUEST['replid'];
             <td>16.</td>
             <td >Berat Badan</td>
             <td colspan="2">:
-              <? if ($row_siswa['berat']!=0) { echo $row_siswa['berat']." Kg"; }?></td>
+              <?php if ($row_siswa['berat']!=0) { echo $row_siswa['berat']." Kg"; }?></td>
           </tr>
           <tr height="20">
             <td>17.</td>
             <td>Tinggi Badan</td>
             <td colspan="2">:
-              <? if ($row_siswa['tinggi']!=0) { echo $row_siswa['tinggi']." cm"; }?></td>
+              <?php if ($row_siswa['tinggi']!=0) { echo $row_siswa['tinggi']." cm"; }?></td>
           </tr>
           <tr height="20">
             <td>18.</td>
@@ -241,12 +241,12 @@ $replid=$_REQUEST['replid'];
             <td >Nama</td>
             <td >:
               <?=$row_siswa['namaayah']?>
-                <?
+                <?php
                 if ($row_siswa['almayah']==1)
                 echo "&nbsp;(alm)";
                 ?></td>
             <td><?=$row_siswa['namaibu']?>
-                <?
+                <?php
                 if ($row_siswa['almibu']==1)
                 echo "&nbsp;(alm)";
                 ?></td>
@@ -269,8 +269,8 @@ $replid=$_REQUEST['replid'];
             <td>25.</td>
             <td >Penghasilan</td>
             <td >:
-              <? if ($row_siswa['penghasilanayah']!=0){ echo FormatRupiah($row_siswa['penghasilanayah']) ; } ?></td>
-            <td><? if ($row_siswa['penghasilanibu']!=0){ echo FormatRupiah($row_siswa['penghasilanibu']) ; } ?></td>
+              <?php if ($row_siswa['penghasilanayah']!=0){ echo FormatRupiah($row_siswa['penghasilanayah']) ; } ?></td>
+            <td><?php if ($row_siswa['penghasilanibu']!=0){ echo FormatRupiah($row_siswa['penghasilanibu']) ; } ?></td>
           </tr>
           <tr height="20">
             <td>26. </td>
@@ -331,6 +331,6 @@ $replid=$_REQUEST['replid'];
 </script>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

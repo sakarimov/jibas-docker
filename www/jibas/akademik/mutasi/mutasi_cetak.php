@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -52,7 +52,7 @@ OpenDb();
 <head>
 <title>Daftar Siswa</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<SCRIPT type="text/javascript" language="JavaScript" src="../script/tables.js"></SCRIPT>
+<SCRIPT type="text/javascript" language="text/javascript" src="../script/tables.js"></SCRIPT>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/common.js"></script>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <link href="../style/style.css" rel="stylesheet" type="text/css">
@@ -73,7 +73,7 @@ OpenDb();
       <tr>
         <td colspan="2">
           <div align="center">
-            <input name="action" type="hidden" id="action2" value="<? if(!empty($_GET['action'])) echo $_GET['action'] ; else echo "tambahJenisMutasi" ;?>">
+            <input name="action" type="hidden" id="action2" value="<?php if(!empty($_GET['action'])) echo $_GET['action'] ; else echo "tambahJenisMutasi" ;?>">
             <input name="state" type="hidden" id="state2" value="jenis">
              <strong>DAFTAR SISWA YANG BELUM DIMUTASI</strong><br>
             <br>
@@ -90,12 +90,12 @@ OpenDb();
             <td width="40" height="30" bordercolor="#000000" bgcolor="#CCCCCC" class="header"><div align="center"><span class="style4">Status&nbsp;Mutasi</span></div></td>
           </tr>
 		  <tr><td colspan="6">&nbsp;</td></tr>
-		  <? 
+		  <?php 
 		
 	$query_mutasi="SELECT s.nis,s.nama,a.angkatan,k.kelas,s.statusmutasi FROM jbsakad.siswa s, jbsakad.angkatan a, jbsakad.kelas k WHERE s.idangkatan=a.replid AND s.aktif=1 AND k.replid=s.idkelas AND a.departemen='$departemen' $tambahan ORDER BY s.nis";
 	$result_mutasi=QueryDb($query_mutasi);
 		  $a=0;
-		  while($row_mutasi=mysql_fetch_row($result_mutasi)){$a++;
+		  while($row_mutasi=mysqli_fetch_row($result_mutasi)){$a++;
 		  ?>
           <tr>
             <td height="25" bordercolor="#000000"><?=$a; ?></td>
@@ -104,22 +104,22 @@ OpenDb();
             <td height="25" bordercolor="#000000"><?=$row_mutasi[2]?></td>
             <td height="25" bordercolor="#000000"><?=$row_mutasi[3]?></td>
             <td height="25" bordercolor="#000000">
-            <? if ($row_mutasi[4]==0){ ?>
+            <?php if ($row_mutasi[4]==0){ ?>
             Belum&nbsp;Dimutasi
-			<? } else { ?>
+			<?php } else { ?>
             Sudah&nbsp;Dimutasi
-            <? } ?></td>
+            <?php } ?></td>
           </tr>
 		  <tr><td colspan="6">&nbsp;</td></tr>
-		  <?
+		  <?php
 		  }
-		  if(mysql_num_rows($result_mutasi)==0)
+		  if(mysqli_num_rows($result_mutasi)==0)
 		  	{
 		?>
 		<tr>
 			<td colspan="6" align="center" bordercolor="#000000"> "Data Belum Ada"</td>
 		</tr>	
-		<?	
+		<?php 
 			}
 		  ?>
         </table>  
@@ -132,6 +132,6 @@ OpenDb();
 <script language="javascript">window.print();</script>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

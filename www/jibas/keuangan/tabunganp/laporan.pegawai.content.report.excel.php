@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -47,9 +47,9 @@ $datetime2 = "$tanggal2 23:59:59";
 OpenDb();
 $sql = "SELECT p.nama, p.bagian
           FROM jbssdm.pegawai p 
-		 WHERE p.nip = '$nip'";
+		 WHERE p.nip = '".$nip."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapegawai = $row[0];
 $bagian = $row[1];
 ?>
@@ -78,12 +78,12 @@ $bagian = $row[1];
 </table>
 <br />
 
-<?
+<?php
 require_once("laporan.pegawai.content.report.body.php");
 ?>
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

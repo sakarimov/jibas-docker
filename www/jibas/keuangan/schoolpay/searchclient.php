@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
  * @version: 15 (January 02, 2019)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -30,9 +30,9 @@ require_once('../library/departemen.php');
 require_once('searchclient.func.php');
 
 $departemen = $_REQUEST["departemen"];
-$filter = isset($_REQUEST["filter"]) ? $_REQUEST["filter"] : "nama";
-$data = isset($_REQUEST["data"]) ? $_REQUEST["data"] : "siswa";
-$keyword = isset($_REQUEST["keyword"]) ? $_REQUEST["keyword"] : "";
+$filter = $_REQUEST["filter"] ?? "nama";
+$data = $_REQUEST["data"] ?? "siswa";
+$keyword = $_REQUEST["keyword"] ?? "";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -84,7 +84,7 @@ $keyword = isset($_REQUEST["keyword"]) ? $_REQUEST["keyword"] : "";
     </fieldset>
     <br>
     <div id="searchBox" style="overflow: auto; height: 430px;">
-        <?
+        <?php
         if (isset($_REQUEST['cari']))
         {
             OpenDb();

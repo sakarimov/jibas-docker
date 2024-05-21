@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -41,24 +41,24 @@ $sql = "SELECT YEAR(b.tanggal) as thn, MONTH(b.tanggal) as bln, DAY(b.tanggal) a
 			WHERE b.replid='$replid'";
 
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$sql_sis="SELECT nama FROM jbsakad.siswa WHERE nis='$row[idpengirim]'";
+$row = @mysqli_fetch_array($result);
+$sql_sis="SELECT nama FROM jbsakad.siswa WHERE nis='".$row['idpengirim']."'";
 $result_sis=QueryDb($sql_sis);
-if (@mysql_num_rows($result_sis) > 0)
+if (@mysqli_num_rows($result_sis) > 0)
 {
-	$row_sis=@mysql_fetch_array($result_sis);
-	$nama=$row_sis[nama];
+	$row_sis=@mysqli_fetch_array($result_sis);
+	$nama=$row_sis['nama'];
 }
 else
 {
-	$sql_peg="SELECT nama FROM jbssdm.pegawai WHERE nip='$row[idpengirim]'";
+	$sql_peg="SELECT nama FROM jbssdm.pegawai WHERE nip='".$row['idpengirim']."'";
 	$result_peg=QueryDb($sql_peg);
-	$row_peg=@mysql_fetch_array($result_peg);
-	$nama=$row_peg[nama];
+	$row_peg=@mysqli_fetch_array($result_peg);
+	$nama=$row_peg['nama'];
 }
 CloseDb();
 
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");	
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];	
 $tglberita=$row['tgl']." ".$namabulan[$row['bln']-1]." ".$row['thn'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -117,9 +117,9 @@ $tglberita=$row['tgl']." ".$namabulan[$row['bln']-1]." ".$row['thn'];
 			<tr>
 				<td align="left">
 					<font style="font-size:11px; line-height: 18px;">
-					<?
+					<?php
 					$berita = $row['berita'];
-					$berita = str_replace("#sq;", "'", $berita);
+					$berita = str_replace("#sq;", "'", (string) $berita);
 					echo $berita;
 					?>
 					</font>

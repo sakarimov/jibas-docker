@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -31,20 +31,20 @@ $sender = $_REQUEST['sender'];
 if ($sender == "tambah")
 {
 	OpenDb();
-	$dir_bln = date(m);
-	$dir_thn = date(Y);
+	$dir_bln = date('m');
+	$dir_thn = date('Y');
 	$dir = $updir . $dir_thn . $dir_bln;
 
-	$jam = date(H).":".date(i).":00";
+	$jam = date('H').":".date('i').":00";
 	$judul = CQ($_REQUEST['judul']);
-	$tgl = explode("-",$_REQUEST['tanggal']);
+	$tgl = explode("-",(string) $_REQUEST['tanggal']);
 	$tanggal = $tgl[2]."-".$tgl[1]."-".$tgl[0];
 	$jenis = $_REQUEST['jenisberita'];
 	
 	$abstrak = CQ($_REQUEST['abstrak']);
 		
 	$isi = $_REQUEST['isi'];
-	$isi = str_replace("'", "#sq;", $isi);
+	$isi = str_replace("'", "#sq;", (string) $isi);
 	
 	$idpengirim = SI_USER_ID();
 	$sql1 = "INSERT INTO jbsvcr.beritasekolah
@@ -56,7 +56,7 @@ if ($sender == "tambah")
 	<script language="javascript">
 		parent.beritasekolah_header.lihat();
 	</script>
-<?
+<?php
 }
 elseif ($sender == "ubah")
 {
@@ -64,19 +64,19 @@ elseif ($sender == "ubah")
 	$page = (int)$_REQUEST['page'];
 	$bulan = $_REQUEST['bulan'];
 	$tahun = $_REQUEST['tahun'];
-	$dir_bln = date(m);
-	$dir_thn = date(Y);
+	$dir_bln = date('m');
+	$dir_thn = date('Y');
 	$dir = $updir . $dir_thn . $dir_bln;
 
 	$judul = CQ($_REQUEST['judul']);
-	$tgl = explode("-",$_REQUEST['tanggal']);
+	$tgl = explode("-",(string) $_REQUEST['tanggal']);
 	$tanggal = $tgl[2]."-".$tgl[1]."-".$tgl[0];
 	$jenisberita = $_REQUEST['jenisberita'];
 	
 	$abstrak = CQ($_REQUEST['abstrak']);
 	
 	$isi = $_REQUEST['isi'];
-	$isi = str_replace("'", "#sq;", $isi);
+	$isi = str_replace("'", "#sq;", (string) $isi);
 	
 	$idpengirim = SI_USER_ID();
 	$replid = $_REQUEST['replid'];
@@ -89,6 +89,6 @@ elseif ($sender == "ubah")
 <script language="javascript">
 	document.location.href="beritasekolah_footer.php?page=<?=$page?>&tahun=<?=$tahun?>&bulan=<?=$bulan?>";
 </script>
-<?
+<?php
 }
 ?>

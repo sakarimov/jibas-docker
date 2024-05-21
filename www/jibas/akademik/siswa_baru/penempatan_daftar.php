@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -77,18 +77,18 @@ if ($op == "xm8r389xemx23xb2378e23") {
 	BeginTrans();
 	$success=0;
 	
-	$sql = "DELETE FROM siswa WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM siswa WHERE replid = '".$_REQUEST['replid']."'";
 	QueryDbTrans($sql,$success);	
 	
-	$sql_calon="UPDATE calonsiswa SET replidsiswa=NULL WHERE replidsiswa = '$_REQUEST[replid]'";
+	$sql_calon="UPDATE calonsiswa SET replidsiswa=NULL WHERE replidsiswa = '".$_REQUEST['replid']."'";
 	if ($success)
 		QueryDbTrans($sql_calon,$success);
 	
-	$sql_dept="DELETE FROM riwayatdeptsiswa WHERE nis='$_REQUEST[nis]'";
+	$sql_dept="DELETE FROM riwayatdeptsiswa WHERE nis='".$_REQUEST['nis']."'";
 	if ($success)
 		QueryDbTrans($sql_dept,$success);
 
-	$sql_kls="DELETE FROM riwayatkelassiswa WHERE nis='$_REQUEST[nis]'";
+	$sql_kls="DELETE FROM riwayatkelassiswa WHERE nis='".$_REQUEST['nis']."'";
 	if ($success)
 		QueryDbTrans($sql_kls,$success);
 	
@@ -264,12 +264,12 @@ function refresh_daftar() {
 <input type="hidden" name="cari" id="cari" value="<?=$cari ?>" />
 <input type="hidden" name="no" id="no" value="<?=$no ?>" />
 <input type="hidden" name="nama" id="nama" value="<?=$nama ?>" />
-<? 	
+<?php 	
 	
 	OpenDb();
 	$sql = "SELECT replid,nopendaftaran,nama,replidsiswa,nisn FROM calonsiswa WHERE idproses ='$proses'";  
 	if ($cari == "tampil") {
-		$sql = $sql." AND idkelompok = '$kelompok'"; 
+		$sql = $sql." AND idkelompok = '".$kelompok."'"; 
 	}
 	if ($cari == "cari") {
 		if ($nama <> "") 
@@ -283,14 +283,14 @@ function refresh_daftar() {
 	
 	$sql_tot = $sql;
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;	
 	
 	$sql = $sql." ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result = QueryDb($sql);
 	
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 	
 	
 	if ($jum == 0) { 
@@ -312,7 +312,7 @@ function refresh_daftar() {
 		alert ('Belum ada calon siswa yang terdaftar!');
 		
 	</script>
-	<? 
+	<?php 
 		} else { ?>
         <table width="100%">
         <tr height="200">
@@ -322,7 +322,7 @@ function refresh_daftar() {
             </td>
         </tr>
         </table>
-<?		}
+<?php 	}
 	} else {  ?>
 <table border="0" width="100%" align="center">
 <!-- TABLE CENTER -->
@@ -340,20 +340,20 @@ function refresh_daftar() {
         <td width="10%">Kelas </td>
         <td width="8%"></td>
     </tr>   
-    <?	
+    <?php 
 		if ($page==0)
 			$cnt = 0;
 		else 
 			$cnt = (int)$page*(int)$varbaris;
 		
 		$result = QueryDb($sql);
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 			if ($row['replidsiswa'] <> NULL) {
 				OpenDb();	
-				$sql1 = "SELECT s.nis, k.kelas FROM siswa s, kelas k WHERE s.replid ='$row[replidsiswa]' AND s.idkelas = k.replid";  				
+				$sql1 = "SELECT s.nis, k.kelas FROM siswa s, kelas k WHERE s.replid ='".$row['replidsiswa']."' AND s.idkelas = k.replid";  				
 				$result1 = QueryDb($sql1);
 				CloseDb();
-				$row1 = @mysql_fetch_array($result1);
+				$row1 = @mysqli_fetch_array($result1);
 				$nis = $row1['nis'];
 				$kls = $row1['kelas'];
 			} else {
@@ -365,20 +365,20 @@ function refresh_daftar() {
        	<td align="center"><?=++$cnt ?></td>
         <td align="center" ><?=$row['nopendaftaran'] ?></td>
 		<td align="center" ><?=$row['nisn'] ?></td>
-        <td><a href="#" onclick="tampil('<?=$row[replid]?>')"><?=$row['nama']?></a></td>
+        <td><a href="#" onclick="tampil('<?=$row['replid']?>')"><?=$row['nama']?></a></td>
         <td align="center"><?=$nis ?></td>
         <td align="center"	><?=$kls?></td>
         
         
         <td align="center">
-		<? if ($row['replidsiswa'] == NULL) { ?>
-        <input type="button" name="pindah" id="pindah" value=" > " class="but" onClick="pindah(<?=$row['replid']?>, '<?=$row[nisn]?>')" onmouseover="showhint('Klik untuk menempatkan calon siswa!', this, event, '90px')"/>        
-        <? } ?>
+		<?php if ($row['replidsiswa'] == NULL) { ?>
+        <input type="button" name="pindah" id="pindah" value=" > " class="but" onClick="pindah(<?=$row['replid']?>, '<?=$row['nisn']?>')" onmouseover="showhint('Klik untuk menempatkan calon siswa!', this, event, '90px')"/>        
+        <?php } ?>
         </td>
 		
     	
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); 
 ?>	
 	<!-- END TABLE CONTENT -->
@@ -386,7 +386,7 @@ function refresh_daftar() {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -411,19 +411,19 @@ function refresh_daftar() {
     <tr>
        	<td width="30%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -437,9 +437,9 @@ function refresh_daftar() {
  		</td-->
         <td width="30%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -447,12 +447,12 @@ function refresh_daftar() {
     </td></tr>
 <!-- END TABLE CENTER -->    
 </table>
-<? 		} 
+<?php 		} 
 	
 } else { ?>
 <script>
 	document.location.href = "blank_penempatan_daftar.php";
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

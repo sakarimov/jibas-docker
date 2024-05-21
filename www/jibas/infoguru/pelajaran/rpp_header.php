@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,8 +50,8 @@ OpenDb();
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Rencana Program Pembelajaran]</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../menu.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../menu.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript">
 var win = null;
@@ -127,24 +127,24 @@ function show() {
     <tr>
       	<td width = "18%"><strong>Departemen</strong>
       	<td width="*"><select name="departemen" id="departemen" onchange="change_dep()" style="width:100px">
-          <? 	$dep = getDepartemen(SI_USER_ACCESS());    
+          <?php 	$dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 				if ($departemen == "")
 					$departemen = $value; ?>
           <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
           <?=$value ?>
           </option>
-          <?	} ?>
+          <?php } ?>
         </select></td>
         <td width="15%"><strong>Semester </strong></td>
 	    <td width="*">
         <select name="semester" id="semester" onchange="change()" style="width:200px">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT replid,semester,aktif FROM semester where departemen='$departemen' ORDER BY aktif DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			if ($semester == "") 
 				$semester = $row['replid'];
 			$ada = "";
@@ -152,27 +152,27 @@ function show() {
 				$ada = "(Aktif)";
 						 
 			?>            
-    			<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $semester)?> ><?=$row['semester']." ".$ada?></option>                 
-    		<?	}	?>
+    			<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $semester)?> ><?=$row['semester']." ".$ada?></option>                 
+    		<?php }	?>
     	</select>        </td> 
   	</tr>
 	<tr>
     	<td align="left"><strong>Tingkat</strong>
        	<td>
         <select name="tingkat" id="tingkat" onchange="change()" style="width:100px">
-        <?	OpenDb();
+        <?php OpenDb();
 			$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($tingkat == "")
 				$tingkat = $row['replid'];				
 			?>
-          <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+          <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
             <?=$row['tingkat']?>
             </option>
-          <?
+          <?php
 			} //while
 			?>
         </select>        </td>
@@ -180,19 +180,19 @@ function show() {
       	<td>
         <!--edited -->
         	<select name="pelajaran" id="pelajaran" onchange="change()" style="width:200px">
-   		<?
+   		<?php
 			OpenDb();
 			$sql = "SELECT pel.replid as replid,pel.nama as nama FROM pelajaran pel,guru g WHERE pel.departemen = '$departemen' AND pel.aktif=1 AND g.nip='".SI_USER_ID()."' AND g.idpelajaran=pel.replid ORDER BY pel.nama";
 					$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];			
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
                   
-    		<?
+    		<?php
 			}
     		?>
     		</select>

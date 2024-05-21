@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessioninfo.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -34,9 +34,9 @@ $departemen = $_REQUEST['departemen'];
 $idpengeluaran = $_REQUEST['idpengeluaran'];
 
 OpenDb();
-$sql = "SELECT nama FROM datapengeluaran WHERE replid = '$idpengeluaran'";
+$sql = "SELECT nama FROM datapengeluaran WHERE replid = '".$idpengeluaran."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nama = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -101,30 +101,30 @@ function excel() {
         <td class="header" width="7%">Petugas</td>
         <td class="header" width="*">&nbsp;</td>
     </tr>
-<?
+<?php
 	$sql = "SELECT p.replid AS id, p.keperluan, p.keterangan, p.jenispemohon, p.nip, p.nis, p.pemohonlain, p.penerima, date_format(p.tanggal, '%d-%b-%Y') as tanggal, date_format(p.tanggalkeluar, '%d-%b-%Y') as tanggalkeluar, p.petugas, p.jumlah FROM pengeluaran p, datapengeluaran d WHERE p.idpengeluaran = d.replid AND d.replid = '$idpengeluaran' AND d.departemen = '$departemen' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY p.tanggal";
 	//echo  $sql;
 	OpenDb();
 	$result = QueryDb($sql);
 	$cnt = 0;
 	$total = 0;
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 		
 		if ($row['jenispemohon'] == 1) {
 			$idpemohon = $row['nip'];
-			$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '$idpemohon'";
+			$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$idpemohon."'";
 			$jenisinfo = "pegawai";
 		} else if ($row['jenispemohon'] == 2) {
 			$idpemohon = $row['nis'];
-			$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$idpemohon'";
+			$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$idpemohon."'";
 			$jenisinfo = "siswa";
 		} else {
 			$idpemohon = "";
-			$sql = "SELECT nama FROM pemohonlain WHERE replid = '$row[pemohonlain]'";
+			$sql = "SELECT nama FROM pemohonlain WHERE replid = '".$row['pemohonlain']."'";
 			$jenisinfo = "pemohon lain";
 		}
 		$result2 = QueryDb($sql);
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$namapemohon = $row2[0];
 		
 		$total += $row['jumlah'];
@@ -144,12 +144,12 @@ function excel() {
         <td valign="top" align="center"><?=$row['petugas'] ?></td>
         <td valign="top" align="center">
         <a href="JavaScript:cetakbukti('<?=$row['id'] ?>')"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Bukti Pengeluaran Kas!', this, event, '100px')"/></a>&nbsp;
-   <?  if (getLevel() != 2) { ?>
+   <?php  if (getLevel() != 2) { ?>
         <a href="JavaScript:edit('<?=$row['id'] ?>')"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pembayaran Pengeluaran!', this, event, '120px')"/></a>
-    <?  } ?>        
+    <?php  } ?>        
         </td>
     </tr>
-<? } ?>
+<?php } ?>
     <tr height="30">
         <td colspan="3" align="center" bgcolor="#999900">
         <font color="#FFFFFF"><strong>T O T A L</strong></font>

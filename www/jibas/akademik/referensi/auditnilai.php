@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -87,14 +87,14 @@ function change_date()
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Bulan:
     <select name="bulan" id="bulan" onchange="change_date()">
-<?	 for ($i = 1; $i <= 12; $i++) { ?>
+<?php  for ($i = 1; $i <= 12; $i++) { ?>
 		 <option value="<?=$i?>" <?=IntIsSelected($i, $bulan)?> ><?=NamaBulan($i)?></option>
-<?	 } ?>
+<?php  } ?>
     </select>
     <select name="tahun" id="tahun" onchange="change_date()">
-<?	 for ($i = $G_START_YEAR; $i <= date('Y') + 1; $i++) { ?>
+<?php  for ($i = $G_START_YEAR; $i <= date('Y') + 1; $i++) { ?>
 		 <option value="<?=$i?>" <?=IntIsSelected($i, $tahun)?> ><?=$i?></option>
-<?	 } ?>
+<?php  } ?>
     </select> 
     &nbsp;<a href="#" onclick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" />&nbsp;refresh</a>
     <br />
@@ -108,14 +108,14 @@ function change_date()
       <td width="*" align="center" background="../style/formbg2.gif">Alasan</td>
       <td width="50" align="center" background="../style/formbg2.gif">Pengguna</td>
     </tr>
-<?	 OpenDb();
+<?php  OpenDb();
 
 	 $cnt = 0;
 	 $sql = "SELECT jenisnilai, idnilai, nasli, nubah, DATE_FORMAT(tanggal, '%d-%m-%Y %H:%i') AS tanggal, alasan, pengguna, informasi 
 	         FROM jbsakad.auditnilai WHERE MONTH(tanggal) = '$bulan' AND YEAR(tanggal) = '$tahun' ORDER BY tanggal DESC";
 	 $res = QueryDb($sql);
-	 echo mysql_error();
-	 while ($row = mysql_fetch_array($res))
+	 echo mysqli_error($mysqlconnection);
+	 while ($row = mysqli_fetch_array($res))
 	 { 
 	 	$cnt++;	?>
       <tr>
@@ -125,9 +125,9 @@ function change_date()
          <td align="center" valign="top"><?=$row['nasli']?></td>
          <td align="center" valign="top"><?=$row['nubah']?></td>
          <td align="left" valign="top"><?=$row['alasan']?></td>
-         <td align="left" valign="top"><? echo ($row['pengguna']=="landlord - landlord"?"Administrator":$row['pengguna']); ?></td>
+         <td align="left" valign="top"><?php echo ($row['pengguna']=="landlord - landlord"?"Administrator":$row['pengguna']); ?></td>
       </tr>
-<?	 }  
+<?php  }  
 	 CloseDb(); ?>
     <!-- END TABLE CONTENT -->
     </table>

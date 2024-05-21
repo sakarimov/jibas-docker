@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ResizeImage($foto, $newwidth, $newheight, $quality, $output)
 {
 	$uploadedfile = $foto['tmp_name'];	
-	if (strlen($uploadedfile) != 0)
+	if (strlen((string) $uploadedfile) != 0)
 	{
 		$type = $foto['type'];
-		list($width, $height) = getimagesize($uploadedfile);
+		[$width, $height] = getimagesize($uploadedfile);
 		$npercent = 1.0;
 		$scalewidth  = $newwidth / $width;
 		$scaleheight = $newheight / $height;
@@ -49,7 +49,7 @@ function ResizeImage($foto, $newwidth, $newheight, $quality, $output)
 		elseif ($type === "image/bmp")
 			$src = imagecreatefrombmp($uploadedfile);
 		else {
-			$type = explode("/", $type);
+			$type = explode("/", (string) $type);
 			//echo "nilai tipe : $type[0], nilai : $type[1] ";
 			$tipe = (string)$type[1];
 			if ($tipe == "jpeg" || $tipe == "pjpeg" || $tipe == "jpg")
@@ -81,7 +81,7 @@ function ResizeImage($foto, $newwidth, $newheight, $quality, $output)
 			imagealphablending($tmp, false); // turn off the alpha blending to keep the alpha channel
 			imagesavealpha($tmp,true);
 			imagecopyresized($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-			imagegif($tmp, $output, $quality);
+			imagegif($tmp, $output);
 		}
 		elseif ($type == "image/png" || $type == "image/x-png")
 		{
@@ -98,7 +98,7 @@ function ResizeImage($foto, $newwidth, $newheight, $quality, $output)
 		elseif ($type == "image/bmp")
 			imagebmp($tmp, $output);	
 		else {
-			$type = explode("/", $foto['type']);
+			$type = explode("/", (string) $foto['type']);
 			$tipe = (string)$type[1];
 			if ($tipe == "jpeg" || $tipe == "pjpeg" || $tipe == "jpg")
 				imagejpeg($tmp, $output, $quality);
@@ -108,7 +108,7 @@ function ResizeImage($foto, $newwidth, $newheight, $quality, $output)
 				imagealphablending($tmp, false); // turn off the alpha blending to keep the alpha channel
 				imagesavealpha($tmp,true);
 				imagecopyresized($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-				imagegif($tmp, $output, $quality);
+				imagegif($tmp, $output);
 				
 			}
 			elseif ($tipe == "png" || $tipe == "x-png") {
@@ -142,7 +142,7 @@ function CropImage($foto, $widthandheight, $quality, $output, $automaticcrop = t
 		$uploadedfile = $foto;
 	
 	//echo "ini nih ".$foto;
-	if (strlen($uploadedfile) != 0)
+	if (strlen((string) $uploadedfile) != 0)
 	{
 		if (count($foto)>0 && is_array($foto))
 			$type = $foto['type'];
@@ -167,7 +167,7 @@ function CropImage($foto, $widthandheight, $quality, $output, $automaticcrop = t
 		}
 		
 		unset($width,$height);
-		list($width, $height) = @getimagesize($uploadedfile);
+		[$width, $height] = @getimagesize($uploadedfile);
 		//echo "Ini".$uploadedfile;
 		$x = ($width/2)-($widthandheight/2);
 		$y = ($height/2)-($widthandheight/2);
@@ -182,7 +182,7 @@ function CropImage($foto, $widthandheight, $quality, $output, $automaticcrop = t
 			$src = imagecreatefrombmp($uploadedfile);
 		else {
 			//$src = imagecreatefromstring(file_get_contents($foto['tmp_name']));	
-			$type = explode("/", $type);
+			$type = explode("/", (string) $type);
 			$tipe = (string)$type[1];
 			//echo "nilai tipe : $type[0], nilai : $type[1] ";
 			if ($tipe == "jpeg" || $tipe == "pjpeg" || $tipe == "jpg")
@@ -212,7 +212,7 @@ function CropImage($foto, $widthandheight, $quality, $output, $automaticcrop = t
 		if ($type == "image/jpeg" || $type == "image/pjpeg")
 			imagejpeg($tmp, $output, $quality);
 		elseif ($type == "image/gif")
-			imagegif($tmp, $output, $quality);
+			imagegif($tmp, $output);
 		elseif ($type == "image/png" || $type == "image/x-png")
 		{
 			$quality = $quality / 100;
@@ -222,12 +222,12 @@ function CropImage($foto, $widthandheight, $quality, $output, $automaticcrop = t
 			imagebmp($tmp, $output);	
 		}
 		else {
-			$type = explode("/", $foto['type']);
+			$type = explode("/", (string) $foto['type']);
 			$tipe = (string)$type[1];
 			if ($tipe == "jpeg" || $tipe == "pjpeg" || $tipe == "jpg")
 				imagejpeg($tmp, $output, $quality);
 			elseif ($tipe == "gif")
-				imagegif($tmp, $output, $quality);
+				imagegif($tmp, $output);
 			elseif ($tipe == "png" || $tipe == "x-png") {
 				$quality = $quality / 100;
 				imagepng($tmp, $output, $quality);
@@ -278,7 +278,7 @@ function imagebmp(&$img, $filename = false)
 		$f = fopen($filename, "wb"); 
 		foreach ($header AS $h) 
 		{ 
-			fwrite($f, $h); 
+			fwrite($f, (string) $h); 
 		} 
 		 
 		//save pixels 
@@ -287,7 +287,7 @@ function imagebmp(&$img, $filename = false)
 			for ($x=0; $x<$wid; $x++) 
 			{ 
 				$rgb = imagecolorat($img, $x, $y); 
-				fwrite($f, byte3($rgb)); 
+				fwrite($f, (string) byte3($rgb)); 
 			} 
 			fwrite($f, $wid_pad); 
 		} 
@@ -344,7 +344,7 @@ function imagecreatefrombmp($filename)
 	for ($y=$hei-1; $y>=0; $y--) 
 	{ 
 		$row = fread($f, $wid2); 
-		$pixels = str_split($row, 3); 
+		$pixels = str_explode($row, 3); 
 		for ($x=0; $x<$wid; $x++) 
 		{ 
 			imagesetpixel($img, $x, $y, dwordize($pixels[$x])); 

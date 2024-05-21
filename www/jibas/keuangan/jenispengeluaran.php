@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -35,7 +35,7 @@ if (getLevel() == 2) { ?>
         alert('Maaf, anda tidak berhak mengakses halaman ini!');
         document.location.href = "penerimaan.php";
     </script>
-<? exit();
+<?php exit();
 } // end if
 
 $varbaris=10;
@@ -56,7 +56,7 @@ if (isset($_REQUEST['departemen']))
 	
 $op = $_REQUEST['op'];
 if ($op == "12134892y428442323x423") {
-	$sql = "DELETE FROM datapengeluaran WHERE replid = '$_REQUEST[id]'";
+	$sql = "DELETE FROM datapengeluaran WHERE replid = '".$_REQUEST['id']."'";
 	OpenDb();
 	QueryDb($sql);
 	CloseDb();
@@ -65,7 +65,7 @@ if ($op == "12134892y428442323x423") {
 }
 
 if ($op == "d28xen32hxbd32dn239dx") {
-	$sql = "UPDATE datapengeluaran SET aktif='$_REQUEST[newaktif]' WHERE replid='$_REQUEST[id]'";
+	$sql = "UPDATE datapengeluaran SET aktif='".$_REQUEST['newaktif']."' WHERE replid='".$_REQUEST['id']."'";
 	
 	OpenDb();
 	QueryDb($sql);
@@ -204,27 +204,27 @@ function change_baris() {
     	<td align="right" width="35%">
         <strong>Departemen&nbsp;</strong> 
         <select name="departemen" id="departemen" onChange="change_dep()">
-<?		OpenDb();
+<?php 	OpenDb();
 		$dep = getDepartemen(getAccess());
 		foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
         	<option value="<?=$value ?>" <?=StringIsSelected($departemen, $value) ?>  > <?=$value ?></option>
-<?		} ?>            
+<?php 	} ?>            
         </select>
         </td>
-<? 		
+<?php 		
 	$sql_tot = "SELECT * FROM datapengeluaran WHERE departemen='$departemen' ORDER BY replid";
 	
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	
 	$sql = "SELECT * FROM datapengeluaran WHERE departemen='$departemen' ORDER BY replid LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$akhir = ceil($jumlah/5)*5;
 	
 	$request = QueryDb($sql);
-	if (mysql_num_rows($request) > 0) {
+	if (mysqli_num_rows($request) > 0) {
 ?>   
        <input type="hidden" name="total" id="total" value="<?=$total?>"/>
         <td align="right">
@@ -244,31 +244,31 @@ function change_baris() {
         <td class="header" width="*">Keterangan</td>
         <td class="header" width="100">&nbsp;</td>
 	</tr>
-<?	
+<?php 
 	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($request)) { ?>
+	while ($row = mysqli_fetch_array($request)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt?></td>
         <td><?=$row['nama'] ?></td>
         <td>
-<?			$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekkredit]'";
+<?php 		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekkredit']."'";
 			$result = QueryDb($sql);
-			$row2 = mysql_fetch_row($result);
+			$row2 = mysqli_fetch_row($result);
 			$namarekkredit = $row2[0];
 	
-			$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekdebet]'";
+			$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekdebet']."'";
 			$result = QueryDb($sql);
-			$row2 = mysql_fetch_row($result);
+			$row2 = mysqli_fetch_row($result);
 			$namarekdebet = $row2[0]; ?>
 		<strong>Rek. Kas:</strong> <?=$row['rekkredit'] . " " . $namarekkredit ?><br />
         <strong>Rek. Beban:</strong> <?=$row['rekdebet'] . " " . $namarekdebet ?>        </td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center">
-        <?
+        <?php
 		$img = "aktif.png";
 		$pesan = "Status Aktif!"; 
 		if ($row['aktif'] == 0) {
@@ -280,7 +280,7 @@ function change_baris() {
         <a href="#" onClick="newWindow('jenispengeluaran_edit.php?id=<?=$row['replid']?>&departemen=<?=$row['departemen']?>', 'UbahJenisPengeluaran','450', '340','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pengeluaran!', this, event, '80px')"/></a>&nbsp;|&nbsp;
         <a href="#" onClick="hapus(<?=$row['replid'] ?>)"><img src="images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Pengeluaran!', this, event, '80px')"/></a>        </td>
     </tr>
-    <?
+    <?php
 	}
 	CloseDb();
 	?>
@@ -288,7 +288,7 @@ function change_baris() {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-<?	if ($page==0){ 
+<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -313,19 +313,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<td align="center">
     <!--input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -339,9 +339,9 @@ function change_baris() {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -349,7 +349,7 @@ function change_baris() {
 <!-- EOF CONTENT -->
 </td></tr>
 </table>
-<?	} else { ?>
+<?php } else { ?>
 	<td width="65%"></td>
 </tr>
 </table>
@@ -369,7 +369,7 @@ function change_baris() {
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>

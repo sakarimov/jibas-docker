@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -42,16 +42,16 @@ $departemen = "yayasan";
 
 $sql = "SELECT nama
           FROM jbssdm.pegawai
-         WHERE nip = '$nip'";   
+         WHERE nip = '".$nip."'";   
 $res = QueryDB($sql);	
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nama = $row[0];
 
 $sql = "SELECT kegiatan
           FROM jbssat.frkegiatan
          WHERE replid = $idkegiatan";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $kegiatan = $row[0];
 
 ?> 
@@ -68,7 +68,7 @@ $kegiatan = $row[0];
 <table border="0" cellpadding="2" cellpadding="0" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-		<? getHeader($departemen) ?>
+		<?php getHeader($departemen) ?>
 		<center>
 			<font size="4"><strong>DETAIL PRESENSI KEGIATAN GURU</strong></font><br />
 		</center>
@@ -97,7 +97,7 @@ $kegiatan = $row[0];
             <td width='12%' align='center' class='header'>Keter lambatan</td>
             <td width='*' align='left' class='header'>Keterangan</td>
         </tr>            
-<?
+<?php
     $cnt = 0;
     
     $sql = "SELECT p.replid, DATE_FORMAT(date_in, '%d %b %Y') AS date_in, time_in, DATE_FORMAT(date_out, '%d %b %Y') AS date_out, 
@@ -110,10 +110,10 @@ $kegiatan = $row[0];
                AND p.idkegiatan = $idkegiatan
              ORDER BY date_in DESC";         
     $res = QueryDb($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
-        $ti = trim($row["time_in"]);
-		$to = trim($row["time_out"]);
+        $ti = trim((string) $row["time_in"]);
+		$to = trim((string) $row["time_out"]);
 		$tomark = "";
         
 		//echo "$to<br>";
@@ -127,9 +127,9 @@ $kegiatan = $row[0];
                        AND hari = $wd";
 			//echo $sql;		   
             $res2 = QueryDb($sql);
-            if (mysql_num_rows($res2) > 0)
+            if (mysqli_num_rows($res2) > 0)
             {
-                $row2 = mysql_fetch_row($res2);
+                $row2 = mysqli_fetch_row($res2);
                 
                 $to = $row2[0] . ":00";
                 $tomark = " (std)";
@@ -163,9 +163,9 @@ $kegiatan = $row[0];
 					   AND hari = $wd";
 			
 			$res2 = QueryDb($sql);
-			if (mysql_num_rows($res2) > 0)
+			if (mysqli_num_rows($res2) > 0)
 			{
-				$row2 = mysql_fetch_row($res2);
+				$row2 = mysqli_fetch_row($res2);
 				$telatt = $row2[0];
 				
 				$telatm = DateArith::TimeToMinute($telatt);
@@ -192,7 +192,7 @@ $kegiatan = $row[0];
             <td align='center'><?= DateArith::ToStringHourFromMinute($telat) ?></td>
             <td align='left'><?= $row['description'] ?>&nbsp;</td>
         </tr>
-<?
+<?php
     }
 ?>
     </table>
@@ -203,6 +203,6 @@ $kegiatan = $row[0];
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

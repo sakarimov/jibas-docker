@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -48,7 +48,7 @@ if (isset($_REQUEST['hal']))
 	
 $op = $_REQUEST['op'];
 if ($op == "12134892y428442323x423") {
-	$sql = "DELETE FROM pemohonlain WHERE replid='$_REQUEST[id]'";
+	$sql = "DELETE FROM pemohonlain WHERE replid='".$_REQUEST['id']."'";
 	OpenDb();
 	QueryDb($sql);
 	CloseDb();
@@ -153,11 +153,11 @@ function change_baris() {
 	<td align="left" valign="top">
 	<input type="hidden" name="flag" id="flag" value="<?=$flag ?>" />
 	
-<?  OpenDb();
+<?php  OpenDb();
 	$sql_tot = "SELECT replid AS id, nama, keterangan FROM pemohonlain";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	
 	$offset = (int)$hal*(int)$varbaris;
 	
@@ -165,7 +165,7 @@ function change_baris() {
 	$akhir = ceil($jumlah/5)*5;	
 	$result = QueryDb($sql);
 	
-	if (@mysql_num_rows($result) > 0) {
+	if (@mysqli_num_rows($result) > 0) {
 	
 ?>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -173,9 +173,9 @@ function change_baris() {
     <tr>
       	<td align="right">
         <a href="#" onClick="refresh()"><img src="images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp; 
-        <?  if (getLevel() != 2) { ?> 
+        <?php  if (getLevel() != 2) { ?> 
         <a href="#" onClick="JavaScript:tambah()"><img src="images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')">Tambah Data Pemohon</a>&nbsp;
-        <?  } ?>
+        <?php  } ?>
     	</td>
     </tr>
 	</table>
@@ -190,34 +190,34 @@ function change_baris() {
         <td width="7%">No</td>
         <td width="30%">Nama</td>
         <td width="*">Keterangan</td>
-        <?  if (getLevel() != 2) { ?>
+        <?php  if (getLevel() != 2) { ?>
         <td width="12%">&nbsp;</td>
-        <? } ?>
+        <?php } ?>
         <td width="6%">&nbsp;</td>
 	</tr>
-<? 	
+<?php 	
 	if ($hal==0)
 		$no = 0;
 	else 
 		$no = (int)$hal*(int)$varbaris;
 
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr >
-    	<td align="center"  onClick="pilih('<?=$row[id]?>','<?=$row[nama]?>')" style="cursor:pointer"><?= ++$no ?></td>
-        <td  onClick="pilih('<?=$row[id]?>','<?=$row[nama]?>')" style="cursor:pointer"><?=$row['nama'] ?></td>
-        <td  onClick="pilih('<?=$row[id]?>','<?=$row[nama]?>')" style="cursor:pointer"><?=$row['keterangan'] ?></td>
-        <?  if (getLevel() != 2) { ?>
+    	<td align="center"  onClick="pilih('<?=$row['id']?>','<?=$row['nama']?>')" style="cursor:pointer"><?= ++$no ?></td>
+        <td  onClick="pilih('<?=$row['id']?>','<?=$row['nama']?>')" style="cursor:pointer"><?=$row['nama'] ?></td>
+        <td  onClick="pilih('<?=$row['id']?>','<?=$row['nama']?>')" style="cursor:pointer"><?=$row['keterangan'] ?></td>
+        <?php  if (getLevel() != 2) { ?>
         <td align="center">
         	<a href="#" onclick="ubah('<?=$row['id']?>')" ><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Data Pemohon!', this, event, '80px')"></a>&nbsp;
         	<a href="#" onClick="del(<?=$row['id']?>)"><img src="images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Data Pemohon!', this, event, '80px')"></a>&nbsp;
         </td>
-        <? } ?>
+        <?php } ?>
         <td>
         <input type="button" class="but" value="Pilih" onclick="pilih(<?=$row['id'] ?>, '<?=$row['nama'] ?>')" />
         </td>
     </tr>
     
-<? 	} 
+<?php 	} 
 	CloseDb();
 ?>
 	 <!-- END TABLE CONTENT -->
@@ -225,7 +225,7 @@ function change_baris() {
 	<script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-     <?	if ($page==0){ 
+     <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -250,19 +250,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -276,26 +276,26 @@ function change_baris() {
  		</td-->
         <td width="30%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-   <?	} else { ?>	
+<?php } else { ?>	
     <table width="100%" border="0" align="center">            
     <tr>
         <td align="center" valign="middle" height="200">    
            	<font size = "2" color ="red"><b>Tidak ditemukan adanya data 
-			<? if (getLevel() != 2) { ?>
+			<?php if (getLevel() != 2) { ?>
             <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-            <? } ?>
+            <?php } ?>
             </b></font>
         </td>
     </tr>
     </table>  
-<? } ?>   
+<?php } ?>   
 	</td>
 </tr> 
  <tr height="26">

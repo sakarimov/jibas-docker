@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -46,9 +46,9 @@ try
     OpenDb();
     $sql = "SELECT IF(nis IS NULL, 'P', 'S') AS ownertype
               FROM jbsvcr.video
-             WHERE replid = '$videoid'";
+             WHERE replid = '".$videoid."'";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         CloseDb();
         
@@ -57,7 +57,7 @@ try
         
         exit();
     }
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ownertype = $row[0];
     
     // == Prepare Folder
@@ -73,11 +73,11 @@ try
     if (!file_exists($uploadPath))
         mkdir($uploadPath, 0755);
         
-    $text = trim($_REQUEST['judul']);
+    $text = trim((string) $_REQUEST['judul']);
     $judul = $text;
     $fjudul = FormattedText($text);
     
-    $text = trim($_REQUEST['pesan']);
+    $text = trim((string) $_REQUEST['pesan']);
     $keterangan = RecodeNewLine($text);
     $fketerangan = FormattedText($text);
     $fprevketerangan = FormattedPreviewText($text, $previewTextLength);    
@@ -108,20 +108,20 @@ try
         // Delete Previous File
         $sql = "SELECT filename, location
                   FROM jbsvcr.video
-                 WHERE replid = '$videoid'";
+                 WHERE replid = '".$videoid."'";
         $res2 = QueryDbEx($sql);
-        $row2 = mysql_fetch_array($res2);
+        $row2 = mysqli_fetch_array($res2);
         $prevfile = "$FILESHARE_UPLOAD_DIR/" . $row2['location'] . "/" . $row2['filename'];
         if (file_exists($prevfile))
             unlink($prevfile);
         
         // Upload 
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         $name = $file['name'];
         $filetype = $file['type'];
         $filesize = $file['size'];
         $location = "anjungan/video/" . date('Y');
-        $filename = $videoid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $filename = $videoid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $dest = "$FILESHARE_UPLOAD_DIR/$location/$filename";
         
         move_uploaded_file($file['tmp_name'], $dest);
@@ -132,7 +132,7 @@ try
                        filename = '$filename', filesize = '$filesize', filetype = '$filetype',
                        fileinfo = '', ffileinfo = '', location = '$location',
                        lastactive = NOW(), lastread = NOW()
-                 WHERE replid = '$videoid'";
+                 WHERE replid = '".$videoid."'";
     }
     else
     {
@@ -140,7 +140,7 @@ try
                    SET judul = '$judul', fjudul = '$fjudul', keterangan = '$keterangan',
                        fprevketerangan = '$fprevketerangan', fketerangan = '$fketerangan',
                        lastactive = NOW(), lastread = NOW()
-                 WHERE replid = '$videoid'";
+                 WHERE replid = '".$videoid."'";
     }
     
     echo $sql;

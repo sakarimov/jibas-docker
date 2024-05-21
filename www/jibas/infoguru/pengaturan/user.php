@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -34,7 +34,7 @@ if (SI_USER_ID()!="landlord" && SI_USER_ID()!="LANDLORD"){
 alert ('Maaf Anda Tidak berhak mengakses halaman ini!');
 parent.framecenter.location.href="../center.php";
 </script>
-	<?
+	<?php
 }
 
 OpenDb();
@@ -43,18 +43,18 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "dw8dxn8w9ms8zs22") {
-	$sql = "UPDATE departemen SET aktif = $_REQUEST[newaktif] WHERE replid = $_REQUEST[replid] ";
+	$sql = "UPDATE departemen SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = {$_REQUEST['replid']} ";
 	QueryDb($sql);
 
 } 
 if ($op == "xm8r389xemx23xb2378e23") {
-	$sql0 = "SELECT * FROM jbsuser.hakakses WHERE login = '$_REQUEST[nip]' AND modul <> 'INFOGURU'";
+	$sql0 = "SELECT * FROM jbsuser.hakakses WHERE login = '".$_REQUEST['nip']."' AND modul <> 'INFOGURU'";
 	$result0 = QueryDb($sql0);
-	if (@mysql_num_rows($result0)==0){
-	$sql = "DELETE FROM jbsuser.login WHERE login = '$_REQUEST[nip]'";
+	if (@mysqli_num_rows($result0)==0){
+	$sql = "DELETE FROM jbsuser.login WHERE login = '".$_REQUEST['nip']."'";
 	$result = QueryDb($sql);
 	}
-	$sql1 = "DELETE FROM jbsuser.hakakses WHERE login = '$_REQUEST[nip]' AND modul='INFOGURU'";
+	$sql1 = "DELETE FROM jbsuser.hakakses WHERE login = '".$_REQUEST['nip']."' AND modul='INFOGURU'";
 	$result1 = QueryDb($sql1);
 	//echo $sql."<br>".$sql1;
 }
@@ -131,7 +131,7 @@ function cetak() {
     </tr>
 	</table>
 	<br /><br />
-    <?
+    <?php
 	$sql = "SELECT * FROM jbsuser.hakakses WHERE modul='INFOGURU' GROUP BY login ORDER BY login";
 	$result = QueryDB($sql);
 	?>
@@ -141,14 +141,14 @@ function cetak() {
       <td align="right">
     
     <a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-    <? if (@mysql_num_rows($result)>0){
+    <?php if (@mysqli_num_rows($result)>0){
 	?>
     <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
-    <? } ?>
-<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+    <?php } ?>
+<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
 	    <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah
 	    User</a>
-<?	} ?>    
+<?php } ?>    
     </td>
     </tr>
     </table><br />
@@ -161,37 +161,37 @@ function cetak() {
         <td width="10%" class="header" align="center">Last Login</td>
         <td width="*" class="header">&nbsp;</td>
     </tr>
-<? 	
-	if (@mysql_num_rows($result)>0){
+<?php 	
+	if (@mysqli_num_rows($result)>0){
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['login'] ?></td>
         <td>
-		<?
-		$sql_get_lvl="SELECT DATE_FORMAT(lastlogin,'%d-%m-%Y') as tanggal, TIME(lastlogin) as jam FROM jbsuser.hakakses WHERE login='$row[login]' AND modul='INFOGURU'";
+		<?php
+		$sql_get_lvl="SELECT DATE_FORMAT(lastlogin,'%d-%m-%Y') as tanggal, TIME(lastlogin) as jam FROM jbsuser.hakakses WHERE login='".$row['login']."' AND modul='INFOGURU'";
 		//echo $sql_get_lvl;
 		$result_get_lvl=QueryDb($sql_get_lvl);
-		$row_get_lvl=@mysql_fetch_array($result_get_lvl);
-		$sql_get_nama="SELECT nama FROM jbssdm.pegawai WHERE nip='$row[login]'";
+		$row_get_lvl=@mysqli_fetch_array($result_get_lvl);
+		$sql_get_nama="SELECT nama FROM jbssdm.pegawai WHERE nip='".$row['login']."'";
 		$result_get_nama=QueryDb($sql_get_nama);
-		$row_get_nama=@mysql_fetch_array($result_get_nama);
-		echo $row_get_nama[nama];
+		$row_get_nama=@mysqli_fetch_array($result_get_nama);
+		echo $row_get_nama['nama'];
 		?></td>
         <td><?=$row['keterangan'] ?></td>
-        <td align="center"><?=$row_get_lvl[tanggal]?><br><?=$row_get_lvl[jam]?></td>
+        <td align="center"><?=$row_get_lvl['tanggal']?><br><?=$row_get_lvl['jam']?></td>
         <td align="center">
         
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
             
             <a href="JavaScript:hapus('<?=$row['login'] ?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Pengguna!', this, event, '75px')"/></a>
-<?		} ?>        </td>
+<?php 	} ?>        </td>
     </tr>
-<?	} } else {
+<?php } } else {
 	 ?>
      <tr><td colspan="6" align="center">Tidak ada data User</td></tr>	
-	<?
+	<?php
 	}
 	?>
     
@@ -211,4 +211,4 @@ function cetak() {
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -62,18 +62,18 @@ alert ('Blank');
   <tr>
     <td width="32%" rowspan="3"><strong>Departemen :</strong>      <select name="departemen" id="departemen" onchange="change_departemen()">
           
-			<?
+			<?php
 				$sql = "SELECT * FROM jbsakad.departemen where aktif=1 ORDER BY urutan ASC";
 				OpenDb();
 				$result = QueryDb($sql);
 				CloseDb();
 			
-				while($row = mysql_fetch_array($result)) {
+				while($row = mysqli_fetch_array($result)) {
 					if ($departemen == "")
 						$departemen = $row['departemen'];
 			?>
-            		<option value="<?=urlencode($row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?> ><?=$row['departemen']?></option>
-            <?
+            		<option value="<?=urlencode((string) $row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?> ><?=$row['departemen']?></option>
+            <?php
 				} //while
 			?>
      	</select>    </td>

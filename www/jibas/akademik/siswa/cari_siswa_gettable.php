@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,7 +40,7 @@ require_once('../library/departemen.php');
     <td class="header">Kelas</td>
     <td class="header">&nbsp;</td>
   </tr>
-  <?
+  <?php
   if (isset($_REQUEST['cari'])){
 	$cari=$_REQUEST['cari'];
 	$jenis=$_REQUEST['jenis'];
@@ -50,18 +50,18 @@ require_once('../library/departemen.php');
 		<input type="hidden" name="departemen" id="departemen" value="<?=$departemen; ?>">
 		<input type="hidden" name="cari" id="cari" value="<?=$cari; ?>">
 		<input type="hidden" name="jenis" id="jenis" value="<?=$jenis; ?>">
-	<?
+	<?php
     OpenDb();
 		$sql_siswa = "SELECT nis,nama,idkelas from jbsakad.siswa WHERE $jenis LIKE '%$cari%' ORDER BY $urutan"; 
 		$result_siswa = QueryDb($sql_siswa);
 		$cnt_siswa = 0;
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {
 		$nis=$row_siswa['nis'];
 		$nama=$row_siswa['nama'];
-		$idkelas=$row_siswa[idkelas];
-				$sql_gabung = "SELECT t.replid,t.departemen,k.replid,k.kelas,k.idtingkat from jbsakad.tingkat t,jbsakad.kelas k WHERE k.replid='$idkelas' AND t.replid=k.idtingkat AND t.departemen = '$departemen'"; 
+		$idkelas=$row_siswa['idkelas'];
+				$sql_gabung = "SELECT t.replid,t.departemen,k.replid,k.kelas,k.idtingkat from jbsakad.tingkat t,jbsakad.kelas k WHERE k.replid='$idkelas' AND t.replid=k.idtingkat AND t.departemen = '".$departemen."'"; 
 				$result_gabung = QueryDb($sql_gabung);
-				if ($row_gabung = @mysql_fetch_row($result_gabung)) {
+				if ($row_gabung = @mysqli_fetch_row($result_gabung)) {
 				$kelas=$row_gabung[3];
 				}
 		?>
@@ -72,7 +72,7 @@ require_once('../library/departemen.php');
     <td><?=$kelas?></td>
     <td><a href="siswa_cari_detail.php?nis=<?=$nis?>" target="cari_siswa_content" ><img src="../images/ico/lihat.png" alt="Lihat Detail Siswa" border="0"/></a></td>
   </tr>
-  <?
+  <?php
   }
 		CloseDb();
 } //0

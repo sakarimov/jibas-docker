@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../../include/config.php");
 require_once("../../include/common.php");
 require_once("../../include/db_functions.php");
@@ -30,46 +30,46 @@ require_once('../../include/sessionchecker.php');
 
 function recursiveDataFolderDelete($iddir)
 {
-	$sql ="SELECT replid FROM jbsvcr.dirshare WHERE idroot = '$iddir'";
+	$sql ="SELECT replid FROM jbsvcr.dirshare WHERE idroot = '".$iddir."'";
 	$res = QueryDb($sql);
-	while ($row = @mysql_fetch_array($res))
+	while ($row = @mysqli_fetch_array($res))
 	{
-		$sql = "DELETE FROM jbsvcr.dirshare WHERE replid = '$row[replid]'";
+		$sql = "DELETE FROM jbsvcr.dirshare WHERE replid = '".$row['replid']."'";
 		QueryDb($sql);
 		
-		$sql = "DELETE FROM jbsvcr.fileshare WHERE iddir = '$row[replid]'";
+		$sql = "DELETE FROM jbsvcr.fileshare WHERE iddir = '".$row['replid']."'";
 		QueryDb($sql);
 		
-		recursiveDataFolderDelete($row[replid]);
+		recursiveDataFolderDelete($row['replid']);
 	}
 	
-	$sql = "DELETE FROM jbsvcr.dirshare WHERE replid = '$iddir'";
+	$sql = "DELETE FROM jbsvcr.dirshare WHERE replid = '".$iddir."'";
 	QueryDb($sql);
 	
-	$sql = "DELETE FROM jbsvcr.fileshare WHERE iddir = '$iddir'";
+	$sql = "DELETE FROM jbsvcr.fileshare WHERE iddir = '".$iddir."'";
 	QueryDb($sql);
 }
 
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 	
 if ($op == "cx5429zsda53h3cs52q836b")
 { 
-	$iddir = $_REQUEST[iddir];
+	$iddir = $_REQUEST['iddir'];
 	
 	OpenDb();
 	
 	$sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE idroot = 0";
    $res = QueryDb($sql);
-   $row = mysql_fetch_row($res);
+   $row = mysqli_fetch_row($res);
    $rootname = $row[0];
 	
-	$sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE replid = '$iddir'";
+	$sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE replid = '".$iddir."'";
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	
 	$FileShareDir = "$FILESHARE_UPLOAD_DIR/fileshare/";
-	$dir = str_replace($rootname, $FileShareDir, $row[0]);
+	$dir = str_replace($rootname, $FileShareDir, (string) $row[0]);
 	
 	deleteFolderRecursive($dir);
 	recursiveDataFolderDelete($iddir);
@@ -125,17 +125,17 @@ function RefreshDirTree()
 </style>
 </head>
 
-<body style="background-color:#e4faff" <? if (isset($_REQUEST[afteradd])) { ?> onLoad="expandTree('tree1');" <? } ?>>
+<body style="background-color:#e4faff" <?php if (isset($_REQUEST['afteradd'])) { ?> onLoad="expandTree('tree1');" <?php } ?>>
 <a href="#" onClick="document.location.reload()"><img src="../../images/ico/refresh.png" border="0" /></a>&nbsp;|&nbsp;<a href="#" onClick="expandTree('tree1'); return false;">Expand All</a>&nbsp;|&nbsp;
 <a href="#" onClick="collapseTree('tree1'); return false;">Collapse All</a><br /><br /><br />
-<?
+<?php
 function getNSubDir($idroot)
 {
 	global $idvolume;
 	
 	$sql = "SELECT count(*) FROM jbsvcr.dirshare WHERE idroot='$idroot'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	
 	return $row[0];
 }
@@ -157,7 +157,7 @@ function traverse($iddir, $count)
 	$result = QueryDb($sql);
 	$space = spacing($count);
 	
-	while ($row = mysql_fetch_row($result))
+	while ($row = mysqli_fetch_row($result))
 	{
 		$ajar="";
 		$msg="";
@@ -171,21 +171,21 @@ function traverse($iddir, $count)
 		{
 			$sql_get_wk = "SELECT p.nama as nama, k.kelas as kelas FROM jbsakad.kelas k, jbssdm.pegawai p WHERE p.nip='$idguru' AND k.nipwali=p.nip";
 			$res_get_wk	= QueryDb($sql_get_wk);
-			$num_wk = @mysql_num_rows($res_get_wk);
-			$row_wk = @mysql_fetch_array($res_get_wk);
-			$kelas = $row_wk[kelas];
-			$namaguru = $row_wk[nama];
+			$num_wk = @mysqli_num_rows($res_get_wk);
+			$row_wk = @mysqli_fetch_array($res_get_wk);
+			$kelas = $row_wk['kelas'];
+			$namaguru = $row_wk['nama'];
 
 			$sql_get_id = "SELECT pel.nama as pelajaran, pel.departemen as dep FROM jbsakad.pelajaran pel, jbsakad.guru g WHERE g.nip='$idguru' AND g.idpelajaran=pel.replid";
 			$res_get_id	= QueryDb($sql_get_id);
-			$num_pel = @mysql_num_rows($res_get_id);
+			$num_pel = @mysqli_num_rows($res_get_id);
 			if ($num_pel > 0)
 			{
 				$ajar="<b><u>Mengajar : </u></b>";
 				$cnt=1;
-				while ($row_pel = @mysql_fetch_array($res_get_id))
+				while ($row_pel = @mysqli_fetch_array($res_get_id))
 				{
-					$ajar=$ajar."<br>".$cnt.". ".$row_pel[pelajaran]." (".$row_pel[dep].")";
+					$ajar=$ajar."<br>".$cnt.". ".$row_pel['pelajaran']." (".$row_pel['dep'].")";
 					$cnt++;
 				}
 				$ajar=$ajar."<br>";
@@ -209,7 +209,7 @@ function traverse($iddir, $count)
 				if ($msg == "")
 					echo "<img onclick='delfolder($iddir)' src='../../images/ico/hapus.png'>";
 			}
-			else if (strtoupper(SI_USER_ID()) == "LANDLORD")
+			else if (strtoupper((string) SI_USER_ID()) == "LANDLORD")
 			{
 				if ($msg == "")
 					echo "<img onclick='delfolder($iddir)' src='../../images/ico/hapus.png'>";
@@ -227,7 +227,7 @@ function traverse($iddir, $count)
 					if ($msg == "")
 						echo "<img onclick='delfolder($iddir)' src='../../images/ico/hapus.png'>";
 			}
-			else if (strtoupper(SI_USER_ID()) =="LANDLORD")
+			else if (strtoupper((string) SI_USER_ID()) =="LANDLORD")
 			{
 				if ($msg == "")
 					echo "<img onclick='delfolder($iddir)' src='../../images/ico/hapus.png'>";
@@ -248,9 +248,9 @@ OpenDb();
 
 $sql = "SELECT d.replid, d.dirname, d.idguru FROM jbsvcr.dirshare d WHERE d.idroot=0";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$iddir = $row[0];
 	$dirname = $row[1];
 	$idguru = $row[2];
@@ -260,7 +260,7 @@ if (mysql_num_rows($result) > 0)
 	if ($nsubdir == 0)
 	{
 		echo "&nbsp;<li class='liBullet'>&nbsp;<a style='text-decoration:none;' href='files.php?iddir=$iddir' target='files'><img src='../../images/ico/folder.gif' border='0'>&nbsp;(root)</a>&nbsp;";
-		if (SI_USER_ID() == $idguru || strtoupper(SI_USER_ID()) =="LANDLORD")
+		if (SI_USER_ID() == $idguru || strtoupper((string) SI_USER_ID()) =="LANDLORD")
 			echo "</li>\r\n";
 	}
 	else

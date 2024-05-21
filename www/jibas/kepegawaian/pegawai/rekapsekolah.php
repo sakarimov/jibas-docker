@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,18 +56,18 @@ function CetakWord() {
 </td></tr>
 </table>
 
-<?
+<?php
 OpenDb();
 $sql = "SELECT pendidikan FROM jbsumum.tingkatpendidikan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$tingkat[] = $row[0];
 }
 $width = floor(60 / count($tingkat));
 
 $sql = "SELECT satker FROM satker";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$satker[] = $row['satker'];
 }
 
@@ -77,7 +77,7 @@ $sql = "SELECT j.satker, ps.tingkat, COUNT(p.nip) AS cnt
         pl.idpegjab = pj.replid AND pj.idjabatan = j.replid GROUP BY j.satker, ps.tingkat HAVING NOT j.satker IS NULL";
 //echo $sql;		
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$s = $row['satker'];
 	$t = $row['tingkat'];
 	$data[$s][$t] = $row['cnt'];
@@ -87,12 +87,12 @@ while ($row = mysql_fetch_array($result)) {
 <tr height="25">
 	<td class="header" align="center" width="5%">No</td>
     <td class="header" align="center" width="23%">Satuan Kerja</td>
-<? 	for ($i = 0; $i < count($tingkat); $i++) { ?>
+<?php 	for ($i = 0; $i < count($tingkat); $i++) { ?>
 	<td class="header" align="center" width="<?=$width?>%"><?=$tingkat[$i]?></td>
-<? 	} ?>    
+<?php 	} ?>    
     <td class="header" align="center" width="10%">Jumlah</td>
 </tr>
-<?
+<?php
 $cnt = 0;
 for($i = 0; $i < count($satker); $i++) {
 	$sk = $satker[$i];
@@ -100,7 +100,7 @@ for($i = 0; $i < count($satker); $i++) {
 <tr height="20">
 	<td align="center" valign="top"><?=++$cnt?></td>
     <td align="left" valign="top"><?=$sk?></td>
-    <? 
+    <?php 
 	$jrow = 0;
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
@@ -109,19 +109,19 @@ for($i = 0; $i < count($satker); $i++) {
 		$jrow += $nilai; 
 		$ttingkat[$t] += $nilai; ?>
 	    <td align="center" valign="top"><?=$nilai?></td>
-    <? 
+    <?php 
 	}
 	$tjrow += $jrow;
 	?>
     <td align="center" valign="top"><?=$jrow?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>JUMLAH</strong></td>
-    <? 
+    <?php 
 	$total = 0;
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
@@ -129,16 +129,16 @@ for($i = 0; $i < count($satker); $i++) {
 		$nilai = $ttingkat[$t]; 
 		$total += $nilai; ?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$nilai?></strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$total?></strong></td>
 </tr>
-<? if ($total > 0) { ?>
+<?php if ($total > 0) { ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>PERSENTASE</strong></td>
-    <? 
+    <?php 
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
 		$t = $tingkat[$j];
@@ -146,12 +146,12 @@ for($i = 0; $i < count($satker); $i++) {
 		$pct = "";
 		$pct = round($nilai / $total, 2) * 100;	?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$pct?>%</strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>100%</strong></td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <script language='JavaScript'>

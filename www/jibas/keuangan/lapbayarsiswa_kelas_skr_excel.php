@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -57,7 +57,7 @@ if (isset($_REQUEST['idkelas']))
 OpenDb();	
 $sql = "SELECT departemen FROM jbsakad.angkatan WHERE replid='$idangkatan'"; 	
 $result = QueryDb($sql);    
-$row = mysql_fetch_row($result);	
+$row = mysqli_fetch_row($result);	
 $departemen = $row[0];	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -69,7 +69,7 @@ $departemen = $row[0];
 
 <body>
 
-<?
+<?php
 OpenDb();
 
 $sql = "SELECT replid FROM tahunbuku WHERE departemen='$departemen' AND aktif=1";
@@ -99,13 +99,13 @@ else
 										  AND p.idpenerimaan = '$idpenerimaan' GROUP BY p.nis) as X)";
 }	
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $max_n_bayar = $row[0];
 $table_width = 520 + $max_n_bayar * 100;
 
 $sql = "SELECT nama FROM datapenerimaan WHERE replid = $idpenerimaan";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 ?>
 
@@ -120,15 +120,15 @@ $namapenerimaan = $row[0];
     <td width="90" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">N I S</font></strong></td>
     <td width="160" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Nama</font></strong></td>
     <td width="50" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Kelas</font></strong></td>
-<?	for($i = 0; $i < $max_n_bayar; $i++) { ?>
+<?php for($i = 0; $i < $max_n_bayar; $i++) { ?>
 	<td width="100" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Bayaran-
       <?=$i + 1 ?>
 	</font></strong></td>
-<?  } ?>
+<?php  } ?>
     <td width="100" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Total Pembayaran</font></strong></td>
     <!--<td class="header" width="200" align="center">Keterangan</td>-->
 </tr>
-<?
+<?php
 OpenDb();
 if ($idtingkat == -1) 
 {
@@ -179,7 +179,7 @@ else
 $result = QueryDb($sql);
 $cnt = 0;
 $totalall = 0;
-while ($row = mysql_fetch_array($result)) { 
+while ($row = mysqli_fetch_array($result)) { 
 	$bg1="#ffffff";
 	if ($cnt==0 || $cnt%2==0)
 		$bg1="#fcffd3";
@@ -199,17 +199,17 @@ while ($row = mysql_fetch_array($result)) {
 <td align="center"><font size="2" face="Arial">
         <?=$row['kelas'] ?>
         </font></td>
-<?		$sql = "SELECT date_format(p.tanggal, '%d-%b-%y') as tanggal, jumlah 
+<?php 	$sql = "SELECT date_format(p.tanggal, '%d-%b-%y') as tanggal, jumlah 
 	           FROM penerimaaniuran p, jurnal j
 			  WHERE p.idjurnal = j.replid AND j.idtahunbuku = '$idtahunbuku' 
-			    AND nis = '$row[nis]' AND idpenerimaan = '$idpenerimaan'";
+			    AND nis = '".$row['nis']."' AND idpenerimaan = '".$idpenerimaan."'";
 		$result2 = QueryDb($sql);
-		$nbayar = mysql_num_rows($result2);
+		$nbayar = mysqli_num_rows($result2);
 		$nblank = $max_n_bayar - $nbayar;
 		
 		$totalbayar = 0;
 		$x=0;
-		while ($row2 = mysql_fetch_array($result2)) {
+		while ($row2 = mysqli_fetch_array($result2)) {
 			$bg2=$bg1;
 			if ($x%2==0 || $x==0)
 				$bg2="#d3fffd";
@@ -223,7 +223,7 @@ while ($row = mysql_fetch_array($result)) {
                 <?=$row2['tanggal'] ?>
                 </font></td></tr>
       </table>            </td>
-<?		
+<?php 	
 		$x++;
 		} //end for 
 		$totalall += $totalbayar;
@@ -234,20 +234,20 @@ while ($row = mysql_fetch_array($result)) {
                 <tr height="20"><td align="center">&nbsp;</td></tr>
                 <tr height="20"><td align="center">&nbsp;</td></tr>
       </table>            </td>
-<?		} //end for ?>        
+<?php 	} //end for ?>        
 		<td align="right"><font size="2" face="Arial">
 	    <?=$totalbayar ?>
 		</font></td>
       <!--<td align="right"><?=$row['keterangan'] ?></td>-->
     </tr>
-<? } //end for ?>
+<?php } //end for ?>
 	<tr height="30">
     	<td bgcolor="#999900" align="center" colspan="<?=4 + $max_n_bayar ?>"><font color="#FFFFFF" size="2" face="Arial"><strong>T O T A L</strong></font></td>
         <td bgcolor="#999900" align="right"><font color="#FFFFFF" size="2" face="Arial"><strong><?=$totalall ?></strong></font></td>
         <!--<td bgcolor="#999900">&nbsp;</td>-->
     </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>
 

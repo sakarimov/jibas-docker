@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -29,9 +29,9 @@ require_once('../include/theme.php');
 require_once('../include/db_functions.php');
 require_once('../library/departemen.php');
 OpenDb();
-$departemen=$_REQUEST[departemen];
-$nis=$_REQUEST[nis];
-$nama=$_REQUEST[nama];
+$departemen=$_REQUEST['departemen'];
+$nis=$_REQUEST['nis'];
+$nama=$_REQUEST['nama'];
 if ($nis<>"" && $nama=="")
 	$sql="SELECT * FROM jbsakad.siswa WHERE nis LIKE '%$nis%' ORDER BY idkelas,nama";
 if ($nama<>"" && $nis=="")
@@ -50,10 +50,10 @@ kjhsjdfjuygkjgkhgfukhg
     <td  height="30" align="center"  class="header">Nama</td>
     <td  height="30" align="center"  class="header">Kelas</td>
 </tr>
-<?
-if (@mysql_num_rows($result)>0){
+<?php
+if (@mysqli_num_rows($result)>0){
 $i=1;
-while ($row=@mysql_fetch_array($result)){
+while ($row=@mysqli_fetch_array($result)){
 //$font2="</font>";
 if (($i%2)<>0){
 	$bg="bgcolor='#C0C0C0'";
@@ -64,11 +64,11 @@ if (($i%2)<>0){
 ?>
 <tr>
     <td align="center" <?=$bg?>><?=$i?></td>
-    <td align="center" <?=$bg?>><?=$row[nis]?></td>
-    <td  <?=$bg?>><?=$row[nama]?></td>
-    <td  <?=$bg?>><?=$row[idkelas]?></td>
+    <td align="center" <?=$bg?>><?=$row['nis']?></td>
+    <td  <?=$bg?>><?=$row['nama']?></td>
+    <td  <?=$bg?>><?=$row['idkelas']?></td>
 </tr>
-<?
+<?php
 $i++;
 }
 } else {
@@ -77,7 +77,7 @@ $i++;
 <tr>
     <td colspan="4" align="center" height="25">Tidak ditemukan data</td>
 </tr>
-<?
+<?php
 
 }
 ?>

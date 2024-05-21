@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -31,11 +31,11 @@ header('Content-Disposition: attachment; filename=Data_Calon_Siswa.xls');
 header('Expires: 0');  
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
-$departemen=$_REQUEST[departemen];
-$proses=$_REQUEST[proses];
-$kelompok=$_REQUEST[kelompok];
-$urut= $_REQUEST[urut];
-$urutan = $_REQUEST[urutan];
+$departemen=$_REQUEST['departemen'];
+$proses=$_REQUEST['proses'];
+$kelompok=$_REQUEST['kelompok'];
+$urut= $_REQUEST['urut'];
+$urutan = $_REQUEST['urutan'];
 
 OpenDb();
 
@@ -49,7 +49,7 @@ $sql = "SELECT *,c.info1 AS hp2,c.info2 AS hp3
 		 ORDER BY $urut $urutan";
 		$result = QueryDb($sql);
 		
-if (@mysql_num_rows($result)<>0){
+if (@mysqli_num_rows($result)<>0){
 ?>
 <html>
 <head>
@@ -75,10 +75,10 @@ Data Siswa per Kelas
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
-        <?
+        <?php
         $sql_proses = "SELECT proses FROM prosespenerimaansiswa where replid='$proses'";
         $result_proses = QueryDb($sql_proses);
-        $row_proses = @mysql_fetch_array($result_proses);
+        $row_proses = @mysqli_fetch_array($result_proses);
         ?>
         <td width="24%">Departemen</td>
         <td width="76%"><strong>:</strong>&nbsp;<?=$departemen?></td>
@@ -91,11 +91,11 @@ Data Siswa per Kelas
     </tr>
     <tr>
         <td>Kelompok Calon Siswa</td>
-        <td><strong>:</strong>&nbsp;<?
+        <td><strong>:</strong>&nbsp;<?php
             $sql_kel = "SELECT kelompok FROM kelompokcalonsiswa WHERE replid='$kelompok'";
             $result_kel = QueryDb($sql_kel);
-            $row_kel=@mysql_fetch_array($result_kel);
-            echo $row_kel[kelompok];
+            $row_kel=@mysqli_fetch_array($result_kel);
+            echo $row_kel['kelompok'];
             ?></td>
     </tr>
     <tr>
@@ -153,18 +153,18 @@ Data Siswa per Kelas
         <td rowspan="2" valign="middle" bgcolor="#666666"><div align="center" class="style1">HP #2</div></td>
         <td rowspan="2" valign="middle" bgcolor="#666666"><div align="center" class="style1">HP #3</div></td>
 <?php
-        $arrDataTambahan = array();
+        $arrDataTambahan = [];
         $sql = "SELECT replid, jenis, kolom
                   FROM tambahandata 
                  WHERE aktif = 1
                    AND departemen = '$departemen'
                  ORDER BY urutan";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $arrDataTambahan[] = array($row[0], $row[1]);
+            $arrDataTambahan[] = [$row[0], $row[1]];
             $kolom = $row[2];
-            echo "<td rowspan=\"2\" valign=\"middle\" bgcolor=\"#666666\"><div align=\"center\" class=\"style1\">$kolom</div></td>";
+            echo "<td rowspan=\"2\" valign=\"middle\" bgcolor=\"#666666\"><div align=\"center\" class=\"style1\"".$kolom."</div></td>";
         }
             ?>
         <td rowspan="2" valign="middle" bgcolor="#666666"><div align="center" class="style1">Sumbangan 1</div></td>
@@ -199,14 +199,14 @@ Data Siswa per Kelas
         <td valign="middle" bgcolor="#666666"><div align="center" class="style1">Pekerjaan</div></td>
         <td valign="middle" bgcolor="#666666"><div align="center" class="style1">Penghasilan</div></td>
     </tr>
-<?
+<?php
     $cnt=1;
-    while ($row=@mysql_fetch_array($result)){
+    while ($row=@mysqli_fetch_array($result)){
         $siswa = "";
         if ($row['replidsiswa'] <> 0) {
-            $sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = $row[replidsiswa]";
+            $sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = ".$row['replidsiswa']."";
             $result3 = QueryDb($sql3);
-            $row3 = @mysql_fetch_array($result3);
+            $row3 = @mysqli_fetch_array($result3);
             $siswa = "<br>NIS Siswa: <b>".$row3['nis']."</b>";
         }
             ?>
@@ -266,7 +266,7 @@ Data Siswa per Kelas
                 <td align="left"><?=$row['hportu']?></td>
                 <td align="left"><?=$row['hp2']?></td>
                 <td align="left"><?=$row['hp3']?></td>
-                <?
+                <?php
                 $no = $row['nopendaftaran'];
                 for($i = 0; $i < count($arrDataTambahan); $i++)
                 {
@@ -274,16 +274,16 @@ Data Siswa per Kelas
                     $jenis = $arrDataTambahan[$i][1];
 
                     if ($jenis == 1 || $jenis == 3)
-                        $sql = "SELECT teks FROM tambahandatacalon WHERE nopendaftaran = '$no' AND idtambahan = '$idtambahan'";
+                        $sql = "SELECT teks FROM tambahandatacalon WHERE nopendaftaran = '$no' AND idtambahan = '".$idtambahan."'";
                     else
-                        $sql = "SELECT filename FROM tambahandatacalon WHERE nopendaftaran = '$no' AND idtambahan = '$idtambahan'";
+                        $sql = "SELECT filename FROM tambahandatacalon WHERE nopendaftaran = '$no' AND idtambahan = '".$idtambahan."'";
 
                     $data = "";
                     $res2 = QueryDb($sql);
-                    if ($row2 = mysql_fetch_row($res2))
+                    if ($row2 = mysqli_fetch_row($res2))
                         $data = $row2[0];
 
-                    echo "<td align=\"left\">$data</td>";
+                    echo "<td align=\"left\"".$data."</td>";
                 }
                 ?>
                 <td align="left"><?=$row['sum1']?></td>
@@ -299,15 +299,15 @@ Data Siswa per Kelas
                 <td align="left"><?=$row['ujian9']?></td>
                 <td align="left"><?=$row['ujian10']?></td>
 
-                <td align="center"><?
+                <td align="center"><?php
 
-                    if ($row[aktif]==1)
+                    if ($row['aktif']==1)
                         echo "Aktif".$siswa;
-                    if ($row[aktif]==0)
+                    if ($row['aktif']==0)
                         echo "Tidak aktif".$siswa;
                     ?></td>
             </tr>
-            <?
+            <?php
             $cnt++;
         } ?>
     </table>
@@ -319,7 +319,7 @@ Data Siswa per Kelas
 
 </body>
 </html>
-<?
+<?php
 }
 CloseDb();
 ?>

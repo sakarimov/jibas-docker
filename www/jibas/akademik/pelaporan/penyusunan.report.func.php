@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetFileName()
 {
     $tipe = $_REQUEST['tipe'];
@@ -40,9 +40,9 @@ function GetFileName()
         {
             $sql = "SELECT tingkat
                       FROM jbsakad.tingkat
-                     WHERE replid = '$tingkat'";
+                     WHERE replid = '".$tingkat."'";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             
             $name .= "_T" . FormatName($row[0]);
         }
@@ -55,9 +55,9 @@ function GetFileName()
         {
             $sql = "SELECT kelas
                       FROM jbsakad.kelas
-                     WHERE replid = '$kelas'";
+                     WHERE replid = '".$kelas."'";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             
             $name .= "_K" . FormatName($row[0]);
         }
@@ -72,7 +72,7 @@ function GetFileName()
 
 function FormatName($name)
 {
-    $name = str_replace(" ", "_", $name);
+    $name = str_replace(" ", "_", (string) $name);
     $name = str_replace("'", "", $name);
     
     return $name;
@@ -128,7 +128,7 @@ function GetNisList(&$ndata)
         
         // Cek dulu apa NIS nya valid 
         $nisinfo = $_REQUEST['nisinfo'];
-        $temp = split(",", $nisinfo);
+        $temp = explode(",", (string) $nisinfo);
         
         if (0 == count($temp))
         {
@@ -163,7 +163,7 @@ function GetNisList(&$ndata)
     $ndata = 0;
     $nisList = "";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($nisList != "")
             $nisList .= ",";
@@ -174,16 +174,15 @@ function GetNisList(&$ndata)
     return $nisList;
 }
 
-function SetDocHeader($ndata, $title)
-{
-    ?>
+function SetDocHeader($ndata, $title){
+echo <<<HTML
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
 <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 9">
 <meta name=Originator content="Microsoft Word 9">
-<title><?=$title?></title>
+<title>$title</title>
 <!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>JIBAS</o:Author>
@@ -206,7 +205,7 @@ p.MsoNormal, li.MsoNormal, div.MsoNormal
 	font-size:12.0pt;
 	font-family:"Verdana";
 	mso-fareast-font-family:"Verdana";}
-<?
+HTML;
 $showLampiran = isset($_REQUEST['chLampiran']);
 $showInfo = isset($_REQUEST['chNilai']) ||
             isset($_REQUEST['chKeuangan']) ||
@@ -215,62 +214,67 @@ $showInfo = isset($_REQUEST['chNilai']) ||
             
 for($i = 1; $i <= $ndata; $i++)
 {
-?>
-@page Section<?=$i?>
+echo <<<HTML
+@page Section$i
 	{size:595.3pt 841.9pt;
 	margin:35.45pt 72.0pt 35.45pt 72.0pt;
 	mso-header-margin:35.4pt;
 	mso-footer-margin:35.4pt;
 	mso-paper-source:0;}
-div.Section<?=$i?>
-	{page:Section<?=$i?>;}
-<? if ($showLampiran) { ?>    
-@page SectionLampiran<?=$i?>
+div.Section$i
+	{page:Section$i;}
+HTML;    
+if ($showLampiran) {
+echo <<<HTML
+@page SectionLampiran$i
 	{size:595.3pt 841.9pt;
 	margin:35.45pt 72.0pt 35.45pt 72.0pt;
 	mso-header-margin:35.4pt;
 	mso-footer-margin:35.4pt;
 	mso-paper-source:0;}
-div.SectionLampiran<?=$i?>
-	{page:SectionLampiran<?=$i?>;}
-<? } // end if?>
-<? if ($showInfo) { ?> 
-@page SectionInfo<?=$i?>
+div.SectionLampiran$i
+	{page:SectionLampiran$i;}
+HTML;
+}
+if ($showInfo) {
+echo <<<HTML
+@page SectionInfo$i
 	{size:595.3pt 841.9pt;
 	margin:35.45pt 72.0pt 35.45pt 72.0pt;
 	mso-header-margin:35.4pt;
 	mso-footer-margin:35.4pt;
 	mso-paper-source:0;}
-div.SectionInfo<?=$i?>
-	{page:SectionInfo<?=$i?>;}
-<? } // end if ?>    
-<?
+div.SectionInfo$i
+	{page:SectionInfo$i;}
+HTML;
+}
+
 } // end for
-?>
+echo <<<HTML
 </style>
 </head>
 
 <body lang=EN-US style='tab-interval:.5in'>
-<?
+HTML;
 }
 
 function SetDocFooter()
 {
-    ?>
+echo '
 </body>
 </html>
-<?    
+';   
 }
 
 function SectionBreak()
 {
-    ?>
+echo <<<HTML
 <span style='font-size:12.0pt;font-family:"Times New Roman";mso-fareast-font-family:
 "Times New Roman";mso-ansi-language:EN-US;mso-fareast-language:EN-US;
 mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always;
 mso-break-type:section-break'>
 </span>    
-<?    
+HTML;
 }
 
 function SetAddress()
@@ -288,9 +292,9 @@ function SetAddress()
         
         echo "<font style='font-family: Verdana; line-height: 18px; font-size: 14px;'>\r\n";
         echo "Kepada Yth:<br>\r\n";
-        if (strlen(trim($ortu)) != 0)
+        if (strlen(trim((string) $ortu)) != 0)
             echo "<strong>$ortu</strong><br>\r\n";
-        echo "Orangtua <strong>" . strtoupper($nama) . "</strong><br>\r\n";
+        echo "Orangtua <strong>" . strtoupper((string) $nama) . "</strong><br>\r\n";
         echo "$alamat<br>\r\n";
         echo "$kodepos<br>\r\n";
         echo "</font>\r\n";
@@ -310,9 +314,9 @@ function SetAddress()
         
         echo "<font style='font-family: Verdana; line-height: 18px; font-size: 14px;'>\r\n";
         echo "Kepada Yth:<br>\r\n";
-        if (strlen(trim($ortu)) != 0)
+        if (strlen(trim((string) $ortu)) != 0)
             echo "<strong>$ortu</strong><br>\r\n";
-        echo "Orangtua <strong>" . strtoupper($nama) . "</strong><br>\r\n";
+        echo "Orangtua <strong>" . strtoupper((string) $nama) . "</strong><br>\r\n";
         echo "$alamat<br>\r\n";
         echo "$kodepos<br>\r\n";
         echo "</font>\r\n";
@@ -333,18 +337,18 @@ function SetHeader()
 	$sql = "SELECT replid, nama, alamat1, alamat2, telp1, telp2, telp3, telp4,
                    fax1, fax2, situs, email
               FROM jbsumum.identitas
-             WHERE departemen = '$departemen'";
+             WHERE departemen = '".$departemen."'";
 
 	$result = QueryDb($sql);
-    $num = @mysql_num_rows($result);
-	$row = @mysql_fetch_row($result);
+    $num = @mysqli_num_rows($result);
+	$row = @mysqli_fetch_row($result);
 	$replid  = $row[0];
 	$nama	 = $row[1];
 	$alamat1 = $row[2];
 	$alamat2 = $row[3];
 	$te1p1   = $row[4];
 	$telp2   = $row[5];
-	$te1p3   = $row[6];
+	$telp3   = $row[6];
 	$telp4   = $row[7];
 	$fax1    = $row[8];
 	$fax2    = $row[9];
@@ -354,7 +358,7 @@ function SetHeader()
 	echo "<table style='font-family: Arial; font-size: 12px; font-weight: bold;' border='0' cellpadding='0' cellspacing='0' width='100%'>\r\n";
 	echo "<tr>\r\n";
 	echo "  <td width='20%' align='center'>\r\n";
-	echo "      <img src='" . $full_url . "library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . rand(1, 5000) . "' />\r\n";
+	echo "      <img src='" . $full_url . "library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . random_int(1, 5000) . "' />\r\n";
 	echo "  </td>\r\n";
 	echo "	<td valign='top' align='left'>\r\n";
 	if ($num > 0)
@@ -429,7 +433,7 @@ function SetAutoFormat($text)
 {
     global $nis, $nama, $kelas, $pin, $departemen;
        
-    $ftext = str_replace("{NIS}", $nis, $text);
+    $ftext = str_replace("{NIS}", $nis, (string) $text);
     $ftext = str_replace("{NAMA}", $nama, $ftext);
     $ftext = str_replace("{KELAS}", $kelas, $ftext);
     $ftext = str_replace("{PIN}", $pin, $ftext);
@@ -502,7 +506,7 @@ function SetInfoNilai()
     echo "<td width='8%' align='center'>&nbsp;</td>\r\n";
     echo "<td width='*' align='center'>Keterangan</td>\r\n";
     echo "</tr>";
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<tr height='40'>\r\n";
         echo "<td colspan='8' align='center' valign='middle'>\r\n";
@@ -513,7 +517,7 @@ function SetInfoNilai()
     else
     {
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             
@@ -525,13 +529,13 @@ function SetInfoNilai()
             
             echo "<tr height='24'>\r\n";
             echo "<td align='center'>$no</td>\r\n";
-            echo "<td align='center'>$row[xtanggal]</td>\r\n";
-            echo "<td align='left'>$row[pelajaran]</td>\r\n";
-            echo "<td align='left'>$row[jenisujian]</td>\r\n";
-            echo "<td align='center'>$row[nilaiujian]</td>\r\n";
-            echo "<td align='center'>$row[nilaiRK]</td>\r\n";
+            echo "<td align='center'>".$row['xtanggal']."</td>\r\n";
+            echo "<td align='left'>".$row['pelajaran']."</td>\r\n";
+            echo "<td align='left'>".$row['jenisujian']."</td>\r\n";
+            echo "<td align='center'>".$row['nilaiujian']."</td>\r\n";
+            echo "<td align='center'>".$row['nilaiRK']."</td>\r\n";
             echo "<td align='center'><font style='color: $colordev'>$dev</font></td>\r\n";
-            echo "<td align='left'>$row[keterangan]</td>\r\n";
+            echo "<td align='left'>".$row['keterangan']."</td>\r\n";
             echo "</tr>\r\n";
             
         }
@@ -586,7 +590,7 @@ function SetInfoKeuangan()
     echo "<td style='background-color: #ddd' align='left' colspan='6' valign='middle'><strong>Pembayaran Iuran Wajib</strong></td>\r\n";
     echo "</tr>\r\n";
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<tr height='40'>\r\n";
         echo "<td colspan='6' align='center' valign='middle'>\r\n";
@@ -597,24 +601,24 @@ function SetInfoKeuangan()
     else
     {
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             
-            $keterangan = trim($row['keterangan']);
+            $keterangan = trim((string) $row['keterangan']);
             $rowspan = strlen($keterangan) == 0 ? "" : "rowspan='2'";
             
             $sql = "SELECT SUM(jumlah) + SUM(info1)
                       FROM jbsfina.penerimaanjtt
-                     WHERE idbesarjtt = $row[idbesarjtt]";
+                     WHERE idbesarjtt = '".$row['idbesarjtt']."'";
             $res2 = QueryDb($sql);
-            $row2 = mysql_fetch_row($res2);
+            $row2 = mysqli_fetch_row($res2);
             $sisa = $row['besar'] - $row2[0];
             
             echo "<tr height='24'>\r\n";
             echo "<td align='center' valign='middle' $rowspan>$no</td>\r\n";
-            echo "<td align='center'>$row[xtanggal]</td>\r\n";
-            echo "<td align='left'>$row[nama]</td>\r\n";
+            echo "<td align='center'>".$row['xtanggal']."</td>\r\n";
+            echo "<td align='left'>".$row['nama']."</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($row['jumlah']) . "</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($row['diskon']) . "</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($sisa) . "</td>\r\n";
@@ -643,7 +647,7 @@ function SetInfoKeuangan()
     echo "<td style='background-color: #ddd' align='left' colspan='6' valign='middle'><strong>Pembayaran Iuran Sukarela</strong></td>\r\n";
     echo "</tr>\r\n";
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<tr height='40'>\r\n";
         echo "<td colspan='6' align='center' valign='middle'>\r\n";
@@ -654,17 +658,17 @@ function SetInfoKeuangan()
     else
     {
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             
-            $keterangan = trim($row['keterangan']);
+            $keterangan = trim((string) $row['keterangan']);
             $rowspan = strlen($keterangan) == 0 ? "" : "rowspan = '2'";
             
             echo "<tr height='24'>\r\n";
             echo "<td align='center' valign='middle' $rowspan>$no</td>\r\n";
-            echo "<td align='center'>$row[xtanggal]</td>\r\n";
-            echo "<td align='left'>$row[nama]</td>\r\n";
+            echo "<td align='center'>".$row['xtanggal']."</td>\r\n";
+            echo "<td align='left'>".$row['nama']."</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($row['jumlah']) . "</td>\r\n";
             echo "<td align='right'>-</td>\r\n";
             echo "<td align='right'>-</td>\r\n";
@@ -703,7 +707,7 @@ function SetInfoKeuangan()
               ORDER BY nama";
     $res = QueryDb($sql);
 
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $idTab = $row['idtabungan'];
         $nmTab = $row['nama'];
@@ -712,9 +716,9 @@ function SetInfoKeuangan()
         $sql = "SELECT SUM(debet), SUM(kredit)
                   FROM jbsfina.tabungan
                  WHERE idtabungan = '$idTab'
-                   AND nis = '$nis'";
+                   AND nis = '".$nis."'";
         $res2 = QueryDb($sql);
-        if ($row2 = mysql_fetch_row($res2))
+        if ($row2 = mysqli_fetch_row($res2))
         {
             $totsaldo = $row2[1] - $row2[0];
         }
@@ -726,7 +730,7 @@ function SetInfoKeuangan()
                    AND nis = '$nis'
                    AND tanggal < '$start'";
         $res2 = QueryDb($sql);
-        if ($row2 = mysql_fetch_row($res2))
+        if ($row2 = mysqli_fetch_row($res2))
         {
             $lastsaldo = $row2[1] - $row2[0];
         }
@@ -741,7 +745,7 @@ function SetInfoKeuangan()
                    AND nis = '$nis'
                    AND tanggal BETWEEN '$start' AND '$end'";
         $res2 = QueryDb($sql);
-        while($row2 = mysql_fetch_array($res2))
+        while($row2 = mysqli_fetch_array($res2))
         {
             if ($first)
             {
@@ -759,11 +763,11 @@ function SetInfoKeuangan()
             $no += 1;
             echo "<tr height='24'>\r\n";
             echo "<td align='center' valign='middle'>$no</td>\r\n";
-            echo "<td align='center'>$row2[tanggal]</td>\r\n";
+            echo "<td align='center'>".$row2['tanggal']."</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($debet) . "</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($kredit) . "</td>\r\n";
             echo "<td align='right'>" . FormatRupiah($rowsaldo) . "</td>\r\n";
-            echo "<td align='left'>$row2[keterangan]</td>\r\n";
+            echo "<td align='left'>".$row2['keterangan']."</td>\r\n";
             echo "</tr>\r\n";
         }
     }
@@ -811,7 +815,7 @@ function SetInfoPresensi()
     echo "<td width='*' align='center'>Keterangan</td>\r\n";
     echo "</tr>\r\n";
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<tr height='40'>\r\n";
         echo "<td colspan='6' align='center' valign='middle'>\r\n";
@@ -822,18 +826,18 @@ function SetInfoPresensi()
     else
     {
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             $telat = 0 == (int)$row['info1'] ? "&nbsp" : $row['info1'] . " menit";
             
             echo "<tr height='24'>\r\n";
             echo "<td align='center'>$no</td>\r\n";
-            echo "<td align='center'>$row[xtanggal]</td>\r\n";
-            echo "<td align='center'>$row[time_in]</td>\r\n";
-            echo "<td align='center'>$row[time_out]</td>\r\n";
+            echo "<td align='center'>".$row['xtanggal']."</td>\r\n";
+            echo "<td align='center'>".$row['TIME_IN']."</td>\r\n";
+            echo "<td align='center'>".$row['TIME_OUT']."</td>\r\n";
             echo "<td align='center'>$telat</td>\r\n";
-            echo "<td align='left'>$row[keterangan]</td>\r\n";
+            echo "<td align='left'>".$row['keterangan']."</td>\r\n";
             echo "</tr>\r\n";
         }
     }
@@ -884,7 +888,7 @@ function SetInfoKegiatan()
     echo "<td width='*' align='center'>Keterangan</td>\r\n";
     echo "</tr>\r\n";
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<tr height='40'>\r\n";
         echo "<td colspan='7' align='center' valign='middle'>\r\n";
@@ -895,19 +899,19 @@ function SetInfoKegiatan()
     else
     {
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             $telat = 0 == (int)$row['info1'] ? "&nbsp" : $row['info1'] . " menit";
             
             echo "<tr height='24'>\r\n";
             echo "<td align='center'>$no</td>\r\n";
-            echo "<td align='center'>$row[xtanggal]</td>\r\n";
-            echo "<td align='left'>$row[kegiatan]</td>\r\n";
-            echo "<td align='center'>$row[time_in]</td>\r\n";
-            echo "<td align='center'>$row[time_out]</td>\r\n";
+            echo "<td align='center'>".$row['xtanggal']."</td>\r\n";
+            echo "<td align='left'>".$row['kegiatan']."</td>\r\n";
+            echo "<td align='center'>".$row['TIME_IN']."</td>\r\n";
+            echo "<td align='center'>".$row['TIME_OUT']."</td>\r\n";
             echo "<td align='center'>$telat</td>\r\n";
-            echo "<td align='left'>$row[keterangan]</td>\r\n";
+            echo "<td align='left'>".$row['keterangan']."</td>\r\n";
             echo "</tr>\r\n";
         }
     }
@@ -958,11 +962,11 @@ function SetNilaiCbe()
                AND p.status = $status
              ORDER BY us.tanggal DESC";
 
-    $lsId = array();
+    $lsId = [];
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $lsId[] = array($row[0], $row[1], $row[2], $row[3]);
+        $lsId[] = [$row[0], $row[1], $row[2], $row[3]];
     }
 
     if (count($lsId) == 0)
@@ -977,7 +981,7 @@ function SetNilaiCbe()
         return;
     }
 
-    $lsIdUjian = array();
+    $lsIdUjian = [];
     for($i = 0; $i < count($lsId); $i++)
     {
         $id = $lsId[$i][0];
@@ -989,9 +993,9 @@ function SetNilaiCbe()
                   FROM jbscbe.ujian u 
                  WHERE u.id = $id";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            $lsIdUjian[] = array($row[0], $row[1], $row[2], $tglUjian, $idPelajaran, $pelajaran);
+            $lsIdUjian[] = [$row[0], $row[1], $row[2], $tglUjian, $idPelajaran, $pelajaran];
         }
     }
 
@@ -1026,7 +1030,7 @@ function SetNilaiCbe()
                    AND nis = '$nis'
                    AND idujianremed IS NOT NULL";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             $haveRemed = $row[0] > 0;
 
         $sifatUjian = 0; // 0 Umum 1 Tertutup
@@ -1035,7 +1039,7 @@ function SetNilaiCbe()
                  WHERE u.idpengujian = p.id
                    AND u.id = $idUjian";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             $sifatUjian = $row[0];
 
         $skalanilai = 10;
@@ -1046,7 +1050,7 @@ function SetNilaiCbe()
                   FROM jbscbe.ujian
                  WHERE id = $idUjianInUjianSerta";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
         {
             $skalanilai = $row[0];
             $nilaikkm = $row[1];
@@ -1084,10 +1088,10 @@ function SetNilaiCbe()
         $sql .= " ORDER BY u.tanggal DESC";
 
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) == 0)
+        if (mysqli_num_rows($res) == 0)
             continue;
 
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
 

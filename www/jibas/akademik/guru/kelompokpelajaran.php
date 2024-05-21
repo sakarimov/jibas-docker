@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/db_functions.php');
@@ -38,7 +38,7 @@ if (isset($_REQUEST['op']))
 
 if ($op == "xm8r389xemx23xb2378e23")
 {
-    $sql = "DELETE FROM jbsakad.kelompokpelajaran WHERE replid = '$_REQUEST[replid]'";
+    $sql = "DELETE FROM jbsakad.kelompokpelajaran WHERE replid = '".$_REQUEST['replid']."'";
     $result = QueryDb($sql);
 }
 ?>
@@ -102,9 +102,9 @@ if ($op == "xm8r389xemx23xb2378e23")
         </table>
         <br /><br />
 
-<?      $sql = "SELECT * FROM kelompokpelajaran";
+<?php      $sql = "SELECT * FROM kelompokpelajaran";
         $result = QueryDb($sql);
-        if (@mysql_num_rows($result) > 0)
+        if (@mysqli_num_rows($result) > 0)
         {   ?>
             <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
             <!-- TABLE CONTENT -->
@@ -112,9 +112,9 @@ if ($op == "xm8r389xemx23xb2378e23")
 
                 <a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
                 <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
-                <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                     <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Kelompok Pelajaran</a>
-                <?	} ?>
+                <?php } ?>
 
             </td></tr>
             </table><br />
@@ -125,26 +125,26 @@ if ($op == "xm8r389xemx23xb2378e23")
                 <td width="10%" class="header" align="center">Kode</td>
                 <td width="*" class="header" align="center">Kelompok</td>
                 <td width="10%" class="header" align="center">Urutan</td>
-                <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                     <td width="8%" class="header">&nbsp;</td>
-                <?	} ?>
+                <?php } ?>
             </tr>
-            <?
+            <?php
             $cnt = 0;
-            while ($row = mysql_fetch_array($result)) { ?>
+            while ($row = mysqli_fetch_array($result)) { ?>
                 <tr height="25">
                     <td align="center"><?=++$cnt ?></td>
                     <td align="center"><?=$row['kode'] ?></td>
                     <td align="left"><?=$row['kelompok'] ?></td>
                     <td align="center"><?=$row['urutan'] ?></td>
-<?		        if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+<?php 	        if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
                     <td align="center">
                         <a href="JavaScript:edit(<?=$row['replid'] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Departemen!', this, event, '80px')" /></a>&nbsp;
                         <a href="JavaScript:hapus(<?=$row['replid'] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Departemen!', this, event, '80px')"/></a>
                     </td>
-<?		        } ?>
+<?php 	        } ?>
                 </tr>
-<?	        } ?>
+<?php         } ?>
             </table>
             <script language='JavaScript'>
                 Tables('table', 1, 0);
@@ -152,25 +152,25 @@ if ($op == "xm8r389xemx23xb2378e23")
             <!-- END TABLE CENTER -->
             </td></tr>
             </table>
-    <?	}
+    <?php }
         else
         { ?>
             <table width="100%" border="0" align="center">
             <tr>
                 <td align="center" valign="middle" height="250" colspan="2">
                     <font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-                        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                             <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-                        <? } ?>
+                        <?php } ?>
                         </p></b></font>
                 </td>
             </tr>
             </table>
-<?      } ?>
+<?php      } ?>
 </td></tr>
     <!-- END TABLE BACKGROUND IMAGE -->
 </table>
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

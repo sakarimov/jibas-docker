@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -40,10 +40,10 @@ if ($senderstate=="guru")
 elseif ($senderstate=="siswa")
 	$sql = "SELECT p.judul,p.pesan,p.nis,sis.nama,DATE_FORMAT(p.tanggalpesan, '%e %b %Y') as tanggal, TIME_FORMAT(p.tanggalpesan, '%H:%i') as waktu FROM jbsvcr.pesan p, jbsakad.siswa sis WHERE p.replid='$idpesan' AND p.nis=sis.nis";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $judul = $row[0];
 $pesan = $row[1];
-$pesan = str_replace("#sq;", "'", $pesan);
+$pesan = str_replace("#sq;", "'", (string) $pesan);
 $receiver = $row[2];
 $nama = $row[3];
 $tgl= $row[4];

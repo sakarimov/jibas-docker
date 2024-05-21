@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('infosiswa.session.php');
 require_once('infosiswa.security.php');
 require_once('infosiswa.config.php');
@@ -37,24 +37,24 @@ $nis = $_SESSION["infosiswa.nis"];
 
 $sql = "SELECT *
 	      FROM jbsakad.siswa
-		 WHERE nis = '$nis'";
+		 WHERE nis = '".$nis."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $asalsekolah = $row['asalsekolah'];
 
 $sql = "SELECT departemen
           FROM jbsakad.asalsekolah
-         WHERE sekolah = '$asalsekolah'";
+         WHERE sekolah = '".$asalsekolah."'";
 $res2 = QueryDb($sql);
-$row2 = mysql_fetch_array($res2);
+$row2 = mysqli_fetch_array($res2);
 $jenjangsekolah = $row2['departemen'];
 
 $sql = "SELECT departemen 
           FROM jbsakad.siswa s, jbsakad.angkatan a 
          WHERE s.idangkatan = a.replid
-           AND s.nis = '$nis'";
+           AND s.nis = '".$nis."'";
 $res2 = QueryDb($sql);
-$row2 = mysql_fetch_array($res2);
+$row2 = mysqli_fetch_array($res2);
 $departemen = $row2['departemen'];
 ?>
 <script language="javascript" src="infosiswa/infosiswa.profile.js"></script>
@@ -140,21 +140,21 @@ $departemen = $row2['departemen'];
         Tanggal Lahir:
     </td>
     <td width="*" align="left">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahir']);
+        $date = explode("-", (string) $row['tgllahir']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>        
-<?      ShowYearCombo('is_thnlahir', 'is_changeTahunLahirSiswa()', 1990, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('is_blnlahir', 'is_changeBulanLahirSiswa()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('is_thnlahir', 'is_changeTahunLahirSiswa()', 1990, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('is_blnlahir', 'is_changeBulanLahirSiswa()', $bln); ?>&nbsp;
         <span id="is_divTglLahirSiswa">
-<?      ShowDateCombo('is_tgllahir', 'is_changeTanggalLahirSiswa()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('is_tgllahir', 'is_changeTanggalLahirSiswa()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
 </tr>
@@ -163,7 +163,7 @@ $departemen = $row2['departemen'];
         Agama:
     </td>
     <td width="*" align="left">
-<?      ShowAgamaCombo($row['agama']); ?>
+<?php      ShowAgamaCombo($row['agama']); ?>
     </td>
 </tr>
 <tr>
@@ -171,7 +171,7 @@ $departemen = $row2['departemen'];
         Suku:
     </td>
     <td width="*" align="left">
-<?      ShowSukuCombo($row['suku']); ?>
+<?php      ShowSukuCombo($row['suku']); ?>
     </td>
 </tr>
 <tr>
@@ -179,7 +179,7 @@ $departemen = $row2['departemen'];
         Status:
     </td>
     <td width="*" align="left">
-<?      ShowStatusCombo($row['status']); ?>
+<?php      ShowStatusCombo($row['status']); ?>
     </td>
 </tr>
 <tr>
@@ -187,7 +187,7 @@ $departemen = $row2['departemen'];
         Kondisi:
     </td>
     <td width="*" align="left">
-<?      ShowKondisiCombo($row['kondisi']); ?>
+<?php      ShowKondisiCombo($row['kondisi']); ?>
     </td>
 </tr>
 <tr>
@@ -213,7 +213,7 @@ $departemen = $row2['departemen'];
         Status Anak:
     </td>
     <td width="*" align="left">
-<?      ShowStatusAnakCombo( $row['statusanak'] ); ?>        
+<?php      ShowStatusAnakCombo( $row['statusanak'] ); ?>        
     </td>
 </tr>
 <tr>
@@ -303,9 +303,9 @@ $departemen = $row2['departemen'];
         Asal Sekolah:
     </td>
     <td width="*" align="left">
-<?      ShowJenjangSekolahCombo($jenjangsekolah) ?><br>
+<?php      ShowJenjangSekolahCombo($jenjangsekolah) ?><br>
         <span id='is_divAsalSekolah'>
-<?      ShowAsalSekolahCombo($jenjangsekolah, $asalsekolah) ?>
+<?php      ShowAsalSekolahCombo($jenjangsekolah, $asalsekolah) ?>
         </span>
     </td>
 </tr>
@@ -422,10 +422,10 @@ $departemen = $row2['departemen'];
         Status Orangtua:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-        <? ShowStatusOrtuCombo('is_statusayah', $row['statusayah']) ?>
+        <?php ShowStatusOrtuCombo('is_statusayah', $row['statusayah']) ?>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-        <? ShowStatusOrtuCombo('is_statusibu', $row['statusibu']) ?>
+        <?php ShowStatusOrtuCombo('is_statusibu', $row['statusibu']) ?>
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -450,39 +450,39 @@ $departemen = $row2['departemen'];
         Tanggal Lahir:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahirayah']);
+        $date = explode("-", (string) $row['tgllahirayah']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>          
-<?      ShowYearCombo('is_thnlahirayah', 'is_changeTahunLahirAyah()', 1900, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('is_blnlahirayah', 'is_changeBulanLahirAyah()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('is_thnlahirayah', 'is_changeTahunLahirAyah()', 1900, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('is_blnlahirayah', 'is_changeBulanLahirAyah()', $bln); ?>&nbsp;
         <span id="is_divTglLahirAyah">
-<?      ShowDateCombo('is_tgllahirayah', 'is_changeTanggalLahirAyah()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('is_tgllahirayah', 'is_changeTanggalLahirAyah()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahiribu']);
+        $date = explode("-", (string) $row['tgllahiribu']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>          
-<?      ShowYearCombo('is_thnlahiribu', 'is_changeTahunLahirIbu()', 1900, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('is_blnlahiribu', 'is_changeBulanLahirIbu()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('is_thnlahiribu', 'is_changeTahunLahirIbu()', 1900, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('is_blnlahiribu', 'is_changeBulanLahirIbu()', $bln); ?>&nbsp;
         <span id="is_divTglLahirIbu">
-<?      ShowDateCombo('is_tgllahiribu', 'is_changeTanggalLahirIbu()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('is_tgllahiribu', 'is_changeTanggalLahirIbu()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
     <td width="*" align="right" valign="top">
@@ -494,10 +494,10 @@ $departemen = $row2['departemen'];
         Pendidikan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPendidikanCombo('is_pendidikanayah', $row['pendidikanayah']) ?>        
+<?php      ShowPendidikanCombo('is_pendidikanayah', $row['pendidikanayah']) ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPendidikanCombo('is_pendidikanibu', $row['pendidikanibu']) ?>                
+<?php      ShowPendidikanCombo('is_pendidikanibu', $row['pendidikanibu']) ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -508,10 +508,10 @@ $departemen = $row2['departemen'];
         Pekerjaan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPekerjaanCombo('is_pekerjaanayah', $row['pekerjaanayah']) ?>        
+<?php      ShowPekerjaanCombo('is_pekerjaanayah', $row['pekerjaanayah']) ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPekerjaanCombo('is_pekerjaanibu', $row['pekerjaanibu']) ?>                
+<?php      ShowPekerjaanCombo('is_pekerjaanibu', $row['pekerjaanibu']) ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -682,7 +682,7 @@ $departemen = $row2['departemen'];
              ORDER BY urutan";
     $res = QueryDb($sql);
     $idtambahan = "";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $replid = $row[0];
         $kolom = $row[1];
@@ -695,9 +695,9 @@ $departemen = $row2['departemen'];
         $data = "";
         if ($jenis == 1)
         {
-            $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -705,9 +705,9 @@ $departemen = $row2['departemen'];
         }
         else if ($jenis == 2)
         {
-            $sql = "SELECT replid, filename FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, filename FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $filename = $row2[1];
@@ -721,9 +721,9 @@ $departemen = $row2['departemen'];
         }
         else if ($jenis == 3)
         {
-            $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM tambahandatasiswa WHERE nis = '$nis' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -736,11 +736,11 @@ $departemen = $row2['departemen'];
                      ORDER BY urutan";
             $res2 = QueryDb($sql);
 
-            $arrList = array();
-            if (mysql_num_rows($res2) == 0)
+            $arrList = [];
+            if (mysqli_num_rows($res2) == 0)
                 $arrList[] = "-";
 
-            while($row2 = mysql_fetch_row($res2))
+            while($row2 = mysqli_fetch_row($res2))
             {
                 $arrList[] = $row2[0];
             }
@@ -758,25 +758,25 @@ $departemen = $row2['departemen'];
         <tr style="height: 24px;">
             <td width="15%" align="right" valign="top"><?=$kolom?>:</td>
             <td colspan="2">
-                <? if ($jenis == 1) { ?>
+                <?php if ($jenis == 1) { ?>
                     <input type="hidden" id="is_jenisdata-<?=$replid?>" name="is_jenisdata-<?=$replid?>" value="1">
                     <input type="hidden" id="is_repliddata-<?=$replid?>" name="is_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="text" class="inputbox" name="is_tambahandata-<?=$replid?>" id="is_tambahandata-<?=$replid?>" size="40" maxlength="1000" value="<?=$data?>">
-                <? } else if ($jenis == 2) { ?>
+                <?php } else if ($jenis == 2) { ?>
                     <input type="hidden" id="is_jenisdata-<?=$replid?>" name="is_jenisdata-<?=$replid?>" value="2">
                     <input type="hidden" id="is_repliddata-<?=$replid?>" name="is_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="hidden" name="is_tambahandata-<?=$replid?>" id="is_tambahandata-<?=$replid?>" value="">
                     <i><?=$data?></i>
-                <? } else { ?>
+                <?php } else { ?>
                     <input type="hidden" id="is_jenisdata-<?=$replid?>" name="is_jenisdata-<?=$replid?>" value="3">
                     <input type="hidden" id="is_repliddata-<?=$replid?>" name="is_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <select class="inputbox" name="is_tambahandata-<?=$replid?>" id="is_tambahandata-<?=$replid?>" style="width:215px">
                         <?= $opt ?>
                     </select>
-                <? } ?>
+                <?php } ?>
             </td>
         </tr>
-        <?
+        <?php
     }
     ?>
     <input type="hidden" id="is_idtambahan" name="is_idtambahan" value="<?=$idtambahan?>">
@@ -787,18 +787,18 @@ $departemen = $row2['departemen'];
 <tr>
     <td width="15%" align="right" valign="top">&nbsp;</td>
     <td align="left" valign="top">
-<?		if ($IsAllowStudentEdit) { ?>		
+<?php 	if ($IsAllowStudentEdit) { ?>		
         <input type="button" value="Simpan" class="but" style="height: 30px; width: 140px;"  onclick="is_Simpan()">
-<?		} else { ?>
+<?php 	} else { ?>
 		<font style='color: red; font-weight: bold;'>
 			Tidak dapat mengubah data pribadi siswa. Silahkan hubungi Administrator JIBAS untuk mengatur perubahan data pribadi siswa.
 		</font>
-<?		} ?>
+<?php 	} ?>
     </td>
 </tr> 
 </table>
 </form>
 </div>
-<?
+<?php
 CloseDb();
 ?>

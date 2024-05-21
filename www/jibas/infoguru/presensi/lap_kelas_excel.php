@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -51,7 +51,7 @@ if ($pelajaran == -1) {
 $sql = "SELECT p.departemen, p.nama, k.kelas, t.tahunajaran, s.semester FROM pelajaran p, kelas k, tahunajaran t, semester s WHERE  k.replid = '$kelas' AND k.idtahunajaran = t.replid AND s.replid = '$semester' $filter";   
 $result = QueryDB($sql);
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -104,7 +104,7 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 		
+<?php 		
 	OpenDb();
 	if ($pelajaran == -1) {		
 		$pel = "Semua Pelajaran";
@@ -116,7 +116,7 @@ $row = mysql_fetch_array($result);
 	}	
 	//echo $sql;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 ?>
 
@@ -135,9 +135,9 @@ $row = mysql_fetch_array($result);
         <td bgcolor="#CCCCCC" class="style6 style5 header">Tlp Ortu</td>
         <td bgcolor="#CCCCCC" class="style6 style5 header">HP Ortu</td>       
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { 
+	while ($row = mysqli_fetch_row($result)) { 
 		$tanda = "";
 		if ($row[7] == 0) 
 			$tanda = "*";
@@ -147,32 +147,32 @@ $row = mysql_fetch_array($result);
 		<td align="center"><?=$row[0]?><span class="style7"><?=$tanda?></span></td>
         <td><span class="style7"><?=$row[1]?></span></td>
   		<td align="center"><span class="style7">
-		<?  if ($pelajaran == -1) {		
-				$sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' " ;	
+		<?php  if ($pelajaran == -1) {		
+				$sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' " ;	
 			} else {
-				$sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;	
+				$sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;	
 			}
 		
 				//echo $sql1;			
 				$result1 = QueryDb($sql1);
-				$row1 = @mysql_fetch_array($result1);
+				$row1 = @mysqli_fetch_array($result1);
 				$hadir = $row1[0];
 				echo $row1[0]; 	?></span></td>
         <td align="center"><span class="style7">
-		<? 	if ($pelajaran == -1) {		
-				$sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir'  " ;
+		<?php 	if ($pelajaran == -1) {		
+				$sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir'  " ;
 			} else {
-				$sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;					
+				$sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;					
 			}
 				$result2 = QueryDb($sql2);
-				$row2 = @mysql_fetch_array($result2);
+				$row2 = @mysqli_fetch_array($result2);
 				$absen = $row2[0];
 				echo $row2[0]; ?></span></td>
         <td align="center"><span class="style7">
-			<? 	$tot = $hadir + $absen;
+			<?php 	$tot = $hadir + $absen;
 				echo $tot;	?></span></td>
         <td align="center"><span class="style7">
-			<? 	if ($tot == 0) 
+			<?php 	if ($tot == 0) 
 					$tot = 1;
 				$prs = (( $hadir/$tot)*100); 
 				echo round($prs,2).'%'; ?></span></td>
@@ -182,16 +182,16 @@ $row = mysql_fetch_array($result);
         <td><span class="style7">'<?=$row[5]?>'</span></td>    
         <td><span class="style7">'<?=$row[6]?>'</span></td>   
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
     </table>
-<? 	} ?>
+<?php 	} ?>
 	
 	</td>
 </tr>
 <tr>
-	<td><? 	if ($row[7] == 0) 
+	<td><?php 	if ($row[7] == 0) 
 			$tanda = "*";
 			echo "Ket: *Status siswa tidak aktif lagi";
     	?>

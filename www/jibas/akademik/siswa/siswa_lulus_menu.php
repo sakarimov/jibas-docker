@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,13 +45,11 @@ if (isset($_REQUEST['pilihan']))
 if (isset($_REQUEST['jenis']))
 	$jenis = $_REQUEST['jenis'];
 
-switch ($jenis) {
-	case 'combo' : $input_awal = "onload=\"document.getElementById('kelas').focus()\"";
-		break;
-	case 'text' : $input_awal = "onload=\"document.getElementById('nis').focus()\"";
-		break;
-	default	: $input_awal = "onload=\"document.getElementById('kelas').focus()\"";
-}	
+$input_awal = match ($jenis) {
+    'combo' => "onload=\"document.getElementById('kelas').focus()\"",
+    'text' => "onload=\"document.getElementById('nis').focus()\"",
+    default => "onload=\"document.getElementById('kelas').focus()\"",
+};	
 
 OpenDb();
 ?>
@@ -67,9 +65,9 @@ OpenDb();
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <title>Kelulusan Siswa [Menu]</title>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 
 function change_kelas() {	
 	var departemen = document.getElementById("departemen").value;
@@ -155,24 +153,24 @@ function focusNext(elemName, evt) {
 <input type="hidden" name="tahunajaran" id="tahunajaran" value="<?=$tahunajaran?>" />
 	<fieldset><legend>Tampilkan daftar siswa berdasarkan</legend>
     <table width="100%" border="0" cellspacing="0">
-    <tr <? if ($pilihan=="2") { ?> style="background-color:#C0C0C0" <? } ?>>
+    <tr <?php if ($pilihan=="2") { ?> style="background-color:#C0C0C0" <?php } ?>>
     	<td align="center" valign="middle">
         <img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
         <td width="15%">Kelas</td>
         <td><select name="kelas" id="kelas" style="width:135px;" onKeyPress="return focusNext('lihat', event)" onChange="change_kelas()">
-          <?
+          <?php
 			OpenDb();
 			$sql_kelas="SELECT k.replid,k.kelas FROM jbsakad.kelas k WHERE k.idtingkat='$tingkat' AND k.idtahunajaran='$tahunajaran' AND  k.aktif=1 ORDER BY k.kelas";
 			$result_kelas=QueryDb($sql_kelas);
 
-			while ($row_kelas=@mysql_fetch_row($result_kelas)){
+			while ($row_kelas=@mysqli_fetch_row($result_kelas)){
 				if ($kelas=="")
 					$kelas=$row_kelas[0];
 			?>
                   <option value="<?=$row_kelas[0]?>"<?=IntIsSelected($row_kelas[0], $kelas) ?>>
                   <?=$row_kelas[1]?>
                   </option>
-					  <?
+					  <?php
 			}
 			CloseDb();
 			?>
@@ -180,7 +178,7 @@ function focusNext(elemName, evt) {
       	<td width="50">
         	<input type="button" class="but" name="lihat" id="lihat" value="Tampil" onclick="lihat_siswa()" style="width:70px;" onMouseOver="showhint('Tampilkan daftar siswa berdasarkan kelas!', this, event, '135px')"/></td>
 	</tr>
-    <tr <? if ($pilihan=="1") { ?> style="background-color:#C0C0C0" <? } ?>>
+    <tr <?php if ($pilihan=="1") { ?> style="background-color:#C0C0C0" <?php } ?>>
         <td align="center" valign="middle">
         <img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
         <td>Pencarian</td>
@@ -188,7 +186,7 @@ function focusNext(elemName, evt) {
         <strong>Nama</strong>&nbsp;<input type="text" name="nama" id="nama" size="15" value="<?=$nama?>" onkeypress="return focusNext('cari', event)"/></td>
         <td><input type="button" class="but" name="cari" id="cari" value="Cari" onclick="cari_siswa();" style="width:70px;" onmouseover="showhint('Tampilkan daftar siswa berdasarkan pencarian!', this, event, '150px')"/></td>
       </tr>
-      <tr <? if ($pilihan=="3") { ?> style="background-color:#C0C0C0" <? } ?>>
+      <tr <?php if ($pilihan=="3") { ?> style="background-color:#C0C0C0" <?php } ?>>
         <td align="center" valign="middle">
         <img src="../images/ico/titik.png" height="5" width="5" align="top"></td>
         <td colspan="2">Tampilkan siswa yang aktif</td>

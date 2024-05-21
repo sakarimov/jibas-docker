@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -72,7 +72,7 @@ $departemen = FetchSingle($sql);
 </head>
 
 <body>
-<?
+<?php
 $sql = "SELECT replid FROM tahunbuku WHERE departemen='$departemen' AND aktif=1";
 $idtahunbuku = FetchSingle($sql);
 
@@ -198,12 +198,12 @@ $departemen = $row[1];
     <td width="80" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">N I S</font></strong></td>
     <td width="140" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Nama</font></strong></td>
     <td width="50" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Kelas</font></strong></td>
-<? 	for($i = 0; $i < $max_n_cicilan; $i++) {
+<?php 	for($i = 0; $i < $max_n_cicilan; $i++) {
 			$n = $i + 1; ?>
     		<td width="120" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">
    		    <?="Bayaran-$n" ?>
     		</font></strong></td>	
-    <?  } ?>
+    <?php  } ?>
     <td width="80" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Status</font></strong></td>
     <td width="125" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">
       <?=$namapenerimaan ?>
@@ -214,7 +214,7 @@ $departemen = $row[1];
     <td width="200" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Keterangan</font></strong></td>
 </tr>
 
-<?
+<?php
 if ($statuslunas == -1) 
 {
 	if ($idtingkat == -1) 
@@ -283,7 +283,7 @@ if ($statuslunas == -1)
 			$sql_tot = "SELECT DISTINCT b.nis, s.nama, k.kelas, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			              FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k
 							 WHERE b.info2 = '$idtahunbuku' AND s.nis = b.nis AND b.idpenerimaan = '$idpenerimaan' AND s.idkelas = '$idkelas' 
-							   AND s.idkelas = k.replid AND s.idangkatan = '$idangkatan'"; 
+							   AND s.idkelas = k.replid AND s.idangkatan = '".$idangkatan."'"; 
 			
 			$sql = "SELECT DISTINCT b.nis, s.nama, k.kelas, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			          FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k 
@@ -311,7 +311,7 @@ else
 		$sql_tot = "SELECT DISTINCT b.nis, s.nama, k.kelas, t.tingkat, b.replid AS id, b.besar, b.keterangan, b.lunas 
 		              FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t
 						 WHERE b.info2 = '$idtahunbuku' AND s.nis = b.nis AND b.idpenerimaan = '$idpenerimaan' AND s.idangkatan = '$idangkatan'
-						   AND s.idkelas = k.replid AND k.idtingkat = t.replid AND b.lunas = '$statuslunas'"; 
+						   AND s.idkelas = k.replid AND k.idtingkat = t.replid AND b.lunas = '".$statuslunas."'"; 
 		
 		$sql = "SELECT DISTINCT b.nis, s.nama, k.kelas, t.tingkat, b.replid AS id, b.besar, b.keterangan, b.lunas
 		          FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
@@ -336,7 +336,7 @@ else
 			$sql_tot = "SELECT DISTINCT b.nis, s.nama, k.kelas, t.tingkat, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			              FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
 							 WHERE b.info2 = '$idtahunbuku' AND s.nis = b.nis AND b.idpenerimaan = '$idpenerimaan' AND s.idangkatan = '$idangkatan' 
-							   AND s.idkelas = k.replid AND k.idtingkat = '$idtingkat' AND k.idtingkat = t.replid AND b.lunas = '$statuslunas'";
+							   AND s.idkelas = k.replid AND k.idtingkat = '$idtingkat' AND k.idtingkat = t.replid AND b.lunas = '".$statuslunas."'";
 			
 			$sql = "SELECT DISTINCT b.nis, s.nama, k.kelas, t.tingkat, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			          FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
@@ -360,7 +360,7 @@ else
 			$sql_tot = "SELECT DISTINCT b.nis, s.nama, k.kelas, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			              FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k
 							 WHERE b.info2 = '$idtahunbuku' AND s.nis = b.nis AND b.idpenerimaan = '$idpenerimaan' AND s.idkelas = '$idkelas' 
-							   AND s.idkelas = k.replid AND b.lunas = '$statuslunas' AND s.idangkatan = '$idangkatan'"; 
+							   AND s.idkelas = k.replid AND b.lunas = '$statuslunas' AND s.idangkatan = '".$idangkatan."'"; 
 									
 			$sql = "SELECT DISTINCT b.nis, s.nama, k.kelas, b.replid AS id, b.besar, b.keterangan, b.lunas 
 			          FROM penerimaanjtt p RIGHT JOIN besarjtt b ON p.idbesarjtt = b.replid, jbsakad.siswa s, jbsakad.kelas k
@@ -375,7 +375,7 @@ $result_tot = QueryDb($sql_tot);
 $result = QueryDb($sql);
 $cnt = 0;
 	
-while ($row = mysql_fetch_array($result)) 
+while ($row = mysqli_fetch_array($result)) 
 {
 	$idbesarjtt = $row['id'];
 	$besarjtt = $row['besar'];
@@ -404,13 +404,13 @@ while ($row = mysql_fetch_array($result))
       <?=$row['nama'] ?>
     </font></td>
     <td align="center"><font size="2" face="Arial">
-      <? if ($idkelas == -1) echo  $row['tingkat']." - "; ?>
+      <?php if ($idkelas == -1) echo  $row['tingkat']." - "; ?>
       <?=$row['kelas'] ?>
     </font></td>
-<?
-	$sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+<?php
+	$sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	$nbayar = $row2[0];
 	$nblank = $max_n_cicilan - $nbayar;
 	$totalbayar = 0;
@@ -420,7 +420,7 @@ while ($row = mysql_fetch_array($result))
 		$result2 = QueryDb($sql);
 		
 		$x=0;
-		while ($row2 = mysql_fetch_row($result2)) {
+		while ($row2 = mysqli_fetch_row($result2)) {
 		$bg2=$bg1;
 		if ($x%2==0 || $x==0)
 			$bg2="#d3fffd";
@@ -436,7 +436,7 @@ while ($row = mysql_fetch_array($result))
                 <?=$row2[0] ?>
                 </font></td></tr>
     </table>            </td>
-<?		$x++;
+<?php 	$x++;
 		}
  		$totalbayarall += $totalbayar;
 	}	
@@ -446,7 +446,7 @@ while ($row = mysql_fetch_array($result))
             <tr height="20"><td align="center">&nbsp;</td></tr>
             <tr height="20"><td align="center">&nbsp;</td></tr>
     </table>        </td>
-    <? }?>
+    <?php }?>
     <td align="center"><font size="2" face="Arial">
       <?=$infojtt ?>
     </font></td>
@@ -466,7 +466,7 @@ while ($row = mysql_fetch_array($result))
       <?=$ketjtt ?>
     </font></td>
 </tr>
-<?
+<?php
 }
 	$totalBiayaAll = FetchSingle($sql_sum_biaya);
 	
@@ -484,7 +484,7 @@ while ($row = mysql_fetch_array($result))
 </tr>
 
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 </body>
 </html>
 <script language="javascript">window.print();</script>

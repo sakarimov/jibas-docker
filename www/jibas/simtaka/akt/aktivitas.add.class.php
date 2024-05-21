@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CAktivitasAdd{
 	function OnStart(){
 		$sqlDate = "SELECT DATE_FORMAT(now(),'%Y-%m-%d'),DATE_FORMAT(now(),'%H:%i:%s')";
 		$resultDate = QueryDb($sqlDate);
-		$rowDate = @mysql_fetch_row($resultDate);
+		$rowDate = @mysqli_fetch_row($resultDate);
 		$this->tglInput = $rowDate[0];		
 		$timeInput = $rowDate[1];
-		if (isset($_REQUEST[simpan])){
-			$perpustakaan = trim(addslashes($_REQUEST[perpustakaan]));
-			$tanggal = trim(addslashes($_REQUEST[tglInput]));
-			$aktivitas = CQ($_REQUEST[aktivitas]);
+		if (isset($_REQUEST['simpan'])){
+			$perpustakaan = trim(addslashes((string) $_REQUEST['perpustakaan']));
+			$tanggal = trim(addslashes((string) $_REQUEST['tglInput']));
+			$aktivitas = CQ($_REQUEST['aktivitas']);
 			$sql = "INSERT INTO aktivitas SET perpustakaan='$perpustakaan',tanggal='".MysqlDateFormat($tanggal)." ".$timeInput."',aktivitas='$aktivitas'";
 			$result = QueryDb($sql);
 			if ($result)
@@ -44,7 +44,7 @@ class CAktivitasAdd{
         <script language="javascript">
 			document.location.href='aktivitas.php';
         </script>
-        <?
+        <?php
 	}
 	function add(){
 		?>
@@ -77,10 +77,10 @@ class CAktivitasAdd{
           </tr>
         </table>
 		</form>
-		<?
+		<?php
 	}
 	function GetPerpus(){
-		$this->perpustakaan = $_REQUEST[perpustakaan];
+		$this->perpustakaan = $_REQUEST['perpustakaan'];
 		if (SI_USER_LEVEL()==2){
 			$sql = "SELECT replid,nama FROM perpustakaan WHERE replid=".SI_USER_IDPERPUS()." ORDER BY nama";
 		} else {
@@ -90,18 +90,18 @@ class CAktivitasAdd{
 		?>
 		<link href="../sty/style.css" rel="stylesheet" type="text/css" />
 		<select name="perpustakaan" id="perpustakaan" class="cmbfrm"  >
-		<?
-		while ($row = @mysql_fetch_row($result)){
+		<?php
+		while ($row = @mysqli_fetch_row($result)){
 		if ($this->perpustakaan=="")
 			$this->perpustakaan = $row[0];	
 		
 		?>
 			<option value="<?=$row[0]?>" <?=IntIsSelected($row[0],$this->perpustakaan)?>><?=$row[1]?></option>
-		<?
+		<?php
 		}
 		?>
 		</select>
-		<?
+		<?php
 	}
 }
 ?>

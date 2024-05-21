@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -46,9 +46,9 @@ try
     OpenDb();
     $sql = "SELECT IF(nis IS NULL, 'P', 'S') AS ownertype
               FROM jbsvcr.gallery
-             WHERE replid = '$galleryid'";
+             WHERE replid = '".$galleryid."'";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         CloseDb();
         
@@ -57,7 +57,7 @@ try
         
         exit();
     }
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ownertype = $row[0];
     
     // Validate File Size
@@ -113,11 +113,11 @@ try
     if (!file_exists($uploadPath))
         mkdir($uploadPath, 0755);
     
-    $text = trim($_REQUEST['judul']);
+    $text = trim((string) $_REQUEST['judul']);
     $judul = $text;
     $fjudul = FormattedText($text);
     
-    $text = trim($_REQUEST['pesan']);
+    $text = trim((string) $_REQUEST['pesan']);
     $pesan = RecodeNewLine($text);
     $fpesan = FormattedText($text);
     $fprevpesan = FormattedPreviewText($text, $previewTextLength);
@@ -126,24 +126,24 @@ try
                SET judul = '$judul', fjudul = '$fjudul', 
                    keterangan = '$pesan', fketerangan = '$fpesan', fprevketerangan = '$fprevpesan',
                    lastactive = NOW(), lastread = NOW()
-             WHERE replid = '$galleryid'";
+             WHERE replid = '".$galleryid."'";
     echo "$sql<br>";
     QueryDbEx($sql);
     
     $newcover = (int)$_REQUEST['newcover'];
     if ($newcover == 1)
     {
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         
         $file = $_FILES["newcover_file"];
         $name = $file['name'];
-        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $type = $file['type'];
         $size = $file['size'];
         $location = "anjungan/galeri/" . date('Y');
         $dest = "$FILESHARE_UPLOAD_DIR/$location/$name";
         
-        $text = trim($_REQUEST['newcover_info']);
+        $text = trim((string) $_REQUEST['newcover_info']);
         $info = $text;
         $finfo = FormattedText($text);
         
@@ -167,7 +167,7 @@ try
     }
     else
     {
-        $text = trim($_REQUEST['cover_info']);
+        $text = trim((string) $_REQUEST['cover_info']);
         $info = $text;
         $finfo = FormattedText($text);
         
@@ -197,11 +197,11 @@ try
         {
             $sql = "SELECT location, filename
                       FROM jbsvcr.galleryfile
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             $res = QueryDbEx($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
+                $row = mysqli_fetch_row($res);
                 
                 $location = $row[0];
                 $filename = $row[1];
@@ -213,7 +213,7 @@ try
                     unlink($location);
                 
                 $sql = "DELETE FROM jbsvcr.galleryfile
-                         WHERE replid = '$replid'";
+                         WHERE replid = '".$replid."'";
                 echo "$sql<br>";
                 QueryDbEx($sql);
             }
@@ -222,7 +222,7 @@ try
         {
             $sql = "UPDATE jbsvcr.galleryfile
                        SET fileinfo = '$info', ffileinfo = '$finfo'
-                     WHERE replid = '$replid'";
+                     WHERE replid = '".$replid."'";
             echo "$sql<br>";
             QueryDbEx($sql);
         }
@@ -235,14 +235,14 @@ try
         $file = $_FILES[$doc];
         
         $info = "gambar_info_$i";
-        $text = trim($_REQUEST[$info]);
+        $text = trim((string) $_REQUEST[$info]);
         $info = $text;
         $finfo = FormattedText($text);
         
-        $rnd = rand(10000, 99999);
+        $rnd = random_int(10000, 99999);
         
         $name = $file['name'];
-        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", $name);
+        $name = $galleryid . "_" . $rnd . "_" . str_replace(" ", "_", (string) $name);
         $type = $file['type'];
         $size = $file['size'];
         $location = "anjungan/galeri/" . date('Y');
@@ -259,7 +259,7 @@ try
         $sql = "INSERT INTO jbsvcr.galleryfile
                    SET galleryid = '$galleryid', filename = '$name', filesize = '$size',
                        filetype = '$type', fileinfo = '$info', ffileinfo = '$finfo', location = '$location',
-                       width = '$width', height = '$height'";
+                       width = '$width', height = '".$height."'";
         echo "$sql<br>";
         QueryDbEx($sql);
     }

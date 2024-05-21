@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/theme.php');
@@ -73,27 +73,27 @@ function pilih(nip, nama) {
 	<tr>
 		<td align="center" >
 	<br />
-<?
+<?php
 OpenDb();
 if (isset($_REQUEST['Submit'])) { 
 
 	$nama = $_REQUEST['nama'];
 	$nip = $_REQUEST['nip'];
 
-	if ((strlen($nama) > 0) && (strlen($nip) > 0))
+	if ((strlen((string) $nama) > 0) && (strlen((string) $nip) > 0))
 		$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' AND nip LIKE '%$nip%' AND nip NOT IN (SELECT login FROM jbsuser.hakakses WHERE MODUL='INFOGURU') ORDER BY nama"; 
-	else if (strlen($nama) > 0)
+	else if (strlen((string) $nama) > 0)
 		$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' AND nip NOT IN (SELECT login FROM jbsuser.hakakses WHERE MODUL='INFOGURU')ORDER BY nama"; 
-	else if (strlen($nip) > 0)
+	else if (strlen((string) $nip) > 0)
 		$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE aktif = 1 AND nip LIKE '%$nip%' AND nip NOT IN (SELECT login FROM jbsuser.hakakses WHERE MODUL='INFOGURU')ORDER BY nama"; 
-	else if ((strlen($nama) == 0) || (strlen($nip) == 0)) 
+	else if ((strlen((string) $nama) == 0) || (strlen((string) $nip) == 0)) 
 		$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE aktif = 1 AND nip NOT IN (SELECT login FROM jbsuser.hakakses WHERE MODUL='INFOGURU')ORDER BY nama";		
 } else {
 	$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE aktif = 1 AND nip NOT IN (SELECT login FROM jbsuser.hakakses WHERE MODUL='INFOGURU')ORDER BY nama"; 
 }
 $result = QueryDb($sql);	
 CloseDb();
-$jum = mysql_num_rows($result);
+$jum = mysqli_num_rows($result);
 
 if ($jum > 0) {
 ?>
@@ -104,10 +104,10 @@ if ($jum > 0) {
     <td class="header" align="center">Nama</td>
     <td class="header" width="10%">&nbsp;</td>
 </tr>
-<?
+<?php
 
 $cnt = 0;
-while($row = mysql_fetch_row($result)) { ?>
+while($row = mysqli_fetch_row($result)) { ?>
 <tr>
 	<td align="center" onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer" title="Klik untuk memilih guru"><?=++$cnt ?></td>
     <td align="center" onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer" title="Klik untuk memilih guru"><?=$row[0] ?></td>
@@ -118,15 +118,15 @@ while($row = mysql_fetch_row($result)) { ?>
 </tr>
 
 
-<? 
+<?php 
 	} ?>
 	</table>
 <script language="javascript">
 	Tables('table', 1, 0);
 </script>
-<? } else { ?>
+<?php } else { ?>
 	<strong><font color="red">Tidak ditemukan adanya data</font></strong><br /><br />    
-<? } ?>
+<?php } ?>
 </td></tr>
 <tr height="35">
 	<td colspan="4" align="center">

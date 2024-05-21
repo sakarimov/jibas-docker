@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,39 +20,39 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 //require_once("../include/errorhandler.php");
 OpenDb();
 $op="";
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 if ($op=="EraseGroup"){
-	$sql = "DELETE FROM jbsfina.groupbarang WHERE replid='$_REQUEST[idgroup]'";
-	$result = mysql_query($sql);
-	$MYSQL_ERRNO = mysql_errno();
-	if ($MYSQL_ERRNO>0){
+	$sql = "DELETE FROM jbsfina.groupbarang WHERE replid='".$_REQUEST['idgroup']."'";
+	$result = mysqli_query($mysqlconnection, $sql);
+	$mysqli_ERRNO = mysqli_errno($mysqlconnection);
+	if ($mysqli_ERRNO>0){
 	?>
     <script language="javascript">
 		alert('Data sedang digunakan \nsehingga tidak dapat dihapus!');
     </script>
-    <?
+    <?php
 	//echo  "<span style='font-family:Verdana; color:red;'>Gagal Menghapus Data<br>Data Sedang Digunakan!</span>";
 	//exit;
 	}
 }
 
 if ($op=="EraseKelompok"){
-	$sql = "DELETE FROM jbsfina.kelompokbarang WHERE replid='$_REQUEST[idkelompok]'";
-	$result = mysql_query($sql);
-	$MYSQL_ERRNO = mysql_errno();
-	if ($MYSQL_ERRNO>0){
+	$sql = "DELETE FROM jbsfina.kelompokbarang WHERE replid='".$_REQUEST['idkelompok']."'";
+	$result = mysqli_query($mysqlconnection, $sql);
+	$mysqli_ERRNO = mysqli_errno($mysqlconnection);
+	if ($mysqli_ERRNO>0){
 	?>
     <script language="javascript">
 		alert('Data sedang digunakan \nsehingga tidak dapat dihapus!');
     </script>
-    <?
+    <?php
 	//echo  "<span style='font-family:Verdana; color:red;'>Gagal Menghapus Data<br>Data Sedang Digunakan!</span>";
 	//exit;
 	}
@@ -63,7 +63,7 @@ function getNSubDir($idroot) {
 	
 	$sql = "SELECT count(*) FROM jbsfina.kelompokbarang WHERE idgroup='$idroot'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	return $row[0];
 }
 
@@ -134,34 +134,34 @@ function SelectKelompok(idkelompok){
 <div align="right">
 <a href="javascript:AddGroup()"><img src="../images/ico/tambah.png" border="0">Tambah Group</a>
 </div>
-<?
+<?php
 $sql = "SELECT replid,namagroup FROM jbsfina.groupbarang ORDER BY namagroup";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 if ($num>0){
 ?>
 <ul class='mktree' id='tree1'>
-<?
-while ($row = @mysql_fetch_row($result)){
+<?php
+while ($row = @mysqli_fetch_row($result)){
 $class="liOpen";
 if (getNSubDir($row[0])==0)
 	$class="liClose";
 ?>
-<li class="liOpen" style="cursor:default">&nbsp;<img src='../images/ico/folder.gif' border='0'>&nbsp;<strong><?=stripslashes($row[1])?></strong>&nbsp;<a href="javascript:AddKelompok('<?=$row[0]?>')"><img src="../images/ico/tambah.png" border='0' title="Tambah Kelompok"></a><a href="javascript:EditGroup('<?=$row[0]?>')"><img src="../images/ico/ubah.png" border='0' title="Ubah Group"></a><a href="javascript:EraseGroup('<?=$row[0]?>')"><img src="../images/ico/hapus.png" border='0' title="Hapus Group"></a>
-<?
-$sql2 = "SELECT replid,kelompok FROM jbsfina.kelompokbarang WHERE idgroup='$row[0]'"; 
+<li class="liOpen" style="cursor:default">&nbsp;<img src='../images/ico/folder.gif' border='0'>&nbsp;<strong><?=stripslashes((string) $row[1])?></strong>&nbsp;<a href="javascript:AddKelompok('<?=$row[0]?>')"><img src="../images/ico/tambah.png" border='0' title="Tambah Kelompok"></a><a href="javascript:EditGroup('<?=$row[0]?>')"><img src="../images/ico/ubah.png" border='0' title="Ubah Group"></a><a href="javascript:EraseGroup('<?=$row[0]?>')"><img src="../images/ico/hapus.png" border='0' title="Hapus Group"></a>
+<?php
+$sql2 = "SELECT replid,kelompok FROM jbsfina.kelompokbarang WHERE idgroup='".$row[0]."'"; 
 $result2 = QueryDb($sql2);
-$num2 = @mysql_num_rows($result2);
+$num2 = @mysqli_num_rows($result2);
 if ($num2>0){
 echo  "<ul>";
-while ($row2 = @mysql_fetch_row($result2)){
+while ($row2 = @mysqli_fetch_row($result2)){
 ?>
 <li class="liOpen" id="liOpen<?=$row2[0]?>" onMouseOver="Hover('liOpen<?=$row2[0]?>','1')" onMouseOut="Hover('liOpen<?=$row2[0]?>','0')" onClick="SelectKelompok('<?=$row2[0]?>')">
 <!--<span >-->
-<span ><img src='../images/ico/page.gif' border='0'>&nbsp;<?=stripslashes($row2[1])?></span>&nbsp;<img src="../images/ico/ubah.png" border='0' onClick="EditKelompok('<?=$row2[0]?>')" title="Ubah Kelompok" style="cursor:pointer"><img src="../images/ico/hapus.png" border='0' onClick="EraseKelompok('<?=$row2[0]?>')" title="Hapus Kelompok" style="cursor:pointer">
+<span ><img src='../images/ico/page.gif' border='0'>&nbsp;<?=stripslashes((string) $row2[1])?></span>&nbsp;<img src="../images/ico/ubah.png" border='0' onClick="EditKelompok('<?=$row2[0]?>')" title="Ubah Kelompok" style="cursor:pointer"><img src="../images/ico/hapus.png" border='0' onClick="EraseKelompok('<?=$row2[0]?>')" title="Hapus Kelompok" style="cursor:pointer">
 <!--</span>-->
 </li>
-<?
+<?php
 }
 echo  "</ul>";
 } 
@@ -172,14 +172,14 @@ echo  "</ul>";
 <script language="javascript">
 collapseTree('tree1');
 </script>
-<?
+<?php
 } else {
 echo  "<div align='center'><br><em>Tidak ada Group Barang</em><br><br></div>";
 }
 ?>
 </fieldset>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

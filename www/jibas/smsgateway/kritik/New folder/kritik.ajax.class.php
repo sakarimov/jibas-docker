@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class NewKritik{
 	function OnStart(){
 		$op = $_REQUEST['op'];
@@ -33,7 +33,7 @@ class NewKritik{
 		$this->KritikID = $KritikID;
 
 		$TxtToReply = $_REQUEST['TxtToReply'];
-		$this->TxtToReply = trim($TxtToReply);
+		$this->TxtToReply = trim((string) $TxtToReply);
 
 		$ID = $_REQUEST['ID'];
 		$this->ID = $ID;
@@ -66,28 +66,28 @@ class NewKritik{
 	function GetNewID(){
 		$sql = "SELECT * FROM kritiksaran WHERE YEAR(senddate)='$this->Year' AND MONTH(senddate)='$this->Month' AND replid NOT IN (".$this->CurrentKritikIdList.") ORDER BY replid DESC";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		$IDList = "";
 		if ($num>0){
 			$cnt = 1;
-			while ($row = @mysql_fetch_array($res)){
+			while ($row = @mysqli_fetch_array($res)){
 				  $IDList = ($IDList=="")?$row['replid']:$IDList.','.$row['replid'];
 				  
-				  $msg 	  = (strlen($row['message'])>50)?substr($row['message'],0,50)."...":$row['message'];
+				  $msg 	  = (strlen((string) $row['message'])>50)?substr((string) $row['message'],0,50)."...":$row['message'];
 				?>
 				<input type="text" id="Content<?=$row['replid']?>" style="width:100%" value="<span class='Link'><?=$row['sender']?></span>#><?=FullDateFormat($row['senddate'])?>#><?=$msg	?>#><?=$row['replid']?>#><?=$row['from']?>" />
-				<?
+				<?php
 			}
 		}
 		?>
 		<input type="text" id="NewKritikIdList" style="width:100%" value="<?=$IDList?>" />
 		<input type="text" id="NumKritikIdList" style="width:100%" value="<?=$num?>" />
-		<?
+		<?php
 	}
 	function GetMessage(){
 		$sql = "SELECT * FROM kritiksaran WHERE replid = '$this->KritikID'";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_array($res);
+		$row = @mysqli_fetch_array($res);
 		?>
         <table width="100%" border="0" cellspacing="3" cellpadding="2">
           <tr>
@@ -102,7 +102,7 @@ class NewKritik{
           </tr>
           
         </table>
-        <?
+        <?php
 	}
 	function GetMessageReaden(){
 		$sql = "UPDATE kritiksaran SET Status=1 WHERE replid = '$this->KritikID'";
@@ -116,17 +116,17 @@ class NewKritik{
             <td>No</td>
             <td>Pengirim</td>
             <td>Tanggal</td>
-            <td><?=ucfirst($this->Type) ?></td>
+            <td><?=ucfirst((string) $this->Type) ?></td>
             <td>&nbsp;</td>
           </tr>
-          <?
+          <?php
 		  $ID  = "";
 		  $sql = "SELECT replid,senddate,sender,`from`,`type`,message FROM kritiksaran WHERE YEAR(senddate)='$this->Year' AND MONTH(senddate)='$this->Month' AND `type`='$this->Type' ORDER BY replid DESC";
 		  $res = QueryDb($sql);
-		  $num = @mysql_num_rows($res);
+		  $num = @mysqli_num_rows($res);
 		  if ($num>0){
 		  $cnt=1;
-		  while ($row = @mysql_fetch_row($res)){
+		  while ($row = @mysqli_fetch_row($res)){
 		  if ($ID=="")
 		  	  $ID = $row[0];
 		  else		
@@ -139,10 +139,10 @@ class NewKritik{
 		  //if ($cnt%2==0)
 		  	//	$bg = "background-color:#cfddd1;";		
 		  
-		  $nohp  = str_replace("+62","",$row[2]);	
+		  $nohp  = str_replace("+62","",(string) $row[2]);	
           $sqlph = "SELECT nama FROM phonebook WHERE nohp LIKE '%$nohp'";
 		  $resph = QueryDb($sqlph);
-		  $rowph = @mysql_fetch_row($resph);
+		  $rowph = @mysqli_fetch_row($resph);
 		  $nama  = $rowph[0];
 		  ?>
           <tr style="cursor:pointer;<?=$bg?><?=$style?>" id="<?=$row[0]?>" >
@@ -150,17 +150,17 @@ class NewKritik{
             <td class="td Link" onclick="ReadMessage('<?=$row[0]?>');"><?=$row[2]?> &lt;<?=$nama?>&gt;</td>
             <td class="td" onclick="ReadMessage('<?=$row[0]?>');"><?=FullDateFormat($row[1])?></td>
             <td class="td" onclick="ReadMessage('<?=$row[0]?>');">
-			<?
+			<?php
 			//echo ucfirst($row[4])." : <br>";
-			if (strlen($row[5])>50)
-				echo substr($row[5],0,50)."...";
+			if (strlen((string) $row[5])>50)
+				echo substr((string) $row[5],0,50)."...";
 			else
 				echo $row[5];
 			?>
             </td>
             <td class="td" align="center"><img onclick="DeleteRow(this,'<?=$row[0]?>');" src="../images/ico/hapus.png" width="16" height="16" /></td>
           </tr>
-          <?
+          <?php
 		  $cnt++;
 		  }
 		  }
@@ -170,7 +170,7 @@ class NewKritik{
 				Tables('KritikTable', 1, 0);
 			</script>
           <input type="hidden" id="CurrentKritikIdList" style="width:100%" value="<?=$ID?>" />
-		<?
+		<?php
     }
 }
 ?>

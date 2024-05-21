@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,24 +44,24 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
 OpenDb();
 
-$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '$tahunajaran'";
+$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '".$tahunajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ta  = $row[0];
 
-$sql = "SELECT kelas FROM kelas WHERE replid = '$kelas'";
+$sql = "SELECT kelas FROM kelas WHERE replid = '".$kelas."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $kls = $row[0];
 
-$sql = "SELECT semester FROM semester WHERE replid = '$semester'";
+$sql = "SELECT semester FROM semester WHERE replid = '".$semester."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $sem = $row[0];
 
-$sql = "SELECT nama FROM pelajaran WHERE replid = '$pelajaran'";
+$sql = "SELECT nama FROM pelajaran WHERE replid = '".$pelajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $pel = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -97,8 +97,8 @@ $pel = $row[0];
 </tr>
 </table>
 <br>
-<?
-$info = array();
+<?php
+$info = [];
 $sql = "SELECT DISTINCT u.idjenis, j.jenisujian
           FROM ujian u, jenisujian j
          WHERE u.idjenis = j.replid
@@ -108,7 +108,7 @@ $sql = "SELECT DISTINCT u.idjenis, j.jenisujian
          ORDER BY j.jenisujian";
 $res = QueryDb($sql);
 $njenis = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $idjenis = $row[0];
     $namajenis = $row[1];
@@ -121,10 +121,10 @@ while($row = mysql_fetch_row($res))
                AND idjenis = '$idjenis'
              ORDER BY tanggal";
     $res2 = QueryDb($sql);
-    $nujian = mysql_num_rows($res2);
+    $nujian = mysqli_num_rows($res2);
     $idujian = "";
     $tglujian = "";
-    while($row2 = mysql_fetch_row($res2))
+    while($row2 = mysqli_fetch_row($res2))
     {
         if ($idujian != "")
             $idujian .= "#";
@@ -146,9 +146,9 @@ while($row = mysql_fetch_row($res))
 
 $sql = "SELECT aktif
           FROM tahunajaran
-         WHERE replid = '$tahunajaran'";
+         WHERE replid = '".$tahunajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ta_aktif = (int)$row[0];
 
 if ($ta_aktif == 0)
@@ -165,9 +165,9 @@ else
              ORDER BY nama";
              
 $res = QueryDb($sql);
-$siswa = array();
+$siswa = [];
 $nsiswa = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $siswa[$nsiswa][0] = $row[0];
     $siswa[$nsiswa][1] = $row[1];
@@ -186,16 +186,16 @@ for($i = 0; $i < $njenis; $i++)
     <td width="30" rowspan="2">No</td>
     <td width="100" rowspan="2">NIS</td>
     <td width="240" rowspan="2">Nama</td>
-<?  for($i = 0; $i < $njenis; $i++)
+<?php  for($i = 0; $i < $njenis; $i++)
     {
         $namajenis = $info[$i][1];
         $nujian = $info[$i][2];
         $width = 60 * $nujian; ?>
         <td width="<?=$width?>" colspan="<?=$nujian?>" align="center"><?=$namajenis?></td>
-<?  } ?>    
+<?php  } ?>    
 </tr>
 <tr>
-<?  for($i = 0; $i < $njenis; $i++)
+<?php  for($i = 0; $i < $njenis; $i++)
     {
         $nujian = $info[$i][2];
         $tglujian = $info[$i][4];
@@ -203,11 +203,11 @@ for($i = 0; $i < $njenis; $i++)
         for($j = 0; $j < count($arrtgl); $j++)
         {  ?>
         <td width="60" align="center" class="header"><?=$arrtgl[$j]?></td>
-<?      }
+<?php      }
     } ?>        
 </tr>
 
-<?
+<?php
 for($s = 0; $s < $nsiswa; $s++)
 {
     $no = $s + 1;
@@ -230,12 +230,12 @@ for($s = 0; $s < $nsiswa; $s++)
             $sql = "SELECT nilaiujian
                       FROM nilaiujian
                      WHERE nis = '$nis'
-                       AND idujian = '$id'";
+                       AND idujian = '".$id."'";
             $res = QueryDb($sql);
-            if (mysql_num_rows($res) > 0)
+            if (mysqli_num_rows($res) > 0)
             {
-                $row = mysql_fetch_row($res);
-                echo "<td align='center'>$row[0]</td>";
+                $row = mysqli_fetch_row($res);
+                echo "<td align='center'>".$row[0]."</td>";
             }
             else
             {
@@ -248,7 +248,7 @@ for($s = 0; $s < $nsiswa; $s++)
 ?>
 </table>
 
-<?
+<?php
 CloseDb();
 ?>
 </body>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ if ((int) $info->Status < 0)
 }
 
 $hasilUjianJson = $info->Data;
-$hasilUjian = json_decode($hasilUjianJson);
+$hasilUjian = json_decode((string) $hasilUjianJson, null, 512, JSON_THROW_ON_ERROR);
 
 $nilaiColor = "#DDDDDD";
 $sNilai = "--";
@@ -237,18 +237,18 @@ for($i = 0; $i < count($hasilUjian->LsHasilSoal); $i++)
     $tag->TipeDataJawaban = $info->TipeDataJawaban;
 
     $jsonTag = $tag->toJson();
-    $jsonTag = str_replace("\"", "`", $jsonTag);
+    $jsonTag = str_replace("\"", "`", (string) $jsonTag);
 
     $imSoal = "";
     $sql = "SELECT id, resdir 
               FROM jbscbe.webusersoal 
              WHERE userid = '$userId' 
                AND idujianserta = '$idUjianSerta' 
-               AND idsoal = '$idSoal'";
+               AND idsoal = '".$idSoal."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $idRes = $row[0];
         $resDir = $row[1];
         $imSoal = checkResFileGetUrl($idRes, $resDir, "qsth");

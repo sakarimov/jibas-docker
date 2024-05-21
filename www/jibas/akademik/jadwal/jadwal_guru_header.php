@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,12 +45,12 @@ OpenDb();
 
 if ($op=="dw8dxn8w9ms8zs22")
 {
-	$sql_update_aktif = "UPDATE jbsakad.infojadwal SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql_update_aktif = "UPDATE jbsakad.infojadwal SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql_update_aktif);
 }
 else if ($op=="xm8r389xemx23xb2378e23")
 {
-	$sql_delete = "DELETE FROM jbsakad.infojadwal WHERE replid = '$_REQUEST[info_jadwal]'";
+	$sql_delete = "DELETE FROM jbsakad.infojadwal WHERE replid = '".$_REQUEST['info_jadwal']."'";
 	$result = QueryDb($sql_delete);
 	if ($result)
 	{
@@ -60,7 +60,7 @@ else if ($op=="xm8r389xemx23xb2378e23")
 			document.location.href="jadwal_guru_header.php";
 			parent.footer.location.href="blank_jadwalguru.php";
 		</script>
-	<?
+	<?php
 	}
 }
 
@@ -186,7 +186,7 @@ function focusNext(elemName, evt) {
     <tr>
     	<td><strong>Tahun Ajaran </strong></td>
     	<td><select name="departemen" id="departemen" onChange="change_departemen()" style="width:80px;" onkeypress="return focusNext('tahunajaran', event)">
-          <?	
+          <?php 
 		  if (SI_USER_LEVEL()==2) {
 			  $dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
@@ -198,7 +198,7 @@ function focusNext(elemName, evt) {
 			  <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
 			  <?=$value ?>
 			  </option>
-			  <?	}
+			  <?php }
 		  }else{
 			 $dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
@@ -210,14 +210,14 @@ function focusNext(elemName, evt) {
           <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
           <?=$value ?>
           </option>	
-		<?  }
+		<?php  }
 		  }   ?>
         </select>       
         <select name="tahunajaran" id="tahunajaran" onChange="change_tahunajaran()" style="width:200px;" onkeypress="return focusNext('info_jadwal', event)">
-   		 	<?
+   		 	<?php
 			$sql = "SELECT replid,tahunajaran,aktif FROM jbsakad.tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
 				if ($row['aktif']) 
@@ -226,8 +226,8 @@ function focusNext(elemName, evt) {
 					$ada = '';			 
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-    		<?
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+    		<?php
 			}
     		?>
     	</select>        </td>
@@ -236,12 +236,12 @@ function focusNext(elemName, evt) {
         <td><strong>Info Jadwal</strong></td>
         <td colspan="3">
 			<select name="info_jadwal" id="info_jadwal" onChange="change(0)" style="width:285px" onkeypress="return focusNext('tabel', event)">
-<?          $sql_info_jadwal = "SELECT i.replid, i.deskripsi, i.aktif
+<?php          $sql_info_jadwal = "SELECT i.replid, i.deskripsi, i.aktif
 								FROM jbsakad.infojadwal i, tahunajaran a
 								WHERE i.idtahunajaran = a.replid AND a.departemen='$departemen'
 								AND i.idtahunajaran = '$tahunajaran' AND i.aktif=1 ORDER BY i.aktif DESC";						            
 			$result_info_jadwal = QueryDb($sql_info_jadwal);
-            while ($row_info_jadwal = @mysql_fetch_array($result_info_jadwal))
+            while ($row_info_jadwal = @mysqli_fetch_array($result_info_jadwal))
 			{
                 if ($info_jadwal == "")
                     $info_jadwal = $row_info_jadwal['replid'];
@@ -253,7 +253,7 @@ function focusNext(elemName, evt) {
 				<option value="<?=$row_info_jadwal['replid']?>" <?=StringIsSelected($row_info_jadwal['replid'],$info_jadwal)?>>
 				<?=$row_info_jadwal['deskripsi'].' '.$ada?>
 		        </option>
-<?  		} ?>
+<?php  		} ?>
         </select>
 			<img src="../images/ico/tambah.png" onClick="newWindow('info_jadwal.php?departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>','InfoJadwal','600','425','resizable=1,scrollbars=1,status=0,toolbar=0')" onMouseOver="showhint('Tambah Info Jadwal!', this, event, '80px')" />           
 		</td>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/theme.php');
@@ -45,9 +45,9 @@ OpenDb();
 $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat 
 		FROM guru g, jbssdm.pegawai p, pelajaran j, tingkat t 
 		WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen AND t.replid = '$idtingkat' 
-		AND j.replid = '$id' AND g.nip = '$nip'"; 
+		AND j.replid = '$id' AND g.nip = '".$nip."'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -64,7 +64,7 @@ $tingkat = $row[4];
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -246,21 +246,21 @@ function focusNext(elemName, evt) {
 	<td><strong>Aspek</strong></td>
 	<td>
     	<select name="aspek" id="aspek" onKeyPress="focusNext('nmin1',event)">
-<?		$sql = "SELECT dasarpenilaian, keterangan FROM dasarpenilaian 
+<?php 	$sql = "SELECT dasarpenilaian, keterangan FROM dasarpenilaian 
 				WHERE aktif = 1 AND  dasarpenilaian NOT IN 
 					(SELECT dasarpenilaian FROM aturangrading g, tingkat t 
 					 WHERE t.replid = g.idtingkat AND g.idpelajaran = $id 
 					 AND g.idtingkat = '$idtingkat' AND g.nipguru = '$nip' GROUP BY g.dasarpenilaian)
 				ORDER BY keterangan";    
 		$result = QueryDb($sql);	
-		while ($row = @mysql_fetch_array($result)) 
+		while ($row = @mysqli_fetch_array($result)) 
 		{
 			if ($aspek == "")
 				$aspek = $row['dasarpenilaian']; ?>
           <option value="<?=$row['dasarpenilaian'] ?>" <?=StringIsSelected($row['dasarpenilaian'], $aspek) ?> >
 		  <?=$row['keterangan'] ?>
           </option>
-<? 		} ?>
+<?php 		} ?>
         </select> </td>
 </tr>
 <tr>
@@ -273,16 +273,16 @@ function focusNext(elemName, evt) {
 		<td class="header" align="center" width="70%" colspan="3">Nilai Min &nbsp;&nbsp;&nbsp; Nilai Maks</td>
      	<td class="header" align="center" width="20%">Grade</td>
 	</tr>
-<?	for ($cnt=1;$cnt<=10;$cnt++) 
+<?php for ($cnt=1;$cnt<=10;$cnt++) 
 	{ ?>		
 	<tr height="25">
 		<td align="center"><?=$cnt?></td>
 		<td align="right"><input type="text" name=<?='nmin'.$cnt?> id=<?='nmin'.$cnt?> size="8" maxlength="5" onKeyPress="focusNext('nmax<?=$cnt?>',event)"/> </td>
         <td align="center" ><strong> - </strong></td>
 		<td align="left"><input type="text" name=<?='nmax'.$cnt?> id=<?='nmax'.$cnt?> size="8" maxlength="5" onkeypress="focusNext('grade<?=$cnt?>',event)"/> </td>
-		<td align="center"><input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" maxlength="2" <? if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" <? } else { ?> onkeypress="focusNext('Simpan',event)" <? } ?> style="text-transform:uppercase"/> </td>
+		<td align="center"><input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" maxlength="2" <?php if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" <?php } else { ?> onkeypress="focusNext('Simpan',event)" <?php } ?> style="text-transform:uppercase"/> </td>
 	</tr>
-<?	}	?>
+<?php }	?>
 	</table> 
     <div align="left">
 	<font color="red"><p><b>Ket: Nilai desimal harus berupa titik,
@@ -317,7 +317,7 @@ function focusNext(elemName, evt) {
 </tr>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

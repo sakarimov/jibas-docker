@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -74,7 +74,7 @@ if(isset($_POST["pelajaran"])){
 }elseif(isset($_GET["pelajaran"])){
 	$pelajaran = $_GET["pelajaran"];
 }
-$jenis_penilaian = $_GET[jenis_penilaian];
+$jenis_penilaian = $_GET['jenis_penilaian'];
 ?>
 
 <html>
@@ -89,11 +89,11 @@ function print_this() {
 }
 </script>
 </head>
-<?
+<?php
 openDb();
 ?>
 <body onLoad="print_this()">
-<? include('../library/headercetak.php');  ?>
+<?php include('../library/headercetak.php');  ?>
 <table width="100%" border="0">
 	<tr>
 		<td align="center" colspan="6"><font size="4"><b>PENILAIAN PELAJARAN</b></td>
@@ -107,33 +107,33 @@ openDb();
 		<td>Tingkat</td>
 		<td>:</td>		
 		<td>
-		<?
-		$query_tkt = "SELECT * FROM jbsakad.tingkat WHERE replid = '$tingkat'";
+		<?php
+		$query_tkt = "SELECT * FROM jbsakad.tingkat WHERE replid = '".$tingkat."'";
 		$result_tkt = QueryDb($query_tkt);
-		$row_tkt = mysql_fetch_array($result_tkt);
-		 echo $row_tkt[tingkat] ?></td>
+		$row_tkt = mysqli_fetch_array($result_tkt);
+		 echo $row_tkt['tingkat'] ?></td>
 	</tr>
 	<tr>
 		<td>Kelas</td>
 		<td>:</td>		
 		<td>
-		<? 
-		$query_kls = "SELECT * FROM jbsakad.kelas WHERE replid = '$kelas'";
+		<?php 
+		$query_kls = "SELECT * FROM jbsakad.kelas WHERE replid = '".$kelas."'";
 		$result_kls = QueryDb($query_kls);
-		$row_kls = mysql_fetch_array($result_kls);
-		echo $row_kls[kelas] ?></td>
+		$row_kls = mysqli_fetch_array($result_kls);
+		echo $row_kls['kelas'] ?></td>
 	</tr>
 	<tr>
 		<td>Pelajaran</td>
 		<td>:</td>		
 		<td>
-		<? if($pelajaran == "all"){
+		<?php if($pelajaran == "all"){
 				$pel = "Semua Pelajaran";
 			}elseif($pelajaran != "all"){
-				$query_pel = "SELECT nama FROM jbsakad.pelajaran WHERE replid = '$pelajaran'";
+				$query_pel = "SELECT nama FROM jbsakad.pelajaran WHERE replid = '".$pelajaran."'";
 				$result_pel = QueryDb($query_pel);
-				$row_pel = mysql_fetch_array($result_pel);
-				$pel = $row_pel[nama];
+				$row_pel = mysqli_fetch_array($result_pel);
+				$pel = $row_pel['nama'];
 			}
 		echo $pel ?></td>
 	</tr>
@@ -152,16 +152,16 @@ openDb();
 <input type="hidden" name="jenis" value="<?=$jenis_penilaian ?>">
     <fieldset><legend><b>Jenis Penilaian</b>
 	
-	<?	
+	<?php 
 	$query_jp = "SELECT * FROM jbsakad.jenisujian ".
 				"WHERE jenisujian.replid = '$jenis_penilaian'";
 	$result_jp = QueryDb($query_jp);
 	
-	$row_jp = @mysql_fetch_array($result_jp);
-	echo "<b>$row_jp[jenisujian]</b>"; ?>
+	$row_jp = @mysqli_fetch_array($result_jp);
+	echo "<b>".$row_jp['jenisujian']."</b>"; ?>
 	
 	
-	<?
+	<?php
 	$query_uj = "SELECT nilaiujian.replid, nilaiujian.idujian, nilaiujian.nis, siswa.nama, length(nilaiujian.keterangan) as lenket, nilaiujian.nilaiujian ".
 				"FROM jbsakad.ujian, jbsakad.nilaiujian, jbsakad.siswa ".
 				"WHERE ujian.idjenis = '$jenis_penilaian' ".
@@ -172,19 +172,19 @@ openDb();
 				"AND siswa.idkelas = '$kelas' ".
 				"AND siswa.nis = nilaiujian.nis ".
                 "AND siswa.aktif = '1' ORDER BY siswa.nama, ujian.tanggal, nilaiujian.idujian";
-	$result_uj = QueryDb($query_uj) or die (mysql_error());
+	$result_uj = QueryDb($query_uj) or die (mysqli_error($mysqlconnection));
 	
 	//echo $query_uj;
-	$num_uj = @mysql_num_rows($result_uj);
+	$num_uj = @mysqli_num_rows($result_uj);
 	
-	while($row_uj = @mysql_fetch_array($result_uj)){
-		$my_data[$row_uj[nis]][n][$row_uj[idujian]][nilai] = $row_uj[nilaiujian];
-		$my_data[$row_uj[nis]][n][$row_uj[idujian]][id] = $row_uj[replid];
-		$my_data[$row_uj[nis]][n][$row_uj[idujian]][idujian] = $row_uj[idujian];
-		$my_data[$row_uj[nis]][n][$row_uj[idujian]][status] = $row_uj[statuspenilaian];
-		$my_data[$row_uj[nis]][n][$row_uj[idujian]][lenket] = $row_uj[lenket];
-		//$my_data[$row_uj[nis]][Replid] = $row_uj[Replid];
-		$my_data[$row_uj[nis]][nama] = $row_uj[nama];
+	while($row_uj = @mysqli_fetch_array($result_uj)){
+		$my_data[$row_uj['nis']]['n'][$row_uj['idujian']]['nilai'] = $row_uj['nilaiujian'];
+		$my_data[$row_uj['nis']]['n'][$row_uj['idujian']]['id'] = $row_uj['replid'];
+		$my_data[$row_uj['nis']]['n'][$row_uj['idujian']]['idujian'] = $row_uj['idujian'];
+		$my_data[$row_uj['nis']]['n'][$row_uj['idujian']]['status'] = $row_uj['statuspenilaian'];
+		$my_data[$row_uj['nis']]['n'][$row_uj['idujian']]['lenket'] = $row_uj['lenket'];
+		//$my_data[$row_uj['nis']]['replid'] = $row_uj['replid'];
+		$my_data[$row_uj['nis']]['nama'] = $row_uj['nama'];
 	}
 
 	?>
@@ -193,7 +193,7 @@ openDb();
 			<td class="headerlong" align="center" height="30">No</td>
 			<td class="headerlong" height="30">NIS</td>
 			<td class="headerlong" height="30">Nama</td>
-			<?
+			<?php
 				$query_qz = "SELECT ujian.replid, ujian.tanggal, jenisujian.jenisujian ".
 							"FROM jbsakad.ujian, jbsakad.jenisujian ".
 							"WHERE ujian.idjenis = '$jenis_penilaian' ".
@@ -205,38 +205,38 @@ openDb();
 				
 			$i=0;
 			$nujian = 0;
-			while($row_qz = @mysql_fetch_array($result_qz)){
+			while($row_qz = @mysqli_fetch_array($result_qz)){
 			$i++;
 			?>
 				<td class="headerlong" align="center" height="30">				
-				<? 
-				$tgl = format_tgl($row_qz[tanggal]);
-				echo  "$row_qz[jenisujian]-$i"; ?>
+				<?php 
+				$tgl = format_tgl($row_qz['tanggal']);
+				echo  $row_qz['jenisujian']-$i ?>
 				<?="<br>($tgl)"; ?>
 				</td>								
-			<?
-			$kol_idujian[$nujian] = $row_qz[replid];
+			<?php
+			$kol_idujian[$nujian] = $row_qz['replid'];
 			$nujian++;
-			$kolom[$row_qz[replid]] = $row_qz[replid];			
+			$kolom[$row_qz['replid']] = $row_qz['replid'];			
 			}
 			?>
 			<td class="headerlong" align="center" height="30">Rata-Rata Siswa</td>
-			<?
+			<?php
 			 $query_ju = "SELECT * FROM jbsakad.jenisujian ".
 						 "WHERE jenisujian.replid = '$jenis_penilaian'";
 			 $result_ju = QueryDb($query_ju);
-			 $row_ju = @mysql_fetch_array($result_ju);
+			 $row_ju = @mysqli_fetch_array($result_ju);
 			?>
-			<td class="headerlong" align="center" height="30">Nilai Akhir <?=$row_ju[jenisujian] ?></td>
+			<td class="headerlong" align="center" height="30">Nilai Akhir <?=$row_ju['jenisujian'] ?></td>
 		</tr>			
-			<?
+			<?php
 			$totCol[] = 0;
 		if($my_data == 0){
 			?>
 			<tr>
 				<td colspan="7" align="center">Data Tidak ada</td>
 			</tr>
-			<?					
+			<?php 				
         }elseif($my_data != "") {
             $i = 0;
             foreach($my_data as $ns => $d) {
@@ -245,18 +245,18 @@ openDb();
                     <tr>
 						<td align='center' height='25'>$i</td>
 						<td height='25'>$ns</td>
-						<td height='25'>$d[nama]</td>";
+						<td height='25'>".$d['nama']."</td>";
 				$t = 0;
 				$idx = 0;
                 if($kolom != "") {
                    		$nkolpinted = 0;
                 		$ujcntstart = 0;
-                    foreach($d[n] as $nuj => $v) {  
+                    foreach($d['n'] as $nuj => $v) {  
 					$ujcnt = $ujcntstart;
 								$ujfound = false;
                     		while ($ujcnt < $nujian && !$ujfound) {                  			
-                    			//echo "$v[idujian] vs $kol_idujian[$ujcnt]";
-                    			if ($v[idujian] == $kol_idujian[$ujcnt]) { 
+                    			//echo "$v['idujian'] vs $kol_idujian[$ujcnt]";
+                    			if ($v['idujian'] == $kol_idujian[$ujcnt]) { 
                     				$ujfound = true;
                     				$ujcntstart = $ujcnt + 1;
 									
@@ -265,28 +265,28 @@ openDb();
                     				$nkolpinted++;
                     				?>
 									<td align='center' height='25'>(+)</td>
-									<?
+									<?php
 									$ujcnt++;
                     			} 
                     		}
                     		
-						$t += $v[nilai];
-						$totCol[$idx] += $v[nilai];
+						$t += $v['nilai'];
+						$totCol[$idx] += $v['nilai'];
 						$idx++;
 						$nkolpinted++;		
                     ?>          
                         <td align='center' height='25'>
 							<b>
-							<?=$v[nilai] ?></b>
-							<input type="hidden" name="nilai<?=$i ?>" value="<?=$v[nilai] ?>">
+							<?=$v['nilai'] ?></b>
+							<input type="hidden" name="nilai<?=$i ?>" value="<?=$v['nilai'] ?>">
 						</td>
-					<?
+					<?php
                     }
               		  while ($nkolpinted < $nujian) {
                   		
                   		?>
 						<td align='center' height='25'>(+)</td>
-				<?
+				<?php
 					$nkolpinted++;
 						}                  	
 				}
@@ -300,28 +300,28 @@ openDb();
 								 "AND nau.idpelajaran = '$pelajaran' ".
 								 "AND nau.idkelas = '$kelas' ".
 								 "AND nau.idsemester = '$semester' ".
-								 "AND nau.nis = '$ns'";
-					$result_nau = QueryDb($query_nau) or die (mysql_error());
-					$row_nau = mysql_fetch_array($result_nau);
-					echo $row_nau[nilaiAU];
+								 "AND nau.nis = '".$ns."'";
+					$result_nau = QueryDb($query_nau) or die (mysqli_error($mysqlconnection));
+					$row_nau = mysqli_fetch_array($result_nau);
+					echo $row_nau['nilaiAU'];
 					?>					
 				</td>
 				</tr>
-				<?
+				<?php
             }
 			?>
 			<tr>
 				<td colspan="3" align="center" class="header" height="30"><b>Rata-rata Kelas</b></td>
-				<?
+				<?php
 				foreach($totCol as $key => $val){
 				?>
 					<td align="center" bgcolor="#FFFFFF"><b><?=round(($val * 1.0)/$i,2); ?></b></td>
-				<?
+				<?php
 				}
 				?><td></td>
 		</tr>
 		
-		<?
+		<?php
         }
 		?>
 		

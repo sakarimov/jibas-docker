@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/theme.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,7 +36,7 @@ if (isset($_POST['simpan'])) {
 	$sql_cek ="SELECT * from jbsumum.suku where suku='".CQ($_REQUEST['suku'])."' AND replid <>'$orig_suku'";
 	$hasil=QueryDb($sql_cek);
 	
-	if (mysql_num_rows($hasil)>0){
+	if (mysqli_num_rows($hasil)>0){
 		CloseDb();
 		$ERROR_MSG = "Suku $suku sudah digunakan!";
 	} else {
@@ -45,10 +45,10 @@ if (isset($_POST['simpan'])) {
 	
 		if ($result) { ?>
 		<script language="javascript">
-            opener.refresh('<?=$_REQUEST[suku]?>');
+            opener.refresh('<?=$_REQUEST['suku']?>');
             window.close();
         </script>
-<?		}	
+<?php 	}	
 }
 }
 CloseDb();
@@ -64,7 +64,7 @@ CloseDb();
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript">
 
@@ -101,7 +101,7 @@ function focusNext(elemName, evt) {
 	<td width="28" background="../<?=GetThemeDir() ?>bgpop_04a.jpg">&nbsp;</td>
     <td width="0" style="background-color:#FFFFFF">
     <!-- CONTENT GOES HERE //--->
-<?
+<?php
 $suku = $_GET['suku'];
 $replid=$_REQUEST['replid'];
 
@@ -139,11 +139,11 @@ if (isset($_POST['orig_suku']))
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

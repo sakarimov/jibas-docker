@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -39,7 +39,7 @@ $idtahunbuku = (int)$_REQUEST['idtahunbuku'];
 OpenDb();	
 $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 $result = QueryDb($sql);    
-$row = mysql_fetch_row($result);	
+$row = mysqli_fetch_row($result);	
 $departemen = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -64,18 +64,18 @@ $departemen = $row[0];
 <tr>
 	<td width="120"><strong>Departemen</strong></td>
     <td><strong>: 
-<?	$sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
+<?php $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);	
+	$row = mysqli_fetch_row($result);	
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 <tr>
 	<td><strong>Tahun Buku</strong></td>
     <td><strong>:
-<?	$sql = "SELECT tahunbuku FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
+<?php $sql = "SELECT tahunbuku FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
@@ -83,38 +83,38 @@ $departemen = $row[0];
 <tr>
 	<td><strong>Kategori</strong></td>
     <td><strong>:
-<?	$sql = "SELECT kategori FROM kategoripenerimaan WHERE kode='$idkategori' ORDER BY urutan";	
+<?php $sql = "SELECT kategori FROM kategoripenerimaan WHERE kode='$idkategori' ORDER BY urutan";	
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 <tr>
 	<td><strong>Jenis Penerimaan</strong></td>
     <td><strong>:
-<?	$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'"; 			
+<?php $sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'"; 			
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 
 </table>
 
-<?
+<?php
 $sql = "SELECT c.nopendaftaran, c.nama, c.telponsiswa as telpon, c.hpsiswa as hp, k.kelompok, c.alamatsiswa as alamattinggal, p.proses 
 		  FROM jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k, jbsakad.prosespenerimaansiswa p 
-		 WHERE c.idkelompok = k.replid AND c.idproses = p.replid AND c.replid = '$replid'";
+		 WHERE c.idkelompok = k.replid AND c.idproses = p.replid AND c.replid = '".$replid."'";
 
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	CloseDb();
 	exit();
 } 
 else 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$no = $row['nopendaftaran'];	
 	$nama = $row['nama'];
 	$telpon = $row['telpon'];
@@ -131,7 +131,7 @@ else
         <fieldset>
         <legend></legend>
         <table border="0" cellpadding="2" cellspacing="2" align="center">
-        <? 
+        <?php 
         $keterangan = "";
         $besar = "";
         $lunas = 0;
@@ -139,11 +139,11 @@ else
 				  FROM besarjttcalon 
 				 WHERE idcalon = $replid AND idpenerimaan = '$idpenerimaan' AND info2='$idtahunbuku'";
         $result = QueryDb($sql);
-        $bayar = mysql_num_rows($result);
+        $bayar = mysqli_num_rows($result);
         
-        if (mysql_num_rows($result) > 0) 
+        if (mysqli_num_rows($result) > 0) 
 		{
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $idbesarjtt = $row['id'];
             $lunas = $row['lunas'];
             $besar = $row['besar'];
@@ -169,9 +169,9 @@ else
         <tr>
             <td width="25%"><strong>Pembayaran</strong></td>                
             <td><strong>: 
-			<?	$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'"; 			
+			<?php $sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'"; 			
                 $result = QueryDb($sql);    
-                $row = mysql_fetch_row($result);
+                $row = mysqli_fetch_row($result);
                 echo  $row[0]; ?>
 			</strong></td>
         </tr>
@@ -183,7 +183,7 @@ else
         <tr>
             <td><strong>Status</strong></td>
             <td><strong>:</strong> 
-            <? 
+            <?php 
             $info = "<font color=red><strong>Belum Lunas</strong></font>";
             if ($lunas == 1)
                 $info = "<font color=blue><strong>Lunas</strong></font>";
@@ -254,10 +254,10 @@ else
 </tr>
 <tr>
     <td align="center" colspan="2"> 
-<? 
-    $sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+<?php 
+    $sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
     $nbayar = $row[0];
     
 	
@@ -275,7 +275,7 @@ else
     $result = QueryDb($sql);
    
     $info = "Pembayaran Pertama";
-	if (mysql_num_rows($result) > 1) 
+	if (mysqli_num_rows($result) > 1) 
 		$info = "Pembayaran Cicilan";
         
 ?> 
@@ -293,11 +293,11 @@ else
         <td class="header" width="*">Keterangan</td>
         <td class="header" width="15%">Petugas</td>
     </tr>
-    <? 
+    <?php 
       
         $cnt = 0;
         $total = 0;
-        while ($row = mysql_fetch_array($result))
+        while ($row = mysqli_fetch_array($result))
 		{
             $total += $row['jumlah'] + $row['diskon'];
 			$total_diskon += $row['diskon'];
@@ -311,7 +311,7 @@ else
         <td align="left"><?=$row['keterangan'] ?></td>
         <td align="center"><?=$row['petugas'] ?></td>
     </tr>
-    <?
+    <?php
         }
         $sisa = $besar - $total - $total_diskon;?>
     <tr height="35">
@@ -329,7 +329,7 @@ else
 </tr>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

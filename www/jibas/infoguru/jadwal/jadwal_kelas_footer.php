@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -48,7 +48,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 		$filter = 'replid';
 	
 	OpenDb();
-	$sql = "DELETE FROM jadwal WHERE $filter = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jadwal WHERE $filter = '".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	CloseDb();
 }	
@@ -59,11 +59,11 @@ function loadJam($id) {
 	       "FROM jam WHERE departemen = '$id' ORDER BY jamke";
 	
 	$result = QueryDb($sql);
-	$GLOBALS[maxJam] = mysql_num_rows($result);
+	$GLOBALS['maxJam'] = mysqli_num_rows($result);
 	
-	while($row = mysql_fetch_array($result)) {
-		$GLOBALS[jam][row][$row[0]][jam1] = $row[1];
-		$GLOBALS[jam][row][$row[0]][jam2] = $row[2];
+	while($row = mysqli_fetch_array($result)) {
+		$GLOBALS['jam']['row'][$row[0]][\JAM1] = $row[1];
+		$GLOBALS['jam']['row'][$row[0]][\JAM2] = $row[2];
 	}
 	return true;
 }
@@ -81,13 +81,13 @@ function loadJadwal() {
 	
 	$result = QueryDb($sql);
 	
-	while($row = mysql_fetch_assoc($result)) {
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][id] = $row[id];
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][njam] = $row[njam];
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][pelajaran] = $row[pelajaran];
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][guru] = $row[guru];
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][status] = $row[status];
-		$GLOBALS[jadwal][row][$row[hari]][$row[jam]][ket] = $row[ket];
+	while($row = mysqli_fetch_assoc($result)) {
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['id'] = $row['id'];
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['njam'] = $row['njam'];
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['pelajaran'] = $row['pelajaran'];
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['guru'] = $row['guru'];
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['status'] = $row['status'];
+		$GLOBALS['jadwal']['row'][$row['hari']][$row['jam']]['ket'] = $row['ket'];
 	}
 	return true;
 }
@@ -95,23 +95,23 @@ function loadJadwal() {
 function getCell($r, $c) {
 	global $mask, $jadwal;
 	if($mask[$c] == 0) {
-		if(isset($jadwal[row][$c][$r])) {
-			$mask[$c] = $jadwal[row][$c][$r][njam] - 1;
+		if(isset($jadwal['row'][$c][$r])) {
+			$mask[$c] = $jadwal['row'][$c][$r]['njam'] - 1;
 			
-			$s = "<td class='jadwal' rowspan='{$jadwal[row][$c][$r][njam]}' width='110px'>";
-			$s.= "<b>{$jadwal[row][$c][$r][pelajaran]}</b><br>";
-			$s.= "{$jadwal[row][$c][$r][guru]}<br><i>{$jadwal[row][$c][$r][status]}</i><br>{$jadwal[row][$c][$r][ket]}<br>";
+			$s = "<td class='jadwal' rowspan='{$jadwal['row'][$c][$r]['njam']}' width='110px'>";
+			$s.= "<b>{$jadwal['row'][$c][$r]['pelajaran']}</b><br>";
+			$s.= "{$jadwal['row'][$c][$r]['guru']}<br><i>{$jadwal['row'][$c][$r]['status']}</i><br>{$jadwal['row'][$c][$r]['ket']}<br>";
 			//$s.= "<img src='../images/ico/ubah.png' style='cursor:pointer' ";
-			//$s.= " onclick='edit({$jadwal[row][$c][$r][id]})'> &nbsp;";
+			//$s.= " onclick='edit({$jadwal['row'][$c][$r]['id']})'> &nbsp;";
 			//$s.= "<img src='../images/ico/hapus.png' style='cursor:pointer' ";
-			//$s.= " onclick='hapus({$jadwal[row][$c][$r][id]},0)'>";
+			//$s.= " onclick='hapus({$jadwal['row'][$c][$r]['id']},0)'>";
 			$s.= "</td>";
 			
 			return $s;
 		} else {
 			$s = "<td class='jadwal' width='110px'>";			
 			//$s.= "<img src='../images/ico/tambah.png' style='cursor:pointer' onclick='tambah($r, $c)'>";
-			$s.= "[Kosong]";
+			$s.= "['Kosong']";
 			$s.= "</td>";
 
 			return $s;
@@ -123,7 +123,7 @@ function getCell($r, $c) {
 
 $mask = NULL;
 for($i = 1; $i <= 7; $i++) {
-	$mask[i] = 0;
+	$mask['i'] = 0;
 }
 
 
@@ -208,11 +208,11 @@ function refresh() {
 <table border="0" width="100%" align="center" style="background-repeat:no-repeat; background-attachment:fixed">
 <tr>
 	<td>
- <?	OpenDb(); 
-	$sql = "SELECT * FROM pelajaran p WHERE p.departemen = '$departemen'";	
+ <?php OpenDb(); 
+	$sql = "SELECT * FROM pelajaran p WHERE p.departemen = '".$departemen."'";	
 	$result = QueryDb($sql);
 	CloseDb();      
-	if (@mysql_num_rows($result)>0){			
+	if (@mysqli_num_rows($result)>0){			
 ?>
   <strong></strong>
     <table width="95%" border="0" align="center">
@@ -237,23 +237,23 @@ function refresh() {
         <td width="110px" class="header" align="center">Sabtu</td>
         <td width="110px" class="header" align="center">Minggu</td>
     </tr>
-	<?
+	<?php
 	
-	if(isset($jam[row])) {
+	if(isset($jam['row'])) {
 		
-		foreach($jam[row] as $k => $v) {
+		foreach($jam['row'] as $k => $v) {
 		?> 
 		<tr>
-			<td class="jam" width="110px"><b><?=++$j ?>.</b> <?=$v[jam1] ?> - <?=$v[jam2] ?></td>
-			<? for($i = 1; $i <= 7; $i++) {?> 
+			<td class="jam" width="110px"><b><?=++$j ?>.</b> <?=$v[\JAM1] ?> - <?=$v[\JAM2] ?></td>
+			<?php for($i = 1; $i <= 7; $i++) {?> 
 			<?=getCell($k, $i); ?> 
-			<? }?>  
+			<?php }?>  
 		</tr>
-		<? } ?>
+		<?php } ?>
  <!-- END TABLE CONTENT -->
     </table>
    
-<? 		} else { ?> 
+<?php 		} else { ?> 
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
@@ -262,7 +262,7 @@ function refresh() {
 		</td>
 	</tr>
 	</table> 
-<?
+<?php
 		}
 	} else {
 	
@@ -274,7 +274,7 @@ function refresh() {
 		</td>
 	</tr>
 	</table>
-<? } ?>     
+<?php } ?>     
      </td></tr>
 <!-- END TABLE CENTER -->    
 </table>

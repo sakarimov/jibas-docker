@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetOwnerName($ownerid, $ownertype)
 {
     $sql = $ownertype == "S" ?
            "SELECT nama FROM jbsakad.siswa WHERE nis = '$ownerid'" :
-           "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+           "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -44,11 +44,11 @@ function ShowImageGallery()
     
     $sql = "SELECT filename, ffileinfo, location, width, height
               FROM jbsvcr.galleryfile
-             WHERE galleryid = '$galleryid'";         
+             WHERE galleryid = '".$galleryid."'";         
     $res = QueryDb($sql);
     $cntcol = 0;
     $nimage = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $nimage += 1;
         
@@ -68,9 +68,9 @@ function ShowImageGallery()
             $h = ($h > $GalleryViewIconHeight) ? $h * $delta : $h;
             
             if ($h > $GalleryViewIconHeight)
-                $imgdim = "height = '$GalleryViewIconHeight'";
+                $imgdim = "height = '".$GalleryViewIconHeight."'";
             else    
-                $imgdim = "width = '$GalleryViewIconWidth'";
+                $imgdim = "width = '".$GalleryViewIconWidth."'";
         }
         ?>
         
@@ -81,7 +81,7 @@ function ShowImageGallery()
             <?= $info ?>
         </td>
         
-<?      $cntcol += 1;
+<?php      $cntcol += 1;
         if ($cntcol == 3)
         {
             $cntcol = 0;
@@ -106,9 +106,9 @@ function GetMaxCommentId($galleryid)
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     
@@ -121,7 +121,7 @@ function ShowPrevCommentLink($galleryid)
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.gallerycomment
-             WHERE galleryid = '$galleryid'";
+             WHERE galleryid = '".$galleryid."'";
     $nCmt = (int)FetchSingle($sql);
     if ($nCmt <= $GalleryViewActiveComment)
         return;
@@ -139,7 +139,7 @@ function ShowPrevCommentLink($galleryid)
             </span>
         </td>
     </tr>
-<?
+<?php
 }
 
 function ShowPrevComment($galleryid)
@@ -148,7 +148,7 @@ function ShowPrevComment($galleryid)
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.gallerycomment
-             WHERE galleryid = '$galleryid'";
+             WHERE galleryid = '".$galleryid."'";
     $nCmt = (int)FetchSingleEx($sql);
     $sqlLimit = "LIMIT " . ($nCmt - $GalleryViewActiveComment);
     
@@ -161,10 +161,10 @@ function ShowPrevComment($galleryid)
                    $sqlLimit";
     
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -179,7 +179,7 @@ function ShowPrevComment($galleryid)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='GalleryViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='GalleryViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -199,7 +199,7 @@ function ShowPrevComment($galleryid)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -212,7 +212,7 @@ function ShowComment($galleryid, $maxCommentId)
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.gallerycomment
-                 WHERE galleryid = '$galleryid'";
+                 WHERE galleryid = '".$galleryid."'";
         $nCmt = (int)FetchSingleEx($sql);
         if ($nCmt > $GalleryViewActiveComment)
             $sqlLimit = "LIMIT " . ($nCmt - $GalleryViewActiveComment) . ", $GalleryViewActiveComment";
@@ -233,10 +233,10 @@ function ShowComment($galleryid, $maxCommentId)
                AND replid > '$maxCommentId'
                    $sqlLimit";
     $res = QueryDbEx($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -251,7 +251,7 @@ function ShowComment($galleryid, $maxCommentId)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='GalleryViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='GalleryViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -271,7 +271,7 @@ function ShowComment($galleryid, $maxCommentId)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     } // while
 }
 
@@ -324,12 +324,12 @@ function ShowCommentBox($galleryid)
     </table>
     </fieldset>
 
-<?    
+<?php    
 }
 
 function ValidateDelCmtLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return ValidateAdminLogin($login, $password, $info);
     
     return ValidateLogin("", $login, $password, $type, $info);
@@ -337,7 +337,7 @@ function ValidateDelCmtLogin($login, $password, &$type, &$info)
 
 function ValidateGalleryOwner($galleryid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -353,7 +353,7 @@ function ValidateGalleryOwner($galleryid, $login)
 
 function ValidateCommentOwner($replid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -379,13 +379,13 @@ function ValidateCommentOwner($replid, $login)
 function DeleteComment($replid)
 {
     $sql = "DELETE FROM jbsvcr.gallerycomment
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     QueryDbEx($sql);         
 }
 
 function ValidateEditGalleryLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
     {
         $info = "Anda tidak berhak mengubah galeri ini!";
         return false;
@@ -396,7 +396,7 @@ function ValidateEditGalleryLogin($login, $password, &$type, &$info)
 
 function ValidateDeleteGalleryLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return ValidateAdminLogin($login, $password, $info);
     
     return ValidateLogin("", $login, $password, $type, $info);
@@ -408,9 +408,9 @@ function DeleteGallery($galleryid)
     
     $sql = "SELECT *
               FROM jbsvcr.galleryfile
-             WHERE galleryid = '$galleryid'";
+             WHERE galleryid = '".$galleryid."'";
     $res = QueryDbEx($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $floc = $row['location'] . "/" . $row['filename'];
         $floc = "$FILESHARE_UPLOAD_DIR/$floc";
@@ -421,12 +421,12 @@ function DeleteGallery($galleryid)
     }
     
     $sql = "DELETE FROM jbsvcr.galleryfile
-             WHERE galleryid = '$galleryid'";
+             WHERE galleryid = '".$galleryid."'";
     echo "$sql<br>";        
     QueryDbEx($sql);
     
     $sql = "DELETE FROM jbsvcr.gallery
-             WHERE replid = '$galleryid'";
+             WHERE replid = '".$galleryid."'";
     echo "$sql<br>";         
     QueryDbEx($sql);
 }

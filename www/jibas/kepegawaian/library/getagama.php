@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -29,14 +29,14 @@ require_once('../include/db_functions.php');
 $agama_kiriman=$_REQUEST['agama'];
 ?>
 <select name="cbAgama" id="cbAgama" onKeyPress="return focusNext('cbNikah', event)">
-<? // Olah untuk combo agama
+<?php // Olah untuk combo agama
 	OpenDb();
 	$sql_agama="SELECT replid,agama,urutan FROM jbsumum.agama ORDER BY urutan";
 	$result_agama=QueryDB($sql_agama);
-	while ($row_agama = mysql_fetch_array($result_agama))
+	while ($row_agama = mysqli_fetch_array($result_agama))
 	{ ?>
 		<option value="<?=$row_agama['agama']?>"<?=StringIsSelected($row_agama['agama'],$agama_kiriman)?>><?=$row_agama['agama']?></option>
-<?  } 
+<?php  } 
 	CloseDb();
 	?>
 </select>	

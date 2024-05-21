@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,9 +54,9 @@ function checkSize($path)
 function formatBytes($size, $precision = 2)
 {
     $base = log($size, 1024);
-    $suffixes = array('', 'KB', 'MB', 'GB', 'TB');
+    $suffixes = ['', 'KB', 'MB', 'GB', 'TB'];
 
-    return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    return round(1024 ** ($base - floor($base)), $precision) .' '. $suffixes[floor($base)];
 }
 
 function getResDir()
@@ -66,7 +66,7 @@ function getResDir()
 
 function delResDir($path)
 {
-    if (strpos($path, getResDir()) === false)
+    if (!str_contains((string) $path, (string) getResDir()))
         return "NOOP";
 
     $files = glob($path . '*', GLOB_MARK);
@@ -99,7 +99,7 @@ function showResDir()
         $result .= "<input type='hidden' id='dir-$no' value='$file'>";
         $result .= $file;
         $result .= "&nbsp;&nbsp;&nbsp;&nbsp;<span id='spSize-$no' style='cursor: pointer; color: blue; text-decoration: underline' onclick='ru_checkSize($no)'>check size</span>";
-        if (strpos($file, $currDir) === false)
+        if (!str_contains($file, $currDir))
             $result .= "&nbsp;&nbsp;<span id='spDel-$no' style='cursor: pointer; color: red; text-decoration: underline' onclick='ru_delResDir($no)'>hapus</span>";
         else
             $result .= "&nbsp;&nbsp;aktif";

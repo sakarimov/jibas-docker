@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../../include/config.php");
 require_once("../../include/common.php");
 require_once("../../include/sessioninfo.php");
@@ -39,13 +39,13 @@ if ($op == "34983xihxf084bzux834hx8x7x93")
 {
    $sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE idroot = 0";
    $result = QueryDb($sql);
-   $row = mysql_fetch_row($result);
+   $row = mysqli_fetch_row($result);
    $rootname = $row[0];
 
    $numdel = (int)$_REQUEST['numdel']-1;
    $fileall = $_REQUEST["listdel"];
    $x = 0;
-   $file = explode("|", $fileall);
+   $file = explode("|", (string) $fileall);
 
    $FileShareDir = "$FILESHARE_UPLOAD_DIR/fileshare/";
    while ($x <= $numdel)
@@ -57,10 +57,10 @@ if ($op == "34983xihxf084bzux834hx8x7x93")
 					WHERE f.replid = '$file[$x]'
 					  AND f.iddir = d.replid";
 		   $result = QueryDb($sql);
-		   $row = @mysql_fetch_row($result);
+		   $row = @mysqli_fetch_row($result);
 		   
 		   $dir_real = $row[0];
-		   $dir_real = str_replace($rootname, $FileShareDir, $dir_real);
+		   $dir_real = str_replace($rootname, $FileShareDir, (string) $dir_real);
 		   $file_path = "$dir_real/$row[1]";
 		   
 		   if (file_exists($file_path))
@@ -191,32 +191,32 @@ function del(){
 <form name="file_list">
 <input type="hidden" name="iddir" id="iddir" value="<?=$iddir?>">
 <br /><br />
-<?
+<?php
 $sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE idroot=0";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $rootname = $row[0];
 
 $sql = "SELECT dirfullpath, idguru FROM jbsvcr.dirshare WHERE replid='$iddir'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $idguru = $row[1];
 $dfullpath = $row[0];
-$fullpath = str_replace($rootname, "", $dfullpath);
+$fullpath = str_replace($rootname, "", (string) $dfullpath);
 ?>
 <font size="3" color="#000033">f i l e s</font>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 	<td width="40%" align="left">Content of: <font size="2" color="#990000"><em><strong>&nbsp;<?="(root)/".$fullpath; ?></strong></em></font></td>
     <td width="*" align="right">
-	 <? if (SI_USER_ID()==$idguru){?>
+	 <?php if (SI_USER_ID()==$idguru){?>
 		<a href="#" onclick="tambahfile('<?=$iddir?>')">
 			<img src="../../images/ico/tambah.png" border="0" />&nbsp;Unggah Berkas
 		</a>
 		<a href="#" onclick="tambahfilezip('<?=$iddir?>')">
 			<img src="../../images/ico/tambah.png" border="0" />&nbsp;Unggah & Ekstrak ZIP
 		</a>
-	 <? } ?>&nbsp;
+	 <?php } ?>&nbsp;
 	 <a href="#" onclick="document.location.reload()"><img src="../../images/ico/refresh.png" border="0" />&nbsp;Refresh</a>&nbsp;&nbsp;</td>
 </tr>
 <tr>
@@ -228,53 +228,53 @@ $fullpath = str_replace($rootname, "", $dfullpath);
 <table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="2" width="100%" class="tab" id="table" bordercolor="#000000">
 <tr height="30">
 	<td width="2%" align="center" class="header">No</td>
-    <? if (SI_USER_ID()==$idguru){ ?>
+    <?php if (SI_USER_ID()==$idguru){ ?>
 	<td width="3%" align="center" class="header">
 	<input type="checkbox" name="cek" id="cek" onClick="cek_all()" title="Pilih semua" onMouseOver="showhint('Pilih semua', this, event, '120px')"/>
 	</td>
-	<? } ?>
+	<?php } ?>
     <td width="*" align="center" class="header">Name</td>
     <td width="12%" align="center" class="header">Size</td>
     <td width="22%" align="center" class="header">Date</td>
 </tr>
-<?
+<?php
 $sql = "SELECT replid, filename, filesize, date_format(filetime, '%d-%b-%Y %h:%i:%s') as filetime
 		  FROM jbsvcr.fileshare
 		 WHERE iddir='$iddir' ORDER BY filename";
 $result = QueryDb($sql);
-$numfile = @mysql_num_rows($result);
+$numfile = @mysqli_num_rows($result);
 $cnt = 1;
 if ($numfile>0)
 {
-	while ($row = mysql_fetch_array($result))
+	while ($row = mysqli_fetch_array($result))
 	{
-		$file_addr = "$FILESHARE_UPLOAD_DIR/fileshare/$fullpath/$row[filename]";
+		$file_addr = "$FILESHARE_UPLOAD_DIR/fileshare/$fullpath/{$row['filename']}";
 	?>
 		<tr height="25">
 			<td align="center"><?=$cnt ?></td>
-	<?  	if (SI_USER_ID() == $idguru)
+	<?php  	if (SI_USER_ID() == $idguru)
 			{ ?>
 			<td align="center">
 				<input type="checkbox" onclick="chg('<?=$cnt?>')" name="cekfile<?=$cnt?>" id="cekfile<?=$cnt?>"/>
 				<input type="hidden" name="delete<?=$cnt?>" id="delete<?=$cnt?>"/>
-				<input type="hidden" name="rep<?=$cnt?>" id="rep<?=$cnt?>" value="<?=$row[replid]?>"/>
+				<input type="hidden" name="rep<?=$cnt?>" id="rep<?=$cnt?>" value="<?=$row['replid']?>"/>
 			</td>
-	<? 		} ?>
+	<?php 		} ?>
 			<td align="left">
-				<a title='<?= "$FILESHARE_ADDR/fileshare/$fullpath/$row[filename]" ?>'
-				   href='<?= "$FILESHARE_ADDR/fileshare/$fullpath/$row[filename]" ?>' target="_blank">
+				<a title='<?= "$FILESHARE_ADDR/fileshare/$fullpath/{$row['filename']}" ?>'
+				   href='<?= "$FILESHARE_ADDR/fileshare/$fullpath/{$row['filename']}" ?>' target="_blank">
 					<?=$row['filename'] ?>
 				</a>
 			</td>
 			<td align="right">
-	<? 		$filesize = $row['filesize'];
+	<?php 		$filesize = $row['filesize'];
 			echo fileSizeInByte($filesize);	?>
 			</td>
 			<td align="center">
 				<?=$row['filetime'] ?>
 			</td>
 		</tr>
-	<?
+	<?php
 		$cnt++;
 	} // while
 }
@@ -282,7 +282,7 @@ else
 {
 ?>
 <tr><td colspan="5" align="center"><div class="divNotif">Tidak ada file dalam folder ini</div></td></tr>
-<?
+<?php
 } // if
 CloseDb();
 ?>
@@ -291,10 +291,10 @@ CloseDb();
 <input type="hidden" name="numdel" id="numdel">
 <input type="hidden" name="jumchecked" id="jumchecked">
 </table>
-<? if ($numfile>0 && SI_USER_ID()==$idguru){ ?>
+<?php if ($numfile>0 && SI_USER_ID()==$idguru){ ?>
 <input type="button" class="but" name="del" id="del" value="Hapus Semua" onClick="del_all()">
 <input type="button" class="but" name="del2" id="del2" value="Hapus yang dipilih" onClick="del_file()">
-<? } ?>
+<?php } ?>
 </form>
 <script language='JavaScript'>
 	    Tables('table', 1, 0);

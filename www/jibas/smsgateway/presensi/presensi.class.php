@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class Presensi{
 	function OnStart(){
 		global $db_name_akad;
@@ -36,7 +36,7 @@ class Presensi{
 		global $SMonth;
 	$sql = "SELECT * FROM format WHERE tipe=0";
 	$res = QueryDb($sql);
-	$hasformat = @mysql_num_rows($res);
+	$hasformat = @mysqli_num_rows($res);
 	?>
 	<link href="../style/style.css" rel="stylesheet" type="text/css" />
     <table width="600" border="0"  align="center" cellpadding="0" cellspacing="0" >
@@ -84,15 +84,15 @@ class Presensi{
                               <tr>
                                 <td style="padding-right:5px">
                                 <select id="dep" class="Cmb" disabled="disabled" onchange="ChgDep(this.value)">
-                                <?
+                                <?php
                                 $sql = "SELECT departemen FROM $db_name_akad.departemen WHERE aktif=1 ORDER BY urutan";
                                 $res = QueryDb($sql);
-                                while ($row = @mysql_fetch_row($res)){
+                                while ($row = @mysqli_fetch_row($res)){
                                     if ($dep=='')
                                         $dep = $row[0];
                                     ?>
                                     <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$dep)?>><?=$row[0]?></option>
-                                    <?
+                                    <?php
                                 }
                                 if ($kls=='')
                                     $kls = $row[0];
@@ -103,13 +103,13 @@ class Presensi{
                                 <div id="klsInfo">
                                 <select id="kls" class="Cmb" disabled="disabled">
                                 <option value="-1" <?=StringIsSelected('-1',$kls)?>>- Semua -</option>
-                                <?
+                                <?php
                                 $sql = "SELECT k.replid, k.kelas FROM $db_name_akad.kelas k,$db_name_akad.tahunajaran ta,$db_name_akad.tingkat ti WHERE k.aktif=1 AND ta.aktif=1 AND ti.aktif=1 AND k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid AND ta.departemen='$dep' AND ti.departemen='$dep' ORDER BY ti.urutan, k.kelas";
                                 $res = QueryDb($sql);
-                                while ($row = @mysql_fetch_row($res)){
+                                while ($row = @mysqli_fetch_row($res)){
                                     ?>
                                     <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                                 </select>
@@ -138,17 +138,17 @@ class Presensi{
                   <tr>
                     <td width="1%" align="right" valign="top" class="td"><span style="color:#666; font-size:12px; font-weight:bold">Tanggal Presensi</span></td>
                     <td class="td" style="padding:5px">
-                        <?
+                        <?php
                         $sql = "SELECT DATE_FORMAT(now(),'%d-%m-%Y'), DATE_FORMAT(SUBDATE(now(), INTERVAL 1 MONTH),'%d-%m-%Y')";
                         $res = QueryDb($sql);
-                        $row = @mysql_fetch_row($res);
+                        $row = @mysqli_fetch_row($res);
                         
-                        $x 	 = split('-',$row[0]);
+                        $x 	 = explode('-',(string) $row[0]);
                         $Date1 = $x[0];
                         $Month1 = $x[1];
                         $Year1 = $x[2];
                         
-                        $y 	 = split('-',$row[1]);
+                        $y 	 = explode('-',(string) $row[1]);
                         $Date2 = $y[0];
                         $Month2 = $y[1];
                         $Year2 = $y[2];
@@ -158,34 +158,34 @@ class Presensi{
                           <tr>
                             <td style="padding-right:2px">
                             <select id="Date2" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=31; $i++){
                                     
 									?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Date2)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:2px">
                             <select id="Month2" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=12; $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Month2)?>><?=$SMonth[$i-1]?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:2px">
                             <select id="Year2" class="Cmb">
-                                <?
-                                for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                                <?php
+                                for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Year2)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
@@ -195,33 +195,33 @@ class Presensi{
                             </td>
                             <td style="padding-right:2px">
                             <select id="Date1" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=31; $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Date1)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:2px">
                             <select id="Month1" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=12; $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Month1)?>><?=$SMonth[$i-1]?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:2px">
                             <select id="Year1" class="Cmb">
-                                <?
-                                for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                                <?php
+                                for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Year1)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
@@ -259,33 +259,33 @@ class Presensi{
                           <tr>
                             <td style="padding-right:2px">
                             <select id="SendDate" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=31; $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Date1)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:2px">
                             <select id="SendMonth" class="Cmb">
-                                <?
+                                <?php
                                 for ($i=1; $i<=12; $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Month1)?>><?=$SMonth[$i-1]?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
                             </td>
                             <td style="padding-right:7px">
                             <select id="SendYear" class="Cmb">
-                                <?
-                                for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                                <?php
+                                for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                                     ?>
                                     <option value="<?=$i?>" <?=StringIsSelected($i,$Year1)?>><?=$i?></option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
@@ -294,7 +294,7 @@ class Presensi{
 							<?php
 							$sql = "SELECT DATE_FORMAT(now(),'%H'),DATE_FORMAT(now(),'%i')";
 							$res = QueryDb($sql);
-							$row = @mysql_fetch_row($res);
+							$row = @mysqli_fetch_row($res);
 							$hour = $row[0];
 							$min = $row[1];
 							?>
@@ -314,9 +314,9 @@ class Presensi{
                   <tr>
                     <td colspan="3" height="30" align="center">
                     <div id="ErrAll" class="ErrMsg"></div>
-                    <? if ($hasformat==0) { ?>
+                    <?php if ($hasformat==0) { ?>
                     <div class="ErrMsg" style="height:30px"><img src="../images/ico/error.gif" width="14" height="14" />&nbsp;Belum ada format SMS untuk laporan Presensi, <br />Silakan tambah format di bagian Format Pesan SMS Presensi</div>
-                    <? } ?>
+                    <?php } ?>
                     <div class="BtnSilver" align="center" onclick="Send()">Kirim</div>
                     </td>
                   </tr>
@@ -333,7 +333,7 @@ class Presensi{
         </td>
       </tr>
     </table>
-	<?
+<?php
     }
 }
 ?>

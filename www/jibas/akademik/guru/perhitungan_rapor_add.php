@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -53,7 +53,7 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat
 		 	WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen 
 		     AND t.replid = '$id_tingkat' AND j.replid = '$id_pelajaran' AND g.nip = '$nip_guru'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -70,7 +70,7 @@ $tingkat = $row[4];
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -173,7 +173,7 @@ function simpan(evt) {
 		<tr>
 			<td><strong>Aspek</strong></td>
 			<td><select name="aspek" id="aspek" onKeyPress="focusNext('cek1',event)">
-<?			$sql = "SELECT dasarpenilaian, keterangan 
+<?php 		$sql = "SELECT dasarpenilaian, keterangan 
 						 FROM dasarpenilaian 
 						WHERE aktif = 1 AND dasarpenilaian 
 					  NOT IN (SELECT a.dasarpenilaian 
@@ -183,14 +183,14 @@ function simpan(evt) {
 									 AND a.idtingkat = '$id_tingkat' ) 
 					ORDER BY keterangan";    
 			$result = QueryDb($sql);	
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($aspek == "")
 					$aspek = $row['dasarpenilaian'];		?>
           	<option value="<?=$row['dasarpenilaian']?>" <?=StringIsSelected($row['dasarpenilaian'], $aspek) ?> >
 		  		<?=$row['keterangan'] ?>
           	</option>
-          	<?	
+          	<?php 
 		  	} 
 		  	?>
           	</select></td>
@@ -199,10 +199,10 @@ function simpan(evt) {
 			<td colspan = "2" valign="top">
 			<fieldset><legend><b>Bobot Penilaian</b></legend>
          <br />
-<?			$sql = "SELECT replid, jenisujian FROM jenisujian WHERE idpelajaran = '$id_pelajaran'"; 
+<?php 		$sql = "SELECT replid, jenisujian FROM jenisujian WHERE idpelajaran = '$id_pelajaran'"; 
 			$result = QueryDb($sql);
-			$num = mysql_num_rows($result);
-			if (mysql_num_rows($result) > 0) 
+			$num = mysqli_num_rows($result);
+			if (mysqli_num_rows($result) > 0) 
 			{	?>
             <table border="0" width="100%"  id="table" class="tab">
             <tr>		
@@ -211,8 +211,8 @@ function simpan(evt) {
                   <td class="header" align="center" width="8%" height="30">Pengujian</td>			
                   <td class="header" align="center" width="15%" height="30">Bobot</td>
             </tr>
-<?				$i = 1;
-            while ($row = @mysql_fetch_array($result)) 
+<?php 			$i = 1;
+            while ($row = @mysqli_fetch_array($result)) 
             {	?>		
             <tr>
                <td align="center" height="25">
@@ -222,16 +222,16 @@ function simpan(evt) {
                    <input type="hidden" name="<?='ujian'.$i?>" id = "<?='ujian'.$i?>" value="<?=$row['replid'] ?>"></td>
                <td height="25"><?=$row['jenisujian'] ?></td>
                <td align="center" height="25">
-                   <input type="text" name="<?='bobot'.$i ?>" id="<?='bobot'.$i ?>"  size="4" maxlength="3" <? if ($i!=$num) { ?> onKeyPress="focusNext('cek<?=(int)$i+1?>',event)" <? } else { ?> onkeypress="focusNext('Simpan',event)" <? } ?> ></td>
+                   <input type="text" name="<?='bobot'.$i ?>" id="<?='bobot'.$i ?>"  size="4" maxlength="3" <?php if ($i!=$num) { ?> onKeyPress="focusNext('cek<?=(int)$i+1?>',event)" <?php } else { ?> onkeypress="focusNext('Simpan',event)" <?php } ?> ></td>
             </tr>
-<?					$i++;	
+<?php 				$i++;	
             }	?>
             <!--<input type="hidden" id="num" name="num" value="<?=$num?>" size="4">-->
             </table>
             <script language='JavaScript'>
             Tables('table', 1, 0);
             </script>
-<? 		} 
+<?php 		} 
 			else 
 			{ ?>
          	<div align="center">
@@ -239,7 +239,7 @@ function simpan(evt) {
             <br />Silahkan isi terlebih dahulu pada bagian Jenis Pengujian.
             </b></font><br /><br />
             </div>
-<? 		} ?>
+<?php 		} ?>
 			</fieldset>
 			</td>
 		</tr>
@@ -253,10 +253,10 @@ function simpan(evt) {
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-<?			if ($num > 0) 
+<?php 		if ($num > 0) 
 			{ ?>
 				<input type="button" name="Simpan" id="Simpan" value="Simpan" class="but" onClick="return validate();document.getElementById('main').submit();" />&nbsp;
-<?			} ?>     
+<?php 		} ?>     
     			<input type="button" name="Tutup" id="Tutup" value="Tutup" class="but" onClick="window.close()" />    		
 			</td>
 		</tr>
@@ -276,7 +276,7 @@ function simpan(evt) {
 
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>
 <script type="text/javascript">
 <!--
 var spryselect1 = new Spry.Widget.ValidationSelect("aspek");

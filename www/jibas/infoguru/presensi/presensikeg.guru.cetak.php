@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,9 +40,9 @@ $tahun = $_REQUEST['tahun'];
 
 $sql = "SELECT nama
           FROM jbssdm.pegawai
-         WHERE nip = '$nip'";   
+         WHERE nip = '".$nip."'";   
 $res = QueryDB($sql);	
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nama = $row[0];
 
 $departemen = "yayasan";
@@ -60,7 +60,7 @@ $departemen = "yayasan";
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<?		getHeader($departemen) ?>		
+<?php 	getHeader($departemen) ?>		
 		<center>
 			<font size="4"><strong>LAPORAN PRESENSI KEGIATAN SISWA</strong></font><br />
 		</center>
@@ -74,7 +74,7 @@ $departemen = "yayasan";
 <tr>
 	<td align="left" valign="top" colspan="2">
 
-<?
+<?php
 	$showbutton = false;
 	require_once("presensikeg.guru.report.php");
 ?>        

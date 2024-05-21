@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,38 +20,38 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CAnggotaAdd{
 	function OnStart(){
-		if (isset($_REQUEST[simpan])){
-			$sql = "SELECT noregistrasi FROM anggota WHERE noregistrasi='$_REQUEST[noreg]' ";
+		if (isset($_REQUEST['simpan'])){
+			$sql = "SELECT noregistrasi FROM anggota WHERE noregistrasi='".$_REQUEST['noreg']."' ";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num>0){
 				$this->exist();
 			} else {
-				$nama = trim(addslashes($_REQUEST[nama]));
-				$alamat = trim(addslashes($_REQUEST[alamat]));
-				$kodepos = trim(addslashes($_REQUEST[kodepos]));
-				$email = trim(addslashes($_REQUEST[email]));
-				$telpon = trim(addslashes($_REQUEST[telpon]));
-				$hp = trim(addslashes($_REQUEST[hp]));
-				$kerja = trim(addslashes($_REQUEST[kerja]));
-				$institusi = trim(addslashes($_REQUEST[institusi]));
-				$keterangan = trim(addslashes($_REQUEST[keterangan]));
+				$nama = trim(addslashes((string) $_REQUEST['nama']));
+				$alamat = trim(addslashes((string) $_REQUEST['alamat']));
+				$kodepos = trim(addslashes((string) $_REQUEST['kodepos']));
+				$email = trim(addslashes((string) $_REQUEST['email']));
+				$telpon = trim(addslashes((string) $_REQUEST['telpon']));
+				$hp = trim(addslashes((string) $_REQUEST['hp']));
+				$kerja = trim(addslashes((string) $_REQUEST['kerja']));
+				$institusi = trim(addslashes((string) $_REQUEST['institusi']));
+				$keterangan = trim(addslashes((string) $_REQUEST['keterangan']));
 				$foto = $_FILES['foto'];
 				$uploadedfile = $foto['tmp_name'];
 				$uploadedfile_name = $foto['name'];
 				//echo $uploadedfile; exit;
-				if (strlen($uploadedfile)!=0){
-					$filename=str_replace(GetFileName($uploadedfile_name),'temp',GetFileName($uploadedfile_name)).GetFileExt($uploadedfile_name);
+				if (strlen((string) $uploadedfile)!=0){
+					$filename=str_replace(GetFileName($uploadedfile_name),'temp',(string) GetFileName($uploadedfile_name)).GetFileExt($uploadedfile_name);
 					ResizeImage($foto, 100, 80, 100, $filename);
 					$handle = fopen($filename, "r");
 					$foto_binary = addslashes(fread(fopen($filename,"r"),filesize($filename)));
 					$fill_foto = ", foto='$foto_binary'"; 
 				}
-				$date = @mysql_fetch_row(QueryDb("SELECT now()"));
-				$sql = "INSERT INTO anggota SET noregistrasi='$_REQUEST[noreg]', nama='$nama', alamat='$alamat', kodepos='$kodepos', email='$email', telpon='$telpon', hp='$hp', pekerjaan='$kerja', institusi='$institusi', keterangan='$keterangan', tgldaftar='$date[0]' $fill_foto";
+				$date = @mysqli_fetch_row(QueryDb("SELECT now()"));
+				$sql = "INSERT INTO anggota SET noregistrasi='".$_REQUEST['noreg']."', nama='$nama', alamat='$alamat', kodepos='$kodepos', email='$email', telpon='$telpon', hp='$hp', pekerjaan='$kerja', institusi='$institusi', keterangan='$keterangan', tgldaftar='".$date[0]."' $fill_foto";
 				$result = QueryDb($sql);
 				if ($result)
 					$this->success();
@@ -65,7 +65,7 @@ class CAnggotaAdd{
 			alert('Kode sudah digunakan!');
 			document.location.href="format.add.php";
 		</script>
-        <?
+        <?php
 	}
 	function success(){
 		?>
@@ -73,7 +73,7 @@ class CAnggotaAdd{
 			parent.opener.getfresh();
 			window.close();
         </script>
-        <?
+        <?php
 	}
 	function add(){
 		?>
@@ -133,10 +133,10 @@ class CAnggotaAdd{
           </tr>
         </table>
 		</form>
-		<?
+		<?php
 	}
 	function get_noreg(){
-		return "ANG".date(YmdHis);
+		return "ANG".date('YmdHis');
 	}
 }
 ?>

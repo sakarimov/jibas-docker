@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 3.11 (May 02, 2018)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -32,7 +32,7 @@ $op = $_REQUEST['op'];
 if ($op == "setTglLahirSiswa")
 {
     $y = $_REQUEST['y'];
-    $m = isset($_REQUEST['m']) ? $_REQUEST['m'] : date('j');
+    $m = $_REQUEST['m'] ?? date('j');
     $d = $y == date('Y') && $m == date('n') ? date('j') : 1;
     
     ShowDateCombo('psb_tgllahir', 'psb_changeTanggalLahirSiswa()', $y, $m, $d); 
@@ -40,7 +40,7 @@ if ($op == "setTglLahirSiswa")
 elseif ($op == "setTglLahirAyah")
 {
     $y = $_REQUEST['y'];
-    $m = isset($_REQUEST['m']) ? $_REQUEST['m'] : date('j');
+    $m = $_REQUEST['m'] ?? date('j');
     $d = $y == date('Y') && $m == date('n') ? date('j') : 1;
     
     ShowDateCombo('psb_tgllahirayah', 'psb_changeTanggalLahirAyah()', $y, $m, $d); 
@@ -48,7 +48,7 @@ elseif ($op == "setTglLahirAyah")
 elseif ($op == "setTglLahirIbu")
 {
     $y = $_REQUEST['y'];
-    $m = isset($_REQUEST['m']) ? $_REQUEST['m'] : date('j');
+    $m = $_REQUEST['m'] ?? date('j');
     $d = $y == date('Y') && $m == date('n') ? date('j') : 1;
     
     ShowDateCombo('psb_tgllahiribu', 'psb_changeTanggalLahirIbu()', $y, $m, $d); 

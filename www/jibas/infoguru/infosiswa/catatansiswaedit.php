@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -43,7 +43,7 @@ if (isset($_REQUEST['idkategori']))
 
 if (isset($_REQUEST['simpan'])){
 	$nis = $_REQUEST['nis'];
-	$tgl=explode("-",$_REQUEST['tanggal']);
+	$tgl=explode("-",(string) $_REQUEST['tanggal']);
 	$tanggal=$tgl[2]."-".$tgl[1]."-".$tgl[0];
 	$judul = $_REQUEST['judul'];
 	$catatan = $_REQUEST['catatan'];
@@ -57,17 +57,17 @@ if (isset($_REQUEST['simpan'])){
 		parent.catatansiswamenu.show('<?=$idkategori?>');	
 		//document.location.href="catatansiswaedit.php?nis=<?=$nis?>&tahunajaran=<?=$tahunajaran?>&idkategori=<?=$idkategori?>";
 	</script>
-	<?
+	<?php
 	}
 	CloseDb();
 }
 OpenDb();
 $res=QueryDb("SELECT * FROM jbsvcr.catatansiswa WHERE replid='$replid'");
-$rw=@mysql_fetch_array($res);
-$tanggal = RegularDateFormat($rw[tanggal]);
-$judul = $rw[judul];
-$catatan = $rw[catatan];
-$idkategori = $rw[kategori];
+$rw=@mysqli_fetch_array($res);
+$tanggal = RegularDateFormat($rw['tanggal']);
+$judul = $rw['judul'];
+$catatan = $rw['catatan'];
+$idkategori = $rw['kategori'];
 CloseDb();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -123,14 +123,14 @@ function validate(){
     <td width="66"><strong>Kategori </strong></td>
     <td width="1149">
     <select name="kategori" id="kategori" >
-    <?
+    <?php
 	OpenDb();
 	$sql = "SELECT * FROM jbsvcr.catatankategori WHERE aktif=1 ORDER BY replid";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 	$cnt=1;
-	while ($row=@mysql_fetch_array($result)){
-		echo "<option value='".$row[replid]."'".StringIsSelected($row[replid],$idkategori).">".$row[kategori]."</option>";
+	while ($row=@mysqli_fetch_array($result)){
+		echo "<option value='".$row['replid']."'".StringIsSelected($row['replid'],$idkategori).">".$row['kategori']."</option>";
 	}
 	} else {
 		echo "<option value=''>Tidak ada kategori</option>";

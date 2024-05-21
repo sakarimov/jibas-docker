@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -46,7 +46,7 @@ OpenDb();
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="../style/style.css">
     <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-    <script language="JavaScript" src="../script/tooltips.js"></script>
+    <script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
     <script language="javascript" src="tabungan.trans.header.js"></script>
 </head>
 
@@ -59,15 +59,15 @@ OpenDb();
     <tr>
     	<td align="left" width = "15%"><strong>Departemen&nbsp;</strong>
       	<td width="*">
-<?      ShowSelectDepartemen(); ?>        
+<?php      ShowSelectDepartemen(); ?>        
         <strong>Tahun Buku&nbsp;</strong>
-<?      ShowTahunBuku(); ?>        
+<?php      ShowTahunBuku(); ?>        
     	</td>
 	</tr>
     <tr>
     	<td><strong>Jenis Tabungan&nbsp;</strong></td>
       	<td>    
-<?      ShowJenisTabungan(); ?>        
+<?php      ShowJenisTabungan(); ?>        
     	</td>
 	</tr>
 	</table>

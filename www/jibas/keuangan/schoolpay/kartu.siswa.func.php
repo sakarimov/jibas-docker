@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,12 +54,12 @@ function ShowCbTingkat($departemen)
     $res = QueryDb($sql);
 
     echo "<select id='tingkat' name='tingkat' style='width: 150px' onchange='changeTingkat()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($selIdTingkat == "") $selIdTingkat = $row[0];
         $sel = $selIdTingkat == $row[0] ? "selected" : "";
 
-        echo "<option value='$row[0]' $sel>$row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -73,7 +73,7 @@ function ShowCbKelas($departemen, $idTingkat)
              WHERE departemen = '$departemen'
                AND aktif = 1";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $idTahunAjaran = $row[0];
 
     $sql = "SELECT replid, kelas
@@ -83,9 +83,9 @@ function ShowCbKelas($departemen, $idTingkat)
              ORDER BY kelas";
     $res = QueryDb($sql);
     echo "<select id='kelas' name='kelas' style='width: 250px' onchange='clearReport()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]' $sel>$row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -119,11 +119,11 @@ function ShowKartuSiswa($showMenu)
              GROUP BY p.nis
              ORDER BY s.nama";
 
-    $lsUser = array();
+    $lsUser = [];
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $lsUser[] = array($row[0], $row[1]);
+        $lsUser[] = [$row[0], $row[1]];
     }
 
     echo "<br>";
@@ -153,7 +153,7 @@ function ShowKartuSiswa($showMenu)
                    AND p.replid = $idPayment";
         $res = QueryDb($sql);
 
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no = $i + 1;
             $replid = $row["replid"];
@@ -161,9 +161,9 @@ function ShowKartuSiswa($showMenu)
             echo "<tr style='height: 30px'>";
             echo "<td align='center'>$no</td>";
             echo "<td align='left'>$nis</td>";
-            echo "<td align='left'>$row[nama]</td>";
-            echo "<td align='left'>$row[paymentid]</td>";
-            echo "<td align='left'>$row[tanggal]</td>";
+            echo "<td align='left'>".$row['nama']."</td>";
+            echo "<td align='left'>".$row['paymentid']."</td>";
+            echo "<td align='left'>".$row['tanggal']."</td>";
             echo "<td align='center'>";
             echo "<span id='spAktif$replid'>";
             if (getLevel() != 2)

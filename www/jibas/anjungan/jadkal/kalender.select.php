@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 
-$dept = isset($_REQUEST['dept']) ? $_REQUEST['dept'] : "";
+$dept = $_REQUEST['dept'] ?? "";
 $kalender = isset($_REQUEST['kalender']) ? (int)$_REQUEST['kalender'] : 0;
 
 OpenDb();
@@ -37,27 +37,27 @@ OpenDb();
 <td align="left" width="300">
     
     <select id='ka_departemen' onchange='ka_ChangeDept()' class='inputbox'>
-<?  $sql = "SELECT departemen
+<?php  $sql = "SELECT departemen
               FROM jbsakad.departemen
              WHERE aktif = 1
              ORDER BY urutan";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($dept == "")
             $dept = $row[0];
         $sel = $dept == $row[0] ? "selected" : "";
         ?>
         <option value='<?=$row[0]?>' <?=$sel?> ><?=$row[0]?></option>
-<?  }   ?>
+<?php  }   ?>
     </select>
     
-<?  $sql = "SELECT replid
+<?php  $sql = "SELECT replid
               FROM jbsakad.tahunajaran
              WHERE departemen = '$dept'
                AND aktif = 1";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $idtahunajaran = (int)$row[0]; ?>
    
 </td>
@@ -72,26 +72,26 @@ OpenDb();
     <td align="left">
     
     <select id='ka_kalender' onchange='ka_ChangeKalender()' class='inputbox'>
-<?  $sql = "SELECT replid, kalender
+<?php  $sql = "SELECT replid, kalender
               FROM jbsakad.kalenderakademik
              WHERE idtahunajaran = '$idtahunajaran'
                AND departemen = '$dept'
                AND aktif = 1
              ORDER BY kalender";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($kalender == 0)
             $kalender = $row[0];
         $sel = $kalender == $row[0] ? "selected" : "";
         ?>
         <option value='<?=$row[0]?>' <?=$sel?> ><?=$row[1]?></option>
-<?  }   ?>
+<?php  }   ?>
     </select>    
         
     </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -50,7 +50,7 @@ if ($dept == "ALL")
 	$sql = "SELECT departemen FROM jbsakad.departemen ORDER BY urutan";
 	$dres = QueryDb($sql);
 	$k = 0;
-	while ($drow = mysql_fetch_row($dres))
+	while ($drow = mysqli_fetch_row($dres))
     {
 		if ($deptlist != "")
             $deptlist .= ",";
@@ -77,7 +77,7 @@ else
     $sql_idpetugas = " AND j.idpetugas = '$petugas' ";
     $sql = "SELECT nama
               FROM jbssdm.pegawai
-             WHERE nip = '$petugas'";
+             WHERE nip = '".$petugas."'";
     $namapetugas = FetchSingle($sql);         
 }
 
@@ -108,7 +108,7 @@ else
 </tr>    
 </table>
 <br><br>
-<?
+<?php
 if ($idkategori == "JTT")
 {
     $sql = "SELECT p.tanggal, p.jumlah, p.info1 AS diskon, p.keterangan, IF(j.idpetugas IS NULL, 'admin', j.idpetugas) AS idpetugas, j.transaksi
@@ -187,13 +187,13 @@ elseif ($idkategori == "LNN")
     <td class='header' width='14%' align='center'>Diskon</td>
     <td class='header' width='*' align='center'>Transaksi/Keterangan</td> 
 </tr>
-<?
+<?php
 
 $res = QueryDb($sql);
 $no = 0;
 $totalj = 0;
 $totald = 0;
-while($row = mysql_fetch_array($res))
+while($row = mysqli_fetch_array($res))
 {
     $no += 1;
     
@@ -206,9 +206,9 @@ while($row = mysql_fetch_array($res))
     {
         $sql = "SELECT nama
                   FROM jbssdm.pegawai
-                 WHERE nip = '$idpetugas'";
+                 WHERE nip = '".$idpetugas."'";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $petugas = $row2[0];
     }
     
@@ -216,7 +216,7 @@ while($row = mysql_fetch_array($res))
     $totalj += $jumlah;
     $totald += $row['diskon'];
     
-    $keterangan = trim($row['keterangan']);
+    $keterangan = trim((string) $row['keterangan']);
     if (strlen($keterangan) > 0)
         $keterangan = "<br><strong>Keterangan:</strong> $keterangan";
     ?>
@@ -228,7 +228,7 @@ while($row = mysql_fetch_array($res))
         <td align='right'><?=FormatRupiah($row['diskon'])?></td>
         <td align='left'><?=$row['transaksi'] . $keterangan?></td>
     </tr>
-<?    
+<?php    
 }
 ?>
 <tr height='25' style='background-color: #ddd'>
@@ -241,6 +241,6 @@ while($row = mysql_fetch_array($res))
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

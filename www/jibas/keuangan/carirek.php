@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -136,29 +136,29 @@ function change_urut(urut,urutan)
     <!-- TABLE LINK -->
     <tr>
     	<td align="left" width="50%"><strong>Kategori&nbsp;</strong>
-<? 		if ($option == "ro") { ?>
+<?php 		if ($option == "ro") { ?>
 
-			<input type="text" name="kategori" id="kategori" readonly="readonly" style="background-color:#DDD" value="<?= strtoupper($kategori) ?>">
+			<input type="text" name="kategori" id="kategori" readonly="readonly" style="background-color:#DDD" value="<?= strtoupper((string) $kategori) ?>">
 
-<?		} else { ?>
+<?php 	} else { ?>
 
 			<select name="kategori" id="kategori" onChange="change_kategori()" onKeyPress="return focusNext('pilih1', event)">
-			<?
+			<?php
 			OpenDb();
 			$sql = "SELECT * FROM katerekakun ORDER BY urutan";
 			$result = QueryDb($sql);
-			while ($row = mysql_fetch_array($result))
+			while ($row = mysqli_fetch_array($result))
 			{
 				if ($kategori == "")
 					$kategori = $row['kategori']; ?>
 				<option value="<?=$row['kategori']?>" <?=StringIsSelected($kategori, $row['kategori'])?> ><?=$row['kategori']?></option>
-			<?
+			<?php
 			}
 			CloseDb();
 			?>
 			</select>
 		
-<? 		} ?>
+<?php 		} ?>
         
         </td>
         <!--<td align="right" width="50%">
@@ -170,18 +170,18 @@ function change_urut(urut,urutan)
 </tr>
 <tr>
 	<td>
-<?	OpenDb();
+<?php OpenDb();
 	$sql_tot = "SELECT * FROM rekakun WHERE kategori='$kategori' ORDER BY kode";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql = "SELECT * FROM rekakun WHERE kategori='$kategori' ORDER BY $urut $urutan "; 	
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$tot = mysql_num_rows($result); ?>
+		$tot = mysqli_num_rows($result); ?>
 		<br />
 		<table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left" bordercolor="#000000">
 		<tr height="30" align="center" class="header">
@@ -191,12 +191,12 @@ function change_urut(urut,urutan)
 			<td>Keterangan</td>
 			<td width="6%">&nbsp;</td>
 		</tr>
-<? 		if ($page==0)
+<?php 		if ($page==0)
 			$no = 0;
 		else 
 			$no = (int)$page*(int)$varbaris;
 		
-		while ($row = mysql_fetch_array($result))
+		while ($row = mysqli_fetch_array($result))
 		{ ?>
 			<tr onclick="pilih('<?=$row['kode'] ?>','<?=$row['nama'] ?>')">
 				<td align="center"><?=++$no ?></td>
@@ -207,12 +207,12 @@ function change_urut(urut,urutan)
 				<input type="button" class="but" value="pilih" name="pilih<?=$no ?>" id="pilih<?=$no ?>" onclick="pilih('<?=$row['kode'] ?>','<?=$row['nama'] ?>')"  />
 				</td>
 			</tr>
-<? 		} ?>
+<?php 		} ?>
 		</table>
 		<script language='JavaScript'>
 			Tables('table', 1, 0);
 		</script>
-<?		if ($page==0)
+<?php 	if ($page==0)
 		{ 
 			$disback="style='visibility:hidden;'";
 			$disnext="style='visibility:visible;'";
@@ -236,7 +236,7 @@ function change_urut(urut,urutan)
 </tr> 
 <tr>
     <td>
-<?	}
+<?php }
 	else
 	{	?>	
 		<table width="100%" border="0" align="center">
@@ -249,7 +249,7 @@ function change_urut(urut,urutan)
 			</td>
 		</tr>
 		</table>  
-<?
+<?php
 }
 ?>    
 	</td>
@@ -276,6 +276,6 @@ function change_urut(urut,urutan)
 <script language="javascript">
 	var spryselect1 = new Spry.Widget.ValidationSelect("kategori");
 </script>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
- <?
+ <?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -33,7 +33,7 @@ $nip = $_REQUEST['nip'];
 
 $sql = "SELECT CONCAT(gelarawal, ' ' , nama, ' ', gelarakhir) AS nama FROM jbssdm.pegawai WHERE nip='$nip'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nama = $row[0];
 ?>
 
@@ -47,7 +47,7 @@ $nama = $row[0];
 
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
-<tr><td align="left" valign="top"><? include("../include/headercetak.php") ?>
+<tr><td align="left" valign="top"><?php include("../include/headercetak.php") ?>
   <center>
     <font size="4"><strong>DATA SEKOLAH</strong></font><br />
    </center><br /><br />
@@ -72,12 +72,12 @@ $nama = $row[0];
     <td width="20%" align="center" class="header">SK</td>
     <td width="23%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.tingkat, ps.sekolah, ps.sk, ps.lulus, ps.keterangan, ps.terakhir FROM jbssdm.pegsekolah ps 
         WHERE ps.nip = '$nip' ORDER BY ps.lulus DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -85,16 +85,16 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['sekolah']?></td>
     <td align="center"><?=$row['lulus']?></td>
     <td align="center">
-	<?	if ($row['terakhir'] == 1) { ?>
+	<?php if ($row['terakhir'] == 1) { ?>
     	<img src="../images/ico/aktif.png" border="0" title="pendidikan sekolah terakhir" />
-    <?	} else { ?>
+    <?php } else { ?>
     	<img src="../images/ico/nonaktif.png" border="0" />
-    <?	} ?>
+    <?php } ?>
     </td>
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>

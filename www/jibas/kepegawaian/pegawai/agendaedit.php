@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -54,13 +54,13 @@ if (isset($_REQUEST['btSubmit'])) {
     <script language="javascript">
 		opener.RefreshAllAgenda();
 		window.close();
-    </script> <?
+    </script> <?php
 	exit();
 } else {
 	$sql = "SELECT j.nip, p.gelarawal, p.nama, p.gelarakhir, j.tanggal, j.keterangan, j.jenis FROM jadwal j, pegawai p WHERE j.nip = p.nip AND j.replid = $id";
 	OpenDb();
 	$result = QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$tgl = GetDatePart($row['tanggal'], "d");
 	$bln = GetDatePart($row['tanggal'], "m");
 	$thn = GetDatePart($row['tanggal'], "y");
@@ -118,14 +118,14 @@ function validate() {
         <td align="right" width="90" valign="top"><strong>Tanggal :</strong></td>
         <td width="*" align="left" valign="top">
        	 <select id="cbTgl" name="cbTgl" onKeyPress="return focusNext('cbBln', event)">
- 		   <?	for ($i = 1; $i <= 31; $i++) { ?>    
+ 		   <?php for ($i = 1; $i <= 31; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $tgl)?>><?=$i?></option>	
-		    <?	} ?>    
+		    <?php } ?>    
         </select>
         <select id="cbBln" name="cbBln" onKeyPress="return focusNext('txThn', event)">
-		    <?	for ($i = 1; $i <= 12; $i++) { ?>    
+		    <?php for ($i = 1; $i <= 12; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $bln)?>><?=NamaBulan($i)?></option>	
-		    <?	} ?>    
+		    <?php } ?>    
         </select>
         <input type="text" name="txThn" onKeyPress="return focusNext('txKeterangan', event)" id="txThn" size="4" maxlength="4" value="<?=$thn?>"/>       </td>
 	</tr>
@@ -141,12 +141,12 @@ function validate() {
         <td align="right" valign="top"><strong>Agenda :</strong></td>
         <td width="*" align="left" valign="top">
         	<select name="cbAgenda" id="cbAgenda">
-<?			OpenDb();
+<?php 		OpenDb();
 			$sql = "SELECT nama, agenda FROM jenisagenda ORDER BY urutan";            
 			$result = QueryDb($sql);
-			while ($row = mysql_fetch_row($result)) { ?>
+			while ($row = mysqli_fetch_row($result)) { ?>
             	<option value="<?=$row[1]?>" <?=StringIsSelected($row[1], $jenis)?>><?=$row[0]?></option>
-<?			} 
+<?php 		} 
 			CloseDb(); ?>      
             </select>
         </td>

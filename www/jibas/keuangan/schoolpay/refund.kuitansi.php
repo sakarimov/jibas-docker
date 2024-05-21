@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $sql = "SELECT DATE_FORMAT(r.waktu, '%d-%b-%Y %H:%i') AS waktu, IFNULL(pg.nama, 
           LEFT JOIN jbsfina.tahunbuku tb ON r.idtahunbuku = tb.replid
          WHERE r.replid = $idRefund";
 $res = QueryDb($sql);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $tanggal = $row["waktu"];
 $jumlah = $row["jumlah"];
 $petugas = $row["petugas"];
@@ -59,7 +59,7 @@ if ($idJurnalSiswa <> 0)
 {
     $sql = "SELECT nokas FROM jbsfina.jurnal WHERE replid = $idJurnalSiswa";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $noKas = $row[0];
 }
 
@@ -67,7 +67,7 @@ if ($idJurnalPegawai <> 0)
 {
     $sql = "SELECT nokas FROM jbsfina.jurnal WHERE replid = $idJurnalPegawai";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         if ($noKas <> "") $noKas .= ", ";
         $noKas .= $row[0];
@@ -80,7 +80,7 @@ $sql = "SELECT DATE_FORMAT(tanggal, '%d-%b-%Y') AS tanggal
          ORDER BY tanggal";
 $res2 = QueryDb($sql);
 $stTanggal = "";
-while($row2 = mysql_fetch_row($res2))
+while($row2 = mysqli_fetch_row($res2))
 {
     if ($stTanggal <> "") $stTanggal .= ", ";
     $stTanggal .= $row2[0];
@@ -89,7 +89,7 @@ $transaksi = "Pembayaran penerimaan Vendor dari transaksi SchoolPay tanggal $stT
 
 $sql = "SELECT replid, nama, alamat1 FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $idHeader = $row["replid"];
 $namaHeader = $row["nama"];
 $alamatHeader = $row["alamat1"];
@@ -181,13 +181,13 @@ for($i = 0; $i < 2; $i++)
 
                                 </td>
                                 <td align="center">
-                                    <? if ($i == 0) { ?>
+                                    <?php if ($i == 0) { ?>
                                         Yang menerima<br /><br /><br /><br /><br />
                                         ( <?=getUserName() ?> )
-                                    <? } else { ?>
+                                    <?php } else { ?>
                                         Yang menyerahkan<br /><br /><br /><br /><br />
                                         ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
-                                    <? } ?>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         </table>
@@ -196,12 +196,12 @@ for($i = 0; $i < 2; $i++)
         </td></tr>
     <tr>
         <td align='right'>
-            <? if ($i == 0) { ?>
+            <?php if ($i == 0) { ?>
                 <hr width="350" style="border-style:dashed; line-height:1px; color:#666;" />
-            <?	} ?>
+            <?php } ?>
         </td>
     </tr>
-<? } //for ?>
+<?php } //for ?>
 </table>
 
 </body>

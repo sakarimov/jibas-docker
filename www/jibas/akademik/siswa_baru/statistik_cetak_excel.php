@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -39,10 +39,10 @@ $dasar = $_REQUEST['dasar'];
 $judul = $_REQUEST['judul'];
 $keyword = $_REQUEST['keyword'];
 
-$str = array("'","+");
-$str_replace = array("\'","x123x");	
+$str = ["'", "+"];
+$str_replace = ["\'", "x123x"];	
 
-$query1 = str_replace($str_replace,$str, $_REQUEST['sql']);
+$query1 = str_replace($str_replace,$str, (string) $_REQUEST['sql']);
 $result1 = QueryDb($query1);
 
 
@@ -81,17 +81,17 @@ $result1 = QueryDb($query1);
   <tr>
     <th width="23%" class="style14" scope="row"><div align="left" class="style6">Departemen</div></th>
     <td width="77%"><span class="style6">
-      <? if ($departemen!="-1") echo $departemen; else echo "(Semua Departemen)"; ?>
+      <?php if ($departemen!="-1") echo $departemen; else echo "(Semua Departemen)"; ?>
     </span></td>
   </tr>
   <tr>
     <th scope="row"><div align="left" class="style6">Proses Penerimaan</div></th>
     <td><span class="style6">
-    <? 	if ($idproses!="-1"){
+    <?php 	if ($idproses!="-1"){
 			OpenDb();
 			$sql_p="SELECT proses FROM jbsakad.prosespenerimaansiswa WHERE replid='$idproses'";
 			$res_p=QueryDb($sql_p);
-			$row_p=@mysql_fetch_array($res_p);
+			$row_p=@mysqli_fetch_array($res_p);
 			echo $row_p['proses'];
 			CloseDb();
 		} else {
@@ -113,14 +113,14 @@ $result1 = QueryDb($query1);
     <td width="*"  align="center" bgcolor="#666666"><span class="style9">Nama</span></td>
     <td width="15%"  align="center" bgcolor="#666666"><span class="style9">Departemen</span></td>
     <td width="15%"  align="center" bgcolor="#666666"><span class="style9">Kelompok</span></td>
-  </tr> <?  
-	 if (@mysql_num_rows($result1) < 1) {
+  </tr> <?php  
+	 if (@mysqli_num_rows($result1) < 1) {
 				?> 
 					<td colspan="4" align="center"><span class="style13">Tidak Ada Data</span></td>
 					 
-  	<? } else{
+  	<?php } else{
 	
-    while ($row1 = @mysql_fetch_row($result1)) { ?>
+    while ($row1 = @mysqli_fetch_row($result1)) { ?>
 	<tr>
   		<td align="center"><span class="style13">
 	    <?=++$cnt?>
@@ -141,7 +141,7 @@ $result1 = QueryDb($query1);
    	    <?=$row1[3] ?>
     	</span></td>
    </tr>
-  						<? }
+  						<?php }
 					}
 		CloseDb();
   	?>

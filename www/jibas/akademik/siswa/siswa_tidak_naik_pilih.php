@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -97,19 +97,19 @@ if ($op=="x2378e23dkofh73n25ki9234"){
 	OpenDb();
 	$sql_kap_kelas_tujuan="SELECT kapasitas FROM jbsakad.kelas WHERE replid=$kelastujuan";
 	$result_kap_kelas_tujuan=QueryDb($sql_kap_kelas_tujuan);
-	$row_kap_kelas_tujuan=mysql_fetch_array($result_kap_kelas_tujuan);
+	$row_kap_kelas_tujuan=mysqli_fetch_array($result_kap_kelas_tujuan);
 	$kap_kelas_tujuan=$row_kap_kelas_tujuan['kapasitas'];
 	
 	$sql_jum_kelas_tujuan="SELECT COUNT(nis) FROM jbsakad.siswa WHERE idkelas=$kelastujuan AND aktif = 1";
 	$result_jum_kelas_tujuan=QueryDb($sql_jum_kelas_tujuan);
-	$row_jum_kelas_tujuan=mysql_fetch_row($result_jum_kelas_tujuan);
+	$row_jum_kelas_tujuan=mysqli_fetch_row($result_jum_kelas_tujuan);
 	
 	if ((int)$kap_kelas_tujuan<=(int)$row_jum_kelas_tujuan[0]){
 		$ERROR_MSG = "Kapasitas kelas tujuan sudah penuh.  Silahkan pilih kelas tujuan lain!";
 	} else { // Jika jumlah murid kelas tujuan < dari kapasitasnya 
-		$tahunsekarang=date(Y);
-		$bulansekarang=date(m);
-		$tanggalsekarang=date(j);
+		$tahunsekarang=date('Y');
+		$bulansekarang=date('m');
+		$tanggalsekarang=date('j');
 		$sekarang=$tahunsekarang."-".$bulansekarang."-".$tanggalsekarang;
 		OpenDb();
 		BeginTrans();
@@ -133,7 +133,7 @@ if ($op=="x2378e23dkofh73n25ki9234"){
 			parent.siswa_tidak_naik_tujuan.location.href = "siswa_tidak_naik_tujuan.php?kelas=<?=$kelastujuan?>&departemen=<?=$departemen?>&tingkatawal=<?=$tingkatawal?>&tahunajaranawal=<?=$tahunajaranawal?>&pilihan=<?=$pilihan?>";
 			document.location.href = "siswa_tidak_naik_pilih.php?kelas=<?=$kelas?>&departemen=<?=$departemen?>&tingkat=<?=$tingkat?>&tahunajaran=<?=$tahunajaran?>&tahunajaran=<?=$tahunajaran?>&namadicari=<?=$namadicari?>&nisdicari=<?=$nisdicari?>&pilihan=<?=$pilihan?>";
 			</script>
-			<? 
+			<?php 
 		} else {
 			RollbackTrans();
 		}
@@ -293,19 +293,19 @@ function refresh_pilih(i) {
 <input type="hidden" name="kelas" id="kelas" value="<?=$kelas?>" />
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis?>" />
 
-<? 	if ($jenis <> ""){ 
+<?php 	if ($jenis <> ""){ 
 		OpenDb();
 		$sql_tot = "SELECT s.nis,s.nama,s.idkelas,k.kelas,s.replid,t.tingkat FROM jbsakad.siswa s, kelas k, tingkat t WHERE $string s.idkelas = k.replid AND k.idtahunajaran = $tahunajaran AND s.aktif=1 AND k.idtingkat = t.replid AND t.replid = $tingkat"; 
 		
 		$result_tot = QueryDb($sql_tot);
-		$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 		$akhir = ceil($jumlah/5)*5;	
 		
 		$sql_siswa = "SELECT s.nis,s.nama,s.idkelas,k.kelas,s.replid,t.tingkat FROM jbsakad.siswa s, kelas k, tingkat t WHERE $string s.idkelas = k.replid AND k.idtahunajaran = $tahunajaran AND s.aktif=1 AND k.idtingkat = t.replid AND t.replid = $tingkat ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		
 		$result_siswa = QueryDb($sql_siswa);
-		if (@mysql_num_rows($result_siswa)>0) {
+		if (@mysqli_num_rows($result_siswa)>0) {
 ?>	
 
 <input type="hidden" name="total" id="total" value="<?=$jumlah?>">
@@ -327,14 +327,14 @@ function refresh_pilih(i) {
         <td width="8%" class="header">&nbsp;</td>
     </tr>
 
-<?		if ($page==0)
+<?php 	if ($page==0)
 			$cnt = 1;
 		else 
 			$cnt = (int)$page*(int)$varbaris+1;
-		while ($row_siswa=@mysql_fetch_row($result_siswa)){
-            $sql_kelas="SELECT replid,kelas FROM jbsakad.kelas WHERE replid='$row_siswa[2]'";
+		while ($row_siswa=@mysqli_fetch_row($result_siswa)){
+            $sql_kelas="SELECT replid,kelas FROM jbsakad.kelas WHERE replid='".$row_siswa[2]."'";
             $result_kelas=QueryDb($sql_kelas);
-            $row_kelas=@mysql_fetch_row($result_kelas);
+            $row_kelas=@mysqli_fetch_row($result_kelas);
 ?>
 
     <tr height="25">
@@ -342,10 +342,10 @@ function refresh_pilih(i) {
     	<td align="center"><?=$row_siswa[0]?></td>
     	<td><a href="#" onClick="newWindow('../library/detail_siswa.php?replid=<?=$row_siswa[4]?>', 'DetailSiswa','800','650','resizable=1,scrollbars=1,status=0,toolbar=0')"><?=$row_siswa[1]?></a></td>
     	<td align="center"><?=$row_siswa[5]." - ".$row_siswa[3]?></td>
-    	<td align="center"><input type="text" size="15" maxlength="255" id="ket_<?=$cnt?>" name="ket_<?=$row_siswa[0]?>" onKeyPress="return focusNext('ket_<?=$cnt+1?>', event)" value="<? if ($_REQUEST['count'] == $cnt) echo $ket ?>"/></td>
+    	<td align="center"><input type="text" size="15" maxlength="255" id="ket_<?=$cnt?>" name="ket_<?=$row_siswa[0]?>" onKeyPress="return focusNext('ket_<?=$cnt+1?>', event)" value="<?php if ($_REQUEST['count'] == $cnt) echo $ket ?>"/></td>
     	<td align="center"><input type="button" class="but" value=" > " onClick="pindah_siswa('<?=$row_siswa[0]?>', '<?=$row_siswa[2]?>', <?=$cnt?>)" onMouseOver="showhint('Klik untuk tidak kelas!', this, event, '80px')"/></td>
     </tr>
-<?			$cnt++;
+<?php 		$cnt++;
 		}
 		
 ?>
@@ -353,7 +353,7 @@ function refresh_pilih(i) {
     <script language='JavaScript'>
 		Tables('table', 1, 0);
  	</script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -378,19 +378,19 @@ function refresh_pilih(i) {
     <tr>
        	<td width="30%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<td align="center">
     	<!--<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -404,14 +404,14 @@ function refresh_pilih(i) {
  		</td>
         <td width="30%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>		
-<?			
+<?php 		
 		} else {
 ?>
 	<table width="100%" border="0" align="center">          
@@ -425,7 +425,7 @@ function refresh_pilih(i) {
 		</td>
 	</tr>
 	</table>
-<?		}
+<?php 	}
 	} else {
 ?>
 	<table width="100%" border="0" align="center">          
@@ -436,7 +436,7 @@ function refresh_pilih(i) {
  	</td>
 	</tr>
 	</table>
-<? 	} ?>
+<?php 	} ?>
 	</td>
 </tr>
 </table>

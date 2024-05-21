@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -44,18 +44,18 @@ $bagian = $_REQUEST['bagian'];
 <tr>
 	<td><font color="#000000"><strong>Bagian </strong></font>
     <select name="bag" id="bag" onChange="change_bagian()">
-    <option value="-1" <? if ($departemen=="-1") echo  "selected"; ?>>(Semua Bagian)</option>
-	<?  $sql_bagian="SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan ASC";
+    <option value="-1" <?php if ($departemen=="-1") echo  "selected"; ?>>(Semua Bagian)</option>
+	<?php  $sql_bagian="SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan ASC";
         $result_bagian=QueryDb($sql_bagian);
-        while ($row_bagian=@mysql_fetch_array($result_bagian)){
+        while ($row_bagian=@mysqli_fetch_array($result_bagian)){
     ?>
       	<option value="<?=$row_bagian['bagian']?>" <?=StringIsSelected($row_bagian['bagian'],$bagian)?>>
       	<?=$row_bagian['bagian']?>
         </option>
-      <?	}  ?>
+      <?php }  ?>
     </select>
     <!--<input type="text" name="bagian" id="bagian" value="<?=$departemen ?>" size="20" readonly style="background-color:#CCCCCC" /> </strong>&nbsp;&nbsp;-->
-    <? if ($bagian == -1)  {        
+    <?php if ($bagian == -1)  {        
         $sql_tambahbag = "";					
     } else	{        
         $sql_tambahbag = "AND p.bagian = '$bagian' "; 					
@@ -66,13 +66,13 @@ $bagian = $_REQUEST['bagian'];
 <tr>
 	<td>
     <br />
-    <?
+    <?php
     OpenDb();
     //$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p LEFT JOIN (guru g LEFT JOIN pelajaran l ON l.replid = g.idpelajaran AND l.departemen='SMP') ON p.nip = g.nip GROUP BY p.nip";
     $sql = "SELECT p.nip, p.nama, p.bagian FROM jbssdm.pegawai p WHERE p.aktif = 1 $sql_tambahbag GROUP BY p.nip ORDER BY p.nama";
    
     $result = QueryDb($sql);
-	if (@mysql_num_rows($result)>0){
+	if (@mysqli_num_rows($result)>0){
 
 	?>
     <!--<div id="tab_daftar">-->
@@ -81,29 +81,29 @@ $bagian = $_REQUEST['bagian'];
         <td class="header" width="7%" align="center">No</td>
         <td class="header" width="15%" align="center">N I P</td>
         <td class="header" >Nama</td>
-        <? if ($sql_tambahbag == "") { ?>
+        <?php if ($sql_tambahbag == "") { ?>
             <td class="header" align="center" >Bagian</td>          
-            <? } ?>
+            <?php } ?>
         <td class="header" width="10%" align="center">&nbsp;</td>
     </tr>
-    <?
+    <?php
     
     $cnt = 0;
-    while($row = mysql_fetch_row($result)) { ?>
+    while($row = mysqli_fetch_row($result)) { ?>
     <tr height="25" onClick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer">
         <td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row[0] ?></td>
         <td><?=$row[1] ?></td>
-        <? if ($sql_tambahbag == "") { ?>				
+        <?php if ($sql_tambahbag == "") { ?>				
 		<td align="center" ><?=$row[2]?></td> 
-        <? } ?>		
+        <?php } ?>		
         <td align="center">
         <input type="button" name="pilih" class="but" id="pilih" value="Pilih" onClick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" />
         </td>
     </tr>
-    <? 	} ?>
+    <?php 	} ?>
     </table>
-<? } else { ?>    		
+<?php } else { ?>    		
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
 		<td>
@@ -114,7 +114,7 @@ $bagian = $_REQUEST['bagian'];
 		</td>
 	</tr>
 	</table>
-<? } ?>	
+<?php } ?>	
     </td>    
 </tr>
 <tr>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -36,15 +36,15 @@ OpenDb();
             <td style="padding-right:4px">Kelas</td>
             <td class="td">
               <select id="CmbDepOrtu" name="CmbDepOrtu" class="Cmb" onchange="ChgCmbDepOrtu()">
-                	<?
+                	<?php
                     $sql = "SELECT departemen FROM $db_name_akad.departemen WHERE aktif=1 ORDER BY urutan";
                     $res = QueryDb($sql);
-                    while ($row = @mysql_fetch_row($res)){
+                    while ($row = @mysqli_fetch_row($res)){
                     if ($dep=="")
 						$dep=$row[0];
 					?>
                 <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$dep)?>><?=$row[0]?></option>
-                	<?
+                	<?php
                     }
                     ?>
                 </select>
@@ -52,17 +52,17 @@ OpenDb();
 			<td class="td">
             	<div id="DivCmbKelasOrtu">
 					<select id="CmbKlsOrtu" name="CmbKlsOrtu" class="Cmb" onchange="ChgCmbKlsOrtu()">
-						<?
+						<?php
 						$sql = "SELECT DISTINCT k.replid, CONCAT(ti.tingkat, ' - ', k.kelas) FROM $db_name_akad.kelas k, $db_name_akad.tingkat ti, $db_name_akad.tahunajaran ta ".
 							   "WHERE k.aktif=1 AND ta.aktif=1 AND ti.aktif=1 AND k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid ".
 							   "AND ta.departemen='$dep' AND ti.departemen='$dep' ORDER BY ti.urutan, k.kelas";
 						$res = QueryDb($sql);
-						while ($row = @mysql_fetch_row($res)){
+						while ($row = @mysqli_fetch_row($res)){
 						if ($kls=="")
 							$kls=$row[0];
 						?>
 					<option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-						<?
+						<?php
 						}
 						?>
 					</select>
@@ -108,41 +108,41 @@ OpenDb();
         <td>HP Ortu Siswa</td>
         <td><input type="checkbox" id="CheckAllOrtu"></td>
       </tr>
-<?		$sql = "SELECT nis, nama, namaayah, hportu, info1, info2, pinortu, pinortuibu, pinsiswa
+<?php 	$sql = "SELECT nis, nama, namaayah, hportu, info1, info2, pinortu, pinortuibu, pinsiswa
 				  FROM $db_name_akad.siswa
 				 WHERE aktif=1
 				   AND idkelas='$kls'
 				 ORDER BY nama";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		if ($num > 0)
 		{
 			$cnt = 1;
-			while ($row = @mysql_fetch_array($res))
+			while ($row = @mysqli_fetch_array($res))
 			{
 				$n = 0;  
-				$hparr = array();
+				$hparr = [];
 				
-				$temp = trim($row['hportu']);
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['hportu']);
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 				{
 				  $hparr[$n] = $temp;
 				  $n += 1;
 				}
 				
-				$temp = trim($row['info1']);  
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['info1']);  
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 				{
 				  $hparr[$n] = $temp;
 				  $n += 1;
 				}
 				  
-				$temp = trim($row['info2']);    
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['info2']);    
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 				  $hparr[$n] = $temp;
 				
 				$namaortu = $row['namaayah'];
-				if (strlen($row['namaayah']) == 0)
+				if (strlen((string) $row['namaayah']) == 0)
 				  $namaortu = $row['nama'];  
 				
 				$nama = $row['nama'];
@@ -162,7 +162,7 @@ OpenDb();
 							   pinibu="<?=$row['pinsiswa']?>">
 					  </td>			
 					</tr>
-<?					$cnt++;	
+<?php 				$cnt++;	
 				} // end for 			
 			} // end while
 		} else {
@@ -170,7 +170,7 @@ OpenDb();
       <tr>
         <td colspan="5" class="Ket" align="center">Tidak ada data</td>
       </tr>
-      <?
+      <?php
 		}
 			?>
     </table>
@@ -178,6 +178,6 @@ OpenDb();
     </td>
   </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

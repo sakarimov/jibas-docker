@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/imageresizer.php');
 require_once('../include/fileinfo.php');
 
@@ -103,7 +103,7 @@ class DaftarPribadi
 				parent.daftarhasil.Refresh();
 				document.location.href = "blank.php";
 			</script>
-<?			exit();	
+<?php 		exit();	
 		}
 		else
 		{
@@ -113,7 +113,7 @@ class DaftarPribadi
 				parent.daftarhasil.Refresh();
 				document.location.href = "blank.php?message='Tidak dapat menghapus data pegawai!'";
 			</script>
-<?			exit();	
+<?php 		exit();	
 		}
 	}
     
@@ -123,7 +123,7 @@ class DaftarPribadi
                   FROM pegawai p
                  WHERE p.nip='$this->nip'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $this->pegawai = $row[0];
         $this->replid = $row[1];
     }
@@ -145,7 +145,7 @@ class DaftarPribadi
         $this->agama = $_REQUEST['cbAgama'];
           $this->suku = $_REQUEST['cbSuku'];
         $this->nikah = $_REQUEST['cbNikah'];
-        $this->kelamin = strtolower($_REQUEST['cbKelamin']);
+        $this->kelamin = strtolower((string) $_REQUEST['cbKelamin']);
         $this->alamat = CQ($_REQUEST['txAlamat']);
         $this->hp = $_REQUEST['txHP'];
         $this->telpon = $_REQUEST['txTelpon'];
@@ -167,7 +167,7 @@ class DaftarPribadi
 	
         $sql = "SELECT replid FROM jbssdm.pegawai WHERE nip = '$this->newnip' AND nip <> '$this->nip'";
         $result = QueryDb($sql);
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
     		$this->ERRMSG = "Telah ada pegawai dengan NIP $nip";
         }
@@ -177,7 +177,7 @@ class DaftarPribadi
             $sday = "$this->thnmulai-$this->blnmulai-$this->tglmulai";
             
 			$gantifoto = "";
-			if (strlen($this->foto['tmp_name']) != 0)
+			if (strlen((string) $this->foto['tmp_name']) != 0)
 			{
 				$output = "../temp/img.tmp";
 				ResizeImage($this->foto, 320, 240, 70, $output);
@@ -211,12 +211,12 @@ class DaftarPribadi
                 }
             }
 
-            if ($success && strlen($this->idtambahan) > 0)
+            if ($success && strlen((string) $this->idtambahan) > 0)
             {
-                if (strpos($this->idtambahan, ",") === false)
-                    $arridtambahan = array($this->idtambahan);
+                if (!str_contains((string) $this->idtambahan, ","))
+                    $arridtambahan = [$this->idtambahan];
                 else
-                    $arridtambahan = explode(",", $this->idtambahan);
+                    $arridtambahan = explode(",", (string) $this->idtambahan);
 
                 // READ WARNING IMAGE
                 $warnimg = "../images/warningimg.jpg";
@@ -248,11 +248,11 @@ class DaftarPribadi
 
                         if ($repliddata == 0)
                             $sql = "INSERT INTO jbssdm.tambahandatapegawai
-                                       SET nip = '$this->nip', idtambahan = '$replid', jenis = '$jenis', teks = '$teks'";
+                                       SET nip = '$this->nip', idtambahan = '$replid', jenis = '$jenis', teks = '".$teks."'";
                         else
                             $sql = "UPDATE jbssdm.tambahandatapegawai
                                        SET teks = '$teks'
-                                     WHERE replid = '$repliddata'";
+                                     WHERE replid = '".$repliddata."'";
 
                         QueryDbTrans($sql, $success);
                     }
@@ -263,7 +263,7 @@ class DaftarPribadi
                         $file = $_FILES[$param];
                         $tmpfile = $file['tmp_name'];
 
-                        if (strlen($tmpfile) != 0)
+                        if (strlen((string) $tmpfile) != 0)
                         {
                             if (filesize($tmpfile) <= 256000)
                             {
@@ -286,11 +286,11 @@ class DaftarPribadi
                             if ($repliddata == 0)
                                 $sql = "INSERT INTO jbssdm.tambahandatapegawai
                                            SET nip = '$this->nip', idtambahan = '$replid', jenis = '2', 
-                                               filedata = '$datafile', filename = '$namefile', filemime = '$typefile', filesize = '$sizefile'";
+                                               filedata = '$datafile', filename = '$namefile', filemime = '$typefile', filesize = '".$sizefile."'";
                             else
                                 $sql = "UPDATE jbssdm.tambahandatapegawai
                                            SET filedata = '$datafile', filename = '$namefile', filemime = '$typefile', filesize = '$sizefile'
-                                         WHERE replid = '$repliddata'";
+                                         WHERE replid = '".$repliddata."'";
 
                             QueryDbTrans($sql, $success);
                         }
@@ -309,7 +309,7 @@ class DaftarPribadi
 					parent.daftarhasil.location.reload();
 					parent.daftarmenu.UpdateNip("<?=$this->newnip?>");
 	            </script>
-<?				exit();
+<?php 			exit();
 			}
 			else
 			{
@@ -323,7 +323,7 @@ class DaftarPribadi
     {
         $sql = "SELECT * FROM pegawai WHERE nip='$this->nip'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
 		  $this->bagian = $row['bagian'];
 		  $this->nuptk = $row['nuptk'];
 		  $this->nrp = $row['nrp'];
@@ -336,7 +336,7 @@ class DaftarPribadi
         $this->nikah = $row['nikah']; //
         $this->agama = $row['agama']; //
 		  $this->suku = $row['suku']; //
-        $this->kelamin = strtolower($row['kelamin']); //
+        $this->kelamin = strtolower((string) $row['kelamin']); //
         $this->alamat = $row['alamat']; //
         $this->hp = $row['handphone']; //
         $this->telpon = $row['telpon']; //

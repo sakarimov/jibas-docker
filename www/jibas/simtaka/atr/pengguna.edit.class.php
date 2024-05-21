@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,37 +20,37 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CPenggunaAdd
 {
 	function OnStart()
 	{
 		$this->nip="";
-		if (isset($_REQUEST[nip]))
-			$this->nip=$_REQUEST[nip];
+		if (isset($_REQUEST['nip']))
+			$this->nip=$_REQUEST['nip'];
 			
 		$this->nama="";
-		if (isset($_REQUEST[nama]))
-			$this->nama=$_REQUEST[nama];
+		if (isset($_REQUEST['nama']))
+			$this->nama=$_REQUEST['nama'];
 			
-		if (isset($_REQUEST[simpan]))
+		if (isset($_REQUEST['simpan']))
 		{
-			if ($_REQUEST[tingkat] == '1')
+			if ($_REQUEST['tingkat'] == '1')
 			{
 				$sql = "UPDATE ".get_db_name('user').".hakakses
-						   SET tingkat='$_REQUEST[tingkat]',
+						   SET tingkat='".$_REQUEST['tingkat']."',
 							   departemen=NULL
 						 WHERE login='$this->nip'
 						   AND modul='SIMTAKA'";
 			}
 			else
 			{
-				$temp = explode(":", $_REQUEST[perpustakaan]);
+				$temp = explode(":", (string) $_REQUEST['perpustakaan']);
 				$idperpustakaan = $temp[0];
 		
 				$sql = "UPDATE ".get_db_name('user').".hakakses
-						   SET tingkat='$_REQUEST[tingkat]',
-							   departemen='$_REQUEST[dep]',
+						   SET tingkat='".$_REQUEST['tingkat']."',
+							   departemen='".$_REQUEST['dep']."',
 							   info1=$idperpustakaan
 					     WHERE login='$this->nip'
 						   AND modul='SIMTAKA'";
@@ -67,22 +67,22 @@ class CPenggunaAdd
 					 WHERE login='$this->nip'
 					   AND modul='SIMTAKA' ";
 			$result = QueryDb($sql);
-			$row = @mysql_fetch_array($result);
-			$this->keterangan=$row[keterangan];
-			$this->nip=$row[login];
-			$this->tingkat=$row[tingkat];
-			if (isset($_REQUEST[tingkat]))
-				$this->tingkat=$_REQUEST[tingkat];
-			$this->dep = $row[departemen];	
-			$this->perpustakaan = $row[info1];
+			$row = @mysqli_fetch_array($result);
+			$this->keterangan=$row['keterangan'];
+			$this->nip=$row['login'];
+			$this->tingkat=$row['tingkat'];
+			if (isset($_REQUEST['tingkat']))
+				$this->tingkat=$_REQUEST['tingkat'];
+			$this->dep = $row['departemen'];	
+			$this->perpustakaan = $row['info1'];
 			
 			$sql = "SELECT *
 					  FROM ".get_db_name('sdm').".pegawai
 					 WHERE nip='$this->nip'";
 			//$echo $$this->tingkat;
 			$result = QueryDb($sql);
-			$row = @mysql_fetch_array($result);
-			$this->nama=$row[nama];
+			$row = @mysqli_fetch_array($result);
+			$this->nama=$row['nama'];
 
 		}
 		
@@ -94,7 +94,7 @@ class CPenggunaAdd
 			alert('Kode sudah digunakan!');
 			document.location.href="format.add.php";
 		</script>
-<?	}
+<?php }
 	
 	function success()
 	{	?>
@@ -102,7 +102,7 @@ class CPenggunaAdd
 			parent.opener.getfresh();
 			window.close();
         </script>
-<?	}
+<?php }
 	
 	function add()
 	{
@@ -142,10 +142,10 @@ class CPenggunaAdd
 			<td>&nbsp;Departemen</td>
 			<td>
 				<select name='dep' id='dep' onchange='ChangeDep(2)'>
-<?				if ($this->tingkat == 1)
+<?php 			if ($this->tingkat == 1)
 				{ ?>
 					<option value='--ALL--'>Semua Departemen</option>
-<?				}
+<?php 			}
 				else
 				{
 					$sql = "SELECT departemen
@@ -153,11 +153,11 @@ class CPenggunaAdd
 							 WHERE aktif = 1
 							 ORDER BY urutan";
 					$result = QueryDb($sql);
-					while($row = mysql_fetch_row($result))
+					while($row = mysqli_fetch_row($result))
 					{
 						$sel = $this->dep == $row[0] ? "selected" : "";	?>
 						<option value='<?=$row[0]?>' <?=$sel?>><?=$row[0]?></option>
-<?					}
+<?php 				}
 				}   ?>
 				</select>
 			</td>
@@ -167,10 +167,10 @@ class CPenggunaAdd
             <td>
 				<div id='divPerpus'>
             	<select name="perpustakaan" id="perpustakaan">
-<? 					if ($this->tingkat=='1' || $this->tingkat=='')
+<?php 					if ($this->tingkat=='1' || $this->tingkat=='')
 					{ ?>
                 	<option value="-1" >Semua Perpustakaan</option>
-<? 					}
+<?php 					}
 					else
 					{
 						$sql = "SELECT *
@@ -178,13 +178,13 @@ class CPenggunaAdd
 								 ORDER BY replid";
 						$result = QueryDb($sql);
 						
-						while ($row = @mysql_fetch_array($result))
+						while ($row = @mysqli_fetch_array($result))
 						{
-							$sel = $this->perpustakaan == $row[replid] ? "selected" : ""; ?>
-							<option value="<?=$row[replid] . ":" . $row[nama]?>" <?=$sel?>>
-								<?=$row[nama]?>
+							$sel = $this->perpustakaan == $row['replid'] ? "selected" : ""; ?>
+							<option value="<?=$row['replid'] . ":" . $row['nama']?>" <?=$sel?>>
+								<?=$row['nama']?>
 							</option>
-<?						}
+<?php 					}
 					} ?>
                 </select>
 				</div>
@@ -204,11 +204,11 @@ class CPenggunaAdd
         </tr>
         </table>
 		</form>
-<?	}
+<?php }
 	
 	function get_noreg()
 	{
-		return "ANG".date(YmdHis);
+		return "ANG".date('YmdHis');
 	}
 }
 ?>

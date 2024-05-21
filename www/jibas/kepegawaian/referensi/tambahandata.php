@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -160,12 +160,12 @@ function refreshPilihan(idtambahan)
     </tr>
     </table><br />
 
-<?
+<?php
     $sql = "SELECT replid, kolom, jenis, keterangan, aktif, urutan 
               FROM jbssdm.tambahandata";
 
     $result = QueryDb($sql);
-    if (@mysql_num_rows($result) > 0)
+    if (@mysqli_num_rows($result) > 0)
     {   ?>
 
         <table border="0" cellpadding="0" cellspacing="0" width="95%" align="center">
@@ -178,9 +178,9 @@ function refreshPilihan(idtambahan)
 
             <a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
             <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
-            <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Tambahan Data</a>
-            <?	} ?>
+            <?php } ?>
 
             </td>
         </tr>
@@ -194,21 +194,21 @@ function refreshPilihan(idtambahan)
             <td width="8%" class="header" align="center">Jenis</td>
             <td width="15%" class="header" align="center">Data Pilihan</td>
             <td width="*" class="header" align="center">Keterangan</td>
-            <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <td width="5%" class="header" align="center">Aktif</td>
                 <td width="8%" class="header">&nbsp;</td>
-            <?	} ?>
+            <?php } ?>
         </tr>
-<?
+<?php
         $cnt = 0;
-        while ($row = mysql_fetch_row($result))
+        while ($row = mysqli_fetch_row($result))
         { ?>
             <tr height="25">
                 <td align="center"><?=++$cnt ?></td>
                 <td align="left"><?= $row[1] ?></td>
                 <td align="center"><?= $row[5] ?></td>
                 <td align="center">
-                    <?  if ((int)$row[2] == 1)
+                    <?php  if ((int)$row[2] == 1)
                             echo "Teks";
                         else if ((int)$row[2] == 2)
                             echo "File";
@@ -216,32 +216,32 @@ function refreshPilihan(idtambahan)
                             echo "Pilihan" ?>
                 </td>
                 <td align="center">
-                <? if ((int) $row[2] == 3) {
+                <?php if ((int) $row[2] == 3) {
                     ShowDataPilihan($row[0]);
                     echo "<br>";
                     ShowLinkPilihan($row[0]);
                 } else { echo "-"; } ?>
                 </td>
                 <td align="left"><?=$row[3] ?></td>
-                <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
                     <td align="center">
-                    <?  if ($row[4] == 1) { ?>
+                    <?php  if ($row[4] == 1) { ?>
                         <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)">
                             <img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
                         </a>
-                    <?	} else { ?>
+                    <?php } else { ?>
                         <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)">
                             <img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
                         </a>
-                    <?	} ?>
+                    <?php } ?>
                     </td>
                     <td align="center">
                         <a href="JavaScript:edit(<?=$row[0] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Departemen!', this, event, '80px')" /></a>&nbsp;
                         <a href="JavaScript:hapus(<?=$row[0] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Departemen!', this, event, '80px')"/></a>
                     </td>
-                <?	} ?>
+                <?php } ?>
             </tr>
-<?	    } ?>
+<?php     } ?>
         <!-- END TABLE CONTENT -->
         </table>
         <script language='JavaScript'>
@@ -251,7 +251,7 @@ function refreshPilihan(idtambahan)
         </td></tr>
         <!-- END TABLE CENTER -->
         </table>
-<?	}
+<?php }
     else
     { ?>
         <table width="100%" border="0" align="center">
@@ -259,19 +259,19 @@ function refreshPilihan(idtambahan)
         <td align="center" valign="middle" height="120" colspan="2">
             <font size = "2" color ="red">
             <b>Tidak ditemukan adanya data.
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-            <? } ?>
+            <?php } ?>
             </b>
             </font>
         </td>
         </tr>
         </table>
-<?  } ?>
+<?php  } ?>
     </td></tr>
     <!-- END TABLE BACKGROUND IMAGE -->
 </table>
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

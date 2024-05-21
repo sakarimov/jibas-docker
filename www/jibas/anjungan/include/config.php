@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 
 // ------------------------------------------------------------
 // PATCH MANAGEMENT FRAMEWORK                                  
@@ -85,10 +85,10 @@ $full_url = "http://$G_SERVER_ADDR/anjungan/";
 function FmtReq_PreventInjection($value)
 {
     $result = $value;
-    $loValue = strtolower($result);
+    $loValue = strtolower((string) $result);
 
-    $arrKeyFound = array();
-    $arrKey = array("union ", "union*", "select ", "select*", "-- ");
+    $arrKeyFound = [];
+    $arrKey = ["union ", "union*", "select ", "select*", "-- "];
     for($i = 0; $i < count($arrKey); $i++)
     {
         $key = $arrKey[$i];
@@ -98,7 +98,7 @@ function FmtReq_PreventInjection($value)
         if ($pos === false)
             continue;
 
-        $search = substr($result, $pos, $keyLen);
+        $search = substr((string) $result, $pos, $keyLen);
         $arrKeyFound[] = $search;
     }
 
@@ -106,7 +106,7 @@ function FmtReq_PreventInjection($value)
     {
         $search = $arrKeyFound[$i];
         $replace = substr($search, 0, 1) . " " . substr($search, 1);
-        $result = str_replace($search, $replace, $result);
+        $result = str_replace($search, $replace, (string) $result);
     }
 
     return $result;
@@ -115,10 +115,10 @@ function FmtReq_PreventInjection($value)
 
 function FmtReq_FormatValue($value)
 {
-	$search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
-    $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
+	$search = ["\\", "\0", "\n", "\r", "\x1a", "'", '"'];
+    $replace = ["\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"'];
 
-    $value = str_replace($search, $replace, $value);
+    $value = str_replace($search, $replace, (string) $value);
 
     return FmtReq_PreventInjection($value);
 }

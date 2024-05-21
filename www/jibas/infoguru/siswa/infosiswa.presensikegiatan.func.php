@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 $sql = "SELECT DISTINCT pk.idkegiatan
           FROM jbssat.frpresensikegiatan pk, jbssat.frkegiatan k
          WHERE pk.idkegiatan = k.replid
            AND MONTH(pk.date_in) = $bulan
            AND YEAR(pk.date_in) = $tahun
-           AND pk.nis = '$nis'";
+           AND pk.nis = '".$nis."'";
 $res = QueryDb($sql);
 
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     
@@ -50,9 +50,9 @@ if (mysql_num_rows($res) == 0)
     <td width="8%">Jumlah Kehadiran (B)</td>
     <td width="8%">Persen Kehadiran (B/A)</td>
 </tr>
-<?
+<?php
 $cnt = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $idkegiatan = $row[0];
     
@@ -62,10 +62,10 @@ while($row = mysql_fetch_row($res))
              WHERE replid = $idkegiatan";
     $res2 = QueryDb($sql);
     
-    if (mysql_num_rows($res2) == 0)
+    if (mysqli_num_rows($res2) == 0)
         continue;
     
-    $row2 = mysql_fetch_array($res2);
+    $row2 = mysqli_fetch_array($res2);
     
     $jenispeserta = $row2['jenispeserta'];
     $iddepartemen = $row2['iddepartemen'];
@@ -76,7 +76,7 @@ while($row = mysql_fetch_row($res))
                AND YEAR(pk.date_in) = $tahun
                AND pk.idkegiatan = $idkegiatan";
     $res3 = QueryDb($sql);
-    $row3 = mysql_fetch_row($res3);
+    $row3 = mysqli_fetch_row($res3);
     $nhari = $row3[0];
     
     $sql = "SELECT COUNT(pk.replid)
@@ -86,7 +86,7 @@ while($row = mysql_fetch_row($res))
                AND pk.nis = '$nis'
                AND pk.idkegiatan = $idkegiatan";
     $res3 = QueryDb($sql);
-    $row3 = mysql_fetch_row($res3);
+    $row3 = mysqli_fetch_row($res3);
     $nhadir = $row3[0];
     
     $persen = $nhari == 0 ? 0 : 100 * round($nhadir / $nhari, 2);
@@ -141,9 +141,9 @@ function GetPeserta($idkegiatan, $jenispeserta, $iddepartemen)
                  WHERE k.idtingkat = t.replid
                    AND k.replid = $idkegiatan";
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) > 0)
+        if (mysqli_num_rows($res) > 0)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             
             $tingkat = $row[0];
             $dept = $row[1];
@@ -162,9 +162,9 @@ function GetPeserta($idkegiatan, $jenispeserta, $iddepartemen)
                    AND k.replid = $idkegiatan";
         
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) > 0)
+        if (mysqli_num_rows($res) > 0)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             
             $kelas = $row[0];
             $tingkat = $row[1];
@@ -191,9 +191,9 @@ function GetPeserta($idkegiatan, $jenispeserta, $iddepartemen)
                    AND k.replid = $idkegiatan";
                    
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) > 0)
+        if (mysqli_num_rows($res) > 0)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             
             $kelompok = $row[0];
             
@@ -271,7 +271,7 @@ function GetNPeserta($idkegiatan, $jenispeserta, $iddepartemen)
                     AND f.active = 1 
                     AND f.verify = 1
                     AND s.aktif = 1
-                    AND ta.departemen = '$iddepartemen'";
+                    AND ta.departemen = '".$iddepartemen."'";
         $npeserta = FetchSingle($sql);        
     }
     else if ($jenispeserta == 4)
@@ -290,7 +290,7 @@ function GetNPeserta($idkegiatan, $jenispeserta, $iddepartemen)
                     AND f.active = 1 
                     AND f.verify = 1
                     AND s.aktif = 1
-                    AND k.idtingkat = '$idtingkat'";
+                    AND k.idtingkat = '".$idtingkat."'";
         $npeserta = FetchSingle($sql);
     }
     else if ($jenispeserta == 5)

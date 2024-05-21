@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('deleteimage.php');
 require_once('../include/sessioninfo.php');
@@ -37,15 +37,15 @@ $bulan = "";
 if (isset($_REQUEST['bulan']))
 	$bulan = $_REQUEST['bulan'];
 	
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];
 
 OpenDb();
 
 $sql = "SELECT bulan FROM jbsvcr.gambartiny WHERE idguru='".SI_USER_ID()."' GROUP BY bulan";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 $b = 0;
-while ($row = @mysql_fetch_array($result))
+while ($row = @mysqli_fetch_array($result))
 {
 	$bln[$b]=$row['bulan'];
 	$b++;
@@ -54,7 +54,7 @@ while ($row = @mysql_fetch_array($result))
 $sql = "SELECT tahun FROM jbsvcr.gambartiny WHERE idguru='".SI_USER_ID()."' GROUP BY tahun";
 $result = QueryDb($sql);
 $t = 0;
-while ($row = @mysql_fetch_array($result))
+while ($row = @mysqli_fetch_array($result))
 {
 	$thn[$t]=$row['tahun'];
 	$t++;
@@ -62,7 +62,7 @@ while ($row = @mysql_fetch_array($result))
 
 if ($op == "09vn4230984cn2048723n98423")
 {
-	$sql_del = "DELETE FROM jbsvcr.gambartiny WHERE replid='$_REQUEST[replid]'";
+	$sql_del = "DELETE FROM jbsvcr.gambartiny WHERE replid='".$_REQUEST['replid']."'";
 	$result_del = QueryDb($sql_del);
 }
 ?>
@@ -100,37 +100,37 @@ if ($op == "09vn4230984cn2048723n98423")
     <div>
     Bulan: 
     <select name="bulan" id="bulan" onchange="chg()">
-    	<?
+    	<?php
 		for ($bi=0;$bi<=$b-1;$bi++){
 		if ($bulan=="")
 			$bulan=$bln[$bi];
 		?>
         <option value="<?=$bln[$bi]?>" <?=StringIsSelected($bulan,$bln[$bi])?>><?=$namabulan[(int)$bln[$bi]-1]?></option>
-        <?
+        <?php
 		}
 		?>
     </select>&nbsp;<select name="tahun" id="tahun" onchange="chg()">
-    	<?
+    	<?php
 		for ($ti=0;$ti<=$t-1;$ti++){
 		if ($tahun=="")
 			$tahun=$thn[$ti];
 		?>
         <option value="<?=$thn[$ti]?>" <?=StringIsSelected($tahun,$thn[$ti])?>><?=$thn[$ti]?></option>
-        <?
+        <?php
 		}
 		?>
     </select>
     <br /><br />
-<?
+<?php
 	if ($num>0)
 	{
 		$sql = "SELECT * FROM jbsvcr.gambartiny WHERE idguru='".SI_USER_ID()."' AND tahun=".$tahun." AND bulan=".$bulan;
 		$result = QueryDb($sql); ?>
 		<table width="75%" border="0" cellspacing="0">
-<?		while ($row = @mysql_fetch_array($result))
+<?php 	while ($row = @mysqli_fetch_array($result))
 		{
 			$bln = $row['bulan'];
-			$bln = strlen($bln) == 1 ? "0$bln" : $bln;
+			$bln = strlen((string) $bln) == 1 ? "0$bln" : $bln;
 			$thn = $row['tahun'];
 			$fn = $row['info1'];
 			
@@ -145,18 +145,18 @@ if ($op == "09vn4230984cn2048723n98423")
 					<img style="cursor:pointer;" src="../images/ico/lihat.png"
 						  onclick="OpenGambar('<?=$imgAddr?>')" title="Lihat Gambar Ini" />&nbsp;
 					<img style="cursor:pointer;" src="../images/ico/hapus.png"
-						  onclick="DelGambar('<?=$row[replid]?>')" title="Hapus Gambar Ini" />
+						  onclick="DelGambar('<?=$row['replid']?>')" title="Hapus Gambar Ini" />
 				</td>  
 			</tr>
 			<tr>
-				<td>Nama Gambar : <?=$row[namagambar]?><br />Keterangan Gambar : <?=$row[keterangan]?></td>  
+				<td>Nama Gambar : <?=$row['namagambar']?><br />Keterangan Gambar : <?=$row['keterangan']?></td>  
 			</tr>
 			<tr>
 				<td><hr /></td>  
 			</tr>
-<? 	} ?>
+<?php 	} ?>
 </table>
-<? }
+<?php }
 	CloseDb();
 ?>
 

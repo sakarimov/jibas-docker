@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -69,10 +69,10 @@ if (isset($_REQUEST['nama']))
     <td class="header" width="30%" align="center">NIS</td>
     <td class="header">Nama</td>
 </tr>
-<?
+<?php
 
-$nis = trim($nis);
-$nama = trim($nama);
+$nis = trim((string) $nis);
+$nama = trim((string) $nama);
 	
 if ((strlen($nis) > 0) && (strlen($nama) > 0))
 	$sql = "SELECT s.nis as nis, s.nama as nama FROM jbsakad.siswa s,jbsakad.kelas k, jbsakad.tahunajaran t, jbsakad.tingkat ti WHERE s.nis LIKE '%$nis%' AND s.nama LIKE '%$nama%' AND ti.departemen='$departemen' AND t.departemen='$departemen' AND k.idtingkat=ti.replid AND k.idtahunajaran=t.replid AND k.replid=s.idkelas ORDER BY s.nama";
@@ -86,7 +86,7 @@ else
 OpenDb();	
 $result = QueryDb($sql);
 $no = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <input type="hidden" name="isnew<?=$no?>" id="isnew<?=$no?>" value="<?=$isnew ?>" />
 <tr height="25">
@@ -95,8 +95,8 @@ while ($row = mysql_fetch_array($result)) {
     <a href="JavaScript:show_bayar('<?=$row['nis']?>')"><?=$row['nis'] ?></a></font></td>
     <td><font size="1"><?=$row['nama'] ?></font></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
-<?  CloseDb() ?>
+<?php  CloseDb() ?>

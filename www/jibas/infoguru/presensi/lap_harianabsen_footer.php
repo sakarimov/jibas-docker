@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -62,13 +62,13 @@ $urutan = "ASC";
 if (isset($_REQUEST['urutan']))
 	$urutan = $_REQUEST['urutan'];
 
-$filter1 = "AND t.departemen = '$departemen'";
+$filter1 = "AND t.departemen = '".$departemen."'";
 if ($tingkat <> -1) 
-	$filter1 = "AND k.idtingkat = '$tingkat'";
+	$filter1 = "AND k.idtingkat = '".$tingkat."'";
 
 $filter2 = "";
 if ($kelas <> -1) 
-	$filter2 = "AND k.replid = '$kelas'";
+	$filter2 = "AND k.replid = '".$kelas."'";
 
 
 ?>
@@ -80,7 +80,7 @@ if ($kelas <> -1)
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Laporan Harian Data Siswa yang Tidak Hadir</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -149,7 +149,7 @@ function change_urut(urut,urutan) {
 <!-- TABLE UTAMA -->
 <tr>
 	<td>
-    <? 		
+    <?php 		
 	OpenDb();	
 	//$sql = "SELECT s.nis, s.nama, SUM(ph.hadir), SUM(ph.ijin), SUM(ph.sakit), SUM(ph.alpa), SUM(ph.cuti),  k.kelas, s.hportu, s.emailortu, s.alamatortu, s.telponortu, s.hpsiswa, s.emailsiswa FROM presensiharian p, phsiswa ph, siswa s, kelas k WHERE ph.nis = s.nis AND ph.idpresensi = p.replid AND p.idsemester = $semester AND s.idkelas = k.replid  $filter1 $filter2 AND (((p.tanggal1 BETWEEN '$tglawal' AND '$tglakhir') OR (p.tanggal2 BETWEEN '$tglawal' AND '$tglakhir')) OR (('$tglawal' BETWEEN p.tanggal1 AND p.tanggal2) OR ('$tglakhir' BETWEEN p.tanggal1 AND p.tanggal2))) AND (ph.ijin>0 OR ph.sakit>0 OR ph.cuti>0 OR ph.alpa>0) GROUP BY s.nis ORDER BY k.kelas,s.nama,p.tanggal1 ";
 	
@@ -157,7 +157,7 @@ function change_urut(urut,urutan) {
 	//echo $sql;
 	
 	$result = QueryDb($sql);			 
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0) { 
 	?>  
         <table width="100%" border="0" align="center">
@@ -185,9 +185,9 @@ function change_urut(urut,urutan) {
           	<td width="7%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('cuti','<?=$urutan?>')">Cuti <?=change_urut('cuti',$urut,$urutan)?></td>          	
           	<td width="5%"></td>
 		</tr>
-		<? 
+		<?php 
 		$cnt = 0;
-		while ($row = @mysql_fetch_row($result)) {	
+		while ($row = @mysqli_fetch_row($result)) {	
 			
 		if ($row[14] == 0) { 
 		$pesan = "Status siswa tidak aktif lagi!";
@@ -195,12 +195,12 @@ function change_urut(urut,urutan) {
 		?>
 		
         <!--<tr height="25" style="color:#FF0000">-->
-		<? } else { 
+		<?php } else { 
 			$pesan = "Lihat!";
 			$color = "#000000";
 		?>
 		<!--<tr height="25">-->
-		<? } ?>      
+		<?php } ?>      
         <tr style="color:<?=$color?>">
 			<td align="center"><?=++$cnt?></td>
 			<td align="center"><?=$row[0]?></td>
@@ -217,7 +217,7 @@ function change_urut(urut,urutan) {
                 <td>Email</td>
                 <td>:</td>
               	<td>
-				<? 	if ($row[9] <> "" && $row[15] <> "")
+				<?php 	if ($row[9] <> "" && $row[15] <> "")
 						echo $row[9].", ".$row[15];
 				 	elseif ($row[15] == "")
 						echo $row[9];
@@ -256,14 +256,14 @@ function change_urut(urut,urutan) {
             <td align="center"><font size="4"><b><?=$row[6]?></b></font></td>  
             <td align="center"><a href="JavaScript:lihat('<?=$row[0]?>')"><img src="../images/ico/lihat.png" border="0" onmouseover="showhint('<?=$pesan?>', this, event, '80px')" /></a></td>    
     	</tr>
- 	<?		
+ 	<?php 	
 		} 
 		CloseDb();	?>
 		</table>
 		<script language='JavaScript'>
    			Tables('table', 1, 0);
 		</script>
-<? 	} else { ?>
+<?php 	} else { ?>
 
 	 <table width="100%" border="0" align="center">          
 	<tr>
@@ -272,7 +272,7 @@ function change_urut(urut,urutan) {
 		</td>
 	</tr>
 	</table>
-<?	} ?> 
+<?php } ?> 
     </td>
 </tr>
 

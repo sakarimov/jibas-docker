@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -29,10 +29,10 @@ require_once('../include/db_functions.php');
 
 $nis="";
 $pelajaran="";
-$nis=$_REQUEST[nis];
-$pelajaran=$_REQUEST[pelajaran];
+$nis=$_REQUEST['nis'];
+$pelajaran=$_REQUEST['pelajaran'];
 
-$bulan_pjg = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+$bulan_pjg = [1=>'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
 OpenDb();
 $sql_pp="SELECT pel.nama as namapelajaran, ppsiswa.statushadir as statushadir, pp.tanggal as tanggal, pp.jam as jam, pp.gurupelajaran as guru,ppsiswa.catatan as catatan FROM jbsakad.pelajaran pel, jbsakad.presensipelajaran pp, jbsakad.ppsiswa ppsiswa WHERE ppsiswa.nis='$nis' AND ppsiswa.idpp=pp.replid AND pel.replid=pp.idpelajaran AND ppsiswa.catatan<>'' AND pp.idpelajaran='$pelajaran'";
@@ -45,11 +45,11 @@ $res_pp=QueryDb($sql_pp);
     <td width="25%" align="center">Tanggal-Jam</td>
     <td width="38%" align="center">Guru</td>
 </tr>
-<?
-if (@mysql_num_rows($res_pp)>0)
+<?php
+if (@mysqli_num_rows($res_pp)>0)
 {
     $cnt=1;
-	while ($row_pp=@mysql_fetch_array($res_pp))
+	while ($row_pp=@mysqli_fetch_array($res_pp))
     {
     	$a="";
     	if ($cnt%2==0)
@@ -57,8 +57,8 @@ if (@mysql_num_rows($res_pp)>0)
   <tr height="25" <?=$a?> >
     <td align="center" rowspan="2"><?=$cnt?></td>
     <td align="center">
-	<?
-	switch ($row_pp[statushadir]){
+	<?php
+	switch ($row_pp['statushadir']){
 	case 0:
 		echo "Hadir";
 		break;
@@ -77,28 +77,28 @@ if (@mysql_num_rows($res_pp)>0)
 	}
 	?>
 	</td>
-    <td><?=ShortDateFormat($row_pp[tanggal])."-".$row_pp[jam]?></td>
-    <td>[<?=$row_pp[guru]?>]&nbsp;
-	<?
-	$res_gr=QueryDb("SELECT nama FROM jbssdm.pegawai WHERE nip='$row_pp[guru]'");
-	$row_gr=@mysql_fetch_array($res_gr);
-	echo $row_gr[nama];
+    <td><?=ShortDateFormat($row_pp['tanggal'])."-".$row_pp['jam']?></td>
+    <td>[<?=$row_pp['guru']?>]&nbsp;
+	<?php
+	$res_gr=QueryDb("SELECT nama FROM jbssdm.pegawai WHERE nip='".$row_pp['guru']."'");
+	$row_gr=@mysqli_fetch_array($res_gr);
+	echo $row_gr['nama'];
 	?>
 	</td>
     </tr>
     <tr <?=$a?>>
-    <td colspan="3"><?=$row_pp[catatan]?></td>
+    <td colspan="3"><?=$row_pp['catatan']?></td>
   </tr>
-  <?
+  <?php
   $cnt++;
   } } else { ?>
   ?>
   <tr>
     <td align="center" colspan="5">Tidak ada Catatan</td>
   </tr>
-  <?
+  <?php
   } ?>
 </table>
-<?
+<?php
 CloseDb();
 ?>

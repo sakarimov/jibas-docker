@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,13 +39,13 @@ require_once('../include/theme.php');
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-    <? include("../include/headercetak.php") ?>
+    <?php include("../include/headercetak.php") ?>
     <center>
       <font size="4"><strong>Presensi Pegawai</strong></font><br />
     </center>
     
     <br /><br />
-<?
+<?php
 OpenDb();
 
 $nip = $_REQUEST['nip'];
@@ -58,7 +58,7 @@ $tanggal = $_REQUEST['tanggal'];
 
 $sql = "SELECT nama
           FROM jbssdm.pegawai
-         WHERE nip = '$nip'";
+         WHERE nip = '".$nip."'";
 $nama = FetchSingle($sql);         
 ?>
 
@@ -90,7 +90,7 @@ $nama = FetchSingle($sql);
     <td width="180" align="center" class="header">Keterangan</td>
     <td width="100" align="center" class="header">Sumber</td>
 </tr>  
-<?
+<?php
 $sql = "SELECT tanggal, DATE_FORMAT(tanggal, '%d %M %Y') AS tanggalview, jammasuk, jampulang,
                jamwaktukerja, menitwaktukerja, status, keterangan, source, WEEKDAY(tanggal) AS hari
           FROM jbssdm.presensi
@@ -101,7 +101,7 @@ $res = QueryDb($sql);
 $no = 0;
 $totjkerja = 0;
 $totmkerja = 0;
-while($row = mysql_fetch_array($res))
+while($row = mysqli_fetch_array($res))
 {
     $no += 1;
     $status = $row["status"];
@@ -151,13 +151,13 @@ while($row = mysql_fetch_array($res))
     <td align="left"><?=$row["keterangan"]?></td>
     <td align="left"><?=$row["source"]?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
     <td style="background-color: #DDD" colspan="6">&nbsp;</td>
     <td style="background-color: #DDD; font-weight: bold;" align="left">
-<?
+<?php
     if ($totmkerja >= 60)
     {
         $totjkerja += floor($totmkerja / 60);
@@ -175,7 +175,7 @@ while($row = mysql_fetch_array($res))
 <script language="javascript"> 
 window.print();
 </script>
-<?
+<?php
 CloseDb();
 ?>
 </html>

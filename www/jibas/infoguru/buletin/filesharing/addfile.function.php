@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,23 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 if (isset($_REQUEST['iddir']))
 	$iddir = $_REQUEST['iddir'];
 	
 OpenDb();
 $sql = "SELECT dirfullpath FROM jbsvcr.dirshare WHERE idroot = 0";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $rootname = $row[0];
 
-$sql = "SELECT * FROM jbsvcr.dirshare WHERE replid = '$iddir'";
+$sql = "SELECT * FROM jbsvcr.dirshare WHERE replid = '".$iddir."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$dirfullpath = $row[dirfullpath];
+$row = @mysqli_fetch_array($result);
+$dirfullpath = $row['dirfullpath'];
 CloseDb();
 
-$fullpath = str_replace($rootname, "", $dirfullpath);
+$fullpath = str_replace($rootname, "", (string) $dirfullpath);
 $cek = 0;
 $ERROR_MSG = "";
 
@@ -46,7 +46,7 @@ if (isset($_REQUEST['Simpan']))
     $iddir = $_REQUEST['iddir'];
 	
     $FileShareDir = "$FILESHARE_UPLOAD_DIR/fileshare/";
-    $destinationdir = str_replace($rootname, $FileShareDir, $dir);
+    $destinationdir = str_replace($rootname, $FileShareDir, (string) $dir);
 	
     OpenDb();
     
@@ -113,18 +113,18 @@ if (isset($_REQUEST['Simpan']))
 function SecurePhpExtension(&$filename)
 {
     $lastpos = -1; $startpos = 0;
-    $pos = strpos($filename, ".", $startpos);
+    $pos = strpos((string) $filename, ".", $startpos);
     while($pos !== FALSE)
     {
         $lastpos = $pos;
         
         $startpos = $pos + 1;
-        $pos = strpos($filename, ".", $startpos);
+        $pos = strpos((string) $filename, ".", $startpos);
     }
     
     if ($lastpos != -1)
     {
-        $ext = strtolower(trim(substr($filename, $lastpos)));
+        $ext = strtolower(trim(substr((string) $filename, $lastpos)));
         if ($ext == ".php")
             $filename = $filename . ".txt";
     }
@@ -138,6 +138,6 @@ function ShowMessageClose($message)
         opener.get_fresh();
         window.close();
     </script>
-<?    
+<?php    
 }
 ?>

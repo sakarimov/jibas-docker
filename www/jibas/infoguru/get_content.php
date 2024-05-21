@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once("sessionchecker.php");
 require_once("include/sessioninfo.php");
 require_once('include/common.php');
@@ -42,15 +42,15 @@ if ($menu=="akademik")
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="jadwal.php" target="framecenter" onmouseover="jadwal.src='images/icon_menu/jadwal_on.png'" name="jadwal" id="jadwal" onmouseout="jadwal.src='images/icon_menu/jadwal.png'"><img src="images/icon_menu/jadwal.png" name="jadwal" width="30" height="30" border="0" id="jadwal"/><br>
     <span class="iconTitle">Jadwal&nbsp;Mengajar</span></a></div></td>
     
-    <? if (SI_USER_LEVEL()!=0){ ?>
+    <?php if (SI_USER_LEVEL()!=0){ ?>
     <td  style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="pelajaran.php" target="framecenter" onmouseover="pelajaran.src='images/icon_menu/pelajaran_on.png'" name="pelajaran" id="pelajaran" onmouseout="pelajaran.src='images/icon_menu/pelajaran.png'"><img src="images/icon_menu/pelajaran.png" name="pelajaran" width="30" height="30" border="0" id="pelajaran"/><br>
     <span class="iconTitle">Pelajaran</span></a></div></td>
-    <? } ?>
+    <?php } ?>
 
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="penilaian.php" target="framecenter" onmouseover="penilaian.src='images/icon_menu/penilaian_on.png'" name="penilaian" id="penilaian" onmouseout="penilaian.src='images/icon_menu/penilaian.png'"><img src="images/icon_menu/penilaian.png" name="penilaian" width="30" height="30" border="0" id="penilaian"/><br>
     <span class="iconTitle">Penilaian</span></a></div></td>
 
-    <? if (SI_USER_LEVEL()!=0){ ?>
+    <?php if (SI_USER_LEVEL()!=0){ ?>
       <td style="padding-right:15px">
           <div align="center">
               <a style="text-decoration:none;" href="exim.php" target="framecenter" onmouseover="exim.src='images/icon_menu/exim_on.png'"
@@ -60,12 +60,12 @@ if ($menu=="akademik")
               </a>
           </div>
       </td>
-    <? } ?>
+    <?php } ?>
     
-    <? if (SI_USER_LEVEL()!=0){ ?>
+    <?php if (SI_USER_LEVEL()!=0){ ?>
 	<td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="presensi.php" target="framecenter" onmouseover="presensi.src='images/icon_menu/presensi_on.png'" name="presensi" id="presensi" onmouseout="presensi.src='images/icon_menu/presensi.png'"><img src="images/icon_menu/presensi.png" name="presensi" width="30" height="30" border="0" id="presensi"/><br>
     <span class="iconTitle">Presensi</span></a></div></td>
-    <? } ?>
+    <?php } ?>
 
 
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="siswa/siswa.php" target="framecenter" onmouseover="infosiswa.src='images/icon_menu/infosiswa_on.png'" name="infosiswa" id="infosiswa" onmouseout="infosiswa.src='images/icon_menu/infosiswa.png'"><img src="images/icon_menu/infosiswa.png" name="infosiswa" width="30" height="30" border="0" id="infosiswa"/><br>
@@ -78,7 +78,7 @@ if ($menu=="akademik")
     <span class="iconTitle">Katalog Pustaka</span></a></div></td>
   </tr>
 </table>
-<? } 
+<?php } 
 if ($menu=="buletin"){	
 ?>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -95,51 +95,51 @@ if ($menu=="buletin"){
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/beritasiswa/beritasiswa.php" target="framecenter" onmouseover="beritasiswa.src='images/icon_menu/beritasiswa_on.png'" name="beritasiswa" id="beritasiswa" onmouseout="beritasiswa.src='images/icon_menu/beritasiswa.png'"><img src="images/icon_menu/beritasiswa.png" name="beritasiswa" width="30" height="30" border="0" id="beritasiswa"/><br>
     <span class="iconTitle">Berita Siswa</span></a></div></td>
 	
-	<? if (SI_USER_LEVEL() != 0){ ?>
+	<?php if (SI_USER_LEVEL() != 0){ ?>
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/pesan/pesan.php" target="framecenter" onmouseover="pesan.src='images/icon_menu/pesan_on.png'" name="pesan" id="pesan" onmouseout="pesan.src='images/icon_menu/pesan.png'"><img src="images/icon_menu/pesan.png" name="pesan" width="30" height="30" border="0" id="pesan"/><br>
     <span class="iconTitle">Pesan</span></a></div></td>
-    <? } ?>
+    <?php } ?>
     
-    <? if (SI_USER_LEVEL()!=0){ ?>
+    <?php if (SI_USER_LEVEL()!=0){ ?>
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/agendaguru/agenda.php" target="framecenter" onmouseover="agendaguru.src='images/icon_menu/agenda_on.png'" name="agendaguru" id="agendaguru" onmouseout="agendaguru.src='images/icon_menu/agenda.png'"><img src="images/icon_menu/agenda.png" name="agendaguru" width="30" height="30" border="0" id="agendaguru"/><br>
     <span class="iconTitle">Agenda Guru</span></a></div></td>
    
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/galerifoto/galerifoto.php" target="framecenter" onmouseover="galerifoto.src='images/icon_menu/galeri_on.png'" name="galerifoto" id="galerifoto" onmouseout="galerifoto.src='images/icon_menu/galeri.png'"><img src="images/icon_menu/galeri.png" name="galerifoto" width="30" height="30" border="0" id="galerifoto"/><br>
     <span class="iconTitle">Galeri Foto</span></a></div></td>
-    <? } ?>
+    <?php } ?>
      <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/filesharing/main.php" target="framecenter" onmouseover="filesharing.src='images/icon_menu/fileshare_on.png'" name="filesharing" id="filesharing" onmouseout="filesharing.src='images/icon_menu/fileshare.png'"><img src="images/icon_menu/fileshare.png" name="filesharing" width="30" height="30" border="0" id="filesharing"/><br>
     <span class="iconTitle">File Sharing</b></span></a></div></td>
 	 
-	<? if (SI_USER_LEVEL() != 0){ ?>
+	<?php if (SI_USER_LEVEL() != 0){ ?>
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="buletin/surat/daftarsurat.main.php" target="framecenter" onmouseover="surat.src='images/icon_menu/surat_on.png'" name="surat" id="surat" onmouseout="surat.src='images/icon_menu/surat.png'"><img src="images/icon_menu/surat.png" name="surat" width="30" height="30" border="0" id="pesan"/><br>
     <span class="iconTitle">Kotak Surat</span></a></div></td>
-    <? } ?>
+    <?php } ?>
   </tr>
 </table>
-<? } ?>
+<?php } ?>
 
-<? if ($menu=="pengaturan") { ?>
+<?php if ($menu=="pengaturan") { ?>
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
 	<td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="#" onmouseover="gantipassword.src='images/icon_menu/gantipassword_on.png'" name="gantipassword" id="gantipassword" onmouseout="gantipassword.src='images/icon_menu/gantipassword.png'" onclick="ganti()"><img src="images/icon_menu/gantipassword.png" name="gantipassword" width="30" height="30" border="0" id="gantipassword"/><br>
     <span class="iconTitle">Ganti Password</span></a></div></td>
-<?  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") {	?>
+<?php  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") {	?>
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="pengaturan/user.php" target="framecenter" onmouseover="daftarpengguna.src='images/icon_menu/pengguna_on.png'" name="daftarpengguna" id="daftarpengguna" onmouseout="daftarpengguna.src='images/icon_menu/pengguna.png'"><img src="images/icon_menu/pengguna.png" name="daftarpengguna" width="30" height="30" border="0" id="daftarpengguna"/><br>
     <span class="iconTitle">Daftar Pengguna</span></a></div></td>
-<?  } ?>
-<?  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") { ?>
+<?php  } ?>
+<?php  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") { ?>
     <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="pengaturan/schooltube.php" target="framecenter"><img src="images/schooltube.png" width="30" height="30" border="0" /><br>
     <span class="iconTitle">School Tube</span></a></div></td>
-<?  } ?>
-<?  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") { ?>
+<?php  } ?>
+<?php  if (SI_USER_ID()=="landlord" || SI_USER_ID()=="LANDLORD") { ?>
   <td style="padding-right:15px"><div align="center"><a style="text-decoration:none;" href="pengaturan/queryerror.php" target="framecenter"><img src="images/ico/b_warning.png" width="30" height="30" border="0" /><br>
               <span class="iconTitle">Query Error Log</span></a></div></td>
-<?  } ?>
+<?php  } ?>
   </tr>
 </table>
-<? } ?>
+<?php } ?>
 
-<? if ($menu=="kepegawaian") { ?>
+<?php if ($menu=="kepegawaian") { ?>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
   <td style="padding-right:15px">
@@ -171,9 +171,9 @@ if ($menu=="buletin"){
   </td>
 </tr>
 </table>
-<? } ?>
+<?php } ?>
 
-<? if ($menu=="elearning") { ?>
+<?php if ($menu=="elearning") { ?>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
     <td style="padding-right:15px" width="60px">
@@ -224,4 +224,4 @@ if ($menu=="buletin"){
 
 </tr>
 </table>
-<? } ?>
+<?php } ?>

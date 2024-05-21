@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,31 +20,23 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function DayName($weekday)
 {
-    switch($weekday)
-    {
-        case 1:
-            return "Mgu";
-        case 2:
-            return "Sen";
-        case 3:
-            return "Sel";
-        case 4:
-            return "Rab";
-        case 5:
-            return "Kam";
-        case 6:
-            return "Jum";
-        default:
-            return "Sab";
-    }
+    return match ($weekday) {
+        1 => "Mgu",
+        2 => "Sen",
+        3 => "Sel",
+        4 => "Rab",
+        5 => "Kam",
+        6 => "Jum",
+        default => "Sab",
+    };
 }
 
 function SafeInput($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     $text = str_replace("<", "&lt;", $text);
     $text = str_replace(">", "^gt;", $text);
     

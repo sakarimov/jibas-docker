@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -54,7 +54,7 @@ else
 
 OpenDb();
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $nokas = $row[5];
 $transaksi = $row[6];
 $tanggal = $row[7];
@@ -73,7 +73,7 @@ if ($status == "calon")
 	$sql = "SELECT k.kelompok
 			  FROM jbsakad.calonsiswa cs, jbsakad.kelompokcalonsiswa k
 			 WHERE cs.idkelompok = k.replid
-			   AND cs.nopendaftaran = '$nis'";
+			   AND cs.nopendaftaran = '".$nis."'";
 }
 else
 {
@@ -81,29 +81,29 @@ else
 	$sql = "SELECT k.kelas
 			  FROM jbsakad.siswa s, jbsakad.kelas k
 			 WHERE s.idkelas = k.replid
-			   AND s.nis = '$nis'";	
+			   AND s.nis = '".$nis."'";	
 }
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $kvalue = $row[0];
 
-$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjtt$status WHERE idbesarjtt$status = '$idbesarjtt'";
+$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjtt$status WHERE idbesarjtt$status = '".$idbesarjtt."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $jumlahbayar = $row[0];
 $jumlahdiskon = $row[1];
 
 $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$departemen = $row[departemen];
+$row = @mysqli_fetch_array($result);
+$departemen = $row['departemen'];
 
 $sql = "SELECT replid, nama, alamat1 FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql); 
-$row = @mysql_fetch_array($result);
-$idHeader = $row[replid];
-$namaHeader = $row[nama];
-$alamatHeader = $row[alamat1];
+$row = @mysqli_fetch_array($result);
+$idHeader = $row['replid'];
+$namaHeader = $row['nama'];
+$alamatHeader = $row['ALAMAT1'];
 
 CloseDb();
 ?>
@@ -118,11 +118,11 @@ CloseDb();
 <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
 
 <table border="0" cellpadding="0" cellspacing="0" width="340" align="center">
-<? for($i = 0; $i < 2; $i++) { ?>
+<?php for($i = 0; $i < 2; $i++) { ?>
 <tr>
 <td align="center" valign="top">
 	<table border="0" cellpadding="0" cellspacing="3" width="330" align="center">
-	<? if ($i == 0) { ?>		
+	<?php if ($i == 0) { ?>		
 	<tr>
 		<td align="center" width='15%'>
 			<img src='<?= $full_url."library/gambar.php?replid=$idHeader&table=jbsumum.identitas" ?>' height='30' />
@@ -132,12 +132,12 @@ CloseDb();
 			<font style='font-size:10px'><?=$alamatHeader?></font>
 		</td>
 	</tr>
-	<? } else { ?>
+	<?php } else { ?>
 	<tr height="1">
 		<td align="center" width='15%'>&nbsp;</td>
 		<td align="left">&nbsp;</td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<tr>
 		<td align="right" colspan='2'>
 			<font size="1"><strong>No. <?=$nokas ?></strong></font>
@@ -154,7 +154,7 @@ CloseDb();
         <table border="0" cellpadding="2" cellspacing="0" width="100%">
         <tr>
         	<td width="20">&nbsp;</td>
-        	<td width="60"><? if ($_REQUEST["status"] == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
+        	<td width="60"><?php if ($_REQUEST["status"] == "calon") echo  "No Pendaftaran"; else echo  "N I S"; ?> </td>
             <td>:&nbsp;<strong><?=$nis ?></strong></td>
         </tr>
         <tr>
@@ -190,12 +190,12 @@ CloseDb();
 			<tr>
 				<td valign="top">
 				<strong>Keterangan:</strong><br>					
-				<? if ($jumlahbayar + $jumlahdiskon < $total) { ?>
+				<?php if ($jumlahbayar + $jumlahdiskon < $total) { ?>
 				&#149;&nbsp;<em>Sisa pembayaran: <?=FormatRupiah($total - $jumlahbayar - $jumlahdiskon)?></em><br>
-				<? } ?>
-				<? if ($diskon != 0 ) { ?>
+				<?php } ?>
+				<?php if ($diskon != 0 ) { ?>
 				&#149;&nbsp;<em>Sudah dipotong diskon: <?=FormatRupiah($diskon)?></em><br>
-				<? } ?>
+				<?php } ?>
 				&#149;&nbsp;<em>Tgl cetak: <?= date('d/m/Y H:i:s') ?></em><br>
 				&#149;&nbsp;<em>Petugas: <?= $petugas ?></em><br>
 				</td></tr>
@@ -203,13 +203,13 @@ CloseDb();
             
             </td>
             <td align="center">
-			<? if ($i == 0) { ?>	
+			<?php if ($i == 0) { ?>	
 				Yang menerima<br /><br /><br /><br /><br />
 				( <?=getUserName() ?> )
-			<? } else { ?>
+			<?php } else { ?>
 				Yang menyerahkan<br /><br /><br /><br /><br />
 				( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
-			<? } ?>
+			<?php } ?>
             </td>
         </tr>
         </table>
@@ -218,12 +218,12 @@ CloseDb();
 </td></tr>	
 <tr>
 	<td align='right'>
-<? if ($i == 0) { ?>
+<?php if ($i == 0) { ?>
 	<hr width="350" style="border-style:dashed; line-height:1px; color:#666;" />
-<?	} ?>	
+<?php } ?>	
 	</td>
 </tr>	
-<? } //for ?>
+<?php } //for ?>
 </table>
 
 </body>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -115,7 +115,7 @@ function change_urut(urut,urutan) {
 <!-- TABLE UTAMA -->
 <tr>
 	<td>
-    <? 		
+    <?php 		
 	OpenDb();
 	
 	$sql = "SELECT DAY(p.tanggal1), MONTH(p.tanggal1), YEAR(p.tanggal1), DAY(p.tanggal2), MONTH(p.tanggal2), YEAR(p.tanggal2),
@@ -125,7 +125,7 @@ function change_urut(urut,urutan) {
 			   AND p.idsemester = m.replid AND p.idkelas = k.replid AND (((p.tanggal1 BETWEEN '$tglawal' AND '$tglakhir') OR (p.tanggal2 BETWEEN '$tglawal' AND '$tglakhir')) OR (('$tglawal' BETWEEN p.tanggal1 AND p.tanggal2) OR ('$tglakhir' BETWEEN p.tanggal1 AND p.tanggal2))) ORDER BY $urut $urutan ";
 	
 	$result = QueryDb($sql);			 
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0) { 
 	?>  
 	<table width="100%" border="0" align="center">
@@ -152,14 +152,14 @@ function change_urut(urut,urutan) {
         <td width="7%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('ph.cuti','<?=$urutan?>')">Cuti <?=change_urut('ph.cuti',$urut,$urutan)?></td>
         <td width="*">Keterangan</td>
     </tr>
-    <? 
+    <?php 
     $cnt = 0;
 	$h=0;
 	$i=0;
 	$s=0;
 	$a=0;
 	$c=0;
-    while ($row = @mysql_fetch_row($result)) {	
+    while ($row = @mysqli_fetch_row($result)) {	
 		$nama = $row[12];
 		
 		
@@ -176,7 +176,7 @@ function change_urut(urut,urutan) {
         <td align="center"><?=$row[10]?></td>
         <td><?=$row[11]?></td>
     </tr>
-<?
+<?php
 	$h+=$row[6];
 	$i+=$row[7];
 	$s+=$row[8];
@@ -198,7 +198,7 @@ function change_urut(urut,urutan) {
         Tables('table', 1, 0);
     </script>
    
-<? 	} else { ?>
+<?php 	} else { ?>
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="300">
@@ -206,7 +206,7 @@ function change_urut(urut,urutan) {
 		</td>
 	</tr>
 	</table>
-<?	} ?>  
+<?php } ?>  
 	</td>
 </tr>
 <!-- END OF TABLE UTAMA -->

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 
-if(isset($_GET[departemen])){
-	$departemen = $_GET[departemen];
-}elseif(isset($_POST[departemen])){
-	$departemen = $_POST[departemen];
+if(isset($_GET['departemen'])){
+	$departemen = $_GET['departemen'];
+}elseif(isset($_POST['departemen'])){
+	$departemen = $_POST['departemen'];
 }
 
 ?>
@@ -83,8 +83,8 @@ function change_sel() {
 </script>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
 <style type="text/css">
 <!--
 .style1 {
@@ -97,7 +97,7 @@ function change_sel() {
 </head>
 
 <body topmargin="0" leftmargin="10" marginheight="0" marginwidth="10"><br>
-<?
+<?php
 openDB();
 ?>
 <form action="carisiswa2.php" method="post" name="main" onSubmit="return validate()">
@@ -115,21 +115,21 @@ openDB();
 				<td width="150">Departemen</td>	
 				<td colspan="2">
 				<select name="departemen">
-				<?
+				<?php
 				
 					$query_dep = "SELECT departemen FROM jbsakad.departemen ORDER BY urutan ASC";
 					$result_dep = QueryDb($query_dep);
 				
 				$i = 0;
-				while($row_dep = @mysql_fetch_array($result_dep)){
-					if($departemen == $row_dep[departemen]){
+				while($row_dep = @mysqli_fetch_array($result_dep)){
+					if($departemen == $row_dep['departemen']){
 						$sel[$i] = "selected";
 					}else{
 						$sel[$i] = "";
 					}
 				?>
-					<option value="<?=$row_dep[departemen] ?>" <?=$sel[$i] ?>><?=$row_dep[departemen] ?></option>
-				<?
+					<option value="<?=$row_dep['departemen'] ?>" <?=$sel[$i] ?>><?=$row_dep['departemen'] ?></option>
+				<?php
 					$i++;
 					}
 				?>
@@ -137,9 +137,9 @@ openDB();
 			  </tr>			  
 			  <tr >
 				<td valign="middle">NIS</td>		
-				<td width="153"><input type="text" name="cr_nis" value="<?=$_POST[cr_nis] ?>"></td>
+				<td width="153"><input type="text" name="cr_nis" value="<?=$_POST['cr_nis'] ?>"></td>
 				<td width="33">Nama</td>
-				<td width="154"><input type="text" name="cr_nama" value="<?=$_POST[cr_nama] ?>"></td>
+				<td width="154"><input type="text" name="cr_nama" value="<?=$_POST['cr_nama'] ?>"></td>
 				<td width="10">&nbsp;</td>
 				<td width="57"><input type="submit" name="cari" value="Cari" class="but"></td>
 			  </tr>
@@ -149,33 +149,33 @@ openDB();
 			</table>
 			<!-- END TABLE FORM -->
 	</fieldset>
-<?
+<?php
 if ((isset($_POST["cari"]))){
- 	if((trim($_POST[cr_nis]!="")) && (trim($_POST[cr_nama]==""))) {
+ 	if((trim($_POST['cr_nis']!="")) && (trim($_POST['cr_nama']==""))) {
 		$selectSQL ="SELECT siswa.nis, siswa.nama, kelas.kelas FROM jbsakad.siswa, jbsakad.kelas ".
-		            "WHERE siswa.nis LIKE '$_POST[cr_nis]%' ".
+		            "WHERE siswa.nis LIKE '". $_POST['cr_nis']."%' ".
 					"AND siswa.aktif = '1' ".
 					"AND siswa.idkelas = kelas.replid ".
 					"AND kelas.departemen = '$departemen' ORDER BY nama";
-	}elseif((isset($_POST["cari"])) && (trim($_POST[cr_nama]!="")) && (trim($_POST[cr_nis]==""))){
+	}elseif((isset($_POST["cari"])) && (trim($_POST['cr_nama']!="")) && (trim($_POST['cr_nis']==""))){
 		$selectSQL ="SELECT siswa.nis, siswa.nama, kelas.kelas FROM jbsakad.siswa,  jbsakad.kelas ".
-		            "WHERE siswa.nama LIKE '$_POST[cr_nama]%' ".
+		            "WHERE siswa.nama LIKE '". $_POST['cr_nama']."%' ".
 					"AND siswa.aktif = '1' ".
 					"AND siswa.idkelas = kelas.replid ".
 					"AND kelas.departemen = '$departemen' ORDER BY nama";
-	}elseif((isset($_POST["cari"])) && (trim($_POST[cr_nama]!="")) && (trim($_POST[cr_nis]!=""))){
+	}elseif((isset($_POST["cari"])) && (trim($_POST['cr_nama']!="")) && (trim($_POST['cr_nis']!=""))){
 		$selectSQL ="SELECT siswa.nis, siswa.nama, kelas.kelas FROM jbsakad.siswa, jbsakad.kelas ".
-		            "WHERE siswa.nama LIKE '$_POST[cr_nama]%' AND siswa.nis LIKE '$_POST[cr_nis]%' ".
+		            "WHERE siswa.nama LIKE '". $_POST['cr_nama']."%' AND siswa.nis LIKE '".$_POST['cr_nis']."%' ".
 					"AND siswa.aktif = '1' ".
 					"AND siswa.idkelas = kelas.replid ".
 					"AND kelas.departemen = '$departemen' ORDER BY nama";
 
-	}elseif((isset($_POST["cari"])) && (trim($_POST[cr_nis]=="")) && (trim($_POST[cr_nama]==""))) {
+	}elseif((isset($_POST["cari"])) && (trim($_POST['cr_nis']=="")) && (trim($_POST['cr_nama']==""))) {
 		$selectSQL ="SELECT nis, nama FROM jbsakad.siswa WHERE nama='x'";
 	}
 	
 	//echo $selectSQL;
-	$result_sis = QueryDb($selectSQL) or die (mysql_error());
+	$result_sis = QueryDb($selectSQL) or die (mysqli_error($mysqlconnection));
 	?>
 	<p><table border='1' cellspacing='0' cellpadding='0' bordercolor='#5A7594' width='100%'>
 			<tr>
@@ -185,27 +185,27 @@ if ((isset($_POST["cari"]))){
 						<td class='header' align='center'>NIS</td>
 						<td class='header'>Nama</td>
 						<td class='header'>Kelas</td>	
-	<?
-	$jml_data = @mysql_num_rows($result_sis);
+	<?php
+	$jml_data = @mysqli_num_rows($result_sis);
 	
 	if($jml_data=="0"){
 		?>
 		<tr>
 				<td colspan='3' align='center'>Data Siswa Tidak Ada</td>
 			 </tr>
-		<? 
+		<?php 
 	}else{
 	
 	$cnt = 0;
-	while($row = @mysql_fetch_array($result_sis)){
+	while($row = @mysqli_fetch_array($result_sis)){
 	?>
 	<tr <?="bgcolor=#".($cnt%2?"ffffff":"EAECEE").""; ?>>
-		<td class='data'><input type="hidden" name="nis<?=$cnt; ?>" value="<?=$row[nis]; ?>">
-		<input type="hidden" name="nama<?=$cnt; ?>" value="<?=$row[nama]; ?>"><input name='siswa' type='radio' value='<?=$row[nis]; ?>' onclick='changeSel(<?=$cnt; ?>)' width='30%'><?=$row[nis]; ?></td>
-		<td width='50%'class='data'><?=$row[nama]; ?></td>
-		<td width='20%'class='data'><?=$row[kelas]; ?></td>
+		<td class='data'><input type="hidden" name="nis<?=$cnt; ?>" value="<?=$row['nis']; ?>">
+		<input type="hidden" name="nama<?=$cnt; ?>" value="<?=$row['nama']; ?>"><input name='siswa' type='radio' value='<?=$row['nis']; ?>' onclick='changeSel(<?=$cnt; ?>)' width='30%'><?=$row['nis']; ?></td>
+		<td width='50%'class='data'><?=$row['nama']; ?></td>
+		<td width='20%'class='data'><?=$row['kelas']; ?></td>
 	</tr>
-	<?
+	<?php
 	$cnt++;
 	}
 	CloseDb();
@@ -222,7 +222,7 @@ if ((isset($_POST["cari"]))){
    </td>
   </tr>
 </table>
-<?
+<?php
 	}
 }	
 ?>

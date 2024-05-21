@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -28,35 +28,35 @@ require_once('../include/rupiah.php');
 require_once('../library/imageresizer.php');
 
 OpenDb();
-$sql = "SELECT * FROM jbsfina.barang WHERE replid='$_REQUEST[idbarang]'";
+$sql = "SELECT * FROM jbsfina.barang WHERE replid='".$_REQUEST['idbarang']."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
-$kode = $row[kode];
-$nama = $row[nama];
-$jumlah = (int)$row[jumlah];
-$kondisi = $row[kondisi];
-$keterangan = $row[keterangan];
-$satuan = $row[satuan];
-$tgl = substr($row[tglperolehan],8,2)."-".substr($row[tglperolehan],5,2)."-".substr($row[tglperolehan],0,4);
-$harga = (int)$row[info1];
+$row = mysqli_fetch_array($result);
+$kode = $row['kode'];
+$nama = $row['nama'];
+$jumlah = (int)$row['jumlah'];
+$kondisi = $row['kondisi'];
+$keterangan = $row['keterangan'];
+$satuan = $row['satuan'];
+$tgl = substr((string) $row['tglperolehan'],8,2)."-".substr((string) $row['tglperolehan'],5,2)."-".substr((string) $row['tglperolehan'],0,4);
+$harga = (int)$row['info1'];
 $total = $harga * $jumlah;
 
-if (isset($_REQUEST[Simpan])){
-	$sql = "SELECT kode FROM jbsfina.barang WHERE kode='$_REQUEST[kode]' AND replid<>'$_REQUEST[idbarang]'";
+if (isset($_REQUEST['Simpan'])){
+	$sql = "SELECT kode FROM jbsfina.barang WHERE kode='".$_REQUEST['kode']."' AND replid<>'".$_REQUEST['idbarang']."'";
 	$result = QueryDb($sql);
-	$num = @mysql_num_rows($result);
+	$num = @mysqli_num_rows($result);
 	if ($num>0){
 		?>
 		<script language="javascript">
-			alert('Kode Barang \'<?=$_REQUEST[kode]?>\' sudah digunakan!');
+			alert('Kode Barang \'<?=$_REQUEST['kode']?>\' sudah digunakan!');
         </script>
-		<?
+		<?php
 	} else {
 		$foto=$_FILES["foto"];
 		$uploadedfile = $foto['tmp_name'];
 		$uploadedtypefile = $foto['type'];
 		$uploadedsizefile = $foto['size'];
-		if (strlen($uploadedfile)!=0)
+		if (strlen((string) $uploadedfile)!=0)
 		{
 			$tmp_path = realpath(".") . "/../../temp";
 			$tmp_exists = file_exists($tmp_path) && is_dir($tmp_path);
@@ -75,14 +75,14 @@ if (isset($_REQUEST[Simpan])){
 			$isifoto = "";
 		}
 		
-		$tgl = MySqlDateFormat($_REQUEST[tgl]);
+		$tgl = MySqlDateFormat($_REQUEST['tgl']);
 		
 		$sql = "UPDATE jbsfina.barang
-				   SET kode='".trim($_REQUEST[kode])."', nama='".trim($_REQUEST[nama])."',
-					   jumlah='".trim($_REQUEST[jumlah])."',kondisi='".addslashes(trim($_REQUEST[kondisi]))."',tglperolehan='$tgl',
-					   keterangan='".addslashes(trim($_REQUEST[keterangan]))."',idkelompok='$_REQUEST[idkelompok]',
-					   satuan='$_REQUEST[satuan]', info1='$_REQUEST[angkaharga]' $isifoto
-				 WHERE replid='$_REQUEST[idbarang]'";
+				   SET kode='".trim((string) $_REQUEST['kode'])."', nama='".trim((string) $_REQUEST['nama'])."',
+					   jumlah='".trim((string) $_REQUEST['jumlah'])."',kondisi='".addslashes(trim((string) $_REQUEST['kondisi']))."',tglperolehan='$tgl',
+					   keterangan='".addslashes(trim((string) $_REQUEST['keterangan']))."',idkelompok='".$_REQUEST['idkelompok']."',
+					   satuan='".$_REQUEST['satuan']."', info1='".$_REQUEST['angkaharga']."' $isifoto
+				 WHERE replid='".$_REQUEST['idbarang']."'";
 		$result = QueryDb($sql);
 		if ($result){
 			?>
@@ -90,7 +90,7 @@ if (isset($_REQUEST[Simpan])){
 				parent.opener.GetFresh();
 				window.close();
             </script>
-            <?
+            <?php
 		}
 	}
 }
@@ -177,7 +177,7 @@ function validate(){
 		var i = 0;
 		var string4split='.';
 
-		z = foto.split(string4split);
+		z = foto.explode(string4split);
 		ext = z[z.length-1];
 		
 		if (ext!='JPG' && ext!='jpg' && ext!='Jpg' && ext!='JPg' && ext!='JPEG' && ext!='jpeg'){
@@ -217,22 +217,22 @@ function salinharga()
 <fieldset style="border:#336699 1px solid; background-color:#eaf4ff" >
 <legend style="background-color:#336699; color:#FFFFFF; font-size:10px; font-weight:bold; padding:5px">&nbsp;Ubah&nbsp;Barang&nbsp;</legend>
 <form action="EditBarang.php" method="post" enctype="multipart/form-data" onSubmit="return validate()">
-<input type="hidden" name="idkelompok" id="idkelompok" value="<?=$_REQUEST[idkelompok]?>" />
-<input type="hidden" name="idbarang" id="idbarang" value="<?=$_REQUEST[idbarang]?>" />
+<input type="hidden" name="idkelompok" id="idkelompok" value="<?=$_REQUEST['idkelompok']?>" />
+<input type="hidden" name="idbarang" id="idbarang" value="<?=$_REQUEST['idbarang']?>" />
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
   <tr>
     <td width="14%" align="right"><strong>Kode&nbsp;Barang</strong></td>
-    <td width="86%"><input type="text" id="kode" name="kode" maxlength="20" value="<?=stripslashes($kode)?>" /></td>
-    <td width="86%" rowspan="5" align="center" valign="middle"><img src="gambar.php?table=jbsfina.barang&replid=<?=$_REQUEST[idbarang]?>" style="padding:2px" /></td>
+    <td width="86%"><input type="text" id="kode" name="kode" maxlength="20" value="<?=stripslashes((string) $kode)?>" /></td>
+    <td width="86%" rowspan="5" align="center" valign="middle"><img src="gambar.php?table=jbsfina.barang&replid=<?=$_REQUEST['idbarang']?>" style="padding:2px" /></td>
   </tr>
   <tr>
     <td align="right"><strong>Nama&nbsp;Barang</strong></td>
-    <td><input type="text" id="nama" name="nama" style="width:95%" maxlength="50" value="<?=stripslashes($nama)?>" /></td>
+    <td><input type="text" id="nama" name="nama" style="width:95%" maxlength="50" value="<?=stripslashes((string) $nama)?>" /></td>
     </tr>
   <tr>
     <td align="right"><strong>Jumlah</strong></td>
     <td><input type="text" id="jumlah" name="jumlah" size="5" maxlength="10" value="<?=stripslashes($jumlah)?>" />
-    &nbsp;Satuan&nbsp;<input type="text" id="satuan" name="satuan" size="10" maxlength="20" value="<?=stripslashes($satuan)?>" /></td>
+    &nbsp;Satuan&nbsp;<input type="text" id="satuan" name="satuan" size="10" maxlength="20" value="<?=stripslashes((string) $satuan)?>" /></td>
   </tr>
   <tr>
     <td align="right">Harga Satuan</td>
@@ -255,11 +255,11 @@ function salinharga()
     </tr>
   <tr>
     <td align="right">Kondisi</td>
-    <td colspan="2"><textarea name="kondisi" id="kondisi"  style="width:95%"><?=stripslashes($kondisi)?></textarea></td>
+    <td colspan="2"><textarea name="kondisi" id="kondisi"  style="width:95%"><?=stripslashes((string) $kondisi)?></textarea></td>
     </tr>
   <tr>
     <td align="right">Keterangan</td>
-    <td colspan="2"><textarea name="keterangan" rows="4" id="keterangan"  style="width:95%"><?=stripslashes($keterangan)?></textarea></td>
+    <td colspan="2"><textarea name="keterangan" rows="4" id="keterangan"  style="width:95%"><?=stripslashes((string) $keterangan)?></textarea></td>
     </tr>
   <tr>
     <td colspan="3" align="center"><input name="Simpan" type="submit" class="but" value="Simpan" />
@@ -269,7 +269,7 @@ function salinharga()
 </form>
 </fieldset>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

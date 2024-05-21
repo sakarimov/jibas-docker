@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -35,15 +35,15 @@ $preplid=(int)$_REQUEST['preplid'];
 $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
-	$sql = "SELECT * FROM jenisujian WHERE jenisujian = '".CQ($_REQUEST['jenisujianbaru'])."' AND idpelajaran='$_REQUEST[idpelajaran]' AND info1='".CQ($_REQUEST['singkatan'])."'";
+	$sql = "SELECT * FROM jenisujian WHERE jenisujian = '".CQ($_REQUEST['jenisujianbaru'])."' AND idpelajaran='".$_REQUEST['idpelajaran']."' AND info1='".CQ($_REQUEST['singkatan'])."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		$jenisujian=CQ($_REQUEST['jenisujianbaru']);
 		$idpelajaran=(int)$_REQUEST['idpelajaran'];
 		CloseDb();
 		$ERROR_MSG = "Jenis Ujian $jenisujian sudah digunakan!";
 		} else {
-		$sql = "INSERT INTO jenisujian SET jenisujian='".CQ($_REQUEST['jenisujianbaru'])."',info1='".CQ($_REQUEST['singkatan'])."',idpelajaran='$_REQUEST[idpelajaran]',keterangan='".CQ($_REQUEST['keterangan'])."' ";
+		$sql = "INSERT INTO jenisujian SET jenisujian='".CQ($_REQUEST['jenisujianbaru'])."',info1='".CQ($_REQUEST['singkatan'])."',idpelajaran='".$_REQUEST['idpelajaran']."',keterangan='".CQ($_REQUEST['keterangan'])."' ";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -52,7 +52,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		
+<?php 	
 	}
 }
 }
@@ -60,9 +60,9 @@ if (isset($_REQUEST['Simpan'])) {
 OpenDb();
 //$sql = "SELECT j.replid,j.jenisujian,j.idpelajaran,j.keterangan,p.replid,p.nama,p.departemen FROM jenisujian j, pelajaran p WHERE p.replid=$preplid AND j.idpelajaran=p.replid ";  
 
-$sql = "SELECT p.nama, p.departemen FROM pelajaran p WHERE p.replid = '$preplid'";
+$sql = "SELECT p.nama, p.departemen FROM pelajaran p WHERE p.replid = '".$preplid."'";
 $result = QueryDb($sql);
-if ($row = mysql_fetch_row($result)){
+if ($row = mysqli_fetch_row($result)){
 	$pelajaran = $row[0];
 	$departemen = $row[1];
 }
@@ -80,7 +80,7 @@ CloseDb();
 <link href="../script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextfield.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextfield.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -178,12 +178,12 @@ function focusNext(elemName, evt) {
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 	opener.tambah();
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 

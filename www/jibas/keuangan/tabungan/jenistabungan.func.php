@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../library/departemen.php');
 
 function CheckUserLevel()
@@ -31,7 +31,7 @@ function CheckUserLevel()
             alert('Maaf, anda tidak berhak mengakses halaman ini!');
             document.location.href = "tabungan.php";
         </script>
-<?      exit();
+<?php      exit();
     } // end if
 }
 
@@ -63,11 +63,11 @@ function ReadPageParam()
 
 function DelTabungan($id)
 {
-	$sql = "DELETE FROM datatabungan WHERE replid = '$id'";
+	$sql = "DELETE FROM datatabungan WHERE replid = '".$id."'";
 	QueryDb($sql);
 }
 
-function SetAktif($id, $newaktif)
+function SetAktif($id, $newaktif): never
 {
     global $idkategori, $departemen, $varbaris, $page, $hal;
     

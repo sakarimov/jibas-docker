@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -69,7 +69,7 @@ $tgl = MySqlDateFormat($tanggal);
 
 <body>
 
-<?
+<?php
 OpenDb();
 if ($idtingkat == -1) {
 	$sql = "SELECT p.nis, datediff('$tgl', max(tanggal)) AS x FROM penerimaaniuran p, jbsakad.siswa s WHERE p.idpenerimaan = '$idpenerimaan' AND s.nis = p.nis AND s.idangkatan = '$idangkatan' GROUP BY p.nis HAVING x >= $telat ORDER BY tanggal DESC";
@@ -82,7 +82,7 @@ if ($idtingkat == -1) {
 //echo  "$sql<br>";
 $result = QueryDb($sql);
 $nisstr = "";
-while($row = mysql_fetch_row($result)) {
+while($row = mysqli_fetch_row($result)) {
 	if (strlen($nisstr) > 0)
 		$nisstr = $nisstr . ",";
 	$nisstr = $nisstr . "'" . $row[0] . "'";
@@ -97,14 +97,14 @@ if (strlen($nisstr) == 0) {
 $sql = "SELECT MAX(jumlah) FROM (SELECT nis, count(replid) AS jumlah FROM penerimaaniuran WHERE nis IN ($nisstr) GROUP BY nis) AS X";
 //echo  "$sql<br>";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $max_n_cicilan = $row[0];
 $table_width = 810 + $max_n_cicilan * 90;
 
 //Dapatkan namapenerimaan
 $sql = "SELECT nama, departemen FROM datapenerimaan WHERE replid='$idpenerimaan'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 $departemen = $row[1];
 
@@ -112,15 +112,15 @@ $namatingkat = "";
 $namakelas = "";
 if ($idtingkat <> -1) {
 	if ($idkelas <> -1) {
-		$sql = "SELECT tingkat, kelas FROM jbsakad.kelas k, jbsakad.tingkat t WHERE k.replid = '$idkelas' AND k.idtingkat = t.replid AND t.replid = '$idtingkat'";
+		$sql = "SELECT tingkat, kelas FROM jbsakad.kelas k, jbsakad.tingkat t WHERE k.replid = '$idkelas' AND k.idtingkat = t.replid AND t.replid = '".$idtingkat."'";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namatingkat = $row[0]." - ";
 		$namakelas = $row[1];	
 	} else {
-		$sql = "SELECT tingkat FROM jbsakad.tingkat t WHERE t.replid = '$idtingkat'";
+		$sql = "SELECT tingkat FROM jbsakad.tingkat t WHERE t.replid = '".$idtingkat."'";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namatingkat = $row[0];
 	}
 } else {
@@ -133,7 +133,7 @@ if ($idtingkat <> -1) {
 
 <?=getHeader($departemen)?>
 
-<center><font size="4"><strong>LAPORAN TUNGGAKAN <?=strtoupper($namapenerimaan) ?><br />
+<center><font size="4"><strong>LAPORAN TUNGGAKAN <?=strtoupper((string) $namapenerimaan) ?><br />
 </strong></font><br /> </center><br />
 <table border="0">
 <tr>
@@ -141,7 +141,7 @@ if ($idtingkat <> -1) {
     <td><strong>: <?=$departemen?></strong></td>
 </tr>
 <tr>
-	<td><strong><? if ($idtingkat <> -1 && $idkelas == -1) echo  "Tingkat"; else echo  "Kelas"; ?></strong></td>
+	<td><strong><?php if ($idtingkat <> -1 && $idkelas == -1) echo  "Tingkat"; else echo  "Kelas"; ?></strong></td>
     <td><strong>: <?=$namatingkat.$namakelas?></strong></td>
 </tr>
 
@@ -158,14 +158,14 @@ if ($idtingkat <> -1) {
     <td class="header" width="80" align="center">NIS</td>
     <td class="header" width="140" align="center">Nama</td>
     <td class="header" width="50" align="center">Kelas</td>
-    <? 	for($i = 0; $i < $max_n_cicilan; $i++) { 
+    <?php 	for($i = 0; $i < $max_n_cicilan; $i++) { 
 			$n = $i + 1; ?>
     		<td class="header" width="120" align="center"><?="Bayaran-$n" ?></td>	
-    <?  } ?>
+    <?php  } ?>
     <td class="header" width="80" align="center">Telat<br /><em>(hari)</em></td>
     <td class="header" width="100" align="center">Total Pembayaran</td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT s.nis, s.nama, k.kelas, t.tingkat FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t WHERE s.idkelas = k.replid AND k.idtingkat = t.replid AND s.nis IN ($nisstr) ORDER BY $urut $urutan ";//LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 
 $result = QueryDb($sql);
@@ -177,17 +177,17 @@ $result = QueryDb($sql);
 $totalbiayaall = 0;
 $totalbayarall = 0;
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$nis = $row['nis']; ?>
 <tr height="40">
 	<td align="center"><?=++$cnt ?></td>
     <td align="center"><?=$row['nis'] ?></td>
     <td><?=$row['nama'] ?></td>
-    <td align="center"><? if ($idkelas == -1) echo  $row['tingkat']." - "; ?><?=$row['kelas'] ?></td>
-<?	$sql = "SELECT count(*) FROM penerimaaniuran WHERE nis = '$nis' AND idpenerimaan = '$idpenerimaan'";
+    <td align="center"><?php if ($idkelas == -1) echo  $row['tingkat']." - "; ?><?=$row['kelas'] ?></td>
+<?php $sql = "SELECT count(*) FROM penerimaaniuran WHERE nis = '$nis' AND idpenerimaan = '".$idpenerimaan."'";
 	//echo  "$sql<br>";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	$nbayar = $row2[0];
 	$nblank = $max_n_cicilan - $nbayar;
 	$totalbayar = 0;
@@ -195,7 +195,7 @@ while ($row = mysql_fetch_array($result)) {
 	if ($nbayar > 0) {
 		$sql = "SELECT date_format(tanggal, '%d-%b-%y'), jumlah FROM penerimaaniuran WHERE nis = '$nis' AND idpenerimaan = '$idpenerimaan' ORDER BY tanggal";
 		$result2 = QueryDb($sql);
-		while ($row2 = mysql_fetch_row($result2)) {
+		while ($row2 = mysqli_fetch_row($result2)) {
 			$totalbayar = $totalbayar + $row2[1]; ?>
             <td>
                 <table border="1" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
@@ -203,7 +203,7 @@ while ($row = mysql_fetch_array($result)) {
                 <tr height="20"><td align="center"><?=$row2[0] ?></td></tr>
                 </table>
             </td>
- <?		}
+ <?php 	}
  		$totalbayarall += $totalbayar;
 	}	
 	for ($i = 0; $i < $nblank; $i++) { ?>
@@ -213,16 +213,16 @@ while ($row = mysql_fetch_array($result)) {
             <tr height="20"><td align="center">&nbsp;</td></tr>
             </table>
         </td>
-    <? }?>
+    <?php }?>
     <td align="center">
-<?	$sql = "SELECT max(datediff('$tanggal', tanggal)) FROM penerimaaniuran WHERE nis = '$nis' AND idpenerimaan = '$idpenerimaan'";
+<?php $sql = "SELECT max(datediff('$tanggal', tanggal)) FROM penerimaaniuran WHERE nis = '$nis' AND idpenerimaan = '".$idpenerimaan."'";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	echo  $row2[0]; ?>
     </td>
     <td align="right"><?=FormatRupiah($totalbayar) ?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="40">
@@ -233,7 +233,7 @@ while ($row = mysql_fetch_array($result)) {
 <script language='JavaScript'>
 	Tables('table', 1, 0);
 </script>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 
 	</td>
 </tr>

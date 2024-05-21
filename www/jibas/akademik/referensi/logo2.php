@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -66,7 +66,7 @@ if (isset($_REQUEST['simpan']))
 	
 	$sql = "SELECT * FROM jbsumum.identitas WHERE departemen='$departemen'";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0)
+	if (@mysqli_num_rows($result) > 0)
 	{
 		$sql="UPDATE jbsumum.identitas SET foto='$foto_data' WHERE departemen='$departemen'";
 		QueryDb($sql);
@@ -79,18 +79,18 @@ if (isset($_REQUEST['simpan']))
 		parent.opener.getfresh();
 		window.close();
     </script>
-  <?
+  <?php
 }
 $sql = "SELECT replid FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $replid = $row[0];
 
 $gbrbaru = 0;
 if (isset($_REQUEST['gbrbaru']))
 	$gbrbaru = 1;
 ?>
-<?
+<?php
 if ($gbrbaru==1){
 	$ol = "reffoto();";
 } else {
@@ -106,7 +106,7 @@ if ($gbrbaru==1){
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" type="text/javascript">
@@ -125,7 +125,7 @@ function ganti() {
 		var i = 0;
 		var string4split='.';
 
-		z = file.split(string4split);
+		z = file.explode(string4split);
 		ext = z[z.length-1];
 		
 		if (ext!='JPG' && ext!='jpg' && ext!='Jpg' && ext!='JPg' && ext!='JPEG' && ext!='jpeg'){
@@ -215,6 +215,6 @@ function wait_foto() {
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

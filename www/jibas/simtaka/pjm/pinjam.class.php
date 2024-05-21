@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
 <link href="../sty/style.css" rel="stylesheet" type="text/css" />
-<?
+<?php
 class CPinjam
 {
 	function OnStart()
 	{
-		$this->state = $_REQUEST[state];
+		$this->state = $_REQUEST['state'];
 		
 		$this->jenisanggota = $_REQUEST['jenisanggota'];
 		$jenis = 'pegawai';
@@ -37,19 +37,19 @@ class CPinjam
 			case '1' : $jenis = 'siswa'; break;
 			case '2' : $jenis = 'lain'; break;
 		}
-		$this->noanggota = $_REQUEST[noanggota];
-		$this->nama = $_REQUEST[nama];
+		$this->noanggota = $_REQUEST['noanggota'];
+		$this->nama = $_REQUEST['nama'];
 		$this->numcode = 0;
-		$this->kodepustaka = $_REQUEST[kodepustaka];
+		$this->kodepustaka = $_REQUEST['kodepustaka'];
 		
 		$this->op = "";
-		if (isset($_REQUEST[op]))
-			$this->op = $_REQUEST[op];
+		if (isset($_REQUEST['op']))
+			$this->op = $_REQUEST['op'];
 		
 		if ($this->op == "newuser")
 		{
 			$sql = "DELETE FROM pinjam
-					 WHERE idanggota = '$_REQUEST[noanggota]'
+					 WHERE idanggota = '".$_REQUEST['noanggota']."'
 					   AND status = 0";
 			QueryDb($sql);					
 		}
@@ -61,8 +61,8 @@ class CPinjam
 					 WHERE p.replid = d.pustaka
 					   AND (d.kodepustaka='$this->kodepustaka' OR d.info1 = '$this->kodepustaka')";
 			$result=QueryDb($sql);
-			$this->numcode=@mysql_num_rows($result);
-			$row=@mysql_fetch_row($result);
+			$this->numcode=@mysqli_num_rows($result);
+			$row=@mysqli_fetch_row($result);
 			$this->replid = $row[0];
 			$this->kodepustaka = $row[1];
 			$this->judul = $row[2];
@@ -72,33 +72,33 @@ class CPinjam
 		if ($this->op == "addtochart")
 		{
 			$sql = "DELETE FROM pinjam
-					 WHERE kodepustaka = '$_REQUEST[kodepustaka]'
-					   AND idanggota = '$_REQUEST[noanggota]'
+					 WHERE kodepustaka = '".$_REQUEST['kodepustaka']."'
+					   AND idanggota = '".$_REQUEST['noanggota']."'
 					   AND status = 0";
 			QueryDb($sql);		   
 					   
 			$sql = "SELECT *
 					  FROM pinjam
-					 WHERE kodepustaka = '$_REQUEST[kodepustaka]'
-					   AND idanggota = '$_REQUEST[noanggota]'
+					 WHERE kodepustaka = '".$_REQUEST['kodepustaka']."'
+					   AND idanggota = '".$_REQUEST['noanggota']."'
 					   AND status = 1";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num == 0)
 			{
 				$idmember = "";
 				if ($jenis == "siswa")
-					$idmember = "nis = '".$_REQUEST[noanggota]."'";
+					$idmember = "nis = '".$_REQUEST['noanggota']."'";
 				elseif ($jenis == "pegawai")
-					$idmember = "nip = '".$_REQUEST[noanggota]."'";
+					$idmember = "nip = '".$_REQUEST['noanggota']."'";
 				else
-					$idmember = "idmember = '".$_REQUEST[noanggota]."'";
+					$idmember = "idmember = '".$_REQUEST['noanggota']."'";
 					
 				$sql = "INSERT INTO pinjam
-						   SET kodepustaka='".$_REQUEST[kodepustaka]."',
-							   tglpinjam = '".MySqlDateFormat($_REQUEST[tglpinjam])."',
-							   tglkembali = '".MySqlDateFormat($_REQUEST[tglkembali])."',
-							   idanggota = '".$_REQUEST[noanggota]."',
+						   SET kodepustaka='".$_REQUEST['kodepustaka']."',
+							   tglpinjam = '".MySqlDateFormat($_REQUEST['tglpinjam'])."',
+							   tglkembali = '".MySqlDateFormat($_REQUEST['tglkembali'])."',
+							   idanggota = '".$_REQUEST['noanggota']."',
 							   keterangan = '".CQ($_REQUEST['keterangan'])."',
 							   info1 = '$jenis',
 							   $idmember";
@@ -112,14 +112,14 @@ class CPinjam
 		if ($this->op == 'delqueue')
 		{
 			$sql = "DELETE FROM pinjam
-					 WHERE replid = $_REQUEST[replid]";
+					 WHERE replid = {$_REQUEST['replid']}";
 			QueryDb($sql);
 		}
 		
 		if ($this->op == 'DontSave')
 		{
 			$sql = "DELETE FROM pinjam
-			         WHERE replid IN ($_REQUEST[idstr])";
+			         WHERE replid IN ({$_REQUEST['idstr']})";
 			QueryDb($sql);
 		}
 		
@@ -127,23 +127,23 @@ class CPinjam
 		{
 			$sql = "UPDATE pinjam
 					   SET status = 1
-					 WHERE replid IN ($_REQUEST[idstr])";
+					 WHERE replid IN ({$_REQUEST['idstr']})";
 			QueryDb($sql);
 			
 			$sql = "SELECT kodepustaka
 					  FROM pinjam
-					 WHERE replid IN ($_REQUEST[idstr])";
+					 WHERE replid IN ({$_REQUEST['idstr']})";
 			$result = QueryDb($sql);
-			while ($row = @mysql_fetch_array($result))
+			while ($row = @mysqli_fetch_array($result))
 			{
 				$sql = "UPDATE daftarpustaka
 						   SET status = 0
-						 WHERE kodepustaka='$row[kodepustaka]'";
+						 WHERE kodepustaka='{{$row['kodepustaka']}}'";
 				QueryDb($sql);
 			}
 		}
 		
-		if (isset($_REQUEST[openuser]))
+		if (isset($_REQUEST['openuser']))
 			$this->OpenUser();
 	}
 	
@@ -152,20 +152,20 @@ class CPinjam
 		<script language='JavaScript'>
 			cari();
 		</script>
-<?  }
+<?php  }
 
 	function OnFinish()
 	{	?>
 		<script language='JavaScript'>
 		//	Tables('table', 1, 0);
 		</script>
-<?  }
+<?php  }
 	
 	function GetMaxQueue($anggota)
 	{
 		$sql = "SELECT * FROM konfigurasi";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		$max_siswa_pjm = $row['siswa'];
 		$max_pegawai_pjm = $row['pegawai'];
 		$max_anggota_pjm = $row['other'];
@@ -207,7 +207,7 @@ class CPinjam
 						   DATE_FORMAT(DATE_ADD(NOW(), INTERVAL $addDay DAY), '%d-%m-%Y')";
 			//echo $this->state . " -- $sql";			   
 			$result = QueryDb($sql);
-			$row = @mysql_fetch_row($result);
+			$row = @mysqli_fetch_row($result);
 			$this->datenow = $row[0];
 			$this->datereturn = $row[1];
 			
@@ -219,16 +219,16 @@ class CPinjam
 			
 		$sql = "SELECT DATE_FORMAT(now(),'%Y-%m-%d')";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		$now = $row[0];
 
 		$sql = "SELECT * FROM pinjam WHERE idanggota='$this->noanggota' AND status=1 AND tglkembali<'".$now."' ORDER BY tglpinjam";
 		$result = QueryDb($sql);
-		$JumTelat = @mysql_num_rows($result);
+		$JumTelat = @mysqli_num_rows($result);
 
 		$sql = "SELECT * FROM pinjam WHERE idanggota='$this->noanggota' AND status=1";
 		$result = QueryDb($sql);
-		$JumPinjam = @mysql_num_rows($result);
+		$JumPinjam = @mysqli_num_rows($result);
 		$max_queue = $this->GetMaxQueue($this->state); ?>
         <input type="hidden" name="max_queue" id="max_queue" value="<?=$max_queue?>" />
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -294,8 +294,8 @@ class CPinjam
                 </div>
             </td>
           </tr>
-		  	<?
-			if (isset($_REQUEST[noanggota]) && $_REQUEST[noanggota]!=""){
+		  	<?php
+			if (isset($_REQUEST['noanggota']) && $_REQUEST['noanggota']!=""){
 			?>
           <tr>
             <td colspan="2">
@@ -303,10 +303,10 @@ class CPinjam
               <fieldset style="background-color: #e8fcff; border-width: 1px; border-color: #ececec;">
               <legend class="welc" style="background-color: #fff; color: #888; font-size: 14px; font-family: 'Segoe UI'">&nbsp;Daftar Peminjaman&nbsp;</legend>
               <div style="height:200px; overflow-x:hidden; width:100%; overflow-y:scroll">
-              <?
+              <?php
               $sql = "SELECT * FROM pinjam WHERE idanggota='$this->noanggota' AND status=0 ORDER BY tglkembali";
 			  $result = QueryDb($sql);
-			  $num = @mysql_num_rows($result);
+			  $num = @mysqli_num_rows($result);
               if ($num>0){
 			  ?>
               <table width="98%" border="1"  cellspacing="0" cellpadding="2" class="tab">
@@ -318,38 +318,38 @@ class CPinjam
                     <td width="99" align="center">&nbsp;</td>
                   </tr>
                   <tbody style="overflow:hidden;" >
-                  <?
+                  <?php
 				  $cnt=1;
-				  while ($row=@mysql_fetch_array($result)){
-				  $judul = @mysql_fetch_row(QueryDb("SELECT p.judul FROM pustaka p, daftarpustaka d WHERE d.pustaka=p.replid AND d.kodepustaka='$row[kodepustaka]'"));
+				  while ($row=@mysqli_fetch_array($result)){
+				  $judul = @mysqli_fetch_row(QueryDb("SELECT p.judul FROM pustaka p, daftarpustaka d WHERE d.pustaka=p.replid AND d.kodepustaka='{$row['kodepustaka']}'"));
 				  ?>
                   <tr height="25">
                     <td width="20" height="20" align="center">
-						<input type="hidden" name="idpinjam<?=$cnt?>" id="idpinjam<?=$cnt?>" value="<?=$row[replid]?>" />
+						<input type="hidden" name="idpinjam<?=$cnt?>" id="idpinjam<?=$cnt?>" value="<?=$row['replid']?>" />
 						<?=$cnt?>                    </td>
-                    <td width="254" align="center"><?=$row[kodepustaka]?></td>
+                    <td width="254" align="center"><?=$row['kodepustaka']?></td>
                     <td width="496" ><?=$judul[0]?></td>
-                    <td width="100" align="center"><?=LongDateFormat($row[tglkembali])?></td>
-                    <td width="100" align="center"><a href="javascript:HapusPeminjaman('<?=$row[replid]?>')"><img src="../img/ico/hapus.png" width="16" height="16" border="0" /></a></td>
+                    <td width="100" align="center"><?=LongDateFormat($row['tglkembali'])?></td>
+                    <td width="100" align="center"><a href="javascript:HapusPeminjaman('<?=$row['replid']?>')"><img src="../img/ico/hapus.png" width="16" height="16" border="0" /></a></td>
                   </tr>
-                  <? $cnt++; ?>
-                  <? } ?>
+                  <?php $cnt++; ?>
+                  <?php } ?>
                   </tbody>
               </table>
-              <? } ?>
+              <?php } ?>
               </div>
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr height="30">
                         <td class="news_content1">Jumlah yang akan dipinjam <?=$num?></td>
                         <td align="right">
-                        	<? if($num!=0){ ?>
+                        	<?php if($num!=0){ ?>
                             <input name="simpan" type="button" class="cmbfrm3" value="  Simpan Peminjaman  "
                                    style="font-size: 14px; background-color: #0a931e; color: #fff; height: 28px;"
                                    onclick="ValidatePeminjaman()" />
           					&nbsp;<input name="batal" type="button" class="cmbfrm2" value="     Batal     "
                                     style="font-size: 14px; background-color: #6e2e16; color: #fff; height: 28px;"
                                     onclick="CancelPeminjaman()" />
-                        	<? } ?>
+                        	<?php } ?>
                         </td>
                       </tr>
               </table>
@@ -422,14 +422,14 @@ class CPinjam
                       <tr>
                           <td>&nbsp;</td>
                         <td align="left">
-						<? if ($this->numcode > 0 && $this->isavaiable == 1) { ?>
+						<?php if ($this->numcode > 0 && $this->isavaiable == 1) { ?>
 						<input name="button" type="button" class="cmbfrm2" id="button" value=" Tambah ke Daftar Peminjaman "
                                style="font-size: 14px; background-color: #0a931e; color: #fff; height: 28px;"
                                onclick="AddToChart()" />
-						<? } ?>
-						<? if ($this->isavaiable == -1) { ?>
+						<?php } ?>
+						<?php if ($this->isavaiable == -1) { ?>
 						<font style='color: red; font-weight: bold;'>Status buku ini sedang dipinjam</font>
-						<? } ?>
+						<?php } ?>
 						</td>
                       </tr>
                     </table>
@@ -440,19 +440,19 @@ class CPinjam
           <tr>
           	<td colspan="2" align="center"></td>
           </tr>
-		  <?
+		  <?php
            } else {	
           ?>
           <input type="hidden" name="num" id="num" value="0" />
-          <? } ?>
+          <?php } ?>
         </table>
 		
-		<? if ($this->op == "newuser" || $this->op == "addtochart") { ?>
+		<?php if ($this->op == "newuser" || $this->op == "addtochart") { ?>
 		<script>
 			setTimeout(function() { focusKodePustaka() }, 250);
 		</script>
-		<? } ?>
-        <?
+		<?php } ?>
+        <?php
 	}
 }
 ?>

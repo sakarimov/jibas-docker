@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -120,26 +120,26 @@ function focusNext(elemName, evt) {
   	<tr>
         <td width="27%"><strong>Departemen </strong></td>
     	<td width="73%"><select name="departemen" id="departemen" onChange="change_departemen()" style="width:250px"  onkeypress="return focusNext('kalender', event)">
-            <?	$dep = getDepartemen(SI_USER_ACCESS());    
+            <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
             <?=$value ?> 
             </option>
-            <?	} ?>
+            <?php } ?>
             </select>		</td>
     </tr>
     <tr>
     	<!--<td><strong>Tahun Ajaran </strong></td>
     	<td>       
         <select name="tahunajaran" id="tahunajaran" onChange="change_tahunajaran()" style="width:200px;" onkeypress="return focusNext('kalender', event)">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT replid,tahunajaran,aktif FROM jbsakad.tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
 				if ($row['aktif']) 
@@ -148,8 +148,8 @@ function focusNext(elemName, evt) {
 					$ada = '';			 
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-    		<?
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+    		<?php
 			}
     		?>
     	</select>        </td>-->
@@ -157,10 +157,10 @@ function focusNext(elemName, evt) {
     <tr>
     	<td><strong>Kalender Akademik</strong></td>
     	<td><select name="kalender" id="kalender" onchange="change(0)" style="width:250px;" onkeypress="return focusNext('tabel', event)">
-          <? OpenDb();
+          <?php OpenDb();
 				$sql_kalender = "SELECT * FROM jbsakad.kalenderakademik where departemen='$departemen' ORDER BY aktif DESC, replid ASC";
 				$result_kalender = QueryDb($sql_kalender);
-				while($row_kalender = @mysql_fetch_array($result_kalender)) {
+				while($row_kalender = @mysqli_fetch_array($result_kalender)) {
 					if ($kalender == "")
 						$kalender = $row_kalender['replid'];
 					if ($row_kalender['aktif']) 
@@ -168,10 +168,10 @@ function focusNext(elemName, evt) {
 					else 
 						$ada = '';
 			?>
-          <option value="<?=urlencode($row_kalender['replid'])?>" <?=IntIsSelected($row_kalender['replid'], $kalender) ?> >
+          <option value="<?=urlencode((string) $row_kalender['replid'])?>" <?=IntIsSelected($row_kalender['replid'], $kalender) ?> >
             <?=$row_kalender['kalender'].' '.$ada?>
           </option>
-          <? } //while	?>
+          <?php } //while	?>
         </select>
 			<img src="../images/ico/tambah.png" onClick="newWindow('daftar_kalender.php?departemen=<?=$departemen?>','KalenderAkademik','600','425','resizable=1,scrollbars=1,status=0,toolbar=0')" onMouseOver="showhint('Tambah Kalender Akademik!', this, event, '80px')" />           
 		</td>
@@ -179,12 +179,12 @@ function focusNext(elemName, evt) {
    <tr>
       	<td><strong>Periode</strong></td>
         <td>
-        <? 	
+        <?php 	
 		if ($kalender <> "" ) {
 			OpenDb();
-			$sql = "SELECT * FROM jbsakad.tahunajaran t, jbsakad.kalenderakademik k WHERE t.replid=k.idtahunajaran AND k.replid = '$kalender'";
+			$sql = "SELECT * FROM jbsakad.tahunajaran t, jbsakad.kalenderakademik k WHERE t.replid=k.idtahunajaran AND k.replid = '".$kalender."'";
 			$result = QueryDb($sql);
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			$periode = format_tgl($row['tglmulai']).' s/d '.format_tgl($row['tglakhir']);
 		} 
 		?> 

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../inc/config.php");
 require_once("../inc/db_functions.php");
 require_once("../inc/common.php");
@@ -30,7 +30,7 @@ $type = $_REQUEST['type'];
 $krit = $_REQUEST['krit']; //1 Statistik peminjam terbanyak 
 $key = $_REQUEST['key'];
 $Limit = $_REQUEST['Limit'];
-$key = split(',', $key);
+$key = explode(',', (string) $key);
 if ($krit==2)
 {
 	require_once("../lib/chartfactory2.php");
@@ -57,7 +57,7 @@ if ($krit == 1)
 			  FROM
 				   (SELECT p.replid, IF(p.nis IS NOT NULL, p.nis, IF(p.nip IS NOT NULL, p.nip, p.idmember)) AS idanggota
 					  FROM pinjam p, daftarpustaka d
-				     WHERE p.tglpinjam BETWEEN '$key[0]' AND '$key[1]'
+				     WHERE p.tglpinjam BETWEEN '".$key[0]."' AND '$key[1]'
 					   AND d.kodepustaka = p.kodepustaka $filter) AS x
 			 GROUP BY x.idanggota
 		     ORDER BY num DESC
@@ -72,7 +72,7 @@ elseif ($krit == 2)
 	
 	$sql = "SELECT judul, count(*) as num
 		      FROM pinjam p, daftarpustaka d, pustaka pu
-			 WHERE p.tglpinjam BETWEEN '$key[0]' AND '$key[1]'
+			 WHERE p.tglpinjam BETWEEN '".$key[0]."' AND '$key[1]'
 			   AND d.kodepustaka=p.kodepustaka
 			   AND pu.replid=d.pustaka $filter
 			 GROUP BY judul
@@ -88,7 +88,7 @@ elseif ($krit == 3)
 	
 	$sql = "SELECT DATE_FORMAT(p.tglpinjam, '%M %Y'), count(*) as num
 			  FROM pinjam p, daftarpustaka d, pustaka pu
-			 WHERE p.tglpinjam BETWEEN '$key[0]' AND '$key[1]'
+			 WHERE p.tglpinjam BETWEEN '".$key[0]."' AND '$key[1]'
 			   AND d.kodepustaka=p.kodepustaka
 			   AND pu.replid=d.pustaka $filter
 			 GROUP BY MONTH(p.tglpinjam), YEAR(p.tglpinjam)

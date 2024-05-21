@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -65,40 +65,40 @@ OpenDb();
 <tr>
     <td width="20%"><font color="#000000"><strong>Departemen</strong></font></td>
     <td><select name="depart" id="depart" onChange="change_departemen(0)" style="width:150px" onkeypress="return focusNext('tahunajaran', event)">
-	<?	$dep = getDepartemen(SI_USER_ACCESS());    
+	<?php $dep = getDepartemen(SI_USER_ACCESS());    
         foreach($dep as $value) {
             if ($departemen == "")
                 $departemen = $value; ?>
         <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
         <?=$value ?>
         </option>
-        <?	} ?>
+        <?php } ?>
   	</select>
     </td>
     <td><font color="#000000"><strong>Tingkat</strong></font></td>
     <td>
             <select name="tingkat" id="tingkat" onChange="change()" style="width:150px;" onkeypress="return focusNext('kelas', event)">
-        <?
+        <?php
             OpenDb();
 			$sql="SELECT * FROM tingkat WHERE departemen='$departemen' AND aktif = 1 ORDER BY urutan";
             $result=QueryDb($sql);
-            while ($row=@mysql_fetch_array($result)){
+            while ($row=@mysqli_fetch_array($result)){
                 if ($tingkat=="")
                     $tingkat=$row['replid'];
         ?> 
             <option value="<?=$row['replid']?>" <?=IntIsSelected($row['replid'], $tingkat)?>><?=$row['tingkat']?></option>
-        <? 	} ?> 
+        <?php 	} ?> 
             </select></td>
 </tr>
 <tr>
     <td><font color="#000000"><strong>Tahun Ajaran </strong></font></td>
     <td><select name="tahunajaran" id="tahunajaran" onChange="change()" style="width:150px;" onkeypress="return focusNext('tingkat', event)">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT replid,tahunajaran,aktif FROM jbsakad.tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
 				if ($row['aktif']) 
@@ -107,50 +107,50 @@ OpenDb();
 					$ada = '';			 
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-    		<?
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+    		<?php
 			}
     		?>
     	</select>        </td>
         
     <td><font color="#000000"><strong>Kelas</strong></font></td>
     <td><select name="kelas" id="kelas" onChange="change_kelas()" style="width:150px">
-<?	if ($tahunajaran <> "") {
+<?php if ($tahunajaran <> "") {
 		OpenDb();
 		$sql="SELECT k.replid,k.kelas FROM jbsakad.kelas k,jbsakad.tahunajaran ta,jbsakad.tingkat ti WHERE k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid AND ti.departemen='$departemen' AND ta.replid=$tahunajaran AND ti.replid = $tingkat AND k.aktif=1 ORDER BY k.kelas";
     	$result=QueryDb($sql);
 		CloseDb();
-    	while ($row=@mysql_fetch_array($result)){
+    	while ($row=@mysqli_fetch_array($result)){
             if ($kelas == "")
-                $kelas = $row[replid]; 
+                $kelas = $row['replid']; 
                 ?>
-    	<option value="<?=$row[replid] ?>" <?=StringIsSelected($row[replid], $kelas) ?> >
-    	<?=$row[kelas] ?>
+    	<option value="<?=$row['replid'] ?>" <?=StringIsSelected($row['replid'], $kelas) ?> >
+    	<?=$row['kelas'] ?>
     	</option>
-    <?	} 
+    <?php } 
 	} else {	?>
     	<option></option>
-<? } ?> 
+<?php } ?> 
   	</select>
    	</td>    
 </tr>
 <tr>
 	<td colspan="4" align="center">
     <br>
-<? 
+<?php 
 OpenDb();
 
 if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") { 
 	$sql_tot = "SELECT s.nis, s.nama, k.kelas FROM jbsakad.siswa s,jbsakad.kelas k WHERE s.aktif=1 AND k.replid=s.idkelas AND s.alumni=0 AND k.replid='$kelas' ORDER BY s.nama"; 	
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql = "SELECT s.nis, s.nama, k.kelas FROM jbsakad.siswa s,jbsakad.kelas k WHERE s.aktif=1 AND k.replid=s.idkelas AND s.alumni=0 AND k.replid='$kelas' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
 	<table width="100%" id="table" class="tab" align="center" cellpadding="2" cellspacing="0" border="1" bordercolor="#000000">
 	<tr height="30" class="header" align="center">
@@ -160,12 +160,12 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
         <!--<td onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('k.kelas','<?=$urutan?>','daftar')">Kelas <?=change_urut('k.kelas',$urut,$urutan)?></td>-->
         <td width="10%">&nbsp;</td>
 	</tr>
-<?
+<?php
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
-	while($row = mysql_fetch_row($result)) { 
+	while($row = mysqli_fetch_row($result)) { 
 ?>
 	<tr height="25" onClick="pilih('<?=$row[0]?>','<?=$row[1]?>')" style="cursor:pointer">
 		<td align="center" ><?=$cnt ?></td>
@@ -174,12 +174,12 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
 		<!--<td align="center"><?=$row[2] ?></td>-->
 		<td align="center"><input type="button" value="Pilih" onClick="pilih('<?=$row[0]?>','<?=$row[1]?>')"  class="but"></td>
 	</tr>
-	<?
+	<?php
 	$cnt++;
 	}
 	CloseDb();	?>
     </table>
-    <?  if ($page==0){ 
+    <?php  if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 	}
@@ -204,19 +204,19 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
     <tr>
        	<td width="30%" align="left"><font color="#000000">Hal
         <select name="hal" id="hal" onChange="change_hal('daftar')">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      	// Navigasi halaman berikutnya dan sebelumnya
         ?>
         </font></td>
     	<!--td align="center">
     	<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>','daftar')" >
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -230,14 +230,14 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
  		</td-->
         <td width="30%" align="right"><font color="#000000">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris('daftar')">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></font></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
 		<td>   
@@ -249,7 +249,7 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
    		</td>
     </tr>
     </table>
-<? }
+<?php }
 } else {?>
     <table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
@@ -262,7 +262,7 @@ if ($kelas <> "" && $tingkat <> "" && $tahunajaran <> "") {
    		</td>
     </tr>
     </table>
-<? } ?>
+<?php } ?>
 </td>    
 </tr>
 <tr>

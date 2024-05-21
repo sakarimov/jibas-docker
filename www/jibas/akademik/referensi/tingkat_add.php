@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,17 +45,17 @@ $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) 
 {
 	OpenDb();
-	$sql = "SELECT * FROM tingkat WHERE tingkat = '$tingkat' AND departemen = '$departemen'";
+	$sql = "SELECT * FROM tingkat WHERE tingkat = '$tingkat' AND departemen = '".$departemen."'";
 	$result = QueryDb($sql);
 	
-	$sql1 = "SELECT * FROM tingkat WHERE urutan = '$urutan' AND departemen = '$departemen'";
+	$sql1 = "SELECT * FROM tingkat WHERE urutan = '$urutan' AND departemen = '".$departemen."'";
 	$result1 = QueryDb($sql1);
 	
-	if (mysql_num_rows($result) > 0) {
-		$row = @mysql_fetch_array($result);
+	if (mysqli_num_rows($result) > 0) {
+		$row = @mysqli_fetch_array($result);
 		CloseDb();
-		$ERROR_MSG = "Tingkat $tingkat sudah digunakan pada Departemen $row[departemen]!";
-	} else if (mysql_num_rows($result1) > 0) {		
+		$ERROR_MSG = "Tingkat $tingkat sudah digunakan pada Departemen ".$row['departemen']."!";
+	} else if (mysqli_num_rows($result1) > 0) {		
 		CloseDb();
 		$ERROR_MSG = "Urutan $urutan sudah digunakan pada Departemen ini!";	
 		$cek = 1;	
@@ -69,7 +69,7 @@ if (isset($_REQUEST['Simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 
@@ -88,7 +88,7 @@ switch ($cek) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Tambah Tingkat]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -187,10 +187,10 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

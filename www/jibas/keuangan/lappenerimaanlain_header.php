@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -38,7 +38,7 @@ OpenDb();
 $sql = "SELECT day(now()), month(now()), year(now()), 
                day(date_sub(now(), INTERVAL 30 DAY)), month(date_sub(now(), INTERVAL 30 DAY)), year(date_sub(now(), INTERVAL 30 DAY))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tgl2 = $row[0];
 $bln2 = $row[1];
 $thn2 = $row[2];
@@ -208,31 +208,31 @@ function panggil(elem){
         <td width="15%"><strong>Departemen </strong></font></td>
         <td colspan="4">
         <select name="departemen" id="departemen" onchange="change_dep();" style="width:115px" onKeyPress="return focusNext('idpenerimaan',event)" onfocus="panggil('departemen')">
-        <?	$dep = getDepartemen(getAccess());
+        <?php $dep = getDepartemen(getAccess());
             foreach ($dep as $value) { 
                 if ($departemen == "")
                     $departemen = $value ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($departemen, $value) ?>  > <?=$value ?></option>
-        <?  } ?>     
-        <?  $sql = "SELECT replid FROM tahunbuku WHERE departemen='$departemen' AND aktif = 1";
+        <?php  } ?>     
+        <?php  $sql = "SELECT replid FROM tahunbuku WHERE departemen='$departemen' AND aktif = 1";
 		    $res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$idtahunbuku = $row[0];
 			//$idtahunbuku = FetchSingle($sql); 
 		?>
         <input type="hidden" name="idtahunbuku" id="idtahunbuku" value="<?=$idtahunbuku?>" />    
         </select>
         <strong>Penerimaan </strong></font>
-        <? $sql = "SELECT replid, nama FROM datapenerimaan WHERE aktif = 1 AND idkategori = 'LNN' AND departemen = '$departemen' ORDER BY nama"; 
+        <?php $sql = "SELECT replid, nama FROM datapenerimaan WHERE aktif = 1 AND idkategori = 'LNN' AND departemen = '$departemen' ORDER BY nama"; 
 		//echo  $sql; ?>
         <select name="idpenerimaan" id="idpenerimaan" onchange="change_sel()" style="width:180px" onKeyPress="return focusNext('tgl1',event)" onfocus="panggil('idpenerimaan')">
-        <?
+        <?php
         $sql = "SELECT replid, nama FROM datapenerimaan WHERE aktif = 1 AND idkategori = 'LNN' AND departemen = '$departemen' ORDER BY nama";
         $result = QueryDb($sql);
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
         ?>
             <option value="<?=$row['replid'] ?>"><?=$row['nama'] ?></option>
-        <?
+        <?php
         }
         ?>
         </select>
@@ -244,44 +244,44 @@ function panggil(elem){
         	<div id="InfoTgl1"> 
             <select name="tgl1" id = "tgl1" onchange="change_tgl1()" onfocus = "panggil('tgl1')" onKeyPress="return focusNext('bln1',event)" >
             	<option value="">[Tgl]</option>
-            <? for($i = 1; $i <= $n1; $i++) { ?>
+            <?php for($i = 1; $i <= $n1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             </div>
         </td>
         <td width="160">
             <select name="bln1" id="bln1" onchange="change_tgl1()" onfocus = "panggil('bln1')" onKeyPress="return focusNext('thn1',event)">
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln1) ?> > <?=$bulan[$i] ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn1" id="thn1" onchange="change_tgl1()" onfocus = "panggil('thn1')" onKeyPress="return focusNext('tgl2',event)">
-            <? for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select> s/d
        	</td>
        	<td width="10">
          	<div id="InfoTgl2">
             <select name="tgl2" id="tgl2" onchange="change_tgl2()" onfocus = "panggil('tgl2')" onKeyPress="return focusNext('bln2',event)">
             	<option value="">[Tgl]</option>
-            <? for($i = 1; $i <= $n2; $i++) { ?>
+            <?php for($i = 1; $i <= $n2; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             </div>
        	</td>
         <td>
             <select name="bln2" id="bln2" onchange="change_tgl2()" onfocus = "panggil('bln2')" onKeyPress="return focusNext('thn2',event)">
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln2) ?> > <?=$bulan[$i] ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn2" id="thn2" onchange="change_tgl2()" onfocus = "panggil('thn2')" onKeyPress="return focusNext('tabel',event)" >
-            <? for($i = $G_START_YEAR; $i <= $thn2+1; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn2+1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             </td>
     	</tr>
@@ -303,6 +303,6 @@ function panggil(elem){
 </tr>
 </table>
 </form>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 </body>
 </html>

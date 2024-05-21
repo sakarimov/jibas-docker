@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ require_once ("main.func.php");
 <table border="0" width="100%" style="height: 100%;" cellpadding="0" cellspacing="0">
 <tr style="height: 100%">
     <td style="background-color: #188361; width: 220px;" valign="top">
-    <? include("main.menu.php") ?>
+    <?php include("main.menu.php") ?>
     </td>
     <td style="background-color: #ffffff; width: auto;">
 

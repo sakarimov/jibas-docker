@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@ $sessionid = $_SESSION["SessionId"];
 
 OpenDb();
 
-$sql = "DELETE FROM jbscbe.webuserinfo WHERE userid = '$userid' AND sessionid = '$sessionid'";
+$sql = "DELETE FROM jbscbe.webuserinfo WHERE userid = '$userid' AND sessionid = '".$sessionid."'";
 QueryDb($sql);
 
-$sql = "DELETE FROM jbscbe.webuserintent WHERE userid = '$userid'";
+$sql = "DELETE FROM jbscbe.webuserintent WHERE userid = '".$userid."'";
 QueryDb($sql);
 
 CloseDb();
@@ -48,7 +48,7 @@ foreach($_SESSION as $k => $v)
 // DELETE ALL COOKIES
 foreach($_COOKIE as $k => $v)
 {
-    setcookie($k, "", time() - 3600, "/");
+    setcookie($k, "", ['expires' => time() - 3600, 'path' => "/"]);
 }
 
 if (file_exists("login.php"))

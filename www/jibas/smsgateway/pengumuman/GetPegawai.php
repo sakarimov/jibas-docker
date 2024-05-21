@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -50,13 +50,13 @@ if ($Source=='' || $Source=='Pilih'){
             <td class="td">
               <select id="CmbBagPeg" name="CmbBagPeg" class="Cmb" onchange="ChgCmbBagPeg(this.value)">
                 <option value="-1" <?=StringIsSelected('-1',$bag)?>>- Semua -</option>
-                <?
+                <?php
                     $sql = "SELECT bagian FROM $db_name_sdm.bagianpegawai";
                     $res = QueryDb($sql);
-                    while ($row = @mysql_fetch_row($res)){
+                    while ($row = @mysqli_fetch_row($res)){
                     ?>
                 <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$bag)?>><?=$row[0]?></option>
-                <?
+                <?php
                     }
                     ?>
                 </select>
@@ -101,16 +101,16 @@ if ($Source=='' || $Source=='Pilih'){
         <td height='20'>No. Ponsel</td>
         <td height='20'><input type="checkbox" id="CheckAllPegawai"></td>
       </tr>
-      <?
+      <?php
 		if ($bag=='-1')
 			$sql = "SELECT * FROM $db_name_sdm.pegawai ORDER BY nama";
 		else
 			$sql = "SELECT * FROM $db_name_sdm.pegawai WHERE bagian='$bag' ORDER BY nama";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		if ($num>0){
 			$cnt=1;
-			while ($row = @mysql_fetch_array($res)){
+			while ($row = @mysqli_fetch_array($res)){
 	  ?>
       <tr>
         <td align="center" class="td"><?=$cnt?></td>
@@ -118,13 +118,13 @@ if ($Source=='' || $Source=='Pilih'){
 		<td class="td"><?=$row['nama']?></td>
         <td class="td"><?=$row['handphone']?></td>
         <td class="td" align="center">
-        <? if (strlen($row['handphone'])>0){ ?>
+        <?php if (strlen((string) $row['handphone'])>0){ ?>
         <!--<span style="cursor:pointer" class="Link" onclick="InsertNewReceipt('<?=$row['handphone']?>','<?=$row['nama']?>','<?=$row['nip']?>')" align="center" />Pilih</span>-->
 		<input type="checkbox" class="checkboxpegawai" hp="<?=$row['handphone']?>" nama="<?=$row['nama']?>" nip="<?=$row['nip']?>" pin="<?=$row['pinpegawai']?>">
-        <? } ?>
+        <?php } ?>
         </td>
       </tr>
-      <?
+      <?php
 			$cnt++;
 			}
 		} else {
@@ -132,7 +132,7 @@ if ($Source=='' || $Source=='Pilih'){
       <tr>
         <td colspan="4" class="Ket" align="center">Tidak ada data</td>
       </tr>
-		<?
+		<?php
 		}
 		?>
     </table>
@@ -140,6 +140,6 @@ if ($Source=='' || $Source=='Pilih'){
     </td>
   </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

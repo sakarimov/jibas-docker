@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -91,10 +91,10 @@ OpenDb();
         Tanggal Lahir:
     </td>
     <td width="*" align="left">
-<?      ShowYearCombo('thnlahir', 'changeTahunLahirSiswa()', 1990, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('blnlahir', 'changeBulanLahirSiswa()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('thnlahir', 'changeTahunLahirSiswa()', 1990, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('blnlahir', 'changeBulanLahirSiswa()', date('n')); ?>&nbsp;
         <span id="divTglLahirSiswa">
-<?      ShowDateCombo('tgllahir', 'changeTanggalLahirSiswa()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('tgllahir', 'changeTanggalLahirSiswa()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
 </tr>
@@ -103,7 +103,7 @@ OpenDb();
         Agama:
     </td>
     <td width="*" align="left">
-<?      ShowAgamaCombo(); ?>
+<?php      ShowAgamaCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -111,7 +111,7 @@ OpenDb();
         Suku:
     </td>
     <td width="*" align="left">
-<?      ShowSukuCombo(); ?>
+<?php      ShowSukuCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -119,7 +119,7 @@ OpenDb();
         Status:
     </td>
     <td width="*" align="left">
-<?      ShowStatusCombo(); ?>
+<?php      ShowStatusCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -127,7 +127,7 @@ OpenDb();
         Kondisi:
     </td>
     <td width="*" align="left">
-<?      ShowKondisiCombo(); ?>
+<?php      ShowKondisiCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -153,7 +153,7 @@ OpenDb();
         Status Anak:
     </td>
     <td width="*" align="left">
-<?      ShowStatusAnakCombo(); ?>        
+<?php      ShowStatusAnakCombo(); ?>        
     </td>
 </tr>
 <tr>
@@ -242,9 +242,9 @@ OpenDb();
         Asal Sekolah:
     </td>
     <td width="*" align="left">
-<?      ShowJenjangSekolahCombo() ?><br>
+<?php      ShowJenjangSekolahCombo() ?><br>
         <span id='divAsalSekolah'>
-<?      ShowAsalSekolahCombo('TK/RA') ?>
+<?php      ShowAsalSekolahCombo('TK/RA') ?>
         </span>
     </td>
 </tr>
@@ -359,10 +359,10 @@ OpenDb();
         Status Orangtua:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-        <? ShowStatusOrtuCombo('statusayah') ?>
+        <?php ShowStatusOrtuCombo('statusayah') ?>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-        <? ShowStatusOrtuCombo('statusibu') ?>
+        <?php ShowStatusOrtuCombo('statusibu') ?>
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -387,17 +387,17 @@ OpenDb();
         Tanggal Lahir:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowYearCombo('thnlahirayah', 'changeTahunLahirAyah()', 1970, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('blnlahirayah', 'changeBulanLahirAyah()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('thnlahirayah', 'changeTahunLahirAyah()', 1970, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('blnlahirayah', 'changeBulanLahirAyah()', date('n')); ?>&nbsp;
         <span id="divTglLahirAyah">
-<?      ShowDateCombo('tgllahirayah', 'changeTanggalLahirAyah()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('tgllahirayah', 'changeTanggalLahirAyah()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowYearCombo('thnlahiribu', 'changeTahunLahirIbu()', 1970, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('blnlahiribu', 'changeBulanLahirIbu()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('thnlahiribu', 'changeTahunLahirIbu()', 1970, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('blnlahiribu', 'changeBulanLahirIbu()', date('n')); ?>&nbsp;
         <span id="divTglLahirIbu">
-<?      ShowDateCombo('tgllahiribu', 'changeTanggalLahirIbu()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('tgllahiribu', 'changeTanggalLahirIbu()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
     <td width="*" align="right" valign="top">
@@ -409,10 +409,10 @@ OpenDb();
         Pendidikan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPendidikanCombo('pendidikanayah') ?>        
+<?php      ShowPendidikanCombo('pendidikanayah') ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPendidikanCombo('pendidikanibu') ?>                
+<?php      ShowPendidikanCombo('pendidikanibu') ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -423,10 +423,10 @@ OpenDb();
         Pekerjaan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPekerjaanCombo('pekerjaanayah') ?>        
+<?php      ShowPekerjaanCombo('pekerjaanayah') ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPekerjaanCombo('pekerjaanibu') ?>                
+<?php      ShowPekerjaanCombo('pekerjaanibu') ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -580,6 +580,6 @@ OpenDb();
 <br><br><br>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

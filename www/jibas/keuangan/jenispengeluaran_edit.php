@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -35,12 +35,12 @@ $departemen = $_REQUEST['departemen'];
 if (isset($_REQUEST['simpan']))
 {
 	OpenDb();
-	$sql = "SELECT replid FROM datapengeluaran WHERE nama = '$_REQUEST[nama]' AND replid <> '$id'";
+	$sql = "SELECT replid FROM datapengeluaran WHERE nama = '".$_REQUEST['nama']."' AND replid <> '$id'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$MYSQL_ERROR_MSG = "Pengeluaran $_REQUEST[nama] telah ada sebelumnya!";
+		$mysqli_ERROR_MSG = "Pengeluaran {$_REQUEST['nama']} telah ada sebelumnya!";
 	}
 	else
 	{
@@ -48,7 +48,7 @@ if (isset($_REQUEST['simpan']))
 		if ($besar == "") $besar = 0;
 		$besar = UnformatRupiah($besar);
 		
-		$sql = "UPDATE datapengeluaran SET nama='".CQ($_REQUEST['nama'])."', besar='$besar', rekkredit='$_REQUEST[norekkredit]', rekdebet='$_REQUEST[norekdebet]', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = $id";
+		$sql = "UPDATE datapengeluaran SET nama='".CQ($_REQUEST['nama'])."', besar='$besar', rekkredit='".$_REQUEST['norekkredit']."', rekdebet='".$_REQUEST['norekdebet']."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = $id";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -58,14 +58,14 @@ if (isset($_REQUEST['simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 } 
 OpenDb();
 
 $sql = "SELECT * FROM datapengeluaran WHERE replid='$id'";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nama = $row['nama'];
 $besar = FormatRupiah($row['besar']);
 $rekkredit = $row['rekkredit'];
@@ -81,12 +81,12 @@ if (isset($_REQUEST['keterangan']))
 
 $sql = "SELECT nama FROM rekakun WHERE kode='$rekkredit'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekkredit = $row[0];
 
 $sql = "SELECT nama FROM rekakun WHERE kode='$rekdebet'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namarekdebet = $row[0];
 
 // ========================================================
@@ -111,7 +111,7 @@ CloseDb();
 <link href="script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript" src="script/tools.js"></script>
 <script language="javascript" src="script/rupiah.js"></script>
@@ -196,9 +196,9 @@ function panggil(elem){
         <td align="left">
 			<input type="text" name="rekkredit" id="rekkredit" value="<?=$rekkredit . " " . $namarekkredit ?>"
 				readonly style="background-color:#CCCC99" maxlength="100" size="30" onFocus="panggil('rekkredit')">
-<?			if (!$idIsUsed) { ?>						
+<?php 		if (!$idIsUsed) { ?>						
 				<a href="#" onClick="JavaScript:cari_rek(1,'HARTA')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>					
 			<input type="hidden" name="norekkredit" id="norekkredit"  value="<?=$rekkredit ?>" />
@@ -209,9 +209,9 @@ function panggil(elem){
         <td align="left">
 			<input type="text" name="rekdebet" id="rekdebet" value="<?=$rekdebet  . " " . $namarekdebet ?>"
 				readonly style="background-color:#CCCC99" maxlength="100" size="30"	onFocus="panggil('rekdebet')">
-<?			if (!$idIsUsed) { ?>						
+<?php 		if (!$idIsUsed) { ?>						
 				<a href="#" onClick="JavaScript:cari_rek(2,'BIAYA')"><img src="images/ico/lihat.png" border="0" /></a>
-<?			} else {
+<?php 		} else {
 				echo "<font style='color:blue'>*</font>";
 			} ?>					
 			<input type="hidden" name="norekdebet" id="norekdebet" value="<?=$rekdebet ?>" />
@@ -225,7 +225,7 @@ function panggil(elem){
         <td colspan="2" align="center">
         	<input class="but" type="submit" value="Simpan" name="simpan" id="simpan" onFocus="panggil('simpan')">
             <input class="but" type="button" value="Tutup" onClick="window.close();"><br>
-<?			if ($idIsUsed) {
+<?php 		if ($idIsUsed) {
 				echo "<font style='color:#666'>* Kode rekening Jenis Pengeluaran ini tidak dapat diubah karena telah digunakan dalam transaksi</font>";
 			} ?>					
 		</td>
@@ -242,11 +242,11 @@ function panggil(elem){
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

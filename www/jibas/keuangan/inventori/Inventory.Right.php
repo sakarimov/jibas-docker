@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -28,19 +28,19 @@ require_once("../include/rupiah.php");
 
 $varkolom=4;
 OpenDb();
-$idkelompok = $_REQUEST[idkelompok];
+$idkelompok = $_REQUEST['idkelompok'];
 if ($idkelompok=="")
 	exit;
 $sql = "SELECT kelompok FROM jbsfina.kelompokbarang WHERE replid='$idkelompok'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $namakelompok = $row[0];
 $op = "";
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 
 if ($op=="EraseBarang"){
-	$sql = "DELETE FROM jbsfina.barang WHERE replid='$_REQUEST[idbarang]'";
+	$sql = "DELETE FROM jbsfina.barang WHERE replid='".$_REQUEST['idbarang']."'";
 	QueryDb($sql);
 }
 ?>
@@ -73,7 +73,7 @@ function Hover(id,state){
 
 function ubah(idbarang, evt){
 	if(evt.target.nodeName=='IMG') {
-		var addr="EditBarang.php?idbarang="+idbarang+"&idkelompok=<?=$_REQUEST[idkelompok]?>";
+		var addr="EditBarang.php?idbarang="+idbarang+"&idkelompok=<?=$_REQUEST['idkelompok']?>";
 		newWindow(addr,'EditBarang',450,420,'resizable=1');		
 		return false;
 	}
@@ -86,7 +86,7 @@ function hapus(idbarang, evt){
 	} else {
 		var msg = "Anda yakin akan menghapus barang ini?";
 		if (confirm(msg))
-			document.location.href="Inventory.Right.php?op=EraseBarang&idbarang="+idbarang+"&idkelompok=<?=$_REQUEST[idkelompok]?>";	
+			document.location.href="Inventory.Right.php?op=EraseBarang&idbarang="+idbarang+"&idkelompok=<?=$_REQUEST['idkelompok']?>";	
 	}
 }
 
@@ -113,49 +113,49 @@ function Excel(idkelompok)
 
 <body>
 <fieldset style="border:#336699 1px solid; background-color:#FFFFFF" >
-<legend style="background-color:#336699; color:#FFFFFF; font-size:10px; font-weight:bold; padding:5px">&nbsp;Kelompok&nbsp;<?=stripslashes($namakelompok)?>&nbsp;</legend>
+<legend style="background-color:#336699; color:#FFFFFF; font-size:10px; font-weight:bold; padding:5px">&nbsp;Kelompok&nbsp;<?=stripslashes((string) $namakelompok)?>&nbsp;</legend>
 <div align="right">
   <a href="javascript:TambahBarang('<?=$idkelompok?>')"><img src="../images/ico/tambah.png" border="0" />&nbsp;Tambah Barang</a>&nbsp;&nbsp;|&nbsp;
   <a href="javascript:Cetak('<?=$idkelompok?>')"><img src="../images/ico/print.png" border="0" />&nbsp;Cetak</a>&nbsp;&nbsp;|&nbsp;
   <a href="javascript:Excel('<?=$idkelompok?>')"><img src="../images/ico/excel.png" border="0" />&nbsp;Excel</a>
 </div>
-<?
+<?php
 $sql = "SELECT * FROM jbsfina.barang WHERE idkelompok='$idkelompok'";
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
-$total = ceil(mysql_num_rows($result)/(int)$varkolom);
+$num = @mysqli_num_rows($result);
+$total = ceil(mysqli_num_rows($result)/(int)$varkolom);
 if ($num>0){
 ?>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
-<?
+<?php
 $cnt=1;
-while ($row = @mysql_fetch_array($result))
+while ($row = @mysqli_fetch_array($result))
 {
 	if ($cnt==1 || $cnt%(int)$varkolom==1){
-	?><tr><?
+	?><tr><?php
 	}
 	
-	$jumlah = (int)$row[jumlah];
-	$satuan = $row[satuan];
-	$harga = (int)$row[info1];
+	$jumlah = (int)$row['jumlah'];
+	$satuan = $row['satuan'];
+	$harga = (int)$row['info1'];
 	$total = $jumlah * $harga;	
 ?>
 <td valign="top" align="center">
-<div id="div<?=$row[replid]?>" style="padding:5px; width:200px; margin:5px; border:2px solid #eaf4ff; cursor:default" onmouseover="Hover('div<?=$row[replid]?>','1')" onmouseout="Hover('div<?=$row[replid]?>','0')" title="<?=$row[keterangan]?>" onclick="ViewDetail('<?=$row[replid]?>',event)">
+<div id="div<?=$row['replid']?>" style="padding:5px; width:200px; margin:5px; border:2px solid #eaf4ff; cursor:default" onmouseover="Hover('div<?=$row['replid']?>','1')" onmouseout="Hover('div<?=$row['replid']?>','0')" title="<?=$row['keterangan']?>" onclick="ViewDetail('<?=$row['replid']?>',event)">
 <div align="left">
-<span style="font-family:Arial; font-size:14px; font-weight:bold; color:#990000"><?=$row[kode]?></span><br />
-<span style="font-family:Arial; font-size:12px; font-weight:bold; color:#006600; cursor:pointer"><?=$row[nama]?></span><br />
+<span style="font-family:Arial; font-size:14px; font-weight:bold; color:#990000"><?=$row['kode']?></span><br />
+<span style="font-family:Arial; font-size:12px; font-weight:bold; color:#006600; cursor:pointer"><?=$row['nama']?></span><br />
 </div>
-<img src="gambar.php?table=jbsfina.barang&replid=<?=$row[replid]?>"  style="padding:2px" />
+<img src="gambar.php?table=jbsfina.barang&replid=<?=$row['replid']?>"  style="padding:2px" />
 <div align="left">
 Jumlah: <?=$jumlah?>&nbsp;<?=$satuan?>&nbsp;@<?=FormatRupiah($harga)?><br />
 Total: <?=FormatRupiah($total)?><br>
-Tanggal: <?=substr($row[tglperolehan],8,2)."-".substr($row[tglperolehan],5,2)."-".substr($row[tglperolehan],0,4)?><br />
-<img src="../images/ico/ubah.png" border="0" onclick="ubah('<?=$row[replid]?>', event)" title="Ubah" style="cursor:pointer; z-index:100" />&nbsp;<img src="../images/ico/hapus.png" border="0" onclick="hapus('<?=$row[replid]?>', event)" title="Hapus" style="cursor:pointer; z-index:100" />
+Tanggal: <?=substr((string) $row['tglperolehan'],8,2)."-".substr((string) $row['tglperolehan'],5,2)."-".substr((string) $row['tglperolehan'],0,4)?><br />
+<img src="../images/ico/ubah.png" border="0" onclick="ubah('<?=$row['replid']?>', event)" title="Ubah" style="cursor:pointer; z-index:100" />&nbsp;<img src="../images/ico/hapus.png" border="0" onclick="hapus('<?=$row['replid']?>', event)" title="Hapus" style="cursor:pointer; z-index:100" />
 </div>
 </div>
 </td>
-<?
+<?php
 if ($num<$varkolom){
 	if ($num==1)
 		echo  "<td width='157'>&nbsp;</td><td width='157'>&nbsp;</td><td width='157'>&nbsp;</td><td width='157'>&nbsp;</td>";
@@ -167,18 +167,18 @@ if ($num<$varkolom){
 		echo  "<td width='157'>&nbsp;</td>";
 }
 if ($cnt%(int)$varkolom==0){
-?></tr><?
+?></tr><?php
 }
 $cnt++;
 }
 ?>
 </table>
-<? } else { ?>
-<div align="center"><span style="font-family:verdana; font-size:12px; font-style:italic; color:#666666">Tidak ada Data Barang Untuk Kelompok <?=stripslashes($namakelompok)?></span></div>
-<? } ?>
+<?php } else { ?>
+<div align="center"><span style="font-family:verdana; font-size:12px; font-style:italic; color:#666666">Tidak ada Data Barang Untuk Kelompok <?=stripslashes((string) $namakelompok)?></span></div>
+<?php } ?>
 </fieldset>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

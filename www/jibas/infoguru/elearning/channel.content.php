@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ $sql = "SELECT judul, deskripsi, DATE_FORMAT(tanggal, '%d-%b-%Y %H:%i') AS tangg
          ORDER BY urutan";
 $res = QueryDb($sql);
 $no = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $no += 1;
     $aktif = 1 == (int) $row[3]? "Aktif" : "Tidak Aktif";
@@ -99,7 +99,7 @@ while($row = mysql_fetch_row($res))
              WHERE idchannel = $idChannel";
     $nModul = FetchSingle($sql);
 
-    $info = "<strong>$row[0]</strong><br>Tanggal buat: $row[2]<br>Urutan: $row[4]<br>Deskripsi: $row[1]";
+    $info = "<strong>".$row[0]."</strong><br>Tanggal buat: $row[2]<br>Urutan: $row[4]<br>Deskripsi: $row[1]";
 ?>
     <tr>
         <td align="center" valign="top"><?=$no?></td>

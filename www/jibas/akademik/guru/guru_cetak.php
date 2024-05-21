@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,7 +31,7 @@ require_once('../include/getheader.php');
 $aktif = 0;
 $guru = $_REQUEST['departemen'];
 $departemen = $_REQUEST['departemen'];
-$query ="AND j.departemen = '$departemen'";
+$query ="AND j.departemen = '".$departemen."'";
 $urut = $_REQUEST['urut'];
 $urutan = $_REQUEST['urutan'];
 
@@ -42,7 +42,7 @@ if ($_REQUEST['aktif']) {
 	$sql = "SELECT nama FROM pelajaran WHERE replid ='$id'";
 	$result = QueryDb($sql); 
 	CloseDb();
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$guru = $row['nama'];
 	$query = "AND g.idpelajaran='$id'";
 }
@@ -77,32 +77,32 @@ if ($_REQUEST['aktif']) {
         <td width="4%" class="header" align="center">No</td>
         <td width="10%" class="header" align="center">NIP</td>
         <td width="15%" class="header" align="center">Guru</td>
-        <? if (!$aktif) { ?>
+        <?php if (!$aktif) { ?>
         	<td width="15%" class="header" align="center">Pelajaran</td>
-        <? } ?>
+        <?php } ?>
         <td width="15%" class="header" align="center">Status Guru</td>
         <td width="*" class="header" align="center">Keterangan</td>
     </tr>
-   		 <?
+   		 <?php
 		OpenDb();
 		$sql = "SELECT g.replid,g.nip,p.nama,g.statusguru,g.keterangan,j.nama FROM guru g, jbssdm.pegawai p, pelajaran j, statusguru s WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND g.statusguru = s.status $query ORDER BY $urut $urutan"; 
 		
 		$result = QueryDb($sql);
 		$cnt = 0;
-		while ($row = @mysql_fetch_row($result)) {
+		while ($row = @mysqli_fetch_row($result)) {
 	
 		?>
     <tr height="25">   	
        	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row[1]?></td>
         <td><?=$row[2] ?></td>
-         <? if (!$aktif) { ?>
+         <?php if (!$aktif) { ?>
         	<td><?=$row[5]?></td>
-        <? } ?> 
+        <?php } ?> 
         <td><?=$row[3]?></td>
         <td><?=$row[4]?></td>        
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); ?>	
     
     <!-- END TABLE CONTENT -->

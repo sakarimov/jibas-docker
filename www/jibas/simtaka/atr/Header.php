@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../inc/session.checker.php");
 require_once("../inc/config.php");
 require_once("../inc/db_functions.php");
 require_once("../inc/common.php");
 $perpustakaan='alls';
-if (isset($_REQUEST[perpustakaan]))
-	$perpustakaan=$_REQUEST[perpustakaan];
+if (isset($_REQUEST['perpustakaan']))
+	$perpustakaan=$_REQUEST['perpustakaan'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -68,18 +68,18 @@ function Cetak(){
 <table width="700" align="center" border="0">
   <tr>
     <td width="567">&nbsp;&nbsp;<strong>Perpustakaan :</strong> 
-	<?
+	<?php
     OpenDb();
     $sql 	= "SELECT * FROM perpustakaan ORDER BY nama";
     $result = QueryDb($sql);
     ?>
     <select name="perpustakaan" class="cmbfrm" id="perpustakaan"  onchange="ChgPerpus()">
         <option value="alls" <?=StringIsSelected('alls',$perpustakaan) ?> ><i>Semua</i></option>
-        <?
-        while ($row = @mysql_fetch_array($result)){
+        <?php
+        while ($row = @mysqli_fetch_array($result)){
         ?>
-        <option value="<?=$row[replid]?>" <?=StringIsSelected($row[replid],$perpustakaan) ?> ><?=$row[nama]?></option>
-        <?
+        <option value="<?=$row['replid']?>" <?=StringIsSelected($row['replid'],$perpustakaan) ?> ><?=$row['nama']?></option>
+        <?php
         }
         ?>
     </select>	</td>
@@ -94,80 +94,80 @@ function Cetak(){
       </tr>
       <tr>
         <td width="200" align="center">
-        <?
+        <?php
         $sql	= "SELECT * FROM ".$db_name_umum.".identitas WHERE status=1 AND perpustakaan='$perpustakaan'";
         $result = QueryDb($sql);
-        $num	= @mysql_num_rows($result);
-		$row	= @mysql_fetch_array($result);
+        $num	= @mysqli_num_rows($result);
+		$row	= @mysqli_fetch_array($result);
 		
         if ($num==0){
 			$sql3 = "INSERT INTO ".$db_name_umum.".identitas SET status=1, perpustakaan='$perpustakaan', departemen='P_".$perpustakaan."'"; 
 			QueryDb($sql3);
 		}
-		if (strlen($row[foto])==0){
-			if (strlen($row[foto])==0 && $perpustakaan=='alls'){
+		if (strlen((string) $row['foto'])==0){
+			if (strlen((string) $row['foto'])==0 && $perpustakaan=='alls'){
 				echo "<div align='center' style='padding-top:20px'>Belum ada logo untuk semua perpustakaan</div>";
-			} elseif (strlen($row[foto])==0 && $perpustakaan!='alls'){
+			} elseif (strlen((string) $row['foto'])==0 && $perpustakaan!='alls'){
 				$sql2 	= "SELECT nama FROM perpustakaan WHERE replid='$perpustakaan'";
 				$result2= QueryDb($sql2);
-				$row2	= @mysql_fetch_array($result2);
-				echo "<div align='center' style='padding-top:20px'>Belum ada logo untuk perpustakaan ".$row2[nama]."</div>";
+				$row2	= @mysqli_fetch_array($result2);
+				echo "<div align='center' style='padding-top:20px'>Belum ada logo untuk perpustakaan ".$row2['nama']."</div>";
 			}
 			echo "<div align='center' style='padding-top:20px'><a href=\"javascript:AddLogo('".$perpustakaan."','Add')\"><img src='../img/ico/tambah.png' border='0' />Tambah</a></div>";
 		} else {
 			?>
-            <img src="../lib/gambar.php?replid=<?=$row[replid]?>&table=<?=$db_name_umum.".identitas"?>&field=foto">
+            <img src="../lib/gambar.php?replid=<?=$row['replid']?>&table=<?=$db_name_umum.".identitas"?>&field=foto">
             <?="<br><a href=\"javascript:AddLogo('".$perpustakaan."','Edit')\"><img src='../img/ico/ubah.png' border='0' />Ubah</a>";
 		}
         ?>        </td>
         <td>
-        <?
-		if (strlen($row[nama])==0){
-			if (strlen($row[nama])==0 && $perpustakaan=='alls'){
+        <?php
+		if (strlen((string) $row['nama'])==0){
+			if (strlen((string) $row['nama'])==0 && $perpustakaan=='alls'){
 				echo "<div align='center' style='padding-top:20px'>Belum ada logo untuk semua perpustakaan</div>";
-			} elseif (strlen($row[nama])==0 && $perpustakaan!='alls'){
+			} elseif (strlen((string) $row['nama'])==0 && $perpustakaan!='alls'){
 				$sql2 	= "SELECT nama FROM perpustakaan WHERE replid='$perpustakaan'";
 				$result2= QueryDb($sql2);
-				$row2	= @mysql_fetch_array($result2);
-				echo "<div align='center' style='padding-top:20px'>Belum ada informasi untuk perpustakaan ".$row2[nama]."</div>";
+				$row2	= @mysqli_fetch_array($result2);
+				echo "<div align='center' style='padding-top:20px'>Belum ada informasi untuk perpustakaan ".$row2['nama']."</div>";
 			}
 			echo "<div align='center' style='padding-top:20px'><a href=\"javascript:AddInfo('".$perpustakaan."','Add')\"><img src='../img/ico/tambah.png' border='0' />Tambah</a></div>";
 		} else {
 			?>
             <span style="font-family:Arial; font-size:22px; font-weight:bold; color:#000000">
-				<?=$row[nama]?>
+				<?=$row['nama']?>
             </span>
             <br />
             <strong>
-			<?=$row[alamat1]?>
-            <?
-			if ($row[telp1]!='' || $row[telp2]!=''){
+			<?=$row['ALAMAT1']?>
+            <?php
+			if ($row['TELP1']!='' || $row['TELP2']!=''){
 				echo " <br>Telp : ";
-				if ($row[telp1]!='' && $row[telp2]=='')
-					echo $row[telp1];
-				elseif ($row[telp2]!='' && $row[telp1]=='')
-					echo $row[telp2];
-				elseif ($row[telp2]!='' && $row[telp1]!='')
-					echo $row[telp1]." , ".$row[telp2];		
+				if ($row['TELP1']!='' && $row['TELP2']=='')
+					echo $row['TELP1'];
+				elseif ($row['TELP2']!='' && $row['TELP1']=='')
+					echo $row['TELP2'];
+				elseif ($row['TELP2']!='' && $row['TELP1']!='')
+					echo $row['TELP1']." , ".$row['TELP2'];		
 			}
-			if ($row[telp1]!='' || $row[telp2]!=''){
-				if ($row[fax1]!='')
-					echo " Fax : ".$row[fax1];
+			if ($row['TELP1']!='' || $row['TELP2']!=''){
+				if ($row['FAX1']!='')
+					echo " Fax : ".$row['FAX1'];
 			} else {
-				if ($row[fax1]!='')
-					echo " Fax : ".$row[fax1];
+				if ($row['FAX1']!='')
+					echo " Fax : ".$row['FAX1'];
 			}
 			
 			?>
             <br />
-            <?
-			if ($row[situs]!='' || $row[email]!=''){
-				if ($row[situs]!='' && $row[email]=='')
-					echo "Website : ".$row[situs];
-				elseif ($row[email]!='' && $row[situs]=='')
-					echo "Email : ".$row[email];
-				elseif ($row[email]!='' && $row[situs]!='')
-					echo "Website : ".$row[situs]." Email : ".$row[email];		
+            <?php
+			if ($row['situs']!='' || $row['email']!=''){
+				if ($row['situs']!='' && $row['email']=='')
+					echo "Website : ".$row['situs'];
+				elseif ($row['email']!='' && $row['situs']=='')
+					echo "Email : ".$row['email'];
+				elseif ($row['email']!='' && $row['situs']!='')
+					echo "Website : ".$row['situs']." Email : ".$row['email'];		
 			}
 			echo "</strong>";
             echo "<div align='center' style='padding-top:20px'><a href=\"javascript:AddInfo('".$perpustakaan."','Edit')\"><img src='../img/ico/ubah.png' border='0' />Ubah</a></div>";

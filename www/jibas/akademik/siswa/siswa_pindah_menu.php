@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,13 +41,11 @@ $pilihan = "";
 if (isset($_REQUEST['pilihan']))
 	$pilihan = $_REQUEST['pilihan'];	
 
-switch ($jenis) {
-	case 'combo' : $input_awal = "onload=\"document.getElementById('idkelas').focus()\"";
-		break;
-	case 'text' : $input_awal = "onload=\"document.getElementById('nis2').focus()\"";
-		break;
-	default	: $input_awal = "onload=\"document.getElementById('idkelas').focus()\"";
-}	
+$input_awal = match ($jenis) {
+    'combo' => "onload=\"document.getElementById('idkelas').focus()\"",
+    'text' => "onload=\"document.getElementById('nis2').focus()\"",
+    default => "onload=\"document.getElementById('idkelas').focus()\"",
+};	
 								
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -140,29 +138,29 @@ function focusNext(elemName, evt) {
    	<fieldset>
 	<legend>Tampilkan daftar siswa berdasarkan</legend>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr <? if ($pilihan=="1") { ?> style="background-color:#C0C0C0" <? } ?>>
+    <tr <?php if ($pilihan=="1") { ?> style="background-color:#C0C0C0" <?php } ?>>
     	<td width="10" align="center" valign="middle">
         	<img src="../images/ico/titik.png" width="5" height="5" align="top"/></td>
         <td width="15%">Kelas</td>
         <td width="*">
        	 	<select name="idkelas" id="idkelas" onChange="change_kelas()" style="width:145px;" onKeyPress="return focusNext('tampil', event)">        
-			<?	OpenDb();
+			<?php OpenDb();
                 $sql = "SELECT replid, kelas, kapasitas FROM kelas where idtingkat='$idtingkat' AND idtahunajaran='$idtahunajaran' AND aktif = 1 ORDER BY kelas";
                 $result = QueryDb($sql);
                 CloseDb();
-                while ($row = @mysql_fetch_array($result)) {
+                while ($row = @mysqli_fetch_array($result)) {
                     if ($idkelas == "")
                         $idkelas = $row['replid'];
             ?>
-                <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $idkelas)?> >
+                <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $idkelas)?> >
                 <?=$row['kelas']?>
                 </option>
-            <?	} ?>
+            <?php } ?>
             </select></td>
      	<td width="50">
         	<input type="button" value="Tampil" id="tampil" class="but" onClick="cari_siswa_combo()" style="width:70px;" onMouseOver="showhint('Tampilkan daftar siswa berdasarkan kelas!', this, event, '135px')"/></td>
     </tr>
-    <tr <? if ($pilihan=="2") { ?> style="background-color:#C0C0C0" <? } ?>>
+    <tr <?php if ($pilihan=="2") { ?> style="background-color:#C0C0C0" <?php } ?>>
       	<td align="center" valign="middle">
         	<img src="../images/ico/titik.png" width="5" height="5" align="top" /></td>
       	<td>Pencarian </td>

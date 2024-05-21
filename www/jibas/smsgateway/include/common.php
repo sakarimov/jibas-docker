@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("sessionchecker.php");
 
-$SMonth = array('Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des');
-$LMonth = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
-$Alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+$SMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+$LMonth = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+$Alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 function RandStr($length) 
 {
 	$charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 	$s = "";
 	while(strlen($s) < $length) 
-		$s .= substr($charset, rand(0, 61), 1);
+		$s .= substr($charset, random_int(0, 61), 1);
 	return $s;		
 }
 
@@ -40,7 +40,7 @@ function RandCode($length)
 	$charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 	$s = "";
 	while(strlen($s) < $length) 
-		$s .= substr($charset, rand(0, 61), 1);
+		$s .= substr($charset, random_int(0, 61), 1);
 	return $s;		
 }
 
@@ -49,7 +49,7 @@ function RandNumber($length)
 	$charset = "1234567890";
 	$s = "";
 	while(strlen($s) < $length) 
-		$s .= substr($charset, rand(0, 61), 1);
+		$s .= substr($charset, random_int(0, 61), 1);
 	return $s;		
 }
 
@@ -74,8 +74,8 @@ function IntIsSelected($String,$Comparer)
 function SDateFormat($string)
 {
 	global $LMonth;
-	$x = split(' ',$string);
-	$y = split('-',$x[0]);
+	$x = explode(' ',(string) $string);
+	$y = explode('-',$x[0]);
 	//echo $y[2].' '.$LMonth[(int)$y[1]-1].' '.$y[0];
 	$m = ($y[1]-1);
 	echo $y[2].'-'.$y[1].'-'.$y[0];
@@ -84,8 +84,8 @@ function SDateFormat($string)
 function DateFormat($string)
 {
 	global $LMonth;
-	$x = split(' ',$string);
-	$y = split('-',$x[0]);
+	$x = explode(' ',(string) $string);
+	$y = explode('-',$x[0]);
 	//echo $y[2].' '.$LMonth[(int)$y[1]-1].' '.$y[0];
 	$m = ($y[1]-1);
 	echo $y[2].' '.$LMonth[$m].' '.$y[0];
@@ -94,8 +94,8 @@ function DateFormat($string)
 function DateFormat2($string)
 {
 	global $LMonth;
-	$x = split(' ',$string);
-	$y = split('-',$x[0]);
+	$x = explode(' ',(string) $string);
+	$y = explode('-',$x[0]);
 	$m = ($y[1]-1);
 
 	if ($y[2]=='1')
@@ -116,8 +116,8 @@ function FullDateFormat($string)
 {
 	global $LMonth;
 	
-	$x = split(' ',$string);
-	$y = split('-',$x[0]);
+	$x = explode(' ',(string) $string);
+	$y = explode('-',$x[0]);
 	$m = ($y[1]-1);
 	
 	echo $y[2].' '.$LMonth[$m].' '.$y[0].' '.$x[1];
@@ -128,8 +128,8 @@ function FullDateFormat2($string)
 	global $LMonth;
 	global $SMonth;
 	
-	$x = split(' ',$string);
-	$y = split('-',$x[0]);
+	$x = explode(' ',(string) $string);
+	$y = explode('-',$x[0]);
 
 	$m = ($y[1]-1);
 	if ($y[2]=='1')
@@ -148,7 +148,7 @@ function FullDateFormat2($string)
 
 function MysqlDateFormat($string)
 {
-	$y = split('-',$string);
+	$y = explode('-',(string) $string);
 	return $y[2].'-'.$y[1].'-'.$y[0];
 }
 
@@ -156,8 +156,8 @@ function GetLastId($field,$table)
 {
 	$sql = "SELECT MAX($field) FROM $table";
 	$res = QueryDb($sql);
-	$num = @mysql_num_rows($res);
-	$row = @mysql_fetch_row($res);
+	$num = @mysqli_num_rows($res);
+	$row = @mysqli_fetch_row($res);
 	if ($num==0)
 		return '1';
 	else
@@ -175,8 +175,8 @@ function CQ($string)
 }
 
 function pagination($showList,$pageList,$num,$url){
-	$page		= (isset($_GET['page']))?$_GET['page']:1;
-	$pagestart 	= (isset($_REQUEST['pagestart']))?$_REQUEST['pagestart']:1;
+	$page		= $_GET['page'] ?? 1;
+	$pagestart 	= $_REQUEST['pagestart'] ?? 1;
 	if (ceil($num/$showList)>1){
 	?>
 	<div class='pagination'>

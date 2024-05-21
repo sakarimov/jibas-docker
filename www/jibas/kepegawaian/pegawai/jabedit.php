@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -46,7 +46,7 @@ $user = getUserId();
 if (isset($_REQUEST['btSubmit']))
 {
 	OpenDb();	
-	if (strlen(trim($idjabatan)) == "")
+	if (strlen(trim((string) $idjabatan)) == 0)
 		$sql = "UPDATE pegjab SET tmt='$tmt', namajab='$jabatan', sk='$sk', keterangan='$keterangan', jenis='$jenis', doaudit = 1 WHERE replid=$id";
 	else
 		$sql = "UPDATE pegjab SET idjabatan=$idjabatan, namajab='$jabatan', tmt='$tmt', sk='$sk', keterangan='$keterangan', jenis='$jenis', doaudit = 1 WHERE replid=$id";
@@ -56,14 +56,14 @@ if (isset($_REQUEST['btSubmit']))
 		opener.Refresh();
 		window.close();
     </script>
-<?
+<?php
 }
 else 
 {
 	OpenDb();
 	$sql = "SELECT p.idjabatan, p.namajab, p.jenis, p.tmt, p.sk, p.keterangan FROM pegjab p WHERE p.replid = $id ORDER BY tmt DESC";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$idjabatan = $row['idjabatan'];
 	$jabatan = $row['namajab'];
 	$jenis = $row['jenis'];
@@ -129,12 +129,12 @@ function TerimaJabatan(id, jabatan) {
         <td align="right" valign="top" width="22%"><strong>Jabatan :</strong></td>
         <td width="*" align="left" valign="top">
         <select name="cbJenisJabatan" id="cbJenisJabatan" onKeyPress="return focusNext('btJabatan', event)">
-<?		OpenDb();
+<?php 	OpenDb();
 		$sql = "SELECT jenis, jabatan FROM jenisjabatan ORDER BY urutan";
 		$result = QueryDb($sql);
-		while ($row = mysql_fetch_row($result)) { ?>    
+		while ($row = mysqli_fetch_row($result)) { ?>    
     		<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $jenis)?>>(<?=$row[1]?>) <?=$row[0]?></option>
-<?		}
+<?php 	}
 		CloseDb(); ?>    
 	    </select>	
         <input type="hidden" name="idJabatan" id="idJabatan" value="<?=$idjabatan?>"/>
@@ -145,15 +145,15 @@ function TerimaJabatan(id, jabatan) {
         <td align="right" valign="top"><strong>TMT Jabatan :</strong></td>
         <td width="*" align="left" valign="top">
         <select id="cbTglTMTJab" name="cbTglTMTJab" onKeyPress="return focusNext('cbBlnTMTJab', event)">
-    <?	for ($i = 1; $i <= 31; $i++) { ?>    
+    <?php for ($i = 1; $i <= 31; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $tgltmtjab)?>><?=$i?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <select id="cbBlnTMTJab" name="cbBlnTMTJab" onKeyPress="return focusNext('txThnTMTJab', event)">
-    <?	$M = date("m");
+    <?php $M = date("m");
         for ($i = 1; $i <= 12; $i++) { ?>    
             <option value="<?=$i?>" <?=IntIsSelected($i, $blntmtjab)?>><?=NamaBulan($i)?></option>	
-    <?	} ?>    
+    <?php } ?>    
         </select>
         <input type="text" name="txThnTMTJab" id="txThnTMTJab" onKeyPress="return focusNext('txSK', event)" size="4" maxlength="4" value="<?=$thntmtjab?>"/>
         </td>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/sessioninfo.php');
@@ -124,21 +124,21 @@ function tampil() {
 	<td width="10%"><strong>Departemen:</strong></td>
     <td width="15%">
     <select name="departemen" id="departemen" onChange="change_dep()">
-	<?	$dep = getDepartemen(SI_USER_ACCESS());    
+	<?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
 				$departemen = $value; ?>
 	<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-<?		} ?>
+<?php 	} ?>
 	</select>
 	</td>
 	<td align="left" width="20%"><strong>Tahun Ajaran</strong></td>
    	<td colspan="2">
-        <?  OpenDb();			
+        <?php  OpenDb();			
 			$sql = "SELECT replid,tahunajaran FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			$row = @mysql_fetch_array($result);	
+			$row = @mysqli_fetch_array($result);	
 			$tahunajaran = $row['replid'];				
 		?>
         <input type="text" name="tahun" id="tahun" size="15" readonly style="background-color:#CCCCCC" value="<?=$row['tahunajaran']?>" />
@@ -150,19 +150,19 @@ function tampil() {
 	<td><strong>Tingkat </strong></td>
     <td>
     	<select name="tingkat" id="tingkat" onchange="change_tingkat()">
-     	<? 	OpenDb();
+     	<?php 	OpenDb();
 			$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($tingkat == "")
 				$tingkat = $row['replid'];				
 			?>
-          <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+          <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
             <?=$row['tingkat']?>
             </option>
-          <?
+          <?php
 			} //while
 			?>
         </select>
@@ -170,18 +170,18 @@ function tampil() {
     <td><strong>Kelas </strong></td>
     <td width="20%">
         <select name="kelas" id="kelas" onchange="change()">
-			<?	OpenDb();
+			<?php OpenDb();
 			$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
 			$result = QueryDb($sql);
 			CloseDb();
 	
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($kelas == "")
 				$kelas = $row['replid'];				 
 			?>
-    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
              
-    		<?
+    		<?php
 			} //while
 			?>
     	</select>        </td>

@@ -33,6 +33,7 @@ services:
       G_JUDUL_DEPAN_1: ${G_JUDUL_DEPAN_1}
       G_JUDUL_DEPAN_2: ${G_JUDUL_DEPAN_2}
       G_JUDUL_DEPAN_3: ${G_JUDUL_DEPAN_3}
+      JIBAS_TIMEZONE: ${JIBAS_TIMEZONE}
     extra_hosts:
       - "host.docker.internal:host-gateway"
   database:

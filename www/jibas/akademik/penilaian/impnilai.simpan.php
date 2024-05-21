@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -60,7 +60,7 @@ $idsemester = (int) FetchSingle($sql);
 
 $sql = "SELECT idjenisujian
           FROM jbsakad.aturannhb
-         WHERE replid = '$idaturan'";
+         WHERE replid = '".$idaturan."'";
 $idjenisujian = (int) FetchSingle($sql);
 
 BeginTrans();
@@ -70,15 +70,15 @@ $sql = "SELECT nilaiAU, replid, keterangan
 	      FROM jbsakad.nau 
 	     WHERE idkelas = '$idkelas' 
 	       AND idsemester = '$idsemester' 
-	       AND idaturan = '$idaturan'";
+	       AND idaturan = '".$idaturan."'";
 //echo "$sql<br>";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
 {
     $sql = "DELETE FROM jbsakad.nau 
 		     WHERE idkelas = '$idkelas' 
 		       AND idsemester = '$idsemester' 
-			   AND idaturan = '$idaturan'";
+			   AND idaturan = '".$idaturan."'";
     //echo "$sql<br>";
     QueryDbTrans($sql, $success);
 }
@@ -100,7 +100,7 @@ QueryDbTrans($sql,$success);
 
 $sql = "SELECT LAST_INSERT_ID()";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $idujian = $row[0];
 //echo "idujian = $idujian<br>";
 
@@ -121,7 +121,7 @@ for($i = 1; $i <= $nnilai; $i++)
                    SET nilaiujian = '$nilai', 
                        nis = '$nis', 
                        idujian = '$idujian', 
-                       keterangan = '$ket'";
+                       keterangan = '".$ket."'";
         //echo "$sql<br>";
         QueryDbTrans($sql, $success);
     }

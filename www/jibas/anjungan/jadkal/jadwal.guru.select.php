@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 
-$dept = isset($_REQUEST['dept']) ? $_REQUEST['dept'] : "";
+$dept = $_REQUEST['dept'] ?? "";
 $jadwal = isset($_REQUEST['jadwal']) ? (int)$_REQUEST['jadwal'] : 0;
-$guru = isset($_REQUEST['guru']) ? $_REQUEST['guru'] : "";
+$guru = $_REQUEST['guru'] ?? "";
 
 OpenDb();
 ?>
@@ -38,45 +38,45 @@ OpenDb();
 <td align="left" width="300">
     
     <select id='jg_departemen' onchange='jg_ChangeDept()' class='inputbox'>
-<?  $sql = "SELECT departemen
+<?php  $sql = "SELECT departemen
               FROM jbsakad.departemen
              WHERE aktif = 1
              ORDER BY urutan";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($dept == "")
             $dept = $row[0];
         $sel = $dept == $row[0] ? "selected" : "";
         ?>
         <option value='<?=$row[0]?>' <?=$sel?> ><?=$row[0]?></option>
-<?  }   ?>
+<?php  }   ?>
     </select>
     
-<?  $sql = "SELECT replid
+<?php  $sql = "SELECT replid
               FROM jbsakad.tahunajaran
              WHERE departemen = '$dept'
                AND aktif = 1";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $idtahunajaran = (int)$row[0]; ?>
     <input type="hidden" id="jd_tahunajaran" value="<?=$idtahunajaran?>">
     
     <select id='jg_jadwal' onchange='jg_ChangeJadwal()' class='inputbox'>
-<?  $sql = "SELECT replid, deskripsi
+<?php  $sql = "SELECT replid, deskripsi
               FROM jbsakad.infojadwal
              WHERE idtahunajaran = '$idtahunajaran'
                AND aktif = 1
              ORDER BY deskripsi";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($jadwal == 0)
             $jadwal = $row[0];
         $sel = $jadwal == $row[0] ? "selected" : "";
         ?>
         <option value='<?=$row[0]?>' <?=$sel?> ><?=$row[1]?></option>
-<?  }   ?>
+<?php  }   ?>
     </select>    
     
 </td>
@@ -91,22 +91,22 @@ OpenDb();
     <td align="left">
 
     <select id='jg_guru' onchange='jg_ChangeGuru()' class='inputbox'>
-<?  $sql = "SELECT DISTINCT j.nipguru, p.nama
+<?php  $sql = "SELECT DISTINCT j.nipguru, p.nama
               FROM jbsakad.jadwal j, jbssdm.pegawai p
              WHERE j.nipguru = p.nip
                AND infojadwal = '$jadwal'
              ORDER BY nama";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {   ?>
         <option value='<?=$row[0]?>'><?=$row[1]?></option>
-<?  }   ?>
+<?php  }   ?>
     </select>     
     
         
     </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

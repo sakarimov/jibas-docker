@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -134,9 +134,9 @@ if ($op == "xm8r389xemx23xb2378e23")
             <td align="right" width="*">
 
                 <a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-                <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                     <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah</a>
-                <?	} ?>
+                <?php } ?>
 
             </td>
         </tr>
@@ -147,18 +147,18 @@ if ($op == "xm8r389xemx23xb2378e23")
         <td width="2%" class="header" align="center">No</td>
         <td width="15%" class="header" align="center">Pilihan</td>
         <td width="5%" class="header" align="center">Urutan</td>
-        <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <td width="5%" class="header" align="center">Aktif</td>
             <td width="8%" class="header">&nbsp;</td>
-        <?	} ?>
+        <?php } ?>
     </tr>
 <?php
     $sql = "SELECT replid, pilihan, aktif, urutan
               FROM pilihandata
-             WHERE idtambahan = '$idtambahan'";
+             WHERE idtambahan = '".$idtambahan."'";
     $res = QueryDb($sql);
     $cnt = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $idpilihan = $row[0];
         $pilihan = $row[1];
@@ -169,23 +169,23 @@ if ($op == "xm8r389xemx23xb2378e23")
             <td align="center"><?= ++$cnt ?></td>
             <td align="left"><?= $pilihan ?></td>
             <td align="center"><?= $urutan ?></td>
-            <?	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
                 <td align="center">
-                    <?  if ($aktif == 1) { ?>
+                    <?php  if ($aktif == 1) { ?>
                         <a href="JavaScript:setaktif(<?= $idpilihan ?>, <?= $aktif ?>)">
                             <img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
                         </a>
-                    <?	} else { ?>
+                    <?php } else { ?>
                         <a href="JavaScript:setaktif(<?= $idpilihan ?>, <?= $aktif ?>)">
                             <img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
                         </a>
-                    <?	} ?>
+                    <?php } ?>
                 </td>
                 <td align="center">
                     <a href="JavaScript:edit(<?= $idpilihan ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah!', this, event, '80px')" /></a>&nbsp;
                     <a href="JavaScript:hapus(<?= $idpilihan ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus!', this, event, '80px')"/></a>
                 </td>
-            <?	} ?>
+            <?php } ?>
         </tr>
 <?php
     }

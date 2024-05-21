@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -73,9 +73,9 @@ if (isset($_REQUEST['simpan'])) {
 	$jam2=$jam2simpan.":".$menit2simpan;
 	
 	OpenDb();
-	$sql = "SELECT * FROM jam WHERE jamke = '$jamkey' AND replid <> '$replid' AND departemen = '$departemen'";	
+	$sql = "SELECT * FROM jam WHERE jamke = '$jamkey' AND replid <> '$replid' AND departemen = '".$departemen."'";	
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Urutan jam ke ".$jamkey." sudah digunakan!";
 	} else {	
@@ -83,15 +83,15 @@ if (isset($_REQUEST['simpan'])) {
 		$jum_sesudahnya=0;
 		$sql_jam_sebelumnya="SELECT replid as replidsebelumnya, jamke as jamkesebelumnya, HOUR(jam2) As jamakhirsebelumnya, MINUTE(jam2) As menitakhirsebelumnya FROM jbsakad.jam WHERE departemen='$departemen' AND jamke<'$jamkey' ORDER BY jamke DESC LIMIT 1";
 		$result_jam_sebelumnya=QueryDb($sql_jam_sebelumnya);				
-		if (mysql_num_rows($result_jam_sebelumnya) > 0) {
-			$row_jam_sebelumnya=@mysql_fetch_array($result_jam_sebelumnya);
+		if (mysqli_num_rows($result_jam_sebelumnya) > 0) {
+			$row_jam_sebelumnya=@mysqli_fetch_array($result_jam_sebelumnya);
 			$jum_sebelumnya=((int)$row_jam_sebelumnya['jamakhirsebelumnya']*60)+(int)$row_jam_sebelumnya['menitakhirsebelumnya'];			
 		} 
 		
 		$sql_jam_sesudahnya="SELECT replid as replidsesudahnya, jamke as jamkesesudahnya, HOUR(jam1) As jamawalsesudahnya, MINUTE(jam1) As menitawalsesudahnya FROM jbsakad.jam WHERE departemen='$departemen' AND jamke>'$jamkey' ORDER BY jamke ASC LIMIT 1";
 		$result_jam_sesudahnya=QueryDb($sql_jam_sesudahnya);
-		if (mysql_num_rows($result_jam_sesudahnya) > 0) {
-			$row_jam_sesudahnya=@mysql_fetch_array($result_jam_sesudahnya);
+		if (mysqli_num_rows($result_jam_sesudahnya) > 0) {
+			$row_jam_sesudahnya=@mysqli_fetch_array($result_jam_sesudahnya);
 			$jum_sesudahnya=((int)$row_jam_sesudahnya['jamawalsesudahnya']*60)+(int)$row_jam_sesudahnya['menitawalsesudahnya'];
 		} 
 		echo $jum_awal.' '.$jum_sebelumnya.' '.$jum_akhir.' '.$jum_sesudahnya;
@@ -102,7 +102,7 @@ if (isset($_REQUEST['simpan'])) {
 				$ERROR_MSG = "Jam selesai tidak boleh berpotongan dengan jam awal urutan selanjutnya!";				
 			} else {
 				//proses simpan data
-				$sql_jam_simpan="UPDATE jbsakad.jam SET jamke='$jamkey',jam1='$jam1',jam2='$jam2' WHERE replid = '$replid'";
+				$sql_jam_simpan="UPDATE jbsakad.jam SET jamke='$jamkey',jam1='$jam1',jam2='$jam2' WHERE replid = '".$replid."'";
 				$result_jam_simpan=QueryDb($sql_jam_simpan);
 				if ($result_jam_simpan){
 					?>
@@ -110,7 +110,7 @@ if (isset($_REQUEST['simpan'])) {
 						parent.opener.refresh();
 						window.close();
 					</script>
-					<?
+					<?php
 				} 
 			}
 		}		
@@ -121,7 +121,7 @@ OpenDb();
 //Ambil dulu semua data recordnya yang replidnya udah diketahuin....
 $sql_y="SELECT HOUR(jam1) as jam1y, MINUTE(jam1) as menit1y, HOUR(jam2) as jam2y, MINUTE(jam2) as menit2y, replid as replidy, jamke as jamkey, departemen FROM jbsakad.jam WHERE replid='$replid'";
 $result_y=QueryDb($sql_y);
-$row_y=@mysql_fetch_array($result_y);
+$row_y=@mysqli_fetch_array($result_y);
 if (!isset($jamkey))
 	$jamkey = $row_y['jamkey'];
 if (!isset($jam1y)) {
@@ -155,7 +155,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" language="JavaScript" src="../script/tables.js"></script>
+<script type="text/javascript" language="text/javascript" src="../script/tables.js"></script>
 <script type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
 
@@ -344,10 +344,10 @@ function panggil(elem){
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

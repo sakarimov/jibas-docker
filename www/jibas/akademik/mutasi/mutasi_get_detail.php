@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -55,20 +55,20 @@ function tampil(replid) {
     <td class="header" height="30">Keterangan</td>
     <td class="header" height="30">&nbsp;</td>
   </tr>
-  <?
+  <?php
   $result=QueryDb($sql);
   $cnt=1;
-  while ($row=@mysql_fetch_array($result)){
+  while ($row=@mysqli_fetch_array($result)){
   ?>
   <tr>
     <td height="25"><?=$cnt?></td>
-    <td height="25"><?=$row[nis]?></td>
-    <td height="25"><?=$row[nama]?></td>
-    <td height="25"><?=LongDateFormat($row[tglmutasi])?></td>
-    <td height="25"><?=$row[keterangan]?></td>
-    <td height="25"><img onClick="tampil('<?=$row[replid]?>')" src="../images/ico/lihat.png"></td>
+    <td height="25"><?=$row['nis']?></td>
+    <td height="25"><?=$row['nama']?></td>
+    <td height="25"><?=LongDateFormat($row['tglmutasi'])?></td>
+    <td height="25"><?=$row['keterangan']?></td>
+    <td height="25"><img onClick="tampil('<?=$row['replid']?>')" src="../images/ico/lihat.png"></td>
   </tr>
-  <?
+  <?php
   $cnt++;
   }
   ?>

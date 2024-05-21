@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -37,33 +37,33 @@ $kls = $_REQUEST['kls'];
   <td style="padding-right:4px">Departemen</td>
   <td class="td">
     <select id="CmbDepSis" name="CmbDepSis" class="Cmb" onchange="ChgCmbDepSis()">
-<?  $sql = "SELECT departemen
+<?php  $sql = "SELECT departemen
 		      FROM $db_name_akad.departemen
 			 WHERE aktif=1
 			 ORDER BY urutan";
     $res = QueryDb($sql);
-    while ($row = @mysql_fetch_row($res))
+    while ($row = @mysqli_fetch_row($res))
 	{
       if ($dep == "")
 		$dep=$row[0]; ?>
       <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$dep)?>><?=$row[0]?></option>
-<?  } ?>
+<?php  } ?>
     </select>
   </td>
   <td class="td">Tingkat</td>
   <td class="td">
     <select id="CmbTktSis" name="CmbTktSis" class="Cmb" onchange="ChgCmbTktThnSis()">
-<?  $sql = "SELECT replid, tingkat
+<?php  $sql = "SELECT replid, tingkat
 		      FROM $db_name_akad.tingkat
 			 WHERE aktif=1
 			   AND departemen='$dep'";
     $res = QueryDb($sql);
-    while ($row = @mysql_fetch_row($res))
+    while ($row = @mysqli_fetch_row($res))
 	{
       if ($tkt == "")
 		$tkt = $row[0]; ?>
       <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$tkt)?>><?=$row[1]?></option>
-<?  } ?>
+<?php  } ?>
     </select>
   </td>
 </tr>
@@ -71,38 +71,38 @@ $kls = $_REQUEST['kls'];
   <td style="padding-right:4px">Tahun Ajaran</td>
   <td class="td">
     <select id="CmbThnSis" name="CmbThnSis" class="Cmb" onchange="ChgCmbTktThnSis()">
-<?  $sql = "SELECT replid, tahunajaran
+<?php  $sql = "SELECT replid, tahunajaran
 			  FROM $db_name_akad.tahunajaran
 			 WHERE aktif=1
 			   AND departemen='$dep'";
     $res = QueryDb($sql);
-    while ($row = @mysql_fetch_row($res))
+    while ($row = @mysqli_fetch_row($res))
 	{
       if ($thn == "")
 		$thn = $row[0];	?>
       <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$thn)?>><?=$row[1]?></option>
-<?  } ?>
+<?php  } ?>
     </select>
   </td>
   <td class="td">Kelas</td>
   <td class="td">
     <select id="CmbKlsSis" name="CmbKlsSis" class="Cmb" onchange="ChgCmbKlsSis()">
-<?  $sql = "SELECT replid, kelas
+<?php  $sql = "SELECT replid, kelas
 		      FROM $db_name_akad.kelas
 			 WHERE aktif=1
 			   AND idtahunajaran='$thn'
 			   AND idtingkat='$tkt'";
     $res = QueryDb($sql);
-    while ($row = @mysql_fetch_row($res))
+    while ($row = @mysqli_fetch_row($res))
 	{
 	  if ($kls == "")
 		$kls = $row[0]; ?>
       <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-<?  } ?>
+<?php  } ?>
     </select>
   </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

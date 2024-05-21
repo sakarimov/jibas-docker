@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/config.php');
@@ -89,20 +89,20 @@ function pilih(nip, nama) {
     <td class="header" >Nama</td>
     <td class="header" width="10%">&nbsp;</td>
 </tr>
-<? if (isset($_REQUEST['Submit'])) { 
+<?php if (isset($_REQUEST['Submit'])) { 
 OpenDb();
 $nama = $_REQUEST['nama'];
 $nip = $_REQUEST['nip'];
 
-if ((strlen($nama) > 0) && (strlen($nip) > 0))
+if ((strlen((string) $nama) > 0) && (strlen((string) $nip) > 0))
 	$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE nama LIKE '%$nama%' AND nip LIKE '%$nip%' ORDER BY nama"; 
-else if (strlen($nama) > 0)
+else if (strlen((string) $nama) > 0)
 	$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE nama LIKE '%$nama%' ORDER BY nama"; 
-else if (strlen($nip) > 0)
+else if (strlen((string) $nip) > 0)
 	$sql = "SELECT nip, nama FROM jbssdm.pegawai WHERE nip LIKE '%$nip%' ORDER BY nama"; 
 $result = QueryDb($sql);
 $cnt = 0;
-while($row = mysql_fetch_row($result)) { ?>
+while($row = mysqli_fetch_row($result)) { ?>
 <tr>
 	<td align="center"><?=++$cnt ?></td>
     <td align="center"><?=$row[0] ?></td>
@@ -111,19 +111,19 @@ while($row = mysql_fetch_row($result)) { ?>
     <input type="button" name="pilih" class="but" id="pilih" value="Pilih" onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" />
     </td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>
-<? if ($cnt == 0) { ?>
+<?php if ($cnt == 0) { ?>
 <tr height="26"><td colspan="4" align="center"><em>Tidak ditemukan data</em></td></tr>
-<? } ?>
+<?php } ?>
 <tr height="26">
 	<td colspan="4" align="center" bgcolor="#999900"><input type="button" class="but" name="tutup" id="tutup" value="Tutup" onclick="window.close()" /></td>
 </tr>
 </table>
 </td></tr>
-<? } ?>
+<?php } ?>
 </table>
 
 <!-- EOF CONTENT -->

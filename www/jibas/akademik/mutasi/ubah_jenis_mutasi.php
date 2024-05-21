@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,7 +40,7 @@ if (isset($_REQUEST['Simpan'])) {
 	$sql="SELECT * FROM jbsakad.jenismutasi WHERE jenismutasi='$jenismutasi' AND replid <> '$replid'";
 	$result=QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0){
+	if (mysqli_num_rows($result) > 0){
 		CloseDb();
 		$ERROR_MSG = "Jenis mutasi $jenismutasi sudah digunakan!";	
 	} else {
@@ -53,7 +53,7 @@ if (isset($_REQUEST['Simpan'])) {
 			opener.refresh();
 			window.close();
         </script>
-    <?
+    <?php
      	}
 	}
 }
@@ -61,7 +61,7 @@ if (isset($_REQUEST['Simpan'])) {
 OpenDb();
 $sql_tampil="SELECT * FROM jbsakad.jenismutasi WHERE replid='$replid'";
 $result_tampil=QueryDb($sql_tampil);
-$row_tampil=mysql_fetch_array($result_tampil);
+$row_tampil=mysqli_fetch_array($result_tampil);
 $jenismutasi = $row_tampil['jenismutasi'];
 $keterangan = $row_tampil['keterangan'];
 
@@ -82,13 +82,13 @@ CloseDb();
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<SCRIPT language="JavaScript" src="../script/validasi.js"></SCRIPT>
-<SCRIPT language="JavaScript" src="../script/tables.js"></SCRIPT>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<SCRIPT language="text/javascript" src="../script/validasi.js"></SCRIPT>
+<SCRIPT language="text/javascript" src="../script/tables.js"></SCRIPT>
 <SCRIPT language="javascript" src="../script/common.js"></script>
 <SCRIPT language="javascript" src="../script/tools.js"></script>
 <title>JIBAS SIMAKA [Ubah Jenis Mutasi]</title>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 function validate(){
 	return	validateEmptyText('jenismutasi', 'Jenis Mutasi') &&
 			validateMaxText('keterangan', 255, 'Keterangan');
@@ -151,11 +151,11 @@ function focusNext(elemName, evt) {
 </form>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

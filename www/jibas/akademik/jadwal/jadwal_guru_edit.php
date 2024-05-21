@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ $sql = "SELECT *, j.keterangan AS keterangan, idtahunajaran, idtingkat, t.tahuna
 		FROM jadwal j, kelas k, tahunajaran t, jbssdm.pegawai p
 		WHERE j.replid = '$replid' AND j.idkelas = k.replid AND k.idtahunajaran = t.replid AND p.nip = j.nipguru";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $pelajaran = $row['idpelajaran'];
 $departemen = $row['departemen'];
 $tahunajaran = $row['idtahunajaran'];
@@ -89,15 +89,15 @@ if (isset($_REQUEST['Simpan']))
 {		
 	$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 	$res = QueryDb($sql);
-	$num = mysql_num_rows($res);
+	$num = mysqli_num_rows($res);
 	if ($num>0)
 	{
-		$dayname = array("", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu");
+		$dayname = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"];
 		
 		$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 		$res = QueryDb($sql);
 		$idinfo_aktif = "";
-		while($row = mysql_fetch_row($res))
+		while($row = mysqli_fetch_row($res))
 		{
 			if (strlen($idinfo_aktif) > 0)
 				$idinfo_aktif .= "','";
@@ -126,10 +126,10 @@ if (isset($_REQUEST['Simpan']))
 				   AND ($sqljam)";
 		$res = QueryDb($sql);
 		
-		if (mysql_num_rows($res) > 0) 
+		if (mysqli_num_rows($res) > 0) 
 		{
 			$ket = "";
-			while ($row = mysql_fetch_array($res))
+			while ($row = mysqli_fetch_array($res))
 			{
 				if (strlen($ket) > 0)
 					$ket .= "\\r\\n";
@@ -160,10 +160,10 @@ if (isset($_REQUEST['Simpan']))
 					   AND ($sqljam)";
 			$res = QueryDb($sql);
 			
-			if (mysql_num_rows($res) > 0)
+			if (mysqli_num_rows($res) > 0)
 			{
 				$ket = "";
-				while ($row = mysql_fetch_array($res))
+				while ($row = mysqli_fetch_array($res))
 				{
 					if (strlen($ket) > 0)
 						$ket .= "\\r\\n";
@@ -175,22 +175,22 @@ if (isset($_REQUEST['Simpan']))
 		
 		if (strlen($ERROR_MSG) == 0)
 		{
-			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam'";
+			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '".$jam."'";
 			$result1 = QueryDb($sql1);
-			$row1 = mysql_fetch_array($result1);
+			$row1 = mysqli_fetch_array($result1);
 			$rep1 = $row1['replid'];
 			$jm1 = $row1['jam1'];
 			
 			$sql2 = "SELECT replid, TIME_FORMAT(jam2, '%H:%i') AS jam2 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam2'";
 			$result2 = QueryDb($sql2);
-			$row2 = mysql_fetch_array($result2);
+			$row2 = mysqli_fetch_array($result2);
 			$rep2 = $row2['replid'];
 			$jm2 = $row2['jam2'];
 			
 			$jum = $jam2 - $jam + 1;
 			$sql = "UPDATE jadwal SET idkelas='$kelas', idpelajaran = '$pelajaran', departemen = '$departemen', infojadwal = '$info', 
 					hari = $hari, jamke = $jam, njam = $jum, sifat = 1, status = '$status', keterangan='$keterangan', jam1 = '$jm1', 
-					jam2 = '$jm2', idjam1 = '$rep1', idjam2 = '$rep2' WHERE replid = '$replid'";
+					jam2 = '$jm2', idjam1 = '$rep1', idjam2 = '$rep2' WHERE replid = '".$replid."'";
 			$result = QueryDb($sql);
 		
 			if ($result)
@@ -201,7 +201,7 @@ if (isset($_REQUEST['Simpan']))
 					opener.parent.footer.refresh();
 					window.close();
 				</script> 
-	<?		}
+	<?php 	}
 		}
 	}
 	else
@@ -220,7 +220,7 @@ if (isset($_REQUEST['Simpan']))
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Jadwal Guru]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
@@ -365,17 +365,17 @@ function panggil(elem){
     <td><strong>Tingkat</strong> </td>
     <td>
 		<select name="tingkat" id="tingkat" onChange="change_tingkat()" style="width:80px;" onKeyPress="return focusNext('kelas', event)" onFocus="panggil('tingkat')">
-<?			$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
+<?php 		$sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
 			$result = QueryDb($sql);
 				
-			while($row = mysql_fetch_array($result))
+			while($row = mysqli_fetch_array($result))
 			{
 				if ($tingkat == "")
 					$tingkat = $row['replid'];	?>
-			<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+			<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
             <?=$row['tingkat']?>
             </option>
-<?			} ?>
+<?php 		} ?>
         </select>
 	</td>
 </tr>
@@ -383,15 +383,15 @@ function panggil(elem){
    	<td><strong>Kelas</strong> </td>
     <td>
        	<select name="kelas" id="kelas" onChange="change()" style="width:180px;" onKeyPress="return focusNext('pelajaran', event)" onFocus="panggil('kelas')">
-<?			$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
+<?php 		$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
 			$result = QueryDb($sql);
 		
-			while($row = mysql_fetch_array($result))
+			while($row = mysqli_fetch_array($result))
 			{
 				if ($kelas == "")
 					$kelas = $row['replid'];	?>
-				<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
-<?			} ?>
+				<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+<?php 		} ?>
     	</select>        
 	</td>    
 </tr>
@@ -399,15 +399,15 @@ function panggil(elem){
 	<td align="left"><strong>Pelajaran</strong></td>
  	<td>
       	<select name="pelajaran" id="pelajaran" onChange="change()" style="width:180px;" onKeyPress="return focusNext('jam2', event)" onFocus="panggil('pelajaran')">
-<?		$sql = "SELECT l.replid,l.nama FROM pelajaran l, guru g WHERE g.nip = '$nip' AND g.idpelajaran = l.replid AND l.aktif=1 AND departemen = '$departemen' ORDER BY l.nama";
+<?php 	$sql = "SELECT l.replid,l.nama FROM pelajaran l, guru g WHERE g.nip = '$nip' AND g.idpelajaran = l.replid AND l.aktif=1 AND departemen = '$departemen' ORDER BY l.nama";
 		$result = QueryDb($sql);
 		
-		while ($row = @mysql_fetch_array($result))
+		while ($row = @mysqli_fetch_array($result))
 		{
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];	?>
-	    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                 
-<?		} ?>
+	    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>                 
+<?php 	} ?>
     	</select>
 	</td>  
 </tr>
@@ -457,13 +457,13 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
-<?
+<?php
 CloseDb();
 ?>
 </body>

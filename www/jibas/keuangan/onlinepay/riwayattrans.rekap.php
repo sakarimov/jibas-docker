@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ if ($metode != "0")
     $sql .= " AND p.jenis = $metode";
 
 if ($pembayaran != "ALL")
-    $sql .= " AND pd.kategori = '$pembayaran'";
+    $sql .= " AND pd.kategori = '".$pembayaran."'";
 
 if ($idPembayaran != "0")
 {
@@ -69,20 +69,20 @@ if ($idPembayaran != "0")
 }
 
 if ($siswa != "ALL")
-    $sql .= " AND p.nis = '$nis'";
+    $sql .= " AND p.nis = '".$nis."'";
 
 if ($bankNo <> "ALL")
-    $sql .= " AND p.bankno = '$bankNo'";
+    $sql .= " AND p.bankno = '".$bankNo."'";
 
 if ($idPetugas != "ALL")
-    $sql .= " AND p.idpetugas = '$idPetugas'";
+    $sql .= " AND p.idpetugas = '".$idPetugas."'";
 
 //echo "$sql<br>";
 
 $nData = 0;
 $stIdPgTrans = "";
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $nData++;
 
@@ -104,9 +104,9 @@ $sql = "SELECT DISTINCT tanggal
          ORDER BY tanggal DESC";
 //echo "$sql<br>";
 
-$lsTanggal = array();
+$lsTanggal = [];
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $lsTanggal[] = $row[0];
 }
@@ -115,7 +115,7 @@ while($row = mysql_fetch_row($res))
 //print_r($lsTanggal);
 //echo "</pre>";
 
-$lsPembayaran = array();
+$lsPembayaran = [];
 if ($pembayaran == "ALL")
 {
     $sql = "SELECT DISTINCT kategori, IFNULL(idpenerimaan, 0) AS idpenerimaan,
@@ -127,7 +127,7 @@ if ($pembayaran == "ALL")
     //echo "$sql<br>";
 
     $res = QueryDb($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $kategori = $row["kategori"];
 
@@ -141,14 +141,14 @@ if ($pembayaran == "ALL")
         else if ($kategori == "PEGTAB")
             $idPembayaran = $row["idtabunganp"];
 
-        $lsPembayaran[] = array($kategori, $idPembayaran);
+        $lsPembayaran[] = [$kategori, $idPembayaran];
     }
 }
 else
 {
     if ($idPembayaran != "0")
     {
-        $lsPembayaran[] = array($pembayaran, $idPembayaran);
+        $lsPembayaran[] = [$pembayaran, $idPembayaran];
     }
     else
     {
@@ -162,7 +162,7 @@ else
         //echo "$sql<br>";
 
         $res = QueryDb($sql);
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $kategori = $row["kategori"];
 
@@ -176,7 +176,7 @@ else
             else if ($kategori == "PEGTAB")
                 $idPembayaran = $row["idtabunganp"];
 
-            $lsPembayaran[] = array($kategori, $idPembayaran);
+            $lsPembayaran[] = [$kategori, $idPembayaran];
         }
     }
 }
@@ -190,10 +190,10 @@ echo "<a href='#' onclick='excelRekap()'><img src='../images/ico/excel.png' bord
 echo "<div id='dvTableContent'>";
 
 echo "<input type='hidden' id='stidpgtrans' value='$stIdPgTrans'>";
-$jsonPen = json_encode($lsPembayaran);
+$jsonPen = json_encode($lsPembayaran, JSON_THROW_ON_ERROR);
 $jsonPen = str_replace("\"", "`", $jsonPen);
 echo "<input type='hidden' id='jsonpen' value='$jsonPen'>";
-$jsonTgl = json_encode($lsTanggal);
+$jsonTgl = json_encode($lsTanggal, JSON_THROW_ON_ERROR);
 $jsonTgl = str_replace("\"", "`", $jsonTgl);
 echo "<input type='hidden' id='jsontgl' value='$jsonTgl'>";
 
@@ -216,7 +216,7 @@ for($i = 0; $i < count($lsPembayaran); $i++)
 echo "<td class='header' width='180' align='center'>Sub Total</td>";
 echo "</tr>";
 
-$lsSubTotalPenerimaan = array();
+$lsSubTotalPenerimaan = [];
 for($j = 0; $j < count($lsPembayaran); $j++)
 {
     $lsSubTotalPenerimaan[] = 0;
@@ -246,7 +246,7 @@ for($i = 0; $i < count($lsTanggal); $i++)
                  WHERE p.replid = pd.idpgtrans
                    AND p.tanggal = '$tanggal'
                    AND p.departemen = '$departemen'
-                   AND pd.kategori = '$kategori'";
+                   AND pd.kategori = '".$kategori."'";
 
         if ($idPenerimaan != "0")
         {
@@ -260,7 +260,7 @@ for($i = 0; $i < count($lsTanggal); $i++)
                 $sql .= " AND pd.idtabunganp = $idPenerimaan";
         }
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $jumlah = $row[0];
 
         $subTotal += $jumlah;
@@ -274,12 +274,12 @@ for($i = 0; $i < count($lsTanggal); $i++)
         }
         else
         {
-            $lsPen = array($lsItem);
+            $lsPen = [$lsItem];
             $jsonPen = json_encode($lsPen);
             $jsonPen = str_replace("\"", "`", $jsonPen);
 
-            $lsTgl = array($tanggal);
-            $jsonTgl = json_encode($lsTgl);
+            $lsTgl = [$tanggal];
+            $jsonTgl = json_encode($lsTgl, JSON_THROW_ON_ERROR);
             $jsonTgl = str_replace("\"", "`", $jsonTgl);
 
             //echo "<a href='#' onclick='showRekapDetail(\"$stIdPgTrans\",\"$kategori\",\"$idPenerimaan\",\"$namaPenerimaan\",\"$tanggal\")' style='color: #0000ff; font-weight: normal; text-decoration: none'>$rp</a>";
@@ -296,11 +296,11 @@ for($i = 0; $i < count($lsTanggal); $i++)
     }
     else
     {
-        $jsonPen = json_encode($lsPembayaran);
+        $jsonPen = json_encode($lsPembayaran, JSON_THROW_ON_ERROR);
         $jsonPen = str_replace("\"", "`", $jsonPen);
 
-        $lsTgl = array($tanggal);
-        $jsonTgl = json_encode($lsTgl);
+        $lsTgl = [$tanggal];
+        $jsonTgl = json_encode($lsTgl, JSON_THROW_ON_ERROR);
         $jsonTgl = str_replace("\"", "`", $jsonTgl);
 
         echo "<a href='#' onclick='showRekapDetail2(\"$stIdPgTrans\",\"$jsonPen\",\"$jsonTgl\")' style='color: #0000ff; font-weight: bold; text-decoration: none'>$rp</a>";
@@ -315,7 +315,7 @@ for($i = 0; $i < count($lsTanggal); $i++)
 echo "<tr>";
 echo "<td align='right' colspan='2' style=' background-color: #ffc038'><strong>Sub Total</strong></td>";
 
-$jsonPen = json_encode($lsPembayaran);
+$jsonPen = json_encode($lsPembayaran, JSON_THROW_ON_ERROR);
 $jsonPen = str_replace("\"", "`", $jsonPen);
 for($i = 0; $i < count($lsSubTotalPenerimaan); $i++)
 {
@@ -324,11 +324,11 @@ for($i = 0; $i < count($lsSubTotalPenerimaan); $i++)
     $kategori = $lsItem[0];
     $idPenerimaan = $lsItem[1];
 
-    $lsPen = array($lsItem);
+    $lsPen = [$lsItem];
     $jsonPen = json_encode($lsPen);
     $jsonPen = str_replace("\"", "`", $jsonPen);
 
-    $jsonTgl = json_encode($lsTanggal);
+    $jsonTgl = json_encode($lsTanggal, JSON_THROW_ON_ERROR);
     $jsonTgl = str_replace("\"", "`", $jsonTgl);
 
     $jumlah = $lsSubTotalPenerimaan[$i];
@@ -349,10 +349,10 @@ if ($allTotal == 0)
 }
 else
 {
-    $jsonPen = json_encode($lsPembayaran);
+    $jsonPen = json_encode($lsPembayaran, JSON_THROW_ON_ERROR);
     $jsonPen = str_replace("\"", "`", $jsonPen);
 
-    $jsonTgl = json_encode($lsTanggal);
+    $jsonTgl = json_encode($lsTanggal, JSON_THROW_ON_ERROR);
     $jsonTgl = str_replace("\"", "`", $jsonTgl);
 
     echo "<a href='#' onclick='showRekapDetail2(\"$stIdPgTrans\",\"$jsonPen\",\"$jsonTgl\")' style='color: #0000ff; font-weight: bold; text-decoration: none'>$rp</a>";

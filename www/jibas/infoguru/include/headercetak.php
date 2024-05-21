@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -13,8 +13,8 @@ function getHeader($dep)
 			FROM jbsumum.identitas
 		   WHERE departemen='$dep'";
 	$result = QueryDb($sql); 
-	$num = @mysql_num_rows($result);
-	$row = @mysql_fetch_row($result);
+	$num = @mysqli_num_rows($result);
+	$row = @mysqli_fetch_row($result);
 	
 	$replid  = $row[0];
 	$nama	 = $row[1];
@@ -31,7 +31,7 @@ function getHeader($dep)
 	$head =	"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
 	$head .="	<tr>";
 	$head .="		<td width=\"20%\" align=\"center\">";
-	$head .="		<img src=\"".$full_url."library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . rand(1, 5000) . "\" />";
+	$head .="		<img src=\"".$full_url."library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . random_int(1, 5000) . "\" />";
 	$head .="		</td>";
 	$head .="		<td valign=\"top\" align='left'>";
 					  if ($num >  0) {	

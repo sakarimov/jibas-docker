@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -45,13 +45,13 @@ $n = JmlHari($blnlahir, $thnlahir);
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/rupiah.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="siswa_add.js"></script>
 </head>
 
-<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="background-color:#dcdfc4" <? if($cek==0){ ?>onLoad="document.getElementById('tahunmasuk').focus()" <? } else { ?>onLoad="document.getElementById('nis').focus()" <? } ?> >
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="background-color:#dcdfc4" <?php if($cek==0){ ?>onLoad="document.getElementById('tahunmasuk').focus()" <?php } else { ?>onLoad="document.getElementById('nis').focus()" <?php } ?> >
 <div id="waitBox" style="position:absolute; visibility:hidden;">
 <img src="../images/movewait.gif" border="0" />Silahkan&nbsp;tunggu...
 </div>
@@ -90,17 +90,17 @@ $n = JmlHari($blnlahir, $thnlahir);
     	<td width="22%"><strong>Angkatan</strong></td>
     	<td colspan="2">  
         	<select name="idangkatan" id="idangkatan" style="width:195px;" onKeyPress="return focusNext('tahunmasuk', event)" onFocus="panggil('idangkatan')" onBlur="unfokus('idangkatan')" >    		
-			<? 
+			<?php 
             $sql_angkatan="SELECT * FROM jbsakad.angkatan WHERE aktif=1 AND departemen='$departemen' ORDER BY replid DESC";
             $result_angkatan=QueryDB($sql_angkatan);
-            while ($row_angkatan = mysql_fetch_array($result_angkatan)) {
+            while ($row_angkatan = mysqli_fetch_array($result_angkatan)) {
                 if ($idangkatan = "") 
                     $idangkatan = $row_angkatan['angkatan'];
 			?>
         		<option value="<?=$row_angkatan['replid']?>"<?=StringIsSelected($row_angkatan['replid'], $idangkatan)?>>
                 <?=$row_angkatan['angkatan']?>
                 </option>
-            <?
+            <?php
     		} 
 			?>
 		</select>
@@ -163,10 +163,10 @@ $n = JmlHari($blnlahir, $thnlahir);
     	<td>Jenis Kelamin</td>
     	<td colspan="2">
             <input type="radio" id="kelamin2" name="kelamin" value="l"  
-                <? if ($kelamin=="1") echo "checked"; else	echo "checked";	?>
+                <?php if ($kelamin=="1") echo "checked"; else	echo "checked";	?>
                 onkeypress="return focusNext('tmplahir', event)" />&nbsp;Laki-laki&nbsp;&nbsp;
             <input type="radio" id="kelamin" name="kelamin" value="p"
-                <? if ($kelamin=="p") echo "checked"; ?>
+                <?php if ($kelamin=="p") echo "checked"; ?>
                 onKeyPress="return focusNext('tmplahir', event)"/>&nbsp;Perempuan
         </td>
   	</tr>
@@ -187,18 +187,18 @@ $n = JmlHari($blnlahir, $thnlahir);
                 <div id="tgl_info">
                     <select name="tgllahir" id="tgllahir" onKeyPress="return focusNext('blnlahir', event)" onFocus="panggil('tgllahir')" onBlur="unfokus('tgllahir')">
                     <option value="">[Tgl]</option>  
-                    <? 	for ($tgl=1;$tgl<=$n;$tgl++){ ?>
+                    <?php 	for ($tgl=1;$tgl<=$n;$tgl++){ ?>
                     <option value="<?=$tgl?>" <?=IntIsSelected($tgllahir, $tgl)?>><?=$tgl?></option>        
-                    <?	}	?>
+                    <?php }	?>
                     </select>
                 </div>
                 </td>
                 <td>
                     <select name="blnlahir" id="blnlahir"  onKeyPress="return focusNext('thnlahir', event)" onChange="change_bln()" onFocus="panggil('blnlahir')" onBlur="unfokus('blnlahir')">
                     <option value="">[Bulan]</option>  
-                    <? 	for ($i=1;$i<=12;$i++) { ?>
+                    <?php 	for ($i=1;$i<=12;$i++) { ?>
                     <option value="<?=$i?>" <?=IntIsSelected($blnlahir, $i)?>><?=NamaBulan($i)?></option>	
-                    <?	} ?>
+                    <?php } ?>
                     </select>
                     <input type="text" name="thnlahir" id="thnlahir" size="5" maxlength="4"
                            onFocus="showhint('Tahun Lahir tidak boleh kosong!', this, event, '120px');panggil('thnlahir')"
@@ -214,21 +214,21 @@ $n = JmlHari($blnlahir, $thnlahir);
         	<div id="InfoAgama">
                 <select name="agama" id="agama" class="ukuran"  onKeyPress="return focusNext('suku', event)" onFocus="panggil('agama')" onBlur="unfokus('agama')">
                 <option value="">[Pilih Agama]</option>
-                <? 
+                <?php 
                 $sql_agama="SELECT replid,agama,urutan FROM jbsumum.agama ORDER BY urutan";
                 $result_agama=QueryDB($sql_agama);
-                while ($row_agama = mysql_fetch_array($result_agama)) {
+                while ($row_agama = mysqli_fetch_array($result_agama)) {
                 ?>
                     <option value="<?=$row_agama['agama']?>"<?=StringIsSelected($row_agama['agama'],$agama)?>>
                     <?=$row_agama['agama']?>
                     </option>
-                <?
+                <?php
                 } 
                 ?>
                 </select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onClick="tambah_agama();" onMouseOver="showhint('Tambah Agama!', this, event, '50px')" />    
-            <? } ?>
+            <?php } ?>
             </div>
         </td>
   	</tr>
@@ -238,19 +238,19 @@ $n = JmlHari($blnlahir, $thnlahir);
             <div id="InfoSuku">
             <select name="suku" id="suku" class="ukuran"  onkeypress="return focusNext('status', event)" onFocus="panggil('suku')" onBlur="unfokus('suku')">
                 <option value="">[Pilih Suku]</option>
-<?              $sql_suku="SELECT suku,urutan,replid FROM jbsumum.suku ORDER BY urutan";
+<?php              $sql_suku="SELECT suku,urutan,replid FROM jbsumum.suku ORDER BY urutan";
                 $result_suku=QueryDB($sql_suku);
-                while ($row_suku = mysql_fetch_array($result_suku))
+                while ($row_suku = mysqli_fetch_array($result_suku))
                 {
                     ?>
                     <option value="<?=$row_suku['suku']?>"<?=StringIsSelected($row_suku['suku'], $suku)?> >
                     <?=$row_suku['suku']?>
                     </option>
-<?              }   ?>
+<?php              }   ?>
             </select>
-<?          if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+<?php          if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_suku();" onMouseOver="showhint('Tambah Suku!', this, event, '50px')" />
-<?          } ?>
+<?php          } ?>
             </div>
         </td>
   	</tr>
@@ -260,21 +260,21 @@ $n = JmlHari($blnlahir, $thnlahir);
             <div id="InfoStatus">
             <select name="status" id="status" class="ukuran"  onKeyPress="return focusNext('kondisi', event)" onFocus="panggil('status')" onBlur="unfokus('status')">
             <option value="">[Pilih Status]</option>
-            <? 
+            <?php 
             $sql_status="SELECT replid,status,urutan FROM jbsakad.statussiswa ORDER BY urutan";
             $result_status=QueryDB($sql_status);
-            while ($row_status = mysql_fetch_array($result_status)) {
+            while ($row_status = mysqli_fetch_array($result_status)) {
             ?>
                 <option value="<?=$row_status['status']?>"<?=StringIsSelected($row_status['status'],$status)?> >
                 <?=$row_status['status']?>
                 </option>
-            <?
+            <?php
             } 
             ?>
             </select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onClick="tambah_status();" onMouseOver="showhint('Tambah Status!', this, event, '50px')"/>    
-            <? } ?>
+            <?php } ?>
             </div>
         </td>
   	</tr>
@@ -284,22 +284,22 @@ $n = JmlHari($blnlahir, $thnlahir);
             <div id="InfoKondisi">
             <select name="kondisi" id="kondisi" class="ukuran"  onKeyPress="return focusNext('warga', event)" onFocus="panggil('kondisi')" onBlur="unfokus('kondisi')">
             <option value="">[Pilih Kondisi]</option>
-            <? 
+            <?php 
             $sql_kondisi="SELECT kondisi,urutan FROM jbsakad.kondisisiswa ORDER BY urutan";
             $result_kondisi=QueryDB($sql_kondisi);
-            while ($row_kondisi = mysql_fetch_array($result_kondisi))
+            while ($row_kondisi = mysqli_fetch_array($result_kondisi))
             {
             ?>
                 <option value="<?=$row_kondisi['kondisi']?>" <?=StringIsSelected($row_kondisi['kondisi'],$kondisi)?> >
                 <?=$row_kondisi['kondisi']?>
                 </option>
-            <?
+            <?php
             } 
             ?>
             </select>
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onClick="tambah_kondisi();" onMouseOver="showhint('Tambah Kondisi!', this, event, '50px')"/>
-            <? } ?>
+            <?php } ?>
             </div>
         </td>
     </tr>
@@ -307,14 +307,14 @@ $n = JmlHari($blnlahir, $thnlahir);
     	<td>Kewarganegaraan</td>
     	<td colspan="2">
             <input type="radio" id="warga" name="warga" value="WNI" 
-            <? 	if ($warga=="WNI" || $warga=="")
+            <?php 	if ($warga=="WNI" || $warga=="")
                     echo "checked";
                 else
                     echo "checked";
             ?> onKeyPress="return focusNext('urutananak', event)"
             />&nbsp;WNI&nbsp;&nbsp;
             <input type="radio" id="warga" name="warga" value="WNA"
-            <? 	if ($warga=="WNA")
+            <?php 	if ($warga=="WNA")
                     echo "checked"
             ?> onKeyPress="return focusNext('urutananak', event)"
             />&nbsp;WNA</td>
@@ -427,13 +427,13 @@ $n = JmlHari($blnlahir, $thnlahir);
 			<div id="depInfo">
         	<select name="dep_asal" id="dep_asal"  onKeyPress="return focusNext('sekolah', event)" onChange="change_departemen(0)" style="width:150px;" onFocus="panggil('dep_asal')" onBlur="unfokus('dep_asal')"> 
                 <option value="">[Pilih Departemen]</option>
-                <? 
+                <?php 
                 $sql_departemen="SELECT DISTINCT departemen FROM jbsakad.asalsekolah ORDER BY departemen";   
                 $result_departemen=QueryDB($sql_departemen);
-                while ($row_dep = mysql_fetch_array($result_departemen)) {
+                while ($row_dep = mysqli_fetch_array($result_departemen)) {
                 ?>
                     <option value="<?=$row_dep['departemen']?>" <?=StringIsSelected($row_dep['departemen'], $dep_asal)?>><?=$row_dep['departemen']?></option>
-                <?
+                <?php
                 }
                 ?>
     		</select>
@@ -450,24 +450,24 @@ $n = JmlHari($blnlahir, $thnlahir);
             <select name="sekolah" id="sekolah" onKeyPress="return focusNext('noijasah', event)"
                     style="width:150px;" onFocus="panggil('sekolah')"  onblur="unfokus('sekolah')">
                 <option value="">[Pilih Asal Sekolah]</option>
-                <? 
+                <?php 
                 $sql_sekolah="SELECT sekolah FROM jbsakad.asalsekolah WHERE departemen='$dep_asal' ORDER BY urutan";
                 $result_sekolah=QueryDB($sql_sekolah);
-                while ($row_sekolah = mysql_fetch_array($result_sekolah)) {
+                while ($row_sekolah = mysqli_fetch_array($result_sekolah)) {
                 ?>
                     <option value="<?=$row_sekolah['sekolah']?>" <?=StringIsSelected($row_sekolah['sekolah'],$sekolah)?>>
                     <?=$row_sekolah['sekolah']?>
                     </option>
-                <?
+                <?php
                 } 
                 ?>
             </select>
             </div>
             </td>
             <td valign="middle">
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <img src="../images/ico/tambah.png" onClick="tambah_asal_sekolah();" onMouseOver="showhint('Tambah Asal Sekolah!', this, event, '80px')"/>
-            <? } ?>
+            <?php } ?>
             </td>
      	</tr>
         </table>
@@ -515,23 +515,23 @@ $n = JmlHari($blnlahir, $thnlahir);
     	<td width="20%" valign="top">Gol. Darah</td>
     	<td colspan="2">
             <input type="radio" name="gol" id="gol" value="A" 
-            <? if ($gol=="A")
+            <?php if ($gol=="A")
                    echo "checked"; 
                    ?> onKeyPress="return focusNext('berat', event)"/>&nbsp;A&nbsp;&nbsp;
             <input type="radio" name="gol" id="gol2" value="AB"
-            <? if ($gol=="B")
+            <?php if ($gol=="B")
                     echo "checked"; 
                     ?> onKeyPress="return focusNext('berat', event)"/>&nbsp;AB&nbsp;&nbsp;
             <input type="radio" name="gol" id="gol" value="B" 
-            <? if ($gol=="AB")
+            <?php if ($gol=="AB")
                     echo "checked";
                     ?> onKeyPress="return focusNext('berat', event)"/>&nbsp;B&nbsp;&nbsp;
             <input type="radio" name="gol" id="gol" value="O" 
-            <? if ($gol=="O")
+            <?php if ($gol=="O")
                     echo "checked"
                     ?> onKeyPress="return focusNext('berat', event)"/>&nbsp;O&nbsp;&nbsp;
             <input type="radio" name="gol" id="gol" value="" 
-            <? if ($gol=="")
+            <?php if ($gol=="")
                 echo "checked" ?> onKeyPress="return focusNext('berat', event)"/><em>(belum ada data)</em></td>
   	</tr>
   	<tr>
@@ -578,7 +578,7 @@ $n = JmlHari($blnlahir, $thnlahir);
                    value="<?=$namaayah?>" class="ukuran" onKeyPress="return focusNext('namaibu', event)" onBlur="unfokus('namaayah')" />    
         	<br />
         	<input type="checkbox" name="almayah" value="1"  title="Klik disini jika Ayah Almarhum"
-    		<? if ($almayah=="1") echo "checked";?>/>&nbsp;&nbsp;<font color="#990000" size="1">(Almarhum)</font>
+    		<?php if ($almayah=="1") echo "checked";?>/>&nbsp;&nbsp;<font color="#990000" size="1">(Almarhum)</font>
         </td>
     	<td bgcolor="#E9AFCF">
         	<input name="namaibu" type="text" size="15" maxlength="100" id="namaibu"
@@ -586,7 +586,7 @@ $n = JmlHari($blnlahir, $thnlahir);
                    value="<?=$namaibu?>" class="ukuran" onKeyPress="return focusNext('statusayah', event)" onBlur="unfokus('namaibu')"/>    
             <br />
             <input type="checkbox" name="almibu" value="1"  title="Klik disini jika Ibu Almarhumah"
-            <? if ($almibu=="1") echo "checked"; ?>/>&nbsp;&nbsp;
+            <?php if ($almibu=="1") echo "checked"; ?>/>&nbsp;&nbsp;
             <font color="#990000" size="1">(Almarhumah)</font>
         </td>
   	</tr>
@@ -641,15 +641,15 @@ $n = JmlHari($blnlahir, $thnlahir);
         	<div id = "pendidikanayahInfo">
             <select name="pendidikanayah" id="Infopendidikanayah" class="ukuran" onKeyPress="return focusNext('Infopendidikanibu', event)" onFocus="panggil('Infopendidikanayah')" style="width:140px" onBlur="unfokus('Infopendidikanayah')">
                 <option value="">[Pilih Pendidikan]</option> 
-                <? 
+                <?php 
                 $sql_pend_ayah="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
                 $result_pend_ayah=QueryDB($sql_pend_ayah);
-                while ($row_pend_ayah = mysql_fetch_array($result_pend_ayah)) {
+                while ($row_pend_ayah = mysqli_fetch_array($result_pend_ayah)) {
                 ?>
                     <option value="<?=$row_pend_ayah['pendidikan']?>"<?=StringIsSelected($row_pend_ayah['pendidikan'],$pendidikanayah)?>>
                     <?=$row_pend_ayah['pendidikan']?>
                     </option>
-                <?
+                <?php
                 } 
                 ?>
             </select>
@@ -662,24 +662,24 @@ $n = JmlHari($blnlahir, $thnlahir);
                 <div id = "pendidikanibuInfo">	
                 <select name="pendidikanibu" id="Infopendidikanibu" class="ukuran" onKeyPress="return focusNext('Infopekerjaanayah', event)" onFocus="panggil('Infopendidikanibu')"  style="width:140px" onBlur="unfokus('Infopendidikanibu')">
                     <option value="">[Pilih Pendidikan]</option>   
-                    <? 
+                    <?php 
                     $sql_pend_ibu="SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan";
                     $result_pend_ibu=QueryDB($sql_pend_ibu);
-                    while ($row_pend_ibu = mysql_fetch_array($result_pend_ibu)) {
+                    while ($row_pend_ibu = mysqli_fetch_array($result_pend_ibu)) {
                     ?>
                         <option value="<?=$row_pend_ibu['pendidikan']?>"<?=StringIsSelected($row_pend_ibu['pendidikan'],$pendidikanibu) ?> >
                         <?=$row_pend_ibu['pendidikan']?>
                         </option>
-                    <?
+                    <?php
                     } 
                     ?>
                 </select>
                 </div>
                 </td>
                 <td>
-                <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+                <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_pendidikan();" onMouseOver="showhint('Tambah Jenis Pendidikan!', this, event, '80px')"/>
-                <? } ?>
+                <?php } ?>
                 </td>
         	</tr>
             </table>
@@ -691,15 +691,15 @@ $n = JmlHari($blnlahir, $thnlahir);
         	<div id="pekerjaanayahInfo">
         	<select name="pekerjaanayah" id="Infopekerjaanayah" class="ukuran" onKeyPress="return focusNext('Infopekerjaanibu', event)" onFocus="panggil('Infopekerjaanayah')" style="width:140px" onBlur="unfokus('Infopekerjaanayah')">
             <option value="">[Pilih Pekerjaan]</option>
-            <? 
+            <?php 
             $sql_kerja_ayah="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan ASC";
             $result_kerja_ayah=QueryDB($sql_kerja_ayah);
-            while ($row_kerja_ayah = mysql_fetch_array($result_kerja_ayah)) {
+            while ($row_kerja_ayah = mysqli_fetch_array($result_kerja_ayah)) {
             ?>
                 <option value="<?=$row_kerja_ayah['pekerjaan']?>"<?=StringIsSelected($row_kerja_ayah['pekerjaan'],$pekerjaanayah)?>>
                 <?=$row_kerja_ayah['pekerjaan']?>
                 </option>
-            <?
+            <?php
             } 
             ?>
             </select>
@@ -712,24 +712,24 @@ $n = JmlHari($blnlahir, $thnlahir);
                 <div id = "pekerjaanibuInfo">
                     <select name="pekerjaanibu" id="Infopekerjaanibu"  class="ukuran" onKeyPress="return focusNext('penghasilanayah1', event)" onFocus="panggil('Infopekerjaanibu')" style="width:140px" onBlur="unfokus('Infopekerjaanibu')">
                     <option value="">[Pilih Pekerjaan]</option>
-                    <? 
+                    <?php 
                     $sql_kerja_ibu="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan ";
                     $result_kerja_ibu=QueryDB($sql_kerja_ibu);
-                    while ($row_kerja_ibu = mysql_fetch_array($result_kerja_ibu)) {
+                    while ($row_kerja_ibu = mysqli_fetch_array($result_kerja_ibu)) {
                     ?>
                         <option value="<?=$row_kerja_ibu['pekerjaan']?>"<?=StringIsSelected($row_kerja_ibu['pekerjaan'],$pekerjaanibu)?>>
                         <?=$row_kerja_ibu['pekerjaan']?>
                         </option>
-                    <?
+                    <?php
                     } 
                     ?>
                     </select>
                 </div>
                 </td>
                 <td>
-				<? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+				<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
                 <img src="../images/ico/tambah.png" onClick="tambah_pekerjaan();" onMouseOver="showhint('Tambah Jenis Pekerjaan!', this, event, '80px')" />
-                <? } ?>
+                <?php } ?>
                 </td>
            	</tr>
             </table>
@@ -854,7 +854,7 @@ $n = JmlHari($blnlahir, $thnlahir);
              ORDER BY urutan";
     $res = QueryDb($sql);
     $idtambahan = "";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $replid = $row[0];
         $kolom = $row[1];
@@ -872,11 +872,11 @@ $n = JmlHari($blnlahir, $thnlahir);
                      ORDER BY urutan";
             $res2 = QueryDb($sql);
 
-            $arrList = array();
-            if (mysql_num_rows($res2) == 0)
+            $arrList = [];
+            if (mysqli_num_rows($res2) == 0)
                 $arrList[] = "-";
 
-            while($row2 = mysql_fetch_row($res2))
+            while($row2 = mysqli_fetch_row($res2))
             {
                 $arrList[] = $row2[0];
             }
@@ -893,21 +893,21 @@ $n = JmlHari($blnlahir, $thnlahir);
         <tr>
             <td valign="top"><?=$kolom?></td>
             <td colspan="2">
-            <? if ($jenis == 1) { ?>
+            <?php if ($jenis == 1) { ?>
                 <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="1">
                 <input type="text" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="40" maxlength="1000"/>
-            <? } else if ($jenis == 2) { ?>
+            <?php } else if ($jenis == 2) { ?>
                 <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="2">
                 <input type="file" name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" size="25" style="width:215px"/>
-            <? } else { ?>
+            <?php } else { ?>
                 <input type="hidden" id="jenisdata-<?=$replid?>" name="jenisdata-<?=$replid?>" value="3">
                 <select name="tambahandata-<?=$replid?>" id="tambahandata-<?=$replid?>" style="width:215px">
                 <?= $opt ?>
                 </select>
-            <? } ?>
+            <?php } ?>
             </td>
         </tr>
-        <?
+        <?php
     }
 ?>
     <input type="hidden" id="idtambahan" name="idtambahan" value="<?=$idtambahan?>">
@@ -934,12 +934,12 @@ $n = JmlHari($blnlahir, $thnlahir);
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
-<?
+<?php } ?>
+<?php
 CloseDb();
 ?>
 </body>

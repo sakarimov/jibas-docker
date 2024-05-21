@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -37,22 +37,22 @@ if (isset($_REQUEST['simpan']))
 	OpenDb();
 	$tanggalmulai = MySqlDateFormat($_REQUEST['tcicilan']);
 	
-	$sql = "SELECT * FROM tahunbuku WHERE tahunbuku = '".CQ($_REQUEST[tahunbuku])."' AND departemen = '$_REQUEST[departemen]' AND replid <> '$id'";
+	$sql = "SELECT * FROM tahunbuku WHERE tahunbuku = '".CQ($_REQUEST['tahunbuku'])."' AND departemen = '".$_REQUEST['departemen']."' AND replid <> '$id'";
 	$result = QueryDb($sql);
 	
-	$sql1 = "SELECT * FROM tahunbuku WHERE awalan = '".CQ($_REQUEST[awalan])."' AND departemen = '$_REQUEST[departemen]' AND replid <> '$id'";
+	$sql1 = "SELECT * FROM tahunbuku WHERE awalan = '".CQ($_REQUEST['awalan'])."' AND departemen = '".$_REQUEST['departemen']."' AND replid <> '$id'";
 	$result1 = QueryDb($sql1);
 	
-	if (mysql_num_rows($result) > 0) 
+	if (mysqli_num_rows($result) > 0) 
 	{
 		CloseDb();
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[tahunbuku] sudah digunakan";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['tahunbuku']} sudah digunakan";
 		$cek = 0;
 	} 
-	else if (mysql_num_rows($result1) > 0) 
+	else if (mysqli_num_rows($result1) > 0) 
 	{
 		CloseDb();
-		$MYSQL_ERROR_MSG = "Awalan $_REQUEST[awalan] sudah digunakan";
+		$mysqli_ERROR_MSG = "Awalan {$_REQUEST['awalan']} sudah digunakan";
 		$cek = 1;
 	} 
 	else 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['simpan']))
 		BeginTrans();
 		$success = true;
 		
-		$sql = "UPDATE tahunbuku SET tahunbuku='".CQ($_REQUEST['tahunbuku'])."', tanggalmulai='$tanggalmulai', awalan='".CQ($_REQUEST['awalan'])."',	keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = '$id'";
+		$sql = "UPDATE tahunbuku SET tahunbuku='".CQ($_REQUEST['tahunbuku'])."', tanggalmulai='$tanggalmulai', awalan='".CQ($_REQUEST['awalan'])."',	keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid = '".$id."'";
 		QueryDbTrans($sql, $success);
 		
 		if ($success)
@@ -68,9 +68,9 @@ if (isset($_REQUEST['simpan']))
 			$sql = "SELECT info1 FROM tahunbuku WHERE replid='$id'";
 			$idjurnal = FetchSingle($sql);
 			
-			if (strlen($idjurnal) > 0)
+			if (strlen((string) $idjurnal) > 0)
 			{
-				$sql = "UPDATE jurnal SET tanggal = '$tanggalmulai' WHERE replid = '$idjurnal'";
+				$sql = "UPDATE jurnal SET tanggal = '$tanggalmulai' WHERE replid = '".$idjurnal."'";
 				QueryDbTrans($sql, $success);
 			}
 		}
@@ -88,7 +88,7 @@ if (isset($_REQUEST['simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 
@@ -100,9 +100,9 @@ switch ($cek) {
 }
 
 OpenDb();
-$sql = "SELECT tahunbuku, departemen, awalan, keterangan, date_format(tanggalmulai, '%d-%m-%Y') AS tanggalmulai FROM tahunbuku WHERE replid = '$id'";
+$sql = "SELECT tahunbuku, departemen, awalan, keterangan, date_format(tanggalmulai, '%d-%m-%Y') AS tanggalmulai FROM tahunbuku WHERE replid = '".$id."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 CloseDb();
 	
 $tahunbuku = $row['tahunbuku'];
@@ -230,11 +230,11 @@ function panggil(elem){
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

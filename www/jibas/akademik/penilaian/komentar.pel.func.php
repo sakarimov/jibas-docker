@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,41 +21,49 @@
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
 <?php
-function ReadParams()
+function ReadParams(): void
 {
     global $departemen, $semester, $tingkat, $tahunajaran, $pelajaran, $kelas, $nis, $nama, $komentar;
 
-    if (isset($_REQUEST['departemen']))
+    if (isset($_REQUEST['departemen'])) {
         $departemen = $_REQUEST['departemen'];
+    }
 
-    if (isset($_REQUEST['semester']))
+    if (isset($_REQUEST['semester'])) {
         $semester = $_REQUEST['semester'];
+    }
 
-    if (isset($_REQUEST['tingkat']))
+    if (isset($_REQUEST['tingkat'])) {
         $tingkat = $_REQUEST['tingkat'];
+    }
 
-    if (isset($_REQUEST['tahunajaran']))
+    if (isset($_REQUEST['tahunajaran'])) {
         $tahunajaran = $_REQUEST['tahunajaran'];
+    }
 
-    if (isset($_REQUEST['pelajaran']))
+    if (isset($_REQUEST['pelajaran'])) {
         $pelajaran = $_REQUEST['pelajaran'];
+    }
 
-    if (isset($_REQUEST['kelas']))
+    if (isset($_REQUEST['kelas'])) {
         $kelas = $_REQUEST['kelas'];
+    }
 
-    if (isset($_REQUEST['nis']))
+    if (isset($_REQUEST['nis'])) {
         $nis = $_REQUEST['nis'];
+    }
 
-    if (isset($_REQUEST['komentar']))
+    if (isset($_REQUEST['komentar'])) {
         $komentar = CQ($_REQUEST['komentar']);
+    }
 
-    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$nis'";
+    $sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$nis."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nama = $row[0];
 }
 
-function ShowUserInfo()
+function ShowUserInfo(): void
 {
     global $nis, $nama;
 ?>
@@ -72,16 +80,16 @@ function ShowUserInfo()
 <?php
 }
 
-function SafeText($text)
+function SafeText($text): string|array
 {
-    $text = str_replace("'", "`", $text);
-    return $text;
+    return str_replace("'", "`", (string) $text);
 }
 
-function SimpanData()
+function SimpanData(): void
 {
-    if (!isset($_REQUEST['Simpan']))
+    if (!isset($_REQUEST['Simpan'])) {
         return;
+    }
 
     $success = true;
     BeginTrans();
@@ -92,13 +100,14 @@ function SimpanData()
         $param = "idnap$i";
         $idnap = $_REQUEST[$param];
 
-        if ($idnap == 0)
+        if ($idnap == 0) {
             continue;
+        }
 
         $param = "komentar$i";
         $komentar = SafeText($_REQUEST[$param]);
 
-        $sql = "UPDATE jbsakad.nap SET komentar = '$komentar' WHERE replid = '$idnap'";
+        $sql = "UPDATE jbsakad.nap SET komentar = '$komentar' WHERE replid = '".$idnap."'";
         //echo "$sql<br>";
         QueryDbTrans($sql, $success);
     }
@@ -113,13 +122,13 @@ function SimpanData()
     }
 }
 
-function ShowListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
+function ShowListKomentar($idpelajaran, $idtingkat, $kdaspek, $no): void
 {
-    $select = GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no);
+    $select = GetListKomentar($idpelajaran, $idtingkat, $kdaspek);
     echo "<div id='divpilihkomentar$no'>$select</div>";
 }
 
-function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
+function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no): string
 {
     $opt = "";
 
@@ -127,11 +136,11 @@ function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
               FROM jbsakad.pilihkomenpel
              WHERE idpelajaran = '$idpelajaran'
                AND idtingkat = '$idtingkat'
-               AND dasarpenilaian = '$kdaspek'";
+               AND dasarpenilaian = '".$kdaspek."'";
     $res2 = QueryDb($sql);
-    $numlen = strlen(mysql_num_rows($res2));
+    $numlen = strlen((string) mysqli_num_rows($res2));
     $cnt = 0;
-    while($row2 = mysql_fetch_row($res2))
+    while($row2 = mysqli_fetch_row($res2))
     {
         $cnt += 1;
         $nocnt = str_pad($cnt, $numlen, "0", STR_PAD_LEFT);
@@ -139,9 +148,10 @@ function GetListKomentar($idpelajaran, $idtingkat, $kdaspek, $no)
         $replid = $row2[0];
         $komentar = $row2[1];
 
-        $komentar = strip_tags($komentar);
-        if (strlen($komentar) > 50)
+        $komentar = strip_tags((string) $komentar);
+        if (strlen($komentar) > 50) {
             $komentar = substr($komentar, 0, 50) . " ..";
+        }
 
         $opt .= "<option value='$replid'>$nocnt. $komentar</option>";
     }
@@ -153,10 +163,11 @@ function GetKomentar($replid)
 {
     $sql = "SELECT komentar
               FROM jbsakad.pilihkomenpel
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res)) {
         return $row[0];
+    }
 
     return "";
 }

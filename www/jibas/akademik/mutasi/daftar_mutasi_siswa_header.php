@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -102,14 +102,14 @@ function focusNext(elemName, evt) {
     	<td align="left" width = "30%"><strong>Departemen</strong>
     	<td width = "*">
 		<select name="departemen" id="departemen"  onchange="change_dep()" style="width:225px" onKeyPress="return focusNext('tahun', event)">
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
     		if ($departemen == "")
         		$departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
               <?=$value ?> 
               </option>
-	  	<?	} ?>
+	  	<?php } ?>
         </select>
    		</td>
   	</tr>
@@ -117,14 +117,14 @@ function focusNext(elemName, evt) {
     	<td align="left"><strong>Tahun Mutasi</strong>
 		<td>
         <select name="tahun" id="tahun" onchange="change_tahun()"  style="width:225px" onKeyPress="return focusNext('tabel', event)">
-    <?  OpenDb();
+    <?php  OpenDb();
 	  	$sql_tahun="SELECT YEAR(tglmutasi) AS tahun FROM jbsakad.mutasisiswa WHERE departemen='$departemen' GROUP BY tahun ORDER BY tahun DESC";
 	  	$result_tahun = QueryDb($sql_tahun);
-		while ($row_tahun=mysql_fetch_array($result_tahun)){
+		while ($row_tahun=mysqli_fetch_array($result_tahun)){
 	?>
        		<option value="<?=$row_tahun['tahun']?>" <?=IntIsSelected($row_tahun['tahun'],$tahun)?>><?=$row_tahun['tahun']?></option>
                           
-	<? 	}  CloseDb();
+	<?php 	}  CloseDb();
 	?>
     	</select>        
         </td>  

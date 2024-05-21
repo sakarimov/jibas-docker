@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetOwnerName($ownerid, $ownertype)
 {
     $sql = $ownertype == "S" ?
            "SELECT nama FROM jbsakad.siswa WHERE nis = '$ownerid'" :
-           "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+           "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -53,7 +53,7 @@ function ShowNotesList($dept, $start, $rowperpage)
              ORDER BY lastactive DESC
              LIMIT $start, $rowperpage";
     $res = QueryDb($sql);
-    $ndata = mysql_num_rows($res);
+    $ndata = mysqli_num_rows($res);
     
     if ($ndata == 0 && $start == 0)
     {
@@ -66,7 +66,7 @@ function ShowNotesList($dept, $start, $rowperpage)
     
     $lastactive = "1970-01-01 12:00:00";
     $lastid = -1;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $notesid = $row['replid'];
         $lastactive = $row['lastactive'];
@@ -79,18 +79,18 @@ function ShowNotesList($dept, $start, $rowperpage)
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.notesfile
                  WHERE filecate = 'pict'
-                   AND notesid = '$notesid'";
+                   AND notesid = '".$notesid."'";
         $npict = (int)FetchSingle($sql);
         
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.notesfile
                  WHERE filecate = 'doc'
-                   AND notesid = '$notesid'";
+                   AND notesid = '".$notesid."'";
         $ndoc = (int)FetchSingle($sql);
         
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.notescomment
-                 WHERE notesid = '$notesid'";
+                 WHERE notesid = '".$notesid."'";
         $ncomment = (int)FetchSingle($sql);
         
         $nread = (int)$row['nread'];
@@ -99,7 +99,7 @@ function ShowNotesList($dept, $start, $rowperpage)
         
         <tr id='not_list_row_<?=$notesid?>' style='background-color: #fff;'>
             <td align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='40'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='40'><br>
                 <strong><?=$ownername?></strong><br>
                 <font class='NotesAge'>
                 <?= SecToAgeDate($row['secdiff'], $row['tglbuat']) ?>
@@ -135,7 +135,7 @@ function ShowNotesList($dept, $start, $rowperpage)
                 <hr width='96%' style='height: 1px; border: 0; border-top: 1px solid #557d1d; '>
             </td>
         </tr>
-<?
+<?php
     }
     
     if ($lastid == -1)
@@ -148,7 +148,7 @@ function ShowNotesList($dept, $start, $rowperpage)
                AND kategori = 'mading'
              LIMIT 1";
     $res = QueryDb($sql);
-    $nnext = mysql_num_rows($res);
+    $nnext = mysqli_num_rows($res);
     
     if ($nnext > 0)
     {  ?>
@@ -163,7 +163,7 @@ function ShowNotesList($dept, $start, $rowperpage)
                 </span>      
             </td>
         </tr>
-<?  }
+<?php  }
 }
 
 function ReloadNotesRow($notesid)
@@ -176,9 +176,9 @@ function ReloadNotesRow($notesid)
                    TIME_TO_SEC(TIMEDIFF(NOW(), lastactive)) AS secdiff_active,
                    TIME_TO_SEC(TIMEDIFF(NOW(), lastread)) AS secdiff_read
               FROM jbsvcr.notes
-             WHERE replid = '$notesid'";
+             WHERE replid = '".$notesid."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
 
     $notesid = $row['replid'];
     $lastactive = $row['lastactive'];
@@ -191,25 +191,25 @@ function ReloadNotesRow($notesid)
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.notesfile
              WHERE filecate = 'pict'
-               AND notesid = '$notesid'";
+               AND notesid = '".$notesid."'";
     $npict = (int)FetchSingle($sql);
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.notesfile
              WHERE filecate = 'doc'
-               AND notesid = '$notesid'";
+               AND notesid = '".$notesid."'";
     $ndoc = (int)FetchSingle($sql);
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.notescomment
-             WHERE notesid = '$notesid'";
+             WHERE notesid = '".$notesid."'";
     $ncomment = (int)FetchSingle($sql);
     
     $nread = (int)$row['nread']; ?>
     
     <tr id='not_list_row_<?=$notesid?>' style='background-color: #fff;'>
         <td align='center' valign='top'>
-            <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='40'><br>
+            <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='40'><br>
             <strong><?=$ownername?></strong><br>
             <font class='NotesAge'>
             <?= SecToAge($row['secdiff']) ?>
@@ -249,6 +249,6 @@ function ReloadNotesRow($notesid)
             </font>
         </td>
     </tr>
-<?
+<?php
 }
 ?>

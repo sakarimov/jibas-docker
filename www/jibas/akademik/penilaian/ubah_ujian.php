@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -34,7 +34,7 @@ if(isset($_REQUEST["replid"]))//1
 
 $query = "SELECT u.idrpp, u.deskripsi, u.idsemester, u.idpelajaran, u.tanggal, k.idtingkat, u.kode FROM jbsakad.ujian u, jbsakad.kelas k WHERE u.replid = '$replid' AND u.idkelas = k.replid";
 $result = QueryDb($query);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $idrpp = $row['idrpp'];
 $deskripsi = CQ($row['deskripsi']);
 $tingkat = $row['idtingkat'];
@@ -69,7 +69,7 @@ if(isset($_REQUEST["ubah"])){
         opener.refresh();
         window.close();
     </script>
-<?
+<?php
 	}
 }	
 ?>
@@ -83,12 +83,12 @@ if(isset($_REQUEST["ubah"])){
 <script type="text/javascript" src="../script/calendar.js"></script>
 <script type="text/javascript" src="../script/lang/calendar-en.js"></script>
 <script type="text/javascript" src="../script/calendar-setup.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 function cek_form() {	
 	return validateEmptyText('deskripsi', 'Deskripsi') && 
 			validateEmptyText('tanggal', 'Tanggal');
@@ -152,15 +152,15 @@ function focusNext(elemName, evt) {
       	<td colspan="2">
         	<select name="idrpp" id="idrpp" style="width:170px;" onkeypress="return focusNext('deskripsi', event)">
             <option value="" <?=IntIsSelected("", $idrpp) ?> >Tanpa RPP</option>
-      	<? $sql_rpp="SELECT * FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' AND aktif=1 ORDER BY rpp";
+      	<?php $sql_rpp="SELECT * FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' AND aktif=1 ORDER BY rpp";
       		$result_rpp=QueryDb($sql_rpp);
-      		while ($row_rpp=@mysql_fetch_array($result_rpp)){
+      		while ($row_rpp=@mysqli_fetch_array($result_rpp)){
 				if ($idrpp == "")
 					$idrpp = $row_rpp['replid'];
       	?>
       			<option value="<?=$row_rpp['replid'] ?>" <?=IntIsSelected($row_rpp['replid'], $idrpp) ?> ><?=$row_rpp['rpp'] ?>
           		</option>
-      	<? } ?>
+      	<?php } ?>
      
       		</select>
      		<img src="../images/ico/tambah.png" onClick="get_rpp('<?=$tingkat?>','<?=$pelajaran?>','<?=$semester?>')" onMouseOver="showhint('Tambah RPP!', this, event, '80px')">
@@ -189,11 +189,11 @@ function focusNext(elemName, evt) {
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 <script type="text/javascript">

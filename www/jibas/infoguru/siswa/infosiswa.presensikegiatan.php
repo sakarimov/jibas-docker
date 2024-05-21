@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/common.php');
@@ -28,8 +28,8 @@ require_once('../include/db_functions.php');
 
 $nis = $_SESSION["infosiswa.nis"];
 
-$bulan = isset($_REQUEST['bulan']) ? $_REQUEST['bulan'] : date('n');
-$tahun = isset($_REQUEST['tahun']) ? $_REQUEST['tahun'] : date('Y');
+$bulan = $_REQUEST['bulan'] ?? date('n');
+$tahun = $_REQUEST['tahun'] ?? date('Y');
 
 OpenDb();
 ?>
@@ -55,19 +55,19 @@ Bulan:
     <option value='12' <?=IntIsSelected(12, $bulan)?>>Desember</option>
 </select>
 <select id='pk_cbTahun' onchange='pk_changeBulan()'>
-<?  for($i = $G_START_YEAR; $i <= date('Y') + 1; $i++) { ?>
+<?php  for($i = $G_START_YEAR; $i <= date('Y') + 1; $i++) { ?>
     <option value='<?=$i?>' <?=IntIsSelected($i, $tahun)?>><?=$i?></option>
-<?  } ?>
+<?php  } ?>
 </select>
 </td></tr>
 <tr><td align='left'>
-<?
+<?php
 require_once("infosiswa.presensikegiatan.func.php");
 ?>
 </td></tr>
 </table>
 </form> 
 </div>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,10 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
+include_once '../../vendor/autoload.php';
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
-include("../library/class/jpgraph.php");
-include("../library/class/jpgraph_bar.php");
-include("../library/class/jpgraph_line.php");
 
 $idproses=(int)$_REQUEST['idproses'];
 $departemen=$_REQUEST['departemen'];
@@ -50,24 +48,24 @@ if ($iddasar=="12"){
 	$query5 = "SELECT COUNT(*) As Jum FROM jbsakad.calonsiswa s, jbsakad.prosespenerimaansiswa a WHERE $kondisi AND s.aktif = '1' AND s.penghasilanayah+s.penghasilanibu = 0";
 
 	$result1 = QueryDb($query1);
-	$row1 = @mysql_fetch_array($result1);
-	$j1 = $row1[Jum];
+	$row1 = @mysqli_fetch_array($result1);
+	$j1 = $row1['Jum'];
 
 	$result2 = QueryDb($query2);
-	$row2 = @mysql_fetch_array($result2);
-	$j2 = $row2[Jum];
+	$row2 = @mysqli_fetch_array($result2);
+	$j2 = $row2['Jum'];
 
 	$result3 = QueryDb($query3);
-	$row3 = @mysql_fetch_array($result3);
-	$j3 = $row3[Jum];
+	$row3 = @mysqli_fetch_array($result3);
+	$j3 = $row3['Jum'];
 
 	$result4 = QueryDb($query4);
-	$row4 = @mysql_fetch_array($result4);
-	$j4 = $row4[Jum];
+	$row4 = @mysqli_fetch_array($result4);
+	$j4 = $row4['Jum'];
 
 	$result5 = QueryDb($query5);
-	$row5 = @mysql_fetch_array($result5);
-	$j5 = $row5[Jum];
+	$row5 = @mysqli_fetch_array($result5);
+	$j5 = $row5['Jum'];
 
 	//=====================================================
 
@@ -75,20 +73,21 @@ if ($iddasar=="12"){
 	//=====================================================
 	if($sum == 0) {
 	  echo "<table width='100%' height='100%'><tr><td align='center' valign='middle'>
-			<font size='2' face='verdana'>Grafik Batang tidak dapat ditampilkan<br> karena belum ada data siswa<br> untuk Departemen <b>$_REQUEST[departemen]</b> dan Angkatan <b>$row[angkatan]</b></font></td></tr></table>";
+			<font size='2' face='verdana'>Grafik Batang tidak dapat ditampilkan<br> karena belum ada data siswa<br> untuk Departemen <b>".$_REQUEST['departemen']."</b> dan Angkatan <b>".$row['angkatan']."</b></font></td></tr></table>";
 	} else {
 		//data group 1
-		$data1 = array($j1);
-		$data2 = array($j2);
-		$data3 = array($j3);
-		$data4 = array($j4);
-		$data5 = array($j5);
+		$data1 = [$j1];
+		$data2 = [$j2];
+		$data3 = [$j3];
+		$data4 = [$j4];
+		$data5 = [$j5];
 
 		//Buat grafik
-		$graph = new Graph(450,300,"auto");
+		mitoteam\jpgraph\MtJpGraph::load(['bar']);
+$graph = new Graph(450,300,"auto");
 		$graph->SetScale("textlin");
 
-		$lab = array("Penghasilan");
+		$lab = ["Penghasilan"];
 
 		//setting kanvas
 		$graph->SetShadow();
@@ -145,7 +144,7 @@ if ($iddasar=="12"){
 		$b5plot->SetValuePos('center');
 
 		//Membuat group
-		$gbplot = new GroupBarPlot(array($b1plot,$b2plot,$b3plot,$b4plot,$b5plot));
+		$gbplot = new GroupBarPlot([$b1plot, $b2plot, $b3plot, $b4plot, $b5plot]);
 
 		//memasukkan kedalam grafik
 		$graph->Add($gbplot);
@@ -251,9 +250,9 @@ if ($iddasar=="12"){
 	}
 
 	$resultstatus = QueryDb($query1);
-	$num = @mysql_num_rows($resultstatus);
+	$num = @mysqli_num_rows($resultstatus);
 	
-	while ($rowstatus = @mysql_fetch_row($resultstatus)) {
+	while ($rowstatus = @mysqli_fetch_row($resultstatus)) {
 		
 		$data[] = $rowstatus[0];
 		if ($iddasar == '4') {
@@ -275,22 +274,23 @@ if ($iddasar=="12"){
 	}
 
 	
-	$color = array('red@0.5','green@0.5','yellow@0.5','blue@0.5','orange@0.5','darkblue@0.5','gold@0.5','navy@0.5','gray@0.5','darkred@0.5','darkgreen@0.5', 'pink@0.5','black@0.5');
+	$color = ['red@0.5', 'green@0.5', 'yellow@0.5', 'blue@0.5', 'orange@0.5', 'darkblue@0.5', 'gold@0.5', 'navy@0.5', 'gray@0.5', 'darkred@0.5', 'darkgreen@0.5', 'pink@0.5', 'black@0.5'];
 	if($num == 0) {
 	  echo "<table width='100%' height='100%'><tr><td align='center' valign='middle'>
 			<font size='2' face='verdana'>Grafik Batang tidak dapat ditampilkan<br> karena belum ada data siswa<br> untuk
-			Departemen <b>$_REQUEST[departemen]</b> dan Angkatan <b>$row[angkatan]</b></font></td></tr></table>";
+			Departemen <b>".$_REQUEST['departemen']."</b> dan Angkatan <b>".$row['angkatan']."</b></font></td></tr></table>";
 	} else {
 		if ($iddasar == "2" || $iddasar=="6" ) { 
 			
 			//Buat grafik
-			$graph = new Graph(450,300,"auto");
+			mitoteam\jpgraph\MtJpGraph::load(['bar']);
+$graph = new Graph(450,300,"auto");
 			$graph->SetScale("textlin");
 		
 			//setting kanvas
 			$graph->SetShadow();
 			$graph->img->SetMargin(50,40,50,40);
-			$graph->xaxis->SetTickLabels(array($xaxis));
+			$graph->xaxis->SetTickLabels([$xaxis]);
 			//$graph->xaxis->SetTickSide(SIDE_LEFT);
 		
 			//Create bar plots
@@ -308,7 +308,7 @@ if ($iddasar=="12"){
 			//Create bar plots
 			for ($i=0;$i<count($status);$i++) {
 				$vardata = "plot".$i;
-				$vardata = new BarPlot (array($data[$i]));
+				$vardata = new BarPlot ([$data[$i]]);
 				$vardata->SetLegend($status[$i]);
 				$vardata->SetShadow('darkgray@0.5');
 				$vardata->value->Show();
@@ -340,7 +340,8 @@ if ($iddasar=="12"){
 		} else {
 		
 			//Buat grafik
-			$graph = new Graph(450,300,"auto");
+			mitoteam\jpgraph\MtJpGraph::load(['bar']);
+$graph = new Graph(450,300,"auto");
 			$graph->SetScale("textlin");
 		
 			//setting kanvas

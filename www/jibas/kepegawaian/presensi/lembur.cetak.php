@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,13 +41,13 @@ require_once("../library/datearith.php");
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-    <? include("../include/headercetak.php") ?>
+    <?php include("../include/headercetak.php") ?>
     <center>
       <font size="4"><strong>Presensi Lembur Pegawai</strong></font><br />
     </center>
     
     <br /><br />
-<?
+<?php
 OpenDb();
 
 $tahun1 = $_REQUEST['tahun1'];
@@ -71,7 +71,7 @@ $tanggal2 = $_REQUEST['tanggal2'];
     <td width="100" align="center" class="header">Jam Pulang</td>
     <td width="200" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT pg.nip, pg.nama, 
                p.jammasuk, p.jampulang,
                p.keterangan, IF(p.replid IS NULL, -1, p.replid),
@@ -84,15 +84,15 @@ $sql = "SELECT pg.nip, pg.nama,
 //echo $sql;         
 $res = QueryDb($sql);
 $n = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $n++;
     
     echo "<tr>\r\n";
     echo "<td align='center'>$n</td>\r\n";
-    echo "<td align='center'>$row[6]</td>\r\n";
-    echo "<td align='left'>$row[0]</td>\r\n";
-    echo "<td align='left'>$row[1]</td>\r\n";
+    echo "<td align='center'>".$row[6]."</td>\r\n";
+    echo "<td align='left'>".$row[0]."</td>\r\n";
+    echo "<td align='left'>".$row[1]."</td>\r\n";
     
     $h = "";
     $m = "";
@@ -107,7 +107,7 @@ while($row = mysql_fetch_row($res))
     echo "$h&nbsp;:&nbsp;$m\r\n";
     echo "</td>\r\n";
     
-    echo "<td align='left'>$row[4]</td>\r\n";
+    echo "<td align='left'>".$row[4]."</td>\r\n";
     echo "</tr>\r\n";
 }
 ?>
@@ -118,17 +118,17 @@ while($row = mysql_fetch_row($res))
 </table>
 
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>
 
-<?
+<?php
 function GetHourMinute($strtime, &$hour, &$minute)
 {
-    if (strpos($strtime, ":") !== FALSE)
+    if (str_contains((string) $strtime, ":"))
     {
-        $temp = split(":", $strtime);
+        $temp = explode(":", (string) $strtime);
         $hour = $temp[0];
         $minute = $temp[1];
         

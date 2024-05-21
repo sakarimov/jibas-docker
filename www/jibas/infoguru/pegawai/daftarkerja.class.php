@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,43 +20,43 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class DaftarKerja
 {
     public $nip;
     public $nama;
-    
+
     public function __construct()
     {
         $this->nip = $_REQUEST['nip'];
 
         $sql = "SELECT TRIM(CONCAT(IFNULL(gelarawal,''), ' ' , nama, ' ', IFNULL(gelarakhir,''))) AS nama FROM jbssdm.pegawai WHERE nip='$this->nip'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $this->nama = $row[0];
-        
+
         $id = $_REQUEST['id'];
         $op = $_REQUEST['op'];
         if ($op == "cn0948cm2478923c98237n23") 
         {
             $success = true;
             BeginTrans();
-            
+
             $sql = "UPDATE jbssdm.pegkerja SET terakhir=0 WHERE nip='$this->nip'";
             QueryDbTrans($sql, $success);
-            
+
             if ($success)
             {
                 $sql = "UPDATE jbssdm.pegkerja SET terakhir=1 WHERE replid=$id";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
             {
                 $sql = "UPDATE jbssdm.peglastdata SET idpegkerja=$id WHERE nip='$this->nip'";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
                 CommitTrans();
             else
@@ -66,16 +66,16 @@ class DaftarKerja
         {
             $success = true;
             BeginTrans();
-            
+
             $sql = "DELETE FROM jbssdm.pegkerja WHERE replid=$id";	
             QueryDbTrans($sql);
-            
+
             if ($success)
             {
                 $sql = "UPDATE jbssdm.peglastdata SET idpegkerja=NULL WHERE idpegkerja=$id AND nip='$this->nip'";
                 QueryDbTrans($sql, $success);
             }
-            
+
             if ($success)
                 CommitTrans();
             else

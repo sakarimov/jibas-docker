@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -41,7 +41,7 @@ $Source = $_REQUEST['Source'];
     <td>No. Ponsel</td>
     <td>&nbsp;</td>
   </tr>
-  <?
+  <?php
     if ($Source=='Pilih'){
 		if ($bag=='-1')
 			$sql = "SELECT * FROM $db_name_sdm.pegawai";
@@ -55,22 +55,22 @@ $Source = $_REQUEST['Source'];
 			$sql .= " AND nama LIKE '%$Nama%'";	
 	}
 	$res = QueryDb($sql);
-    $num = @mysql_num_rows($res);
+    $num = @mysqli_num_rows($res);
     if ($num>0){
         $cnt=1;
-        while ($row = @mysql_fetch_array($res)){
+        while ($row = @mysqli_fetch_array($res)){
   ?>
   <tr>
     <td align="center" class="td"><?=$cnt?></td>
     <td class="td">(<?=$row['nip']?>) <?=$row['nama']?></td>
     <td class="td"><?=$row['handphone']?></td>
     <td class="td" align="center">
-    <? if (strlen($row['handphone'])>0){ ?>
+    <?php if (strlen((string) $row['handphone'])>0){ ?>
     <span style="cursor:pointer" class="Link" onclick="InsertNewReceipt('<?=$row['handphone']?>','<?=$row['nama']?>','<?=$row['nip']?>')" align="center"  />Pilih</span>
-    <? } ?>
+    <?php } ?>
     </td>
   </tr>
-  <?
+  <?php
         $cnt++;
         }
     } else {
@@ -78,10 +78,10 @@ $Source = $_REQUEST['Source'];
   <tr>
     <td colspan="4" class="Ket" align="center">Tidak ada data</td>
   </tr>
-  <?
+  <?php
     }
         ?>
 </table>
-<?
+<?php
 CloseDb();
 ?>

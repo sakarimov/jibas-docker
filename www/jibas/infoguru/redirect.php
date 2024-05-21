@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/config.php');
 require_once('include/db_functions.php');
 
@@ -33,9 +33,9 @@ session_start();
 
 OpenDb();
 
-$username = trim($_REQUEST['username']);
+$username = trim((string) $_REQUEST['username']);
 if ($username == "jibas") $username = "landlord";
-$password = trim($_REQUEST['password']);
+$password = trim((string) $_REQUEST['password']);
 
 $username = str_replace("'", "\'", $username);
 $username = str_replace("--", " ", $username);
@@ -48,8 +48,8 @@ $user_exists = false;
 if ($login == "landlord")
 {
 	$sql_la = "SELECT password FROM jbsuser.landlord";
-	$result_la = QueryDb($sql_la) or die(mysql_error());
-	$result_hasilla = mysql_fetch_array($result_la);
+	$result_la = QueryDb($sql_la) or die(mysqli_error($mysqlconnection));
+	$result_hasilla = mysqli_fetch_array($result_la);
 	
 	if (md5($password) == $result_hasilla['password'])
 	{
@@ -70,9 +70,9 @@ else
 				FROM jbsuser.login 
 			   WHERE login = $username
 			     AND password='" . md5($password) . "'";
-	$result = QueryDb($query) or die(mysql_error());
-	$row = mysql_fetch_array($result);
-	$num = mysql_num_rows($result);
+	$result = QueryDb($query) or die(mysqli_error($mysqlconnection));
+	$row = mysqli_fetch_array($result);
+	$num = mysqli_num_rows($result);
 	if($num != 0) 
 	{
 		$query2 = "SELECT h.departemen as departemen, h.tingkat as tingkat, p.nama as nama, 
@@ -81,9 +81,9 @@ else
 					WHERE h.login = $username
 					  AND p.nip = h.login
 					  AND h.modul = 'INFOGURU'";
-		$result2 = QueryDb($query2) or die(mysql_error());
-		$row2 = mysql_fetch_array($result2);
-		$num2 = mysql_num_rows($result2);
+		$result2 = QueryDb($query2) or die(mysqli_error($mysqlconnection));
+		$row2 = mysqli_fetch_array($result2);
+		$num2 = mysqli_num_rows($result2);
 		if($num2 != 0) 
 		{
 			$_SESSION['login'] = $login;
@@ -92,7 +92,7 @@ else
 			$_SESSION['panggilan'] = $row2['panggilan'];
 			$_SESSION['theme'] = $row2['tema'];
 			$_SESSION['bagian'] = $row2['bagian'];
-			if ($row2[tingkat] == 2)
+			if ($row2['tingkat'] == 2)
 			{
 				$_SESSION['departemen'] = $row2['departemen'];
 			} 
@@ -112,11 +112,11 @@ else
 if (!$user_exists) 
 {
 ?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
         alert("Username atau password tidak cocok!");
         document.location.href = "../infoguru";
     </script>
-<?
+<?php
 }
 else
 {
@@ -129,7 +129,7 @@ else
 	{
 		$query_root = "SELECT replid, dirfullpath FROM jbsvcr.dirshare WHERE idroot=0";
 		$result_root = QueryDb($query_root);
-		$row_root = @mysql_fetch_array($result_root);
+		$row_root = @mysqli_fetch_array($result_root);
 		$newdir = $FILESHARE_UPLOAD_DIR . "/fileshare/" . $_SESSION['login'];
 	
 		if (!@file_exists($newdir) && !@is_dir($newdir))
@@ -146,13 +146,13 @@ else
 		}
 			
 		$query = "SELECT * FROM jbsvcr.dirshare 
-				   WHERE idroot = $row_root[replid] AND idguru='$_SESSION[login]' AND dirname='$_SESSION[login]'";
-		if (@mysql_num_rows(QueryDb($query)) == 0)
+				   WHERE idroot = '".$row_root['replid']."' AND idguru='".$_SESSION['login']."' AND dirname='".$_SESSION['login']."'";
+		if (@mysqli_num_rows(QueryDb($query)) == 0)
 		{
-			$dirfullpath = $row_root['dirfullpath'] . $_SESSION[login] . "/";
+			$dirfullpath = $row_root['dirfullpath'] . $_SESSION['login'] . "/";
 			
-			$query_dir = "INSERT INTO jbsvcr.dirshare SET idroot='$row_root[replid]', 
-							dirname='$_SESSION[login]', dirfullpath='$dirfullpath', idguru='$_SESSION[login]'";
+			$query_dir = "INSERT INTO jbsvcr.dirshare SET idroot='".$row_root['replid']."', 
+							dirname='".$_SESSION['login']."', dirfullpath='$dirfullpath', idguru='".$_SESSION['login']."'";
 			QueryDb($query_dir);
 		}
 		
@@ -163,10 +163,10 @@ else
     if (isset($_SESSION['nama']))
 	{ 
 	?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
 		top.location.href = "../infoguru";
     </script>
-    <?
+    <?php
 	}
 	exit();
 }

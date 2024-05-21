@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -50,17 +50,17 @@ if (isset($_REQUEST['nokas']))
 OpenDb();
 $sql = "SELECT nama FROM datapengeluaran WHERE replid = $idpengeluaran";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapengeluaran = $row[0];
 
 $sql = "SELECT tahunbuku FROM tahunbuku WHERE replid = $idtahunbuku";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tahunbuku = $row[0];
 
 $sql = "SELECT jenispemohon, nip, nis, pemohonlain, penerima, tanggal, tanggalkeluar, jumlah, keperluan, petugas, keterangan FROM pengeluaran WHERE replid = $idtransaksi";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $jpemohon = $row['jenispemohon'];
 if ($jpemohon == 1)
 	$idpemohon = $row['nip'];
@@ -77,13 +77,13 @@ $keterangan = $row['keterangan'];
 $petugas = $row['petugas'];
 
 if ($jpemohon == 1) 
-	$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '$idpemohon'";
+	$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$idpemohon."'";
 else if ($jpemohon == 2)
-	$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$idpemohon'";
+	$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$idpemohon."'";
 else
-	$sql = "SELECT nama FROM pemohonlain WHERE replid = '$idpemohon'";
+	$sql = "SELECT nama FROM pemohonlain WHERE replid = '".$idpemohon."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapemohon = $row[0];
 
 CloseDb();

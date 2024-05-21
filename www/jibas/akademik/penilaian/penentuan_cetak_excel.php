@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -58,9 +58,9 @@ if(isset($_REQUEST["aspek"]))
 if(isset($_REQUEST["aspekket"]))
 	$aspekket = $_REQUEST["aspekket"];	
 
-$sql = "SELECT nama FROM pelajaran WHERE replid = '$pelajaran'";
+$sql = "SELECT nama FROM pelajaran WHERE replid = '".$pelajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $namapel = $row[0];
 
 ?>
@@ -71,15 +71,15 @@ $namapel = $row[0];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-<?
+<?php
 //cek keberadaan nap dan idinfo
 $idinfo = 0;
 $nap_ada = 0;
 $sql = "SELECT replid FROM jbsakad.infonap WHERE idpelajaran='$pelajaran' AND idsemester='$semester' AND idkelas='$kelas'";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
 {
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$idinfo = $row[0];
 	
 	$sql = "SELECT COUNT(n.replid)
@@ -88,7 +88,7 @@ if (mysql_num_rows($res) > 0)
 			   AND a.idpelajaran = '$pelajaran' AND a.dasarpenilaian='$aspek' AND a.aktif = 1
 			   AND n.idinfo = '$idinfo' ";		   
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$nap_ada = $row[0];
 }
 
@@ -98,7 +98,7 @@ $sql = "SELECT SUM(bobot) as bobotPK, COUNT(a.replid)
 		 WHERE a.nipguru='$nip' AND a.idtingkat=k.idtingkat AND k.replid='$kelas' 
 		   AND a.idpelajaran='$pelajaran' AND a.dasarpenilaian='$aspek' AND a.aktif=1";
 $res = QueryDb($sql);
-$row = @mysql_fetch_row($res);
+$row = @mysqli_fetch_row($res);
 $bobot_PK = $row[0];
 $jum_nhb = $row[1];
 
@@ -110,7 +110,7 @@ $sql = "SELECT j.jenisujian as jenisujian, a.bobot as bobot, a.replid, a.idjenis
 		   AND a.idjenisujian=j.replid AND a.aktif = 1 
 	  ORDER BY a.replid"; 
 $result_get_aturan_PK = QueryDb($sql);
-$jum_PK = @mysql_num_rows($result_get_aturan_PK);
+$jum_PK = @mysqli_num_rows($result_get_aturan_PK);
 
 //Ambil nilai grading
 $sql = "SELECT grade 
@@ -120,7 +120,7 @@ $sql = "SELECT grade
 	  ORDER BY nmin DESC";
 $res = QueryDb($sql);
 $cntgrad = 0;
-while ($row = @mysql_fetch_array($res)) 
+while ($row = @mysqli_fetch_array($res)) 
 {
 	$grading[$cntgrad] = $row['grade'];
 	$cntgrad++;
@@ -142,50 +142,50 @@ while ($row = @mysql_fetch_array($res))
 		<td height="15" colspan="2" class="headerlong" width="13%"><span class="style1">Nilai <?=$aspekket?></span></td>
     </tr>
     <tr height="15" class="header" align="center">
-	<?	$i = 0;
-		while ($row_PK = @mysql_fetch_array($result_get_aturan_PK)) 
+	<?php $i = 0;
+		while ($row_PK = @mysqli_fetch_array($result_get_aturan_PK)) 
 		{			
-            $ujian[$i++] = array($row_PK['replid'], $row_PK['bobot'], $row_PK['idjenisujian'], $aspek);  ?>
+            $ujian[$i++] = [$row_PK['replid'], $row_PK['bobot'], $row_PK['idjenisujian'], $aspek];  ?>
     		<td width="8%" class="headerlong">
             	<span class="style1"><?= $row_PK['jenisujian']." (".$row_PK['bobot'].")" ?></span>
             </td>
-    <?	} ?>
+    <?php } ?>
 		<td align="center" class="headerlong"><span class="style1">Angka</span></td>
         <td align="center" class="headerlong"><span class="style1">Huruf</span></td>
 	</tr>
-<?	//Mulai perulangan siswa
+<?php //Mulai perulangan siswa
 	$sql = "SELECT replid, nis, nama 
 	          FROM jbsakad.siswa 
 			 WHERE idkelas='$kelas' AND aktif=1 
 		  ORDER BY nama";
   	$res_siswa = QueryDb($sql);
   	$cnt = 1;
-	$total = mysql_num_rows($res_siswa);
-  	while ($row_siswa = @mysql_fetch_array($res_siswa)) 
+	$total = mysqli_num_rows($res_siswa);
+  	while ($row_siswa = @mysqli_fetch_array($res_siswa)) 
 	{ ?>
   	<tr height="25">
     	<td align="center"><?=$cnt?></td>
     	<td align="center"><?=$row_siswa['nis']?></td>
     	<td><?=$row_siswa['nama']?></td>
-	<?	foreach ($ujian as $value) 
+	<?php foreach ($ujian as $value) 
 		{ 
 			$sql = "SELECT n.nilaiAU as nilaiujian 
 			          FROM jbsakad.nau n, jbsakad.aturannhb a 
-				     WHERE n.idpelajaran = '$pelajaran' AND n.idkelas='$kelas' AND n.nis='$row_siswa[nis]' AND n.idsemester='$semester' 
-				       AND n.idjenis='$value[2]' AND n.idaturan=a.replid AND a.replid='$value[0]'";
+				     WHERE n.idpelajaran = = '".$pelajaran."' AND n.idkelas='$kelas' AND n.nis='".$row_siswa['nis']."' AND n.idsemester='$semester' 
+				       AND n.idjenis='".$value[2]."' AND n.idaturan=a.replid AND a.replid='".$value[0]."'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_array($res);
+			$row = @mysqli_fetch_array($res);
 			echo "<td align='center'>" . $row['nilaiujian'] . "</td>";
 		}  	?>
 	   	<td align="center"><strong>
-	<? 	$ext_idinfo = "";
+	<?php 	$ext_idinfo = "";
 		if ($idinfo != "")
-			$ext_idinfo = " AND i.replid = '$idinfo'";
+			$ext_idinfo = " AND i.replid = '".$idinfo."'";
 			
 		$sql = "SELECT n.nilaihuruf, n.nilaiangka, i.nilaimin 
 				  FROM jbsakad.nap n, jbsakad.aturannhb a, jbsakad.infonap i 
 				 WHERE n.idinfo = i.replid 
-				   AND n.nis = '$row_siswa[nis]' 
+				   AND n.nis = '".$row_siswa['nis']."' 
 				   AND i.idpelajaran = '$pelajaran' 
 				   AND i.idsemester = '$semester' 
 				   AND i.idkelas = '$kelas'
@@ -193,8 +193,8 @@ while ($row = @mysql_fetch_array($res))
 				   AND a.dasarpenilaian = '$aspek' 
 				       $ext_idinfo";
 		$res = QueryDb($sql);
-		$nilaiangka_pemkonsep = @mysql_num_rows($res);
-		$row_get_nap_pemkonsep = @mysql_fetch_row($res);
+		$nilaiangka_pemkonsep = @mysqli_num_rows($res);
+		$row_get_nap_pemkonsep = @mysqli_fetch_row($res);
 		
 		if ($nilaiangka_pemkonsep == 0) 
 		{		
@@ -204,12 +204,12 @@ while ($row = @mysql_fetch_array($res))
 			{		
 				$sql = "SELECT n.nilaiAU 
 						  FROM jbsakad.nau n, jbsakad.aturannhb a 
-						 WHERE n.idkelas = '$kelas' AND n.nis = '$row_siswa[nis]' 
+						 WHERE n.idkelas = = '".$kelas."' AND n.nis = '".$row_siswa['nis']."' 
 						   AND n.idsemester = '$semester' AND n.idpelajaran = '$pelajaran'
-						   AND n.idjenis = '$value[2]' AND n.idaturan = a.replid 
-						   AND a.dasarpenilaian = '$aspek'";
+						   AND n.idjenis = '".$value[2]."' AND n.idaturan = a.replid 
+						   AND a.dasarpenilaian = '".$aspek."'";
 				$res = QueryDb($sql);
-				$row = @mysql_fetch_array($res);
+				$row = @mysqli_fetch_array($res);
 				$nau = $row["nilaiAU"];
 				$bobot = $value[1];
 				$nap = $nau * $bobot;
@@ -219,7 +219,7 @@ while ($row = @mysql_fetch_array($res))
             
             <?=$nilakhirpk?>
             
-	<?	} 
+	<?php } 
 		else 
 		{ 
 			//Ada data nilai di database
@@ -230,12 +230,12 @@ while ($row = @mysql_fetch_array($res))
                 
 				<?=$nilakhirpk?>
                  
-	<? 	} ?>
+	<?php 	} ?>
 			</strong>
     	</td>
         <!-- Grading Pemahaman konsep -->
         <td height="25" align="center"><strong>
-	<?  if ($nilakhirpk == "") 
+	<?php  if ($nilakhirpk == "") 
 		{
 			$grade_PK = $grading[count($grading)-1];
 		} 
@@ -248,7 +248,7 @@ while ($row = @mysql_fetch_array($res))
 					 	 WHERE a.idpelajaran = '$pelajaran' AND a.idtingkat = k.idtingkat AND k.replid = '$kelas' 
 						   AND a.dasarpenilaian = '$aspek' AND a.nipguru = '$nip' AND '$nilakhirpk' BETWEEN a.nmin AND a.nmax";
 				$res = QueryDb($sql);
-				$row = @mysql_fetch_array($res);
+				$row = @mysqli_fetch_array($res);
 				$grade_PK = $row['grade'];
 			} 
 			else 
@@ -263,12 +263,12 @@ while ($row = @mysql_fetch_array($res))
 		</strong>
         </td>
   	  </tr>
-<?  	$cnt++;
+<?php  	$cnt++;
   	} ?>
 </table>
 
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

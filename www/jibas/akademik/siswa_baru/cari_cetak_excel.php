@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -43,8 +43,8 @@ switch($jenis) {
 	case 'nama'			: $namajenis = 'Nama Calon Siswa';
 		break;
 }
-$urut= $_REQUEST[urut];
-$urutan = $_REQUEST[urutan];
+$urut= $_REQUEST['urut'];
+$urutan = $_REQUEST['urutan'];
 
 OpenDb();
 
@@ -53,7 +53,7 @@ if ($jenis != "kondisi" && $jenis != "status" && $jenis != "agama" && $jenis != 
 else 
 		$sql = "SELECT c.replid,c.nopendaftaran,c.nama,p.departemen,k.kelompok,c.aktif,c.nisn FROM calonsiswa c,kelompokcalonsiswa k, prosespenerimaansiswa p WHERE c.$jenis = '$cari' AND p.departemen='$departemen' AND c.idkelompok = k.replid AND c.idproses = p.replid AND p.replid = k.idproses ORDER BY $urut $urutan, nama ASC";
 $result = QueryDB($sql);
-if (@mysql_num_rows($result)<>0){
+if (@mysqli_num_rows($result)<>0){
 ?>
 <html>
 <head>
@@ -100,9 +100,9 @@ if (@mysql_num_rows($result)<>0){
 <td width="20" valign="middle" bgcolor="#666666"><div align="center" class="style1">Kelompok</div></td>
 <td width="10" valign="middle" bgcolor="#666666"><div align="center" class="style1">Status</div></td>
 </tr>
-<?
+<?php
 	$cnt=1;
-	while ($row=@mysql_fetch_array($result)){
+	while ($row=@mysqli_fetch_array($result)){
 	?>
 	<tr height="25">
 	<td width="3" align="center"><?=$cnt?></td>
@@ -111,7 +111,7 @@ if (@mysql_num_rows($result)<>0){
         <td><?=$row['nama']?></td>
         <td><?=$row['kelompok'] ?></td>
         <td align="center">
-		<?	if ($row['aktif']==1){
+		<?php if ($row['aktif']==1){
 				echo "Aktif";
 			} elseif ($row['aktif']==0){
 				echo "Tidak Aktif ";
@@ -119,7 +119,7 @@ if (@mysql_num_rows($result)<>0){
 		?>	
         </td> 
     </tr>
-	<?
+	<?php
 		$cnt++;
 }
 	?>
@@ -130,7 +130,7 @@ if (@mysql_num_rows($result)<>0){
 
 </body>
 </html>
-<?
+<?php
 }
 CloseDb();
 ?>

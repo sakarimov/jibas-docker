@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -78,14 +78,14 @@ $DS = new DaftarSertifikat();
     <td width="*" align="center" class="header">Keterangan</td>
     <td width="8%" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.sertifikat, ps.lembaga, ps.tahun, ps.keterangan, ps.terakhir
           FROM pegserti ps 
          WHERE ps.nip = '$DS->nip'
          ORDER BY ps.tahun DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -93,11 +93,11 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['lembaga']?></td>
     <td align="center"><?=$row['tahun']?></td>
     <td align="center">
-	<?	if ($row['terakhir'] == 1) { ?>
+	<?php if ($row['terakhir'] == 1) { ?>
     	<img src="../images/ico/aktif.png" border="0" title="sertifikasi terakhir" />
-    <?	} else { ?>
+    <?php } else { ?>
     	<a title="klik untuk menjadi sertifikasi terakhir" href="JavaScript:ChangeLast(<?=$row['replid']?>)"><img src="../images/ico/nonaktif.png" border="0" /></a>
-    <?	} ?>
+    <?php } ?>
     </td>
     <td align="left"><?=$row['keterangan']?></td>
     <td align="center">
@@ -105,13 +105,13 @@ while ($row = mysql_fetch_array($result)) {
 	    <a title="hapus" href="JavaScript:Hapus(<?=$row['replid']?>)"><img src="../images/ico/hapus.png" border="0" /></a>
     </td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>    
 

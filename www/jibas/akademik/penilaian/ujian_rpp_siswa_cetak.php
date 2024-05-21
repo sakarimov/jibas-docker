@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -40,7 +40,7 @@ OpenDb();
 $sql="SELECT DISTINCT r.rpp, p.nama, t.departemen, r.idpelajaran, r.idsemester, j.jenisujian, k.kelas, s.semester, t.tingkat FROM pelajaran p, rpp r, ujian u, jenisujian j, kelas k, semester s, tingkat t WHERE p.replid=r.idpelajaran AND r.replid= u.idrpp AND j.replid = $ujian AND u.idrpp = $rpp AND u.idjenis = j.replid AND k.replid = $kelas AND u.idkelas = k.replid AND u.idsemester = s.replid AND k.idtingkat = t.replid";
 
 $result=QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $materi = $row['rpp'];
 $namapel = $row['nama'];
 $pelajaran = $row['idpelajaran'];
@@ -58,8 +58,8 @@ $namatingkat = $row['tingkat'];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
 <title></title>
 </head>
 <body>
@@ -92,7 +92,7 @@ $namatingkat = $row['tingkat'];
   <tr>
     	<td align="center" colspan="4">
  
-<?       
+<?php       
 		OpenDb();
 		$sql1 = "SELECT s.nis, round(SUM(nilaiujian)/(COUNT(DISTINCT u.replid)),2) FROM nilaiujian n, siswa s, ujian u, jenisujian j WHERE n.idujian = u.replid AND u.idsemester = $semester AND u.idkelas = $kelas AND u.idjenis = $ujian AND u.idrpp = $rpp AND u.idpelajaran = $pelajaran AND s.nis = n.nis AND u.idjenis = j.replid AND s.idkelas = $kelas AND s.aktif = 1 GROUP BY s.nis ORDER BY s.nama";
 		
@@ -103,14 +103,14 @@ $namatingkat = $row['tingkat'];
         // sample data array
         //$data = array();
 		$cnt =0;
-        while($row1 = mysql_fetch_row($result1)) {
+        while($row1 = mysqli_fetch_row($result1)) {
             //$data[] = array($row1[1],$row1[2],$row1[3],$row1[4],$row1[5]);			
             //$legend_x[] = $row1[0];			
 			$legend_x[] = ++$cnt;
-			$data[] = array($row1[1]);
+			$data[] = [$row1[1]];
 			//$data[] = $row1[1];
         }
-		$legend_y = array('Rata');
+		$legend_y = ['Rata'];
 		//$legend_y = 'Rata';
 				
         $graph = new CAsBarDiagram;
@@ -139,22 +139,22 @@ $namatingkat = $row['tingkat'];
     <td height="30" class="headerlong"><div align="center">Nama</div></td>
     <td height="30" class="headerlong"><div align="center">Rata-rata RPP</div></td>
   </tr>
-  <?
+  <?php
   $sql_siswa="SELECT * FROM jbsakad.siswa WHERE idkelas='$kelas' AND aktif=1 order by nama";
   $result_siswa=QueryDb($sql_siswa);
  
   	$cnt=0;
-  	while ($row_siswa=@mysql_fetch_array($result_siswa)){
-  		//$sql_jum_nil="SELECT SUM(r.rataUS) as nilaiUS, COUNT(r.rataUS) as jum FROM jbsakad.rataus r,jbsakad.ujian u,jbsakad.rpp rpp WHERE r.nis='$row_siswa[nis]' AND r.idjenis='$ujian' AND u.idrpp='$rpp' AND u.idjenis=r.idjenis AND r.idpelajaran='$pelajaran' AND r.idkelas='$kelas'";
-		$sql2 = "SELECT round(SUM(nilaiujian)/(COUNT(DISTINCT u.replid)),2), SUM(nilaiujian) FROM nilaiujian n, siswa s, ujian u, jenisujian j WHERE n.idujian = u.replid AND u.idsemester = $semester AND u.idkelas = $kelas AND u.idjenis = $ujian AND u.idrpp = $rpp AND u.idpelajaran = $pelajaran AND s.nis = n.nis AND u.idjenis = j.replid AND s.nis = '$row_siswa[nis]' AND s.aktif = 1 ORDER BY s.nama";
+  	while ($row_siswa=@mysqli_fetch_array($result_siswa)){
+  		//$sql_jum_nil="SELECT SUM(r.rataUS) as nilaiUS, COUNT(r.rataUS) as jum FROM jbsakad.rataus r,jbsakad.ujian u,jbsakad.rpp rpp WHERE r.nis='".$row_siswa['nis']."' AND r.idjenis='$ujian' AND u.idrpp='$rpp' AND u.idjenis=r.idjenis AND r.idpelajaran='$pelajaran' AND r.idkelas='$kelas'";
+		$sql2 = "SELECT round(SUM(nilaiujian)/(COUNT(DISTINCT u.replid)),2), SUM(nilaiujian) FROM nilaiujian n, siswa s, ujian u, jenisujian j WHERE n.idujian = u.replid AND u.idsemester = $semester AND u.idkelas = $kelas AND u.idjenis = $ujian AND u.idrpp = $rpp AND u.idpelajaran = $pelajaran AND s.nis = n.nis AND u.idjenis = j.replid AND s.nis = '".$row_siswa['nis']."' AND s.aktif = 1 ORDER BY s.nama";
   		$result2 = QueryDb($sql2);
-			$row2 = mysql_fetch_row($result2);
+			$row2 = mysqli_fetch_row($result2);
     ?>
       	<tr>
         	<td height="25" align="center"><?=++$cnt?></td>
         	<td height="25"><div align="center"><?=$row_siswa['nis']?></div></td>
         	<td height="25"><?=$row_siswa['nama']?></td>
-            <td height="25" align="center"><?
+            <td height="25" align="center"><?php
             	if ($row2[1] > 0) 
 					echo $row2[0];
 				else 
@@ -162,7 +162,7 @@ $namatingkat = $row['tingkat'];
 				//echo $row['rata'];
 					?></td>
       	</tr>
-  <? 	}  ?>
+<?php 	}  ?>
         </table>
 </td>
   </tr>
@@ -177,6 +177,6 @@ $namatingkat = $row['tingkat'];
 window.print();
 </script>
 </html>
-<?
+<?php
 CloseDb();
 ?>

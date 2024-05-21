@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ function ReadParams()
     if (isset($_REQUEST['jenis']))
         $jenis = CQ($_REQUEST['jenis']);
 
-    $komentar = urldecode($komentar);
+    $komentar = urldecode((string) $komentar);
 }
 
 function ReadData()
@@ -42,9 +42,9 @@ function ReadData()
     global $replid, $komentar;
 
     OpenDb();
-    $sql = "SELECT komentar FROM pilihkomensos WHERE replid = '$replid'";
+    $sql = "SELECT komentar FROM pilihkomensos WHERE replid = '".$replid."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $komentar = $row[0];
     CloseDb();
 }
@@ -57,7 +57,7 @@ function SimpanData()
     $komentar = CQ($komentar);
     $sql = "UPDATE pilihkomensos 
                SET komentar = '$komentar'
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     $result = QueryDb($sql);
     if ($result)
     { 	?>
@@ -65,7 +65,7 @@ function SimpanData()
             opener.refreshListKomentarSos('<?=$jenis?>');
             window.close();
         </script>
-        <?
+        <?php
     }
     CloseDb();
     exit();

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ class SoalInfo
 
     public function toJson()
     {
-        return json_encode($this);
+        return json_encode($this, JSON_THROW_ON_ERROR);
     }
 }
 
@@ -104,10 +104,10 @@ function getUjianData()
 
     OpenDb();
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return GenericReturn::createJson(-99, "Tidak ditemukan data ujian", "");
 
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $json = $row[0];
     CloseDb();
 
@@ -119,7 +119,7 @@ function updateUjianData($json)
     $userId = $_SESSION["UserId"];
     $sessionId = getSessionId();
 
-    $json = str_replace("'", "`", $json);
+    $json = str_replace("'", "`", (string) $json);
 
     $sql = "UPDATE jbscbe.webuserintent
                SET intent = '$json' 
@@ -172,7 +172,7 @@ function getSoal($idSoal)
                   FROM jbscbe.webusersoal
                  WHERE userid = '$userId'
                    AND idsoal = '$idSoal'
-                   AND idujianserta = '$idUjianSerta'";
+                   AND idujianserta = '".$idUjianSerta."'";
 
         OpenDb();
         $nsoal = (int) FetchSingle($sql);
@@ -184,9 +184,9 @@ function getSoal($idSoal)
                       FROM jbscbe.webusersoal
                      WHERE userid = '$userId'
                        AND idsoal = '$idSoal'
-                       AND idujianserta = '$idUjianSerta'";
+                       AND idujianserta = '".$idUjianSerta."'";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
 
             $idRes = $row[0];
             $resDir = $row[1];
@@ -220,7 +220,7 @@ function getSoal($idSoal)
         if ((int) $info->Status < 0)
             return GenericReturn::createJson((int) $info->Status, $info->Data, ""); // Login gagal
 
-        $soalData = json_decode($info->Data);
+        $soalData = json_decode((string) $info->Data, null, 512, JSON_THROW_ON_ERROR);
 
         $soalInfo = new SoalInfo();
         $soalInfo->IdSoal = $idSoal;
@@ -231,7 +231,7 @@ function getSoal($idSoal)
         $soalInfo->SoalGabungJawaban = $soalData->SoalGabungJawaban;
 
         // -- Resize for Thumbnail
-        $imSoal = ImageResize::createFromString(base64_decode($soalData->Soal));
+        $imSoal = ImageResize::createFromString(base64_decode((string) $soalData->Soal));
         $imSoal->scale(25);
         $soalThumb = base64_encode($imSoal->getImageAsString());
 
@@ -250,7 +250,7 @@ function getSoal($idSoal)
                        idsemester = '$soalData->IdSemester', semester = '$soalData->Semester',
                        idkategori = '$soalData->IdKategori', kategori = '$soalData->Kategori',
                        idindikator = '$soalData->IdIndikator', indikator = '$soalData->IdIndikator',
-                       idtema = '$soalData->IdTema', tema = '$soalData->Tema', resdir = '$resDir'";
+                       idtema = '$soalData->IdTema', tema = '$soalData->Tema', resdir = '".$resDir."'";
         QueryDb($sql);
 
         $sql = "SELECT LAST_INSERT_ID()";
@@ -285,9 +285,9 @@ function base64ToImage($base64)
 {
     try
     {
-        return base64_decode($base64);
+        return base64_decode((string) $base64);
     }
-    catch (Exception $ex)
+    catch (Exception)
     {
         try
         {
@@ -296,7 +296,7 @@ function base64ToImage($base64)
                 return file_get_contents($notRight);
             return "";
         }
-        catch (Exception $ex2)
+        catch (Exception)
         {
             return "";
         }
@@ -361,7 +361,7 @@ function finishUjian($ujianData)
     $userId = $_SESSION["UserId"];
     $sessionId = $_SESSION["SessionId"];
 
-    $ujianData = str_replace("\\\"", "\"", $ujianData);
+    $ujianData = str_replace("\\\"", "\"", (string) $ujianData);
 
     $finishInfo = new FinishUjianData();
     $finishInfo->IdUjianSerta = $idUjianSerta;
@@ -407,7 +407,7 @@ function checkDownloadSoal($idSoal)
                   FROM jbscbe.webusersoal
                  WHERE userid = '$userId'
                    AND idujianserta = '$idUjianSerta'
-                   AND idsoal = '$idSoal'";
+                   AND idsoal = '".$idSoal."'";
         OpenDb();
         $nSoal = (int) FetchSingle($sql);
         CloseDb();
@@ -430,10 +430,10 @@ function checkDownloadSoal($idSoal)
         if ((int)$info->Status < 0)
             return GenericReturn::createJson((int)$info->Status, $info->Data, ""); // Login gagal
 
-        $soalData = json_decode($info->Data);
+        $soalData = json_decode((string) $info->Data, null, 512, JSON_THROW_ON_ERROR);
 
         // -- Resize for Thumbnail
-        $imSoal = ImageResize::createFromString(base64_decode($soalData->Soal));
+        $imSoal = ImageResize::createFromString(base64_decode((string) $soalData->Soal));
         $imSoal->scale(25);
         $soalThumb = base64_encode($imSoal->getImageAsString());
 
@@ -451,7 +451,7 @@ function checkDownloadSoal($idSoal)
                        idsemester = '$soalData->IdSemester', semester = '$soalData->Semester',
                        idkategori = '$soalData->IdKategori', kategori = '$soalData->Kategori',
                        idindikator = '$soalData->IdIndikator', indikator = '$soalData->IdIndikator',
-                       idtema = '$soalData->IdTema', tema = '$soalData->Tema', resdir = '$resDir'";
+                       idtema = '$soalData->IdTema', tema = '$soalData->Tema', resdir = '".$resDir."'";
         QueryDb($sql);
 
         $sql = "SELECT LAST_INSERT_ID()";
@@ -490,16 +490,16 @@ function getGambarSoal($idSoal)
                   FROM jbscbe.webusersoal
                  WHERE userid = '$userId'
                    AND idujianserta = '$idUjianSerta'
-                   AND idsoal = '$idSoal'";
+                   AND idsoal = '".$idSoal."'";
         OpenDb();
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) == 0)
+        if (mysqli_num_rows($res) == 0)
         {
             CloseDb();
             return GenericReturn::createJson(-99, "Soal tidak ditemukan!", "");
         }
 
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $idRes = $row[0];
         $resDir = $row[1];
         CloseDb();

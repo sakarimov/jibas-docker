@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -46,7 +46,7 @@ if (isset($_REQUEST['Simpan']))
 	//$simpan=$_REQUEST['Simpan'];
 	
 $komentar=$_REQUEST['komentar'];
-$sql_update="UPDATE jbsakad.komennap SET komentar='$komentar' WHERE replid='$_REQUEST[replid]'";
+$sql_update="UPDATE jbsakad.komennap SET komentar='$komentar' WHERE replid='".$_REQUEST['replid']."'";
 
 $result_update=QueryDb($sql_update);
 //echo $sql_update;
@@ -57,7 +57,7 @@ if ($result_update){
 parent.opener.refresh();
 window.close();
 </script>
-<?
+<?php
 }
 }
 ?>
@@ -100,11 +100,11 @@ window.close();
 	<td width="28" background="../<?=GetThemeDir() ?>bgpop_04a.jpg">&nbsp;</td>
     <td width="0" style="background-color:#FFFFFF">
     <!-- CONTENT GOES HERE //--->
-<?
+<?php
 $sql_get_comment="SELECT k.komentar,s.nama,k.nis FROM jbsakad.komennap k, jbsakad.siswa s WHERE k.nis=s.nis AND k.replid='$replid'";
 $result_get_comment=QueryDb($sql_get_comment);
-$row_get_comment=@mysql_fetch_row($result_get_comment);
-$ada_get_comment=@mysql_num_rows($result_get_comment);
+$row_get_comment=@mysqli_fetch_row($result_get_comment);
+$ada_get_comment=@mysqli_num_rows($result_get_comment);
 //echo $sql_get_comment;
 ?>
 <form name="frm_komentar" id="frm_komentar" action="ubah_komentar.php" method="POST">
@@ -159,6 +159,6 @@ $ada_get_comment=@mysql_num_rows($result_get_comment);
 </table>
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 3.11 (May 02, 2018)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -49,7 +49,7 @@ OpenDb();
         Departemen:
     </td>
     <td width="*" align="left">
-<?      ShowDepartemenCombo() ?>        
+<?php      ShowDepartemenCombo() ?>        
     </td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@ OpenDb();
     </td>
     <td width="*" align="left">
         <div id="psb_divProses">
-<?      ShowPenerimaanCombo($selDept) ?>
+<?php      ShowPenerimaanCombo($selDept) ?>
         </div>
     </td>
 </tr>
@@ -68,7 +68,7 @@ OpenDb();
     </td>
     <td width="*" align="left">
         <div id="psb_divKelompok">
-<?      ShowKelompokCombo($selProses) ?>
+<?php      ShowKelompokCombo($selProses) ?>
         </div>
     </td>
 </tr>
@@ -147,10 +147,10 @@ OpenDb();
         Tanggal Lahir:
     </td>
     <td width="*" align="left">
-<?      ShowYearCombo('psb_thnlahir', 'psb_changeTahunLahirSiswa()', 1980, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahir', 'psb_changeBulanLahirSiswa()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahir', 'psb_changeTahunLahirSiswa()', 1980, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahir', 'psb_changeBulanLahirSiswa()', date('n')); ?>&nbsp;
         <span id="psb_divTglLahirSiswa">
-<?      ShowDateCombo('psb_tgllahir', 'psb_changeTanggalLahirSiswa()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('psb_tgllahir', 'psb_changeTanggalLahirSiswa()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
 </tr>
@@ -159,7 +159,7 @@ OpenDb();
         Agama:
     </td>
     <td width="*" align="left">
-<?      ShowAgamaCombo(); ?>
+<?php      ShowAgamaCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -167,7 +167,7 @@ OpenDb();
         Suku:
     </td>
     <td width="*" align="left">
-<?      ShowSukuCombo(); ?>
+<?php      ShowSukuCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -175,7 +175,7 @@ OpenDb();
         Status:
     </td>
     <td width="*" align="left">
-<?      ShowStatusCombo(); ?>
+<?php      ShowStatusCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -183,7 +183,7 @@ OpenDb();
         Kondisi:
     </td>
     <td width="*" align="left">
-<?      ShowKondisiCombo(); ?>
+<?php      ShowKondisiCombo(); ?>
     </td>
 </tr>
 <tr>
@@ -209,7 +209,7 @@ OpenDb();
         Status Anak:
     </td>
     <td width="*" align="left">
-<?      ShowStatusAnakCombo(); ?>        
+<?php      ShowStatusAnakCombo(); ?>        
     </td>
 </tr>
 <tr>
@@ -299,9 +299,9 @@ OpenDb();
         Asal Sekolah:
     </td>
     <td width="*" align="left">
-<?      ShowJenjangSekolahCombo() ?><br>
+<?php      ShowJenjangSekolahCombo() ?><br>
         <span id='psb_divAsalSekolah'>
-<?      ShowAsalSekolahCombo('TK/RA') ?>
+<?php      ShowAsalSekolahCombo('TK/RA') ?>
         </span>
     </td>
 </tr>
@@ -418,10 +418,10 @@ OpenDb();
         Status Orangtua:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-        <? ShowStatusOrtuCombo('psb_statusayah') ?>
+        <?php ShowStatusOrtuCombo('psb_statusayah') ?>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-        <? ShowStatusOrtuCombo('psb_statusibu') ?>
+        <?php ShowStatusOrtuCombo('psb_statusibu') ?>
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -446,17 +446,17 @@ OpenDb();
         Tanggal Lahir:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowYearCombo('psb_thnlahirayah', 'psb_changeTahunLahirAyah()', 1900, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahirayah', 'psb_changeBulanLahirAyah()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahirayah', 'psb_changeTahunLahirAyah()', 1900, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahirayah', 'psb_changeBulanLahirAyah()', date('n')); ?>&nbsp;
         <span id="psb_divTglLahirAyah">
-<?      ShowDateCombo('psb_tgllahirayah', 'psb_changeTanggalLahirAyah()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('psb_tgllahirayah', 'psb_changeTanggalLahirAyah()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowYearCombo('psb_thnlahiribu', 'psb_changeTahunLahirIbu()', 1900, date('Y') + 1, date('Y')); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahiribu', 'psb_changeBulanLahirIbu()', date('n')); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahiribu', 'psb_changeTahunLahirIbu()', 1900, date('Y') + 1, date('Y')); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahiribu', 'psb_changeBulanLahirIbu()', date('n')); ?>&nbsp;
         <span id="psb_divTglLahirIbu">
-<?      ShowDateCombo('psb_tgllahiribu', 'psb_changeTanggalLahirIbu()', date('Y'), date('n'), date('j')); ?>
+<?php      ShowDateCombo('psb_tgllahiribu', 'psb_changeTanggalLahirIbu()', date('Y'), date('n'), date('j')); ?>
         </span>
     </td>
     <td width="*" align="right" valign="top">
@@ -468,10 +468,10 @@ OpenDb();
         Pendidikan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPendidikanCombo('psb_pendidikanayah') ?>        
+<?php      ShowPendidikanCombo('psb_pendidikanayah') ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPendidikanCombo('psb_pendidikanibu') ?>                
+<?php      ShowPendidikanCombo('psb_pendidikanibu') ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -482,10 +482,10 @@ OpenDb();
         Pekerjaan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPekerjaanCombo('psb_pekerjaanayah') ?>        
+<?php      ShowPekerjaanCombo('psb_pekerjaanayah') ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPekerjaanCombo('psb_pekerjaanibu') ?>                
+<?php      ShowPekerjaanCombo('psb_pekerjaanibu') ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -638,19 +638,19 @@ OpenDb();
 </table>
 <br>
 <div id="psb_divTambahanData">
-<?
+<?php
     ShowTambahanData($selDept)
 ?>
 </div>
 <br>
 <div id="psb_divSumbangan">
-<?
+<?php
 ShowSumbangan($selProses)
 ?>
 </div>
 <br>
 <div id="psb_divNilaiUjian">
-<?
+<?php
 ShowNilaiUjian($selProses)
 ?>
 </div>
@@ -665,6 +665,6 @@ ShowNilaiUjian($selProses)
 </table>
 <br><br><br>
 </form>    
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -41,7 +41,7 @@ $Nama = $_REQUEST['Nama'];
     <td>No. Ponsel Ortu</td>
     <td>&nbsp;</td>
   </tr>
-  <?
+  <?php
     if ($Source=='Pilih'){
 		$sql = "SELECT * FROM $db_name_akad.siswa WHERE aktif=1 AND idkelas='$kls'";
 	} else {
@@ -52,10 +52,10 @@ $Nama = $_REQUEST['Nama'];
 			$sql .= " AND nama LIKE '%$Nama%'";	
 	}
 	$res = QueryDb($sql);
-    $num = @mysql_num_rows($res);
+    $num = @mysqli_num_rows($res);
     if ($num>0){
         $cnt=1;
-        while ($row = @mysql_fetch_array($res)){
+        while ($row = @mysqli_fetch_array($res)){
   ?>
   <tr>
     <td align="center" class="td"><?=$cnt?></td>
@@ -63,12 +63,12 @@ $Nama = $_REQUEST['Nama'];
     <td class="td"><?=$row['hpsiswa']?></td>
     <td class="td"><?=$row['hportu']?></td>
     <td class="td" align="center">
-    <? if (strlen($row['hpsiswa'])>0 || strlen($row['hportu'])>0){ ?>
+    <?php if (strlen((string) $row['hpsiswa'])>0 || strlen((string) $row['hportu'])>0){ ?>
     <div align="center" class="BtnSilver90" onclick="InsertNewReceipt2('<?=$row['hpsiswa']?>_<?=$row['hportu']?>','<?=$row['nama']?>_<?=$row['namaayah']?>','<?=$row['nis']?>')"  />Pilih</div>
-    <? } ?>
+    <?php } ?>
     </td>
   </tr>
-  <?
+  <?php
         $cnt++;
         }
     } else {
@@ -76,10 +76,10 @@ $Nama = $_REQUEST['Nama'];
   <tr>
     <td colspan="5" class="Ket" align="center">Tidak ada data</td>
   </tr>
-  <?
+  <?php
     }
         ?>
 </table>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/rupiah.php');
 
@@ -31,7 +31,7 @@ function GetNoKas()
     //Ambil awalan dan cacah tahunbuku untuk bikin nokas;
     $sql = "SELECT awalan, cacah
               FROM tahunbuku
-             WHERE replid = '$idtahunbuku'";
+             WHERE replid = '".$idtahunbuku."'";
 	//echo "$sql<br>";		 
     $row = FetchSingleRow($sql);
     $awalan = $row[0];
@@ -141,7 +141,7 @@ function SaveIuranSukarelaSiswa($rowno)
 	 // Ambil informasi kode rekening berdasarkan jenis penerimaan
 	$sql = "SELECT rekkas, rekpiutang, rekpendapatan, info1, nama
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
 	//echo "$sql<br>";		 
 	$row = FetchSingleRow($sql);
 	//$rekkas = $row[0];
@@ -190,7 +190,7 @@ function SaveIuranSukarelaSiswa($rowno)
 		QueryDbTrans($sql, $success);
 	}
 	
-	$transactions[] = array($nokas, $infocicil, $jumlah, 0, "SKR", 0);
+	$transactions[] = [$nokas, $infocicil, $jumlah, 0, "SKR", 0];
 	
 	return $success;
 }
@@ -224,7 +224,7 @@ function SaveIuranSukarelaCalonSiswa($rowno)
 	 // Ambil informasi kode rekening berdasarkan jenis penerimaan
 	$sql = "SELECT rekkas, rekpiutang, rekpendapatan, info1, nama
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
 	//echo "$sql<br>";		 
 	$row = FetchSingleRow($sql);
 	$rekkas = $row[0];
@@ -273,7 +273,7 @@ function SaveIuranSukarelaCalonSiswa($rowno)
 		QueryDbTrans($sql, $success);
 	}
 	
-	$transactions[] = array($nokas, $infocicil, $jumlah, 0, "CSSKR", 0);
+	$transactions[] = [$nokas, $infocicil, $jumlah, 0, "CSSKR", 0];
 	
 	return $success;
 }
@@ -323,7 +323,7 @@ function SaveIuranWajibSiswa($rowno)
 	 // Ambil informasi kode rekening berdasarkan jenis penerimaan
 	$sql = "SELECT rekkas, rekpiutang, rekpendapatan, info1, nama
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
 	//echo "$sql<br>";		 
 	$row = FetchSingleRow($sql);
 	//$rekkas = $row[0];
@@ -394,9 +394,9 @@ function SaveIuranWajibSiswa($rowno)
 		//-- Cari jumlah terbayar, yg sudah dibayarkan siswa
 		$sql = "SELECT SUM(jumlah), SUM(info1)
 				  FROM jbsfina.penerimaanjtt
-				 WHERE idbesarjtt = '$idbesarjtt'";
+				 WHERE idbesarjtt = '".$idbesarjtt."'";
 		$res = QueryDb($sql);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		
 		$terbayar = $row[0];
 		$terdiskon = $row[1];
@@ -411,7 +411,7 @@ function SaveIuranWajibSiswa($rowno)
 	{
 		$nokas = GetNoKas();
 		
-		$transactions[] = array($nokas, $infocicil, $jcicilan, $jdiskon, "JTT", $tersisa);
+		$transactions[] = [$nokas, $infocicil, $jcicilan, $jdiskon, "JTT", $tersisa];
 		
 		//echo "SimpanJurnal($idtahunbuku, $tcicilan, $infocicil, $nokas, '', $petugas, 'penerimaanjtt', $idjurnal)<br>";
 		$success = SimpanJurnal($idtahunbuku, $tcicilan, $infociciljurnal, $nokas, "", $idpetugas, $petugas, "penerimaanjtt", $idjurnal);
@@ -523,7 +523,7 @@ function SaveIuranWajibCalonSiswa($rowno)
 	 // Ambil informasi kode rekening berdasarkan jenis penerimaan
 	$sql = "SELECT rekkas, rekpiutang, rekpendapatan, info1, nama
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
 	//echo "$sql<br>";		 
 	$row = FetchSingleRow($sql);
 	//$rekkas = $row[0];
@@ -592,9 +592,9 @@ function SaveIuranWajibCalonSiswa($rowno)
 		//-- Cari jumlah terbayar, yg sudah dibayarkan siswa
 		$sql = "SELECT SUM(jumlah), SUM(info1)
 				  FROM jbsfina.penerimaanjttcalon
-				 WHERE idbesarjttcalon = '$idbesarjtt'";
+				 WHERE idbesarjttcalon = '".$idbesarjtt."'";
 		$res = QueryDb($sql);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		
 		$terbayar = $row[0];
 		$terdiskon = $row[1];
@@ -609,7 +609,7 @@ function SaveIuranWajibCalonSiswa($rowno)
 	{
 		$nokas = GetNoKas();
 		
-		$transactions[] = array($nokas, $infocicil, $jcicilan, $jdiskon, "CSWJB", $tersisa);
+		$transactions[] = [$nokas, $infocicil, $jcicilan, $jdiskon, "CSWJB", $tersisa];
 		
 		//echo "SimpanJurnal($idtahunbuku, $tcicilan, $infocicil, $nokas, '', $petugas, 'penerimaanjttcalon', $idjurnal)<br>";
 		$success = SimpanJurnal($idtahunbuku, $tcicilan, $infociciljurnal, $nokas, "", $idpetugas, $petugas, "penerimaanjttcalon", $idjurnal);
@@ -730,7 +730,7 @@ function SaveMultiTransInfo()
         $res = QueryDbTrans($sql, $success);
         if ($success)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $idinfo = $row[0];
         }
     }
@@ -743,7 +743,7 @@ function SaveMultiTransInfo()
             $kategori = $transactions[$i][4];
 
             $sql = "INSERT INTO jbsfina.multitransdata
-                       SET idinfo = $idinfo, notrans = '$notrans', kategori = '$kategori'";
+                       SET idinfo = $idinfo, notrans = '$notrans', kategori = '".$kategori."'";
             QueryDbTrans($sql, $success);
         }
     }

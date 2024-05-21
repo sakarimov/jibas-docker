@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ function ShowCbMedia()
              ORDER BY m.judul";
     $res = QueryDb($sql);
 
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<b>Video: </b>:&nbsp;&nbsp;";
         echo "<select id='media' style='width: 300px; height: 25px'>";
@@ -46,7 +46,7 @@ function ShowCbMedia()
 
     echo "<b>Video: </b>:&nbsp;&nbsp;";
     echo "<select id='media' style='width: 300px; height: 25px' onchange='changeVideo()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $idMedia = $row[0];
         $judul = $row[1];
@@ -78,14 +78,14 @@ function ShowDaftarCatatan($idMedia, $date1, $date2)
              ORDER BY timestamp DESC";
     $res = QueryDb($sql);
     $no = 0;
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $no += 1;
 
         echo "<tr style='height: 100px; line-height: 17px;'>";
         echo "<td align='center' valign='top'>$no</td>";
-        echo "<td align='left' valign='top'><b>$row[1]</b><br>$row[0]</td>";
-        echo "<td align='left' valign='top'><i>$row[2]</i><br>$row[3]</td>";
+        echo "<td align='left' valign='top'><b>".$row[1]."</b><br>".$row[0]."</td>";
+        echo "<td align='left' valign='top'><i>".$row[2]."</i><br>".$row[3]."</td>";
         echo "</tr>";
     }
 }

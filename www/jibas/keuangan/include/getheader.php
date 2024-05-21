@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 	
+<?php 	
 function getHeader($dep)
 {
 	global $full_url;
@@ -28,20 +28,20 @@ function getHeader($dep)
 	OpenDb();
 	$sql = "SELECT * FROM jbsumum.identitas WHERE departemen='$dep'";
 	$result = QueryDb($sql); 
-	$num = @mysql_num_rows($result);
-	$row = @mysql_fetch_array($result);
-	$replid = $row[replid];
-	$nama = $row[nama];
-	$alamat1 = $row[alamat1];
-	$alamat2 = $row[alamat2];
-	$te1p1 = $row[telp1];
-	$telp2 = $row[telp2];
-	$te1p3 = $row[telp3];
-	$telp4 = $row[telp4];
-	$fax1 = $row[fax1];
-	$fax2 = $row[fax2];
-	$situs = $row[situs];
-	$email = $row[email];
+	$num = @mysqli_num_rows($result);
+	$row = @mysqli_fetch_array($result);
+	$replid = $row['replid'];
+	$nama = $row['nama'];
+	$alamat1 = $row['ALAMAT1'];
+	$alamat2 = $row['ALAMAT2'];
+	$te1p1 = $row['TELP1'];
+	$telp2 = $row['TELP2'];
+	$te1p3 = $row['TELP3'];
+	$telp4 = $row['TELP4'];
+	$fax1 = $row['FAX1'];
+	$fax2 = $row['FAX2'];
+	$situs = $row['situs'];
+	$email = $row['email'];
 	//CloseDb();
 		
 	$head =	"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
@@ -112,9 +112,9 @@ function getSmallHeader($dep)
 	
 	$sql = "SELECT replid, nama FROM jbsumum.identitas WHERE departemen='$dep'";
 	$result = QueryDb($sql); 
-	$row = @mysql_fetch_array($result);
-	$replid = $row[replid];
-	$nama = $row[nama];
+	$row = @mysqli_fetch_array($result);
+	$replid = $row['replid'];
+	$nama = $row['nama'];
 		
 	$head  ="<table border='1' cellpadding='0' cellspacing='0' width='100%'>";
 	$head .="<tr>";

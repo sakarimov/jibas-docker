@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,10 +38,10 @@ $cek = 0;
 $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
-	$sql = "SELECT * FROM jbsvcr.catatankategori WHERE kategori = '$kategori'";
+	$sql = "SELECT * FROM jbsvcr.catatankategori WHERE kategori = '".$kategori."'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {		
+	if (mysqli_num_rows($result) > 0) {		
 		CloseDb();
 		$ERROR_MSG = "Kategori $kategori sudah digunakan!";		
 	} else {
@@ -52,7 +52,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 	CloseDb();
 }
@@ -64,7 +64,7 @@ if (isset($_REQUEST['Simpan'])) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS INFOGURU [Tambah Kategori Catatan Siswa]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script src="../script/SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryAssets/SpryValidationTextarea.js" type="text/javascript"></script>
@@ -118,11 +118,11 @@ function focusNext(elemName, evt) {
 </form>
    
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 </body>

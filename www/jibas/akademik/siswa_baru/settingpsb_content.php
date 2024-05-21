@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -39,9 +39,9 @@ OpenDb();
 
 if (isset($_REQUEST['Simpan']))
 {
-	$sql = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '$proses'";
+	$sql = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '".$proses."'";
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$ndata = $row[0];
 	
 	$set = "";
@@ -53,9 +53,9 @@ if (isset($_REQUEST['Simpan']))
 		$fnm = "nmsum$i";
 		$kd = $_REQUEST[$fkd];
 		$nm = $_REQUEST[$fnm];
-		$kd = str_replace("'", "`", $kd);
-		$nm = str_replace("'", "`", $nm);
-		$set .= "$fkd = '$kd', $fnm = '$nm'";
+		$kd = str_replace("'", "`", (string) $kd);
+		$nm = str_replace("'", "`", (string) $nm);
+		$set .= "$fkd = '$kd', $fnm = '".$nm."'";
 	}
 	
 	for($i = 1; $i <= 10; $i++)
@@ -66,29 +66,29 @@ if (isset($_REQUEST['Simpan']))
 		$fnm = "nmujian$i";
 		$kd = $_REQUEST[$fkd];
 		$nm = $_REQUEST[$fnm];
-		$kd = str_replace("'", "`", $kd);
-		$nm = str_replace("'", "`", $nm);
-		$set .= "$fkd = '$kd', $fnm = '$nm'";
+		$kd = str_replace("'", "`", (string) $kd);
+		$nm = str_replace("'", "`", (string) $nm);
+		$set .= "$fkd = '$kd', $fnm = '".$nm."'";
 	}
 	
 	if ($ndata == 0)
 		$sql = "INSERT INTO settingpsb SET idproses = '$proses', $set";
 	else
-		$sql = "UPDATE settingpsb SET $set WHERE idproses = '$proses'";
+		$sql = "UPDATE settingpsb SET $set WHERE idproses = '".$proses."'";
 	
 	QueryDb($sql);
 }
 
-$sql = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '$proses'";
+$sql = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '".$proses."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ndata = $row[0];
 
 if ($ndata > 0)
 {
-	$sql = "SELECT * FROM settingpsb WHERE idproses = '$proses'";
+	$sql = "SELECT * FROM settingpsb WHERE idproses = '".$proses."'";
 	$res = QueryDb($sql);
-	$row = mysql_fetch_array($res);
+	$row = mysqli_fetch_array($res);
 	
 	$kdsum1 = $row['kdsum1']; $nmsum1 = $row['nmsum1'];
 	$kdsum2 = $row['kdsum2']; $nmsum2 = $row['nmsum2'];
@@ -113,7 +113,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Konfigurasi Pendataan PSB</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>

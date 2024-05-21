@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ function CheckAllConfigReady()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.bank";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
         {
             echo "[-1,\"Atur dahulu konfigurasi Daftar Rekening Bank\"]";
@@ -53,7 +53,7 @@ function CheckAllConfigReady()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.formatnomortagihan";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
         {
             echo "[-1,\"Atur dahulu konfigurasi Format Nomor Tagihan\"]";
@@ -62,7 +62,7 @@ function CheckAllConfigReady()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.formatpesanpg";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
         {
             echo "[-1,\"Atur dahulu konfigurasi Format Pesan Tagihan\"]";
@@ -109,7 +109,7 @@ function CheckBankConfig()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.bank";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
             echo "&nbsp;&nbsp;<img src='../images/warning.png'>";
     }
@@ -131,7 +131,7 @@ function CheckInfoBayarConfig()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.infobayar";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
             echo "&nbsp;&nbsp;<img src='../images/warning.png'>";
     }
@@ -153,7 +153,7 @@ function CheckFormatNomorTagihanConfig()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.formatnomortagihan";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
             echo "&nbsp;&nbsp;<img src='../images/warning.png'>";
     }
@@ -176,7 +176,7 @@ function CheckPesanPgConfig()
 
         $sql = "SELECT COUNT(*) FROM jbsfina.formatpesanpg";
         $res = QueryDbEx($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         if ($row[0] == 0)
             echo "&nbsp;&nbsp;<img src='../images/warning.png'>";
     }
@@ -202,7 +202,7 @@ function CheckGetServiceFee()
         $schoolId = $PG_SCHOOL_ID;
         $dbId = $PG_DATABASE_ID;
 
-        if (strlen($schoolId) != 5 || strlen($dbId) != 5)
+        if (strlen((string) $schoolId) != 5 || strlen((string) $dbId) != 5)
             return;
 
         $pgServiceAddr = $PG_ADDR . "/jbsfina/svcf.php";
@@ -214,7 +214,7 @@ function CheckGetServiceFee()
             return;
 
         $jsonInfo = $sendGr->Data;
-        $info = json_decode($jsonInfo);
+        $info = json_decode((string) $jsonInfo, null, 512, JSON_THROW_ON_ERROR);
         $valid = $info[0];
         $message = $info[1];
         $serviceFee = $info[2];

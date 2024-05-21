@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -34,16 +34,16 @@ if (isset($_REQUEST['nis']))
 OpenDb();
 
 $res_nm_sis=QueryDb("SELECT nama FROM jbsakad.siswa WHERE nis='$nis'");
-$row_nm_sis=@mysql_fetch_array($res_nm_sis);
+$row_nm_sis=@mysqli_fetch_array($res_nm_sis);
 $tglawal = "";
 if (isset($_REQUEST['tglawal'])){
-	$tglawl = explode('-',$_REQUEST['tglawal']);
+	$tglawl = explode('-',(string) $_REQUEST['tglawal']);
 	$tglawal = $tglawl[2]."-".$tglawl[1]."-".$tglawl[0];
 	
 }
 $tglakhir = "";
 if (isset($_REQUEST['tglakhir'])){
-	$tglakhr =  explode('-',$_REQUEST['tglakhir']);
+	$tglakhr =  explode('-',(string) $_REQUEST['tglakhir']);
 	$tglakhir = $tglakhr[2]."-".$tglakhr[1]."-".$tglakhr[0];
 	
 }
@@ -65,7 +65,7 @@ $result=QueryDb($sql);
           <tr>
             <td width="11%"><strong>Siswa</strong></td>
             <td width="1%"><strong>:</strong></td>
-            <td width="88%">[<?=$nis?>]&nbsp;<?=$row_nm_sis[nama]?></td>
+            <td width="88%">[<?=$nis?>]&nbsp;<?=$row_nm_sis['nama']?></td>
           </tr>
           <tr>
             <td><strong>Periode</strong></td>
@@ -83,20 +83,20 @@ $result=QueryDb($sql);
     <td width="42%" >Periode</td>
     <td width="55%" >Keterangan</td>
   </tr>
-  <?
-  if (@mysql_num_rows($result)>0){
+  <?php
+  if (@mysqli_num_rows($result)>0){
   $cnt=1;
-  while ($row=@mysql_fetch_array($result)){
+  while ($row=@mysqli_fetch_array($result)){
   	$a="";
 	if ($cnt%2==0)
 		$a="style='background-color:#FFFFCC'";
   ?>
   <tr height="25" <?=$a?>>
     <td align="center"><?=$cnt?></td>
-    <td><?=ShortDateFormat($row[tanggal1])?> s.d. <?=ShortDateFormat($row[tanggal2])?></td>
-    <td><?=$row[keterangan]?></td>
+    <td><?=ShortDateFormat($row[\TANGGAL1])?> s.d. <?=ShortDateFormat($row[\TANGGAL2])?></td>
+    <td><?=$row['keterangan']?></td>
   </tr>
-  <?
+  <?php
   $cnt++;
   }
   } else {
@@ -104,10 +104,10 @@ $result=QueryDb($sql);
    <tr height="25">
     <td align="center" colspan="3">Tidak ada keterangan presensi untuk periode tsb.</td>
   </tr>
-  <? } ?>
+  <?php } ?>
 </table>
 
     </td>
   </tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>

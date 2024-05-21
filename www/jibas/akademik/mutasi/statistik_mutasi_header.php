@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -118,47 +118,47 @@ function focusNext(elemName, evt) {
         <td width="25%"><strong>Departemen</strong></td>
         <td width="*">
       	<select name="departemen" id="departemen" onChange="change_dep()"  style="width:100px" onKeyPress="return focusNext('tahunawal', event)">
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 				if ($departemen == "")
 					$departemen = $value; ?>
         	<option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
             <?=$value ?> 
             </option>
-       	<?	} ?>
+       	<?php } ?>
         </select></td>
 	</tr>
   	<tr>
     	<td><strong>Periode</strong></td>
     	<td>
       	<select name="tahunawal" id="tahunawal" onChange="change()"  style="width:100px" onKeyPress="return focusNext('tahunakhir', event)">
-        <?	OpenDb();
+        <?php OpenDb();
 			$sql_thn_awal="SELECT DISTINCT YEAR(tglmutasi) as tahunawal FROM jbsakad.mutasisiswa WHERE departemen='$departemen' ORDER BY tahunawal ASC";
 			$result_thn_awal=QueryDb($sql_thn_awal);
-			while($row_thn_awal=mysql_fetch_array($result_thn_awal)){
+			while($row_thn_awal=mysqli_fetch_array($result_thn_awal)){
 				if ($tahunawal=="")
 					$tahunawal=$row_thn_awal['tahunawal'];
 		?>
         	<option value="<?=$row_thn_awal['tahunawal']?>" <?=IntIsSelected($row_thn_awal['tahunawal'],$tahunawal)?>>
         	<?=$row_thn_awal['tahunawal']?>
         	</option>
-        <?	}
+        <?php }
 			CloseDb();
 		?>
       	</select>   
     	s/d
       	<select name="tahunakhir" id="tahunakhir" onChange="change()"  style="width:100px" onKeyPress="return focusNext('tabel', event)">
-        <?	OpenDb();
+        <?php OpenDb();
 			$sql_thn_akhir="SELECT DISTINCT YEAR(tglmutasi) as tahunakhir FROM jbsakad.mutasisiswa WHERE departemen='$departemen' ORDER BY tahunakhir DESC";
 			$result_thn_akhir=QueryDb($sql_thn_akhir);
-			while($row_thn_akhir=mysql_fetch_array($result_thn_akhir)){
+			while($row_thn_akhir=mysqli_fetch_array($result_thn_akhir)){
 				if ($tahunakhir=="")
 					$tahunakhir=$row_thn_akhir['tahunakhir'];
 		?>
         	<option value="<?=$row_thn_akhir['tahunakhir']?>" <?=IntIsSelected($row_thn_akhir['tahunakhir'],$tahunakhir)?>>
         	<?=$row_thn_akhir['tahunakhir']?>
         	</option>
-        <?	}
+        <?php }
 			CloseDb();
 		?>
       	</select>   

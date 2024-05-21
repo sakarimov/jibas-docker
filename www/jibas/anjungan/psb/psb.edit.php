@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/rupiah.php");
@@ -51,24 +51,24 @@ $sql = "SELECT k.idproses, p.departemen
          WHERE k.idproses = p.replid
            AND k.replid = $idkelompok";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $selProses = $row[0];
 $selDept = $row[1];
 $selKelompok = $idkelompok;
 
 $sql = "SELECT *
           FROM jbsakad.calonsiswa
-         WHERE nopendaftaran = '$nocalon'";
+         WHERE nopendaftaran = '".$nocalon."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $replid = $row['replid'];
 $asalsekolah = $row['asalsekolah'];
 
 $sql = "SELECT departemen
           FROM jbsakad.asalsekolah
-         WHERE sekolah = '$asalsekolah'";
+         WHERE sekolah = '".$asalsekolah."'";
 $res2 = QueryDb($sql);
-$row2 = mysql_fetch_array($res2);
+$row2 = mysqli_fetch_array($res2);
 $jenjangsekolah = $row2['departemen'];
 ?>
 <form name="psb_form" id="psb_form" method="post">
@@ -93,7 +93,7 @@ $jenjangsekolah = $row2['departemen'];
         Departemen:
     </td>
     <td width="*" align="left">
-<?      ShowDepartemenCombo2() ?>        
+<?php      ShowDepartemenCombo2() ?>        
     </td>
 </tr>
 <tr>
@@ -102,7 +102,7 @@ $jenjangsekolah = $row2['departemen'];
     </td>
     <td width="*" align="left">
         <div id="psb_divProses">
-<?      ShowPenerimaanCombo2($selDept) ?>
+<?php      ShowPenerimaanCombo2($selDept) ?>
         </div>
     </td>
 </tr>
@@ -112,7 +112,7 @@ $jenjangsekolah = $row2['departemen'];
     </td>
     <td width="*" align="left">
         <div id="psb_divKelompok">
-<?      ShowKelompokCombo2($selProses) ?>
+<?php      ShowKelompokCombo2($selProses) ?>
         </div>
     </td>
 </tr>
@@ -199,21 +199,21 @@ $jenjangsekolah = $row2['departemen'];
         Tanggal Lahir:
     </td>
     <td width="*" align="left">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahir']);
+        $date = explode("-", (string) $row['tgllahir']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>        
-<?      ShowYearCombo('psb_thnlahir', 'psb_changeTahunLahirSiswa()', 1980, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahir', 'psb_changeBulanLahirSiswa()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahir', 'psb_changeTahunLahirSiswa()', 1980, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahir', 'psb_changeBulanLahirSiswa()', $bln); ?>&nbsp;
         <span id="psb_divTglLahirSiswa">
-<?      ShowDateCombo('psb_tgllahir', 'psb_changeTanggalLahirSiswa()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('psb_tgllahir', 'psb_changeTanggalLahirSiswa()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
 </tr>
@@ -222,7 +222,7 @@ $jenjangsekolah = $row2['departemen'];
         Agama:
     </td>
     <td width="*" align="left">
-<?      ShowAgamaCombo($row['agama']); ?>
+<?php      ShowAgamaCombo($row['agama']); ?>
     </td>
 </tr>
 <tr>
@@ -230,7 +230,7 @@ $jenjangsekolah = $row2['departemen'];
         Suku:
     </td>
     <td width="*" align="left">
-<?      ShowSukuCombo($row['suku']); ?>
+<?php      ShowSukuCombo($row['suku']); ?>
     </td>
 </tr>
 <tr>
@@ -238,7 +238,7 @@ $jenjangsekolah = $row2['departemen'];
         Status:
     </td>
     <td width="*" align="left">
-<?      ShowStatusCombo($row['status']); ?>
+<?php      ShowStatusCombo($row['status']); ?>
     </td>
 </tr>
 <tr>
@@ -246,7 +246,7 @@ $jenjangsekolah = $row2['departemen'];
         Kondisi:
     </td>
     <td width="*" align="left">
-<?      ShowKondisiCombo($row['kondisi']); ?>
+<?php      ShowKondisiCombo($row['kondisi']); ?>
     </td>
 </tr>
 <tr>
@@ -272,7 +272,7 @@ $jenjangsekolah = $row2['departemen'];
         Status Anak:
     </td>
     <td width="*" align="left">
-<?      ShowStatusAnakCombo( $row['statusanak'] ); ?>        
+<?php      ShowStatusAnakCombo( $row['statusanak'] ); ?>        
     </td>
 </tr>
 <tr>
@@ -362,9 +362,9 @@ $jenjangsekolah = $row2['departemen'];
         Asal Sekolah:
     </td>
     <td width="*" align="left">
-<?      ShowJenjangSekolahCombo($jenjangsekolah) ?><br>
+<?php      ShowJenjangSekolahCombo($jenjangsekolah) ?><br>
         <span id='psb_divAsalSekolah'>
-<?      ShowAsalSekolahCombo($jenjangsekolah, $asalsekolah) ?>
+<?php      ShowAsalSekolahCombo($jenjangsekolah, $asalsekolah) ?>
         </span>
     </td>
 </tr>
@@ -481,10 +481,10 @@ $jenjangsekolah = $row2['departemen'];
         Status Orangtua:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-        <? ShowStatusOrtuCombo('psb_statusayah', $row['statusayah']) ?>
+        <?php ShowStatusOrtuCombo('psb_statusayah', $row['statusayah']) ?>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-        <? ShowStatusOrtuCombo('psb_statusibu', $row['statusibu']) ?>
+        <?php ShowStatusOrtuCombo('psb_statusibu', $row['statusibu']) ?>
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -509,39 +509,39 @@ $jenjangsekolah = $row2['departemen'];
         Tanggal Lahir:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahirayah']);
+        $date = explode("-", (string) $row['tgllahirayah']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>          
-<?      ShowYearCombo('psb_thnlahirayah', 'psb_changeTahunLahirAyah()', 1900, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahirayah', 'psb_changeBulanLahirAyah()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahirayah', 'psb_changeTahunLahirAyah()', 1900, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahirayah', 'psb_changeBulanLahirAyah()', $bln); ?>&nbsp;
         <span id="psb_divTglLahirAyah">
-<?      ShowDateCombo('psb_tgllahirayah', 'psb_changeTanggalLahirAyah()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('psb_tgllahirayah', 'psb_changeTanggalLahirAyah()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      $thn = date('Y');
+<?php      $thn = date('Y');
         $bln = date('n');
         $tgl = date('j');
         
-        $date = split("-", $row['tgllahiribu']);
+        $date = explode("-", (string) $row['tgllahiribu']);
         if (count($date) == 3)
         {
             $thn = $date[0];
             $bln = $date[1];
             $tgl = $date[2];
         } ?>          
-<?      ShowYearCombo('psb_thnlahiribu', 'psb_changeTahunLahirIbu()', 1900, date('Y') + 1, $thn); ?>&nbsp;
-<?      ShowMonthCombo('psb_blnlahiribu', 'psb_changeBulanLahirIbu()', $bln); ?>&nbsp;
+<?php      ShowYearCombo('psb_thnlahiribu', 'psb_changeTahunLahirIbu()', 1900, date('Y') + 1, $thn); ?>&nbsp;
+<?php      ShowMonthCombo('psb_blnlahiribu', 'psb_changeBulanLahirIbu()', $bln); ?>&nbsp;
         <span id="psb_divTglLahirIbu">
-<?      ShowDateCombo('psb_tgllahiribu', 'psb_changeTanggalLahirIbu()', date('Y'), date('n'), $tgl); ?>
+<?php      ShowDateCombo('psb_tgllahiribu', 'psb_changeTanggalLahirIbu()', date('Y'), date('n'), $tgl); ?>
         </span>
     </td>
     <td width="*" align="right" valign="top">
@@ -553,10 +553,10 @@ $jenjangsekolah = $row2['departemen'];
         Pendidikan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPendidikanCombo('psb_pendidikanayah', $row['pendidikanayah']) ?>        
+<?php      ShowPendidikanCombo('psb_pendidikanayah', $row['pendidikanayah']) ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPendidikanCombo('psb_pendidikanibu', $row['pendidikanibu']) ?>                
+<?php      ShowPendidikanCombo('psb_pendidikanibu', $row['pendidikanibu']) ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -567,10 +567,10 @@ $jenjangsekolah = $row2['departemen'];
         Pekerjaan:
     </td>
     <td width="*" align="left" bgcolor="#DBD8F3">
-<?      ShowPekerjaanCombo('psb_pekerjaanayah', $row['pekerjaanayah']) ?>        
+<?php      ShowPekerjaanCombo('psb_pekerjaanayah', $row['pekerjaanayah']) ?>        
     </td>
     <td width="*" align="left" bgcolor="#E9AFCF">
-<?      ShowPekerjaanCombo('psb_pekerjaanibu', $row['pekerjaanibu']) ?>                
+<?php      ShowPekerjaanCombo('psb_pekerjaanibu', $row['pekerjaanibu']) ?>                
     </td>
     <td width="*" align="right" valign="top">
         &nbsp;
@@ -741,7 +741,7 @@ $jenjangsekolah = $row2['departemen'];
              ORDER BY urutan";
     $res = QueryDb($sql);
     $idtambahan = "";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $replid = $row[0];
         $kolom = $row[1];
@@ -756,9 +756,9 @@ $jenjangsekolah = $row2['departemen'];
         $data = "";
         if ($jenis == 1)
         {
-            $sql = "SELECT replid, teks FROM tambahandatacalon WHERE nopendaftaran = '$nocalon' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM tambahandatacalon WHERE nopendaftaran = '$nocalon' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -766,9 +766,9 @@ $jenjangsekolah = $row2['departemen'];
         }
         else if ($jenis == 3)
         {
-            $sql = "SELECT replid, teks FROM tambahandatacalon WHERE nopendaftaran = '$nocalon' AND idtambahan = '$replid'";
+            $sql = "SELECT replid, teks FROM tambahandatacalon WHERE nopendaftaran = '$nocalon' AND idtambahan = '".$replid."'";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $replid_data = $row2[0];
                 $data = $row2[1];
@@ -781,11 +781,11 @@ $jenjangsekolah = $row2['departemen'];
                      ORDER BY urutan";
             $res2 = QueryDb($sql);
 
-            $arrList = array();
-            if (mysql_num_rows($res2) == 0)
+            $arrList = [];
+            if (mysqli_num_rows($res2) == 0)
                 $arrList[] = "-";
 
-            while($row2 = mysql_fetch_row($res2))
+            while($row2 = mysqli_fetch_row($res2))
             {
                 $arrList[] = $row2[0];
             }
@@ -803,26 +803,26 @@ $jenjangsekolah = $row2['departemen'];
         <tr style="height: 24px">
             <td width="15%" align="right" valign="top"><?=$kolom?></td>
             <td colspan="2">
-                <? if ($jenis == 1) { ?>
+                <?php if ($jenis == 1) { ?>
                     <input type="hidden" id="psb_jenisdata-<?=$replid?>" name="psb_jenisdata-<?=$replid?>" value="1">
                     <input type="hidden" id="psb_repliddata-<?=$replid?>" name="psb_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="text" class="inputbox" name="psb_tambahandata-<?=$replid?>" id="psb_tambahandata-<?=$replid?>" size="40" maxlength="1000" value="<?=$data?>">
-                <? } else if ($jenis == 2) { ?>
+                <?php } else if ($jenis == 2) { ?>
                     <input type="hidden" id="psb_jenisdata-<?=$replid?>" name="psb_jenisdata-<?=$replid?>" value="2">
                     <input type="hidden" id="psb_repliddata-<?=$replid?>" name="psb_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <input type="file" class="inputbox" name="psb_tambahandata-<?=$replid?>" id="psb_tambahandata-<?=$replid?>" size="40" style="width: 255px""/>
                     <i><?=$data?></i>
-                <? } else { ?>
+                <?php } else { ?>
                     <input type="hidden" id="psb_jenisdata-<?=$replid?>" name="psb_jenisdata-<?=$replid?>" value="3">
                     <input type="hidden" id="psb_repliddata-<?=$replid?>" name="psb_repliddata-<?=$replid?>" value="<?=$replid_data?>">
                     <select class="inputbox" name="psb_tambahandata-<?=$replid?>" id="psb_tambahandata-<?=$replid?>" style="width:215px">
                         <?= $opt ?>
                     </select>
-                <? } ?>
+                <?php } ?>
 
             </td>
         </tr>
-        <?
+        <?php
     }
     ?>
     <input type="hidden" id="psb_idtambahan" name="psb_idtambahan" value="<?=$idtambahan?>">
@@ -830,13 +830,13 @@ $jenjangsekolah = $row2['departemen'];
 <br>
 
 <div id="psb_divSumbangan">   
-<?
+<?php
 ShowSumbangan($selProses, $row)
 ?>
 </div>
 <br>
 <div id="psb_divNilaiUjian">
-<?
+<?php
 ShowNilaiUjian($selProses, $row)
 ?>
 </div>
@@ -850,6 +850,6 @@ ShowNilaiUjian($selProses, $row)
 </tr> 
 </table>
 </form>    
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/common.php');
 require_once('../inc/rupiah.php');
@@ -30,11 +30,11 @@ OpenDb();
 if (isset($_REQUEST['Simpan'])){
 	$sql = "SELECT * FROM konfigurasi";
 	$result = QueryDb($sql);
-	$num = @mysql_num_rows($result);
+	$num = @mysqli_num_rows($result);
 	if ($num==0){
-		$sql = "INSERT INTO konfigurasi SET siswa='$_REQUEST[siswa]',pegawai='$_REQUEST[pegawai]',other='$_REQUEST[other]',denda='".UnformatRupiah($_REQUEST[denda])."'";
+		$sql = "INSERT INTO konfigurasi SET siswa='".$_REQUEST['siswa']."',pegawai='".$_REQUEST['pegawai']."',other='".$_REQUEST['other']."',denda='".UnformatRupiah($_REQUEST['denda'])."'";
 	} else {
-		$sql = "UPDATE konfigurasi SET siswa='$_REQUEST[siswa]',pegawai='$_REQUEST[pegawai]',other='$_REQUEST[other]',denda='".UnformatRupiah($_REQUEST[denda])."'";
+		$sql = "UPDATE konfigurasi SET siswa='".$_REQUEST['siswa']."',pegawai='".$_REQUEST['pegawai']."',other='".$_REQUEST['other']."',denda='".UnformatRupiah($_REQUEST['denda'])."'";
 	}
 	$result = QueryDb($sql);
 	if ($result){
@@ -42,22 +42,22 @@ if (isset($_REQUEST['Simpan'])){
         <script language="javascript">
 			window.close();
         </script>
-        <?
+        <?php
 	}
 }
 $sql = "SELECT * FROM konfigurasi";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$siswa = $row[siswa];
+$row = @mysqli_fetch_array($result);
+$siswa = $row['siswa'];
 if ($siswa=='')
 	$siswa=0;
-$pegawai = $row[pegawai];
+$pegawai = $row['pegawai'];
 if ($pegawai=='')
 	$pegawai=0;
-$other = $row[other];
+$other = $row['other'];
 if ($other=='')
 	$other=0;
-$denda = $row[denda];
+$denda = $row['denda'];
 if ($denda=='')
 	$denda=0;	
 ?>
@@ -125,7 +125,7 @@ function Fokus(elementId){
     <td><input type="text" name="denda" id="denda" class="inptxt-small-text" value="<?=FormatRupiah($denda)?>" style="width:150px" onBlur="Blur('denda')" onFocus="Fokus('denda')" /></td>
   </tr>
   <tr>
-<?
+<?php
 	$disabled = "";
 	if (!IsAdmin())
 		$disabled = "disabled='disabled'"; ?>
@@ -137,4 +137,4 @@ function Fokus(elementId){
 </div>
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>

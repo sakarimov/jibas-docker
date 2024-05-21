@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -46,26 +46,26 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
 OpenDb();
 
-$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '$tahunajaran'";
+$sql = "SELECT tahunajaran FROM tahunajaran WHERE replid = '".$tahunajaran."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ta  = $row[0];
 
-$sql = "SELECT kelas FROM kelas WHERE replid = '$kelas'";
+$sql = "SELECT kelas FROM kelas WHERE replid = '".$kelas."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $kls = $row[0];
 
-$sql = "SELECT semester FROM semester WHERE replid = '$semester'";
+$sql = "SELECT semester FROM semester WHERE replid = '".$semester."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $sem = $row[0];
 
 if ($pelajaran != 0)
 {
-    $sql = "SELECT nama FROM pelajaran WHERE replid = '$pelajaran'";
+    $sql = "SELECT nama FROM pelajaran WHERE replid = '".$pelajaran."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $pel = $row[0];
 }
 else
@@ -73,16 +73,16 @@ else
     $pel = "(Semua Pelajaran)";
 }
 
-$arrSiswa = array();
+$arrSiswa = [];
 $nisStr = "";
 GetDataSiswa();
 
-$arrPel = array();
+$arrPel = [];
 $idPelStr = "";
 GetDataPelajaran();
 
-$arrAspekPel = array();
-$arrAspek = array();
+$arrAspekPel = [];
+$arrAspek = [];
 GetAspekPelajaran();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -168,7 +168,7 @@ GetAspekPelajaran();
 </tr>
 
 <?php
-$arrTotalNilaiAspekKelas = array();
+$arrTotalNilaiAspekKelas = [];
 
 $no = 0;
 $nSiswa = count($arrSiswa);
@@ -178,7 +178,7 @@ for($i = 0; $i < $nSiswa; $i++)
 
     $nis = $arrSiswa[$i][0];
     $nama = $arrSiswa[$i][1];
-    $arrTotalNilaiAspek = array();
+    $arrTotalNilaiAspek = [];
 
     echo "<tr height='25'>";
     echo "<td align='left'>$no</td>";
@@ -206,12 +206,12 @@ for($i = 0; $i < $nSiswa; $i++)
                        AND i.idpelajaran = $idPel
                        AND i.idsemester = $semester
                        AND i.idkelas = $kelas
-                       AND a.dasarpenilaian = '$kdAspek'";
+                       AND a.dasarpenilaian = '".$kdAspek."'";
             $res = QueryDb($sql);
-            $nData = mysql_num_rows($res);
+            $nData = mysqli_num_rows($res);
 
             $nilai = "";
-            if ($row = mysql_fetch_row($res))
+            if ($row = mysqli_fetch_row($res))
             {
                 $nilai = $row[0];
 
@@ -222,12 +222,12 @@ for($i = 0; $i < $nSiswa; $i++)
                 }
                 else
                 {
-                    $arrTotalNilaiAspek[$kdAspek] = array($nilai, 1);
+                    $arrTotalNilaiAspek[$kdAspek] = [$nilai, 1];
                 }
 
                 if ($no == 1)
                 {
-                    $arrTotalNilaiAspekKelas[$colCnt] = array($nilai, 1);
+                    $arrTotalNilaiAspekKelas[$colCnt] = [$nilai, 1];
                 }
                 else
                 {
@@ -265,7 +265,7 @@ for($i = 0; $i < $nSiswa; $i++)
 
             if ($no == 1)
             {
-                $arrTotalNilaiAspekKelas[$colCnt] = array($nilai, 1);
+                $arrTotalNilaiAspekKelas[$colCnt] = [$nilai, 1];
             }
             else
             {
@@ -286,8 +286,9 @@ echo "<td align='left' style='background-color: #ddb639; font-weight: bold;' col
 for($i = 0; $i < $nCol; $i++)
 {
     $rata = "";
-    if ($arrTotalNilaiAspekKelas[$i][1] > 0)
+    if ($arrTotalNilaiAspekKelas[$i][1] > 0) {
         $rata = round($arrTotalNilaiAspekKelas[$i][0] / $arrTotalNilaiAspekKelas[$i][1], 2);
+    }
 
     echo "<td align='center' style='background-color: #ddb639; font-weight: bold;'>$rata</td>";
 }

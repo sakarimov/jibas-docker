@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -61,7 +61,7 @@ $op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM kelompokcalonsiswa WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM kelompokcalonsiswa WHERE replid = '".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	CloseDb();	
 $page=0;
@@ -201,46 +201,46 @@ function change_baris() {
         <td width="15%" rowspan="2">&nbsp;</td>
         <td width="16%"><strong>Departemen &nbsp;</strong></td>
         <td width="20%"><select name="departemen" id="departemen" onchange="tampil()" style="width:155px;">
-          <?	$dep = getDepartemen(SI_USER_ACCESS());    
+          <?php $dep = getDepartemen(SI_USER_ACCESS());    
 	foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
           <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
             <?=$value ?>
             </option>
-          <?	} ?>
+          <?php } ?>
         </select></td>
       </tr>
       <tr>
         <td><strong>Proses Penerimaan &nbsp;</strong></td>
-        <td><?	$sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
+        <td><?php $sql = "SELECT replid,proses FROM prosespenerimaansiswa WHERE aktif=1 AND departemen='$departemen'";				
 				$result = QueryDb($sql);
-				if (@mysql_num_rows($result)>0){
-					$row = mysql_fetch_array($result);
+				if (@mysqli_num_rows($result)>0){
+					$row = mysqli_fetch_array($result);
 					$proses = $row['replid'];
 				} 
 			?>
           <input type="text" name="nama_proses" id="nama_proses" style="width:150px;" class="disabled" value="<?=$row['proses']?>" readonly />
           <input type="hidden" name="proses" id="proses"  value="<?=$proses?>" /></td>
-        <?
+        <?php
 OpenDb();
 if ($proses!="") {
 	$sql_tot = "SELECT replid,kelompok,kapasitas,keterangan FROM kelompokcalonsiswa WHERE idproses='$proses'";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 						
 	$sql = "SELECT replid,kelompok,kapasitas,keterangan FROM kelompokcalonsiswa WHERE idproses='$proses' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 						
 	$akhir = ceil($jumlah/5)*5;
 	  
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0) {
+	if (@mysqli_num_rows($result) > 0) {
 ?>
         <input type="hidden" name="total" id="total" value="<?=$total?>"/>
         <td align="right"><a href="#" onclick="refresh()"><img src="../images/ico/refresh.png" border="0" onmouseover="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp; <a href="JavaScript:cetak('<?=$urut?>','<?=$urutan?>')"><img src="../images/ico/print.png" border="0" onmouseover="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;
-          <?		//if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+          <?php 	//if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
           <a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onmouseover="showhint('Tambah Kelompok!', this, event, '50px')"/>&nbsp;Tambah Kelompok</a>
-          <?		//} ?></td>
+          <?php 	//} ?></td>
       </tr>
     </table>
     <br />   	
@@ -253,49 +253,49 @@ if ($proses!="") {
         <td width="12%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('kapasitas','<?=$urutan?>')" >Kapasitas <?=change_urut('kapasitas',$urut,$urutan)?></td>
         <td width="8%">Terisi</td>
         <td width="*" >Keterangan</td>
-        <?	//if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <td width="8%" >&nbsp;</td>
-        <? //} ?>
+        <?php //} ?>
       </tr>
-   	<?    
+   	<?php    
 		if ($page==0)
 			$i = 0;
 		else 
 			$i = (int)$page*(int)$varbaris;
 			
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
       <tr>
         <td height="25" align="center"><?=++$i?></td>
         <td height="25"><?=$row['kelompok']?></td>
         <td height="25" align="center"><?=$row['kapasitas']?></td>
         <td height="25" align="center">
-		<?	$sql1 = "SELECT COUNT(*) FROM calonsiswa WHERE idkelompok='$row[replid]' AND aktif = 1";
+		<?php $sql1 = "SELECT COUNT(*) FROM calonsiswa WHERE idkelompok='".$row['replid']."' AND aktif = 1";
 			$result1 = QueryDb($sql1);
-			$row1 = @mysql_fetch_row($result1);
+			$row1 = @mysqli_fetch_row($result1);
 			echo $row1[0];
 			if ($row1[0] > 0 ) {
 		?>  
         	&nbsp;<a href="JavaScript:lihat(<?=$row['replid']?>)"><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Lihat Calon Siswa!', this, event, '65px')"/></a>
-        <? 	} ?>
+        <?php 	} ?>
         </td>        
         <td height="25"><?=$row['keterangan']?></td>
         
 
         <td height="25" align="center">    
         	<a href="JavaScript:edit(<?=$row['replid'] ?>)" ><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Kelompok!', this, event, '80px')"/></a>&nbsp; 
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>
             <a href="JavaScript:hapus(<?=$row['replid'] ?>)" ><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Kelompok!', this, event, '80px')"/></a>
     	</td>
-<?		}?>   
+<?php 	}?>   
   	</tr>
-<?	} CloseDb(); ?>
+<?php } CloseDb(); ?>
       <!-- END TABLE CONTENT -->
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>	
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -320,19 +320,19 @@ if ($proses!="") {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -346,15 +346,15 @@ if ($proses!="") {
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
 
-<?	} else { ?>
+<?php } else { ?>
 <td width = "65%"></td>
 </tr>
 </table>
@@ -364,19 +364,19 @@ if ($proses!="") {
 	<td><hr style="border-style:dotted" color="#000000" /></td>
 </tr>
 </table>
-<? //if ($proses!=""){ ?>
+<?php //if ($proses!=""){ ?>
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data 
-        <? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? //} ?>
+        <?php //} ?>
         </b></font>
 	</td>
 </tr>
 </table>  
-<? } 
+<?php } 
 	} else {?>
 <td width = "65%"></td>
 </tr>
@@ -390,17 +390,17 @@ if ($proses!="") {
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
-    <? if ($departemen != "") {	?>  
+    <?php if ($departemen != "") {	?>  
         <font size = "2" color ="red"><b>Belum ada Proses Penerimaan Siswa Baru untuk Departemen <?=$departemen?> <br> Silahkan isi  terlebih dahulu di menu Proses Penerimaan Siswa Baru pada bagian PSB</font>
-    <? } else { ?>
+    <?php } else { ?>
 		<font size = "2" color ="red"><b>Belum ada data Departemen.
         <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
         </b></font>
-    <? } ?>    
+    <?php } ?>    
 	</td>
 </tr>
 </table>  
-<? } 
+<?php } 
 
 	?>
 </td></tr>

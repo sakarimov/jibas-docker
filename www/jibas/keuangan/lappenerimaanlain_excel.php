@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -69,15 +69,15 @@ if (isset($_REQUEST['idpenerimaan']))
 </head>
 
 <body>
-<?
+<?php
 OpenDb();
 $sql = "SELECT nama FROM datapenerimaan WHERE replid= $idpenerimaan";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 ?>
 
-<center><font size="4" face="Verdana"><strong>LAPORAN PENERIMAAN <?=strtoupper($namapenerimaan) ?></strong></font><br /> 
+<center><font size="4" face="Verdana"><strong>LAPORAN PENERIMAAN <?=strtoupper((string) $namapenerimaan) ?></strong></font><br /> 
 </center>
 <br /><br />
 
@@ -106,14 +106,14 @@ $namapenerimaan = $row[0];
     <td width="25%" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Keterangan</font></strong></td>
     <td width="10%" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Petugas</font></strong></td>
 </tr>
-<? 
+<?php 
 OpenDb();
 $sql = "SELECT p.replid AS id, j.nokas, p.sumber, date_format(p.tanggal, '%d-%b-%Y') AS tanggal, p.keterangan, p.jumlah, p.petugas FROM penerimaanlain p, jurnal j, datapenerimaan dp WHERE j.replid = p.idjurnal AND p.idpenerimaan = dp.replid AND p.idpenerimaan = '$idpenerimaan' AND dp.departemen = '$departemen' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY $urut $urutan "; 
 //echo  $sql;
 $result = QueryDb($sql);
 $cnt = 0;
 $tot = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$bg1="#ffffff";
 	if ($cnt==0 || $cnt%2==0)
 		$bg1="#fcffd3";
@@ -139,7 +139,7 @@ while ($row = mysql_fetch_array($result)) {
       <?=$row['petugas'] ?>
     </font></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="35">

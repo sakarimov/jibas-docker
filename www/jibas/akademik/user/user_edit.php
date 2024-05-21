@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/theme.php");
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
@@ -36,7 +36,7 @@ if(isset($_REQUEST["replid"]))
 
 $sql="SELECT h.login, h.tingkat, h.departemen, h.keterangan, p.nama FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='SIMAKA' AND h.login = l.login AND l.login = p.nip AND h.replid=$replid ";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nip = $row['login'];
 $nama = $row['nama'];
 $departemen = $row['departemen'];
@@ -62,17 +62,17 @@ if (isset($_REQUEST['simpan'])) {
 	OpenDb();
 	$tingkat=$_REQUEST['status_user'];
 	
-	$sql_dep = "AND departemen = '$_REQUEST[departemen]'";
+	$sql_dep = "AND departemen = '".$_REQUEST['departemen']."'";
 	if ($_REQUEST['status_user'] == "" || $_REQUEST['status_user'] == 1) {
 		$tingkat = 1;
 		$sql_dep = "";	
 	}	
 		
-	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '$_REQUEST[nip]' AND tingkat = $tingkat AND modul = 'SIMAKA' $sql_dep AND replid <> $replid";
+	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '".$_REQUEST['nip']."' AND tingkat = $tingkat AND modul = 'SIMAKA' $sql_dep AND replid <> $replid";
 	
 	$result=QueryDb($sql);
 
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Pengguna ".$_REQUEST['nip']." sudah mempunyai account untuk tingkat dan departemen ini!";
 	} else {
@@ -92,7 +92,7 @@ if (isset($_REQUEST['simpan'])) {
 			parent.opener.refresh();
 			window.close();
 		</script>
-		<?
+		<?php
 		} 
 	}
 }
@@ -118,9 +118,9 @@ if($status_user == 1 || $status_user == "") {
 <title>JIBAS SIMAKA [Ubah Pengguna]</title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 
 function cek_form() {
 	var nip = document.tambah_user.nip.value;
@@ -255,13 +255,13 @@ function panggil(elem){
 	<td><strong>Tingkat</strong></td>
     <td><select name="status_user" id="status_user" style="width:165px" onChange="change_tingkat();" onFocus="panggil('status_user')" <?=$fokus?>>
             <option value="1"
-            <?
+            <?php
                 if ($status_user==1)
                 echo "selected";
                 ?>
             >Manajer Akademik</option>
             <option value="2"
-            <?
+            <?php
                 if ($status_user==2)
                 echo "selected";
                 ?>
@@ -271,7 +271,7 @@ function panggil(elem){
 <tr>
     <td><strong>Departemen</strong></td>
     <td><select name="departemen" style="width:165px;" id="tt" <?=$dd ?> onKeyPress="return focusNext('keterangan', event)" onFocus="panggil('tt')">
-    <?  if ($status_user == 1 || $status_user == ""){	
+    <?php  if ($status_user == 1 || $status_user == ""){	
     		echo "<option value='' selected='selected'>Semua</option>";
     	}
 		OpenDb();
@@ -279,14 +279,14 @@ function panggil(elem){
 		$result_pro = QueryDb($query_pro);
 	
 		$i = 0;
-		while($row_pro = @mysql_fetch_array($result_pro)) {
+		while($row_pro = @mysqli_fetch_array($result_pro)) {
 			if($departemen == "") {
-				$departemen = $row_pro[departemen];
+				$departemen = $row_pro['departemen'];
 				if ($status_user == 1 || $status_user == "")
 					$sel[$i] = "";
 				else
 					$sel[$i] = "selected";
-			} elseif ($departemen == $row_pro[departemen]) {
+			} elseif ($departemen == $row_pro['departemen']) {
 				if ($status_user == 1 || $status_user == "")
 					$sel[$i] = "";
 				else
@@ -294,7 +294,7 @@ function panggil(elem){
 			} else {
 				$sel[$i] = "";
 			}
-			echo "<option value='$row_pro[departemen]' $sel[$i]>$row_pro[departemen]";
+			echo "<option value='".$row_pro['departemen']."' $sel[$i]>{$row_pro['departemen']}";
 			$i++;
 		}
 	?>
@@ -321,10 +321,10 @@ function panggil(elem){
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

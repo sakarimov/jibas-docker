@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
  require_once("../jibitheme/include/theme.php");
 
 require_once('../include/config.php');
@@ -39,9 +39,9 @@ if(isset($_POST["detail_pegawai"])){
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript">
     var win = null;
 function newWindow(mypage,myname,w,h,features) {
       var winl = (screen.width-w)/2;
@@ -72,17 +72,17 @@ function newWindow(mypage,myname,w,h,features) {
 <tr>
     <td align="center" valign="center">
 
-<?
+<?php
 OpenDb();
 if (!isset($_POST['simpan'])) {
 $query = "select replid,nip,noid,nama,bagian, tmplahir,day(tgllahir) as tanggal,year(tgllahir) as tahun,month(tgllahir) as bulan,suku,dokter from jibiklinik.pendataanpegawai  where replid = '$lihat_pegawai'";
-$result_query= Querydb($query) or die(mysql_error);
-$row=mysql_fetch_array($result_query);
-$tmplahir=$row[tmplahir];
-$tgllahir=$row[tanggal];
-$bulanlahir=$row[bulan];
-$tahunlahir=$row[tahun];
-if($row[dokter]== 1 )
+$result_query= Querydb($query) or die(\MYSQLI_ERROR);
+$row=mysqli_fetch_array($result_query);
+$tmplahir=$row['tmplahir'];
+$tgllahir=$row['tanggal'];
+$bulanlahir=$row['bulan'];
+$tahunlahir=$row['tahun'];
+if($row['dokter']== 1 )
 {
  $dokter = "Dokter";
 } else {
@@ -102,18 +102,18 @@ if($row[dokter]== 1 )
               <tr>
                 <td width="22%">Nip</td>
                 <td width="2%">:</td>
-                <td width="44%"><?=$row[nip] ?></td>
-                <td rowspan="7" align="center"><img src="../library/gambar.php?table=pendataanpegawai&replid=<?=$row[replid] ?>" width="90" height="121"></td>
+                <td width="44%"><?=$row['nip'] ?></td>
+                <td rowspan="7" align="center"><img src="../library/gambar.php?table=pendataanpegawai&replid=<?=$row['replid'] ?>" width="90" height="121"></td>
               </tr>
               <tr>
                 <td>nama</td>
                 <td>:</td>
-                <td><b><?=$row[nama] ?></b></td>
+                <td><b><?=$row['nama'] ?></b></td>
               </tr>
               <tr>
                 <td>no Identitas</td>
                 <td valign="top">:</td>
-                <td valign="top"><?=$row[noid]  ?> </td>
+                <td valign="top"><?=$row['noid']  ?> </td>
               </tr>
               <tr>
                 <td>Tmpt,tgl lahir</td>
@@ -123,12 +123,12 @@ if($row[dokter]== 1 )
               <tr>
                 <td>Bagian</td>
                 <td>:</td>
-                <td><?=$row[bagian] ?></td>
+                <td><?=$row['bagian'] ?></td>
               </tr>
               <tr>
                 <td>suku</td>
                 <td>:</td>
-                <td><?=$row[suku] ?></td>
+                <td><?=$row['suku'] ?></td>
               </tr>
               <tr>
                 <td>status</td>
@@ -145,46 +145,46 @@ if($row[dokter]== 1 )
           </div></td>
         </tr>
     </table>
-    <?
+    <?php
 
 }else {
-    $query_cek = "SELECT * FROM pegawai.suku WHERE suku = '$_POST[suku]'";
+    $query_cek = "SELECT * FROM pegawai.suku WHERE suku  = '".$_POST['suku']."'";
     $result_cek = QueryDb($query_cek);
-    $num_cek = @mysql_num_rows($result_cek);
+    $num_cek = @mysqli_num_rows($result_cek);
 
     if($num_cek == 0) {
         $query = "INSERT INTO pegawai.suku(suku) ".
                  "VALUES ('".CQ($_POST['suku'])."')";
-        $result = QueryDb($query) or die (mysql_error());
+        $result = QueryDb($query) or die (mysqli_error($mysqlconnection));
 
     	$query_get_id = "SELECT last_insert_id() FROM suku";
     	$result_get_id = QueryDb($query_get_id);
-    	$row_id = @mysql_fetch_array($result_get_id);
+    	$row_id = @mysqli_fetch_array($result_get_id);
 
-        if(mysql_affected_rows() > 0) {
+        if(mysqli_affected_rows($conn) > 0) {
                 ?>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
                     opener.document.location.href="pendataan_suku.php?sukuid=<?=$row_id[0] ?>";
     				window.close();
                 </script>
-                <?
+                <?php
         }else{
                ?>
-               <script language="JavaScript">
+               <script language = "javascript" type = "text/javascript">
                    alert("Gagal menambah data");
                    opener.document.location.href="pendataan_suku.php?sukuid=<?=$row_id[0] ?>";
                    window.close();
                </script>
-               <?
+               <?php
         }
     }else {
         ?>
-        <script language="JavaScript">
+        <script language = "javascript" type = "text/javascript">
             alert("Gagal menambah data. Masukkan Jenis Pemantauan yang berbeda");
-            opener.document.location.href="pendataan_suku.php?sukuid=<?=$_POST[sukuid] ?>";
+            opener.document.location.href="pendataan_suku.php?sukuid=<?=$_POST['sukuid'] ?>";
             window.close();
         </script>
-    <?
+    <?php
     }
 }
 CloseDb();

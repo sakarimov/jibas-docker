@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -50,14 +50,14 @@ if (1 != (int)$_SESSION["multipaystep"])
     <script language="javascript" src="multitrans.content.save.js"></script>
 </head>
 <body topmargin="0" leftmargin="0">
-<?
+<?php
 $departemen = $_REQUEST['departemen'];
 $kelompok = $_REQUEST['kelompok'];
 $idtahunbuku = $_REQUEST['idtahunbuku'];
 $studentid = $_REQUEST['noid'];
 $studentname = $_REQUEST['nama'];
 $ktransaksi = $_REQUEST['ktransaksi'];
-$ktransaksi = str_replace("'", "`", $ktransaksi);
+$ktransaksi = str_replace("'", "`", (string) $ktransaksi);
 $ktransaksi = str_replace('"', '`', $ktransaksi);
 $smsinfo = isset($_REQUEST['smsinfo']) ? 1 : 0;
 
@@ -66,7 +66,7 @@ OpenDb();
 $success = true;
 BeginTrans();
 
-$transactions = array();
+$transactions = [];
 
 $nrow = $_REQUEST['nflagrow'];
 for($i = 0; $i < $nrow; $i++)
@@ -109,27 +109,27 @@ if ($success)
     <input type="hidden" name="idtahunbuku" id="idtahunbuku" value="<?=$idtahunbuku?>">
     <input type="hidden" name="studentid" id="studentid" value="<?=$studentid?>">
     <input type="hidden" name="ktransaksi" id="ktransaksi" value="<?=$ktransaksi?>">
-    <?
+    <?php
     CountTotalPayment();
     ?>
     <div id="divReportCompact" style="visibility: hidden">
-    <?
+    <?php
     CreateDivPrintReportCompact();
     ?>
     </div>
     <div id="divReportDetail" style="visibility: hidden">
-    <?
+    <?php
     CreateDivPrintReportDetail();
     ?>
     </div>
-<?  $_SESSION["multipaystep"] = 2;
+<?php  $_SESSION["multipaystep"] = 2;
 }
 else
 {
     RollbackTrans(); ?>
     <br><br>
     <font style="font-size: 18px; color: red">Gagal menyimpan data. Tidak ada data transaksi yang tersimpan.</font><br>
-<?  
+<?php  
 }
 CloseDb();
 ?>

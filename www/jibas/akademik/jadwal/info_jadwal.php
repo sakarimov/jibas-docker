@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,13 +50,13 @@ $op = $_REQUEST['op'];
 
 if ($op == "dw8dxn8w9ms8zs22") {	
 	OpenDb();
-	$sql = "UPDATE infojadwal SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE infojadwal SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 	CloseDb();
 	$jadwal = $_REQUEST['replid'];
 } else if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM infojadwal WHERE replid = '$_REQUEST[replid]'";	
+	$sql = "DELETE FROM infojadwal WHERE replid = '".$_REQUEST['replid']."'";	
 	QueryDb($sql);		
 	CloseDb();	
 	$jadwal = $_REQUEST['replid'];
@@ -74,7 +74,7 @@ OpenDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 function change_departemen() {	
 	var departemen=document.getElementById("departemen").value;
@@ -205,26 +205,26 @@ function ByeWin() {
     	<td width="20%"><strong>Departemen </strong></td>
     	<td width="20%">
         <select name="departemen" id="departemen" onChange="change_departemen()" style="width:150px;">
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
 		foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
           <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
             <?=$value ?> 
             </option>
-              <?	} ?>
+              <?php } ?>
         </select>  		</td>
     </tr>
     <tr>
     	<td><strong>Tahun Ajaran</strong></td>
         <td>  
         <select name="tahunajaran" id="tahunajaran" onChange="change_tahunajaran()" style="width:150px;">
-   		 	<?
+   		 	<?php
 			OpenDb();
 			$sql = "SELECT replid,tahunajaran,aktif FROM tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
 				if ($row['aktif']) 
@@ -233,18 +233,18 @@ function ByeWin() {
 					$ada = '';			 
 			?>
             
-    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-    		<?
+    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+    		<?php
 			}
     		?>
     	</select>   
         </td>
-<?	if ($tahunajaran <> "" && $departemen <> "") { 
+<?php if ($tahunajaran <> "" && $departemen <> "") { 
 	OpenDb();	
 	$sql = "SELECT i.deskripsi, i.aktif, i.replid FROM jbsakad.infojadwal i, jbsakad.tahunajaran t WHERE t.departemen ='$departemen' AND i.idtahunajaran = '$tahunajaran' AND i.idtahunajaran = t.replid ORDER BY $urut $urutan";
 	
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0) {
+	if (@mysqli_num_rows($result) > 0) {
 ?>
         <td align="right">
         	<a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '80px')">&nbsp;Refresh</a>&nbsp;&nbsp;
@@ -264,20 +264,20 @@ function ByeWin() {
         <td width="15%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('i.aktif','<?=$urutan?>')">Status <?=change_urut('i.aktif',$urut,$urutan)?></td>
         <td width="15%">&nbsp;</td>
 	</tr>
-    <?
+    <?php
 	$cnt=1;
-	while ($row = @mysql_fetch_array($result)) {				
+	while ($row = @mysqli_fetch_array($result)) {				
 		$replid=$row['replid'];
 	?>
     <tr height="25">
         <td align="center"><?=$cnt?></td>
         <td><?=$row['deskripsi']?></td>
         <td align="center">
-        <? if ($row['aktif']==1){ ?>
+        <?php if ($row['aktif']==1){ ?>
             <img src="../images/ico/aktif.png" onClick="setaktif(<?=$row['aktif']?>,<?=$row['replid']?>)" onMouseOver="showhint('Status Aktif', this, event, '80px')">
-        <? } else { ?>
+        <?php } else { ?>
             <img src="../images/ico/nonaktif.png" onClick="setaktif(<?=$row['aktif']?>,<?=$row['replid']?>)" onMouseOver="showhint('Status Tidak Aktif', this, event, '80px')">
-        <? } ?> 
+        <?php } ?> 
 		</td>
         <td align="center">
         	<a href="#" onClick="newWindow('info_jadwal_edit.php?replid=<?=$row['replid']?>',     'UbahInfoJadwal','390','250','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Info Jadwal!', this, event, '80px')"></a>&nbsp;
@@ -285,7 +285,7 @@ function ByeWin() {
         
 	</tr> 
      
-    <?
+    <?php
 	$cnt++;	
 	} //while
 	CloseDb();
@@ -297,7 +297,7 @@ function ByeWin() {
   
 	</table>
   
-<?	} else { ?>
+<?php } else { ?>
 	<td width = "48%"></td>
 	</tr>
 	</table>
@@ -319,7 +319,7 @@ function ByeWin() {
    	</tr>
    	</table>
 
-<?	}
+<?php }
 } else { ?>
 	<td width = "48%"></td>
 	</tr>
@@ -332,19 +332,19 @@ function ByeWin() {
 	<tr>
 		<td align="center" valign="middle" height="150">
     
-    <? if ($departemen == "") { ?>
+    <?php if ($departemen == "") { ?>
 		<font size = "2" color ="red"><b>Belum ada data Departemen.
         <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
         </b></font>
-    <? } elseif ($tahunajaran == "") {?>
+    <?php } elseif ($tahunajaran == "") {?>
     	<font size = "2" color ="red"><b>Belum ada data Tahun Ajaran.
         <br />Silahkan isi terlebih dahulu di menu Tahun Ajaran pada bagian Referensi.
         </b></font>
-    <? } ?>
+    <?php } ?>
         </td>
    	</tr>
    	</table>
-<? } ?> 
+<?php } ?> 
 	</td>
 </tr>
 <tr height="35">

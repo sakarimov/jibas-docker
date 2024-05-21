@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -70,15 +70,15 @@ if (isset($_REQUEST['idpenerimaan']))
 <?=getHeader($departemen)?>
 
 
-<?
+<?php
 OpenDb();
 $sql = "SELECT nama FROM datapenerimaan WHERE replid= $idpenerimaan";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 ?>
 
-<center><font size="4"><strong>LAPORAN PENERIMAAN <?=strtoupper($namapenerimaan) ?></strong></font><br /> </center><br /><br />
+<center><font size="4"><strong>LAPORAN PENERIMAAN <?=strtoupper((string) $namapenerimaan) ?></strong></font><br /> </center><br /><br />
 
 <table border="0">
 <tr>
@@ -102,7 +102,7 @@ $namapenerimaan = $row[0];
     <td class="header" width="25%">Keterangan</td>
     <td class="header" width="10%">Petugas</td>
 </tr>
-<? 
+<?php 
 OpenDb();
 $sql = "SELECT p.replid AS id, j.nokas, p.sumber, date_format(p.tanggal, '%d-%b-%Y') AS tanggal, p.keterangan, p.jumlah, p.petugas FROM penerimaanlain p, jurnal j, datapenerimaan dp WHERE j.replid = p.idjurnal AND p.idpenerimaan = dp.replid AND p.idpenerimaan = '$idpenerimaan' AND dp.departemen = '$departemen' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY $urut $urutan ";//LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 
 //echo  $sql;
@@ -112,7 +112,7 @@ $result = QueryDb($sql);
 //else 
 //	$cnt = (int)$page*(int)$varbaris;
 $tot = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$tot += $row['jumlah'];
 ?>
 <tr height="25">
@@ -123,7 +123,7 @@ while ($row = mysql_fetch_array($result)) {
     <td><?=$row['keterangan'] ?></td>
     <td><?=$row['petugas'] ?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="35">

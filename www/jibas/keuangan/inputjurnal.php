@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -58,16 +58,16 @@ if (1 == (int)$_REQUEST['issubmit'])
 	OpenDb();
 	
 	//Ambil awalan dan cacah tahunbuku untuk bikin nokas;
-	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '$idtahunbuku'";
+	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		CloseDb();
 		trigger_error("Tidak ditemukan data tahunbuku", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$awalan = $row[0];
 		$cacah = $row[1];
 	}
@@ -80,7 +80,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 	$success = 0;
 	
 	$sql = "INSERT INTO jurnal 
-			   SET tanggal='$tanggal', transaksi='".CQ($_REQUEST[keperluan])."', idpetugas=$idpetugas_value, petugas='$petugas', 
+			   SET tanggal='$tanggal', transaksi='".CQ($_REQUEST['keperluan'])."', idpetugas=$idpetugas_value, petugas='$petugas', 
 			   	   nokas='$nokas', idtahunbuku='$idtahunbuku', keterangan='".CQ($_REQUEST['keterangan'])."', sumber='jurnalumum'";
 	QueryDbTrans($sql, $success);
 	
@@ -88,7 +88,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 	if ($success) 
 	{
 		$result = QueryDbTrans($sql, $success);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$idjurnal = $row[0];
 	}
 	
@@ -98,7 +98,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 		$debet = UnformatRupiah($_REQUEST['debet' . $i]);
 		$kredit = UnformatRupiah($_REQUEST['kredit' . $i]);
 		
-		if (strlen(trim($koderek)) > 0) 
+		if (strlen(trim((string) $koderek)) > 0) 
 		{
 			$sql = "INSERT INTO jurnaldetail SET idjurnal='$idjurnal', koderek='$koderek', debet='$debet', kredit='$kredit'";
 			if ($success) 
@@ -122,7 +122,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 		alert ('Data telah disimpan');
 		document.location.href="inputjurnal.php";
 	</script>
-<?	exit();
+<?php exit();
 }
 OpenDb();
 ?>
@@ -357,22 +357,22 @@ function focusNext(elemName, evt) {
             <td width="12%" align="left"><strong>Departemen </strong></td>
             <td colspan="2">
                 <select name="departemen" id="departemen" style="background-color:#FFFF99;width:180px" onChange="change_dep()" onKeyPress="return focusNext('keperluan', event)">
-    <?          $dep = getDepartemen(getAccess());
+    <?php          $dep = getDepartemen(getAccess());
                 foreach($dep as $value) {
                     if ($departemen == "")
                         $departemen = $value; ?>
                     <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?>><?=$value ?></option>
-                <? } ?>    
+                <?php } ?>    
                 </select>&nbsp;
             </td>
         </tr>
         <tr>
             <td><strong>Tahun Buku </strong></td>
             <td colspan="2">
-			<? $sql = "SELECT replid, tahunbuku FROM tahunbuku WHERE aktif = 1 AND departemen = '$departemen'";
+			<?php $sql = "SELECT replid, tahunbuku FROM tahunbuku WHERE aktif = 1 AND departemen = '".$departemen."'";
                $result = QueryDb($sql);
                     
-               $row = mysql_fetch_row($result);
+               $row = mysqli_fetch_row($result);
             ?>
                 <input type="text" name="tahunbuku" id="tahunbuku" size="27" readonly style="background-color:#CCCC99" value="<?=$row[1] ?>">
                 <input type="hidden" name="idtahunbuku" id="idtahunbuku" value="<?=$row[0] ?>" />
@@ -410,7 +410,7 @@ function focusNext(elemName, evt) {
                 <td class="header" align="center" width="18%">Debet</td>
                 <td class="header" align="center" width="18%">Kredit</td>
             </tr>
-            <? for($i = 1; $i <= $MAX_INPUT_JOURNAL; $i++) { ?>
+            <?php for($i = 1; $i <= $MAX_INPUT_JOURNAL; $i++) { ?>
             <tr height="25">
                 <td align="center"><?=$i ?></td>
                 <td><input type="text" name="koderek<?=$i ?>" id="koderek<?=$i ?>" size="8" maxlength="8" readonly="readonly" style="background-color:#CCCCCC" onClick="pilihrek(<?=$i?>)"  />
@@ -421,9 +421,9 @@ function focusNext(elemName, evt) {
                 <td align="center">
                 	<input type="text" name="debet<?=$i ?>" id="debet<?=$i ?>" size="15" maxlength="15" onBlur="formatRupiah('debet<?=$i ?>');jumlah('debet', <?=$i?>);" onKeyPress="if (document.getElementById('debet<?=$i?>').value != 0) return focusNext('debet<?=(int)$i+1?>',event); else return focusNext('kredit<?=$i?>', event);" onFocus="unformatRupiah('debet<?=$i ?>')" style="text-align:right"/> </td>
                 <td align="center">
-                	<input type="text" name="kredit<?=$i ?>" id="kredit<?=$i ?>" size="15" maxlength="15" onblur="formatRupiah('kredit<?=$i ?>');jumlah('kredit', <?=$i?>);" onfocus="unformatRupiah('kredit<?=$i ?>')" <? if ($i!=$MAX_INPUT_JOURNAL) { ?> onKeyPress="return focusNext('debet<?=(int)$i+1?>',event)" <? } else { ?> onkeypress="return focusNext('Simpan',event)" <? } ?>  style="text-align:right"/></td>
+                	<input type="text" name="kredit<?=$i ?>" id="kredit<?=$i ?>" size="15" maxlength="15" onblur="formatRupiah('kredit<?=$i ?>');jumlah('kredit', <?=$i?>);" onfocus="unformatRupiah('kredit<?=$i ?>')" <?php if ($i!=$MAX_INPUT_JOURNAL) { ?> onKeyPress="return focusNext('debet<?=(int)$i+1?>',event)" <?php } else { ?> onkeypress="return focusNext('Simpan',event)" <?php } ?>  style="text-align:right"/></td>
             </tr>
-            <? } ?>          
+            <?php } ?>          
         	<tr height="30">
         	<td colspan="2" align="center" bgcolor="#999900">
             	<font color="#FFFFFF"><strong>T O T A L</strong></font>
@@ -449,13 +449,13 @@ function focusNext(elemName, evt) {
 <!-- EOF CONTENT -->
 </td></tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 
-<? if (strlen($msg) > 0) {?>
+<?php if (strlen((string) $msg) > 0) {?>
 <script language="javascript">
 	alert('<?=$msg ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

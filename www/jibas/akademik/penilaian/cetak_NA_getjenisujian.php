@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/theme.php"); 
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
@@ -40,19 +40,19 @@ $nip=$_REQUEST["nip"];
 ?>
 <div align="right">
 <select name="jen_uji" id="jen_uji" onchange="jen_uji()" style="width:150px">
-			  <?
+			  <?php
 			  $sql_jenispengujian="SELECT * FROM jbsakad.aturannhb WHERE idtingkat='$tingkat' AND idpelajaran='$pelajaran' AND aktif=1 AND dasarpenilaian='$dasar_penilaian' AND nipguru='$nip'";
 			  $result_jenispengujian=QueryDb($sql_jenispengujian);
-			   if (@mysql_num_rows($result_jenispengujian)>0){
-			  while ($row_jenispengujian=@mysql_fetch_array($result_jenispengujian)){
-				$sql_jenisuji="SELECT jenisujian FROM jbsakad.jenisujian WHERE replid='$row_jenispengujian[idjenisujian]'";
+			   if (@mysqli_num_rows($result_jenispengujian)>0){
+			  while ($row_jenispengujian=@mysqli_fetch_array($result_jenispengujian)){
+				$sql_jenisuji="SELECT jenisujian FROM jbsakad.jenisujian WHERE replid='".$row_jenispengujian['idjenisujian']."'";
 				$result_jenisuji=QueryDb($sql_jenisuji);
-				$row_jenisuji=@mysql_fetch_array($result_jenisuji);
+				$row_jenisuji=@mysqli_fetch_array($result_jenisuji);
 				?>
-    		    <option value="<?=urlencode($row_jenispengujian['replid'])?>" <? //IntIsSelected($row['replid'], $kelas) ?>>
+    		    <option value="<?=urlencode((string) $row_jenispengujian['replid'])?>" <?php //IntIsSelected($row['replid'], $kelas) ?>>
    		        <?=$row_jenisuji['jenisujian']?>
    		        </option>
-				<?
+<?php
 			  }
 				} else {
 			  echo "<option value='' > - - - </option>";

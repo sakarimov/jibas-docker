@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -35,7 +35,7 @@ $sql = "SELECT t.departemen
 	      FROM siswa s, kelas k, tingkat t
 		 WHERE s.nis='$nis' AND s.idkelas=k.replid AND k.idtingkat=t.replid";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 
 $sql = "SELECT c.nis, c.nama, c.panggilan, c.tahunmasuk, c.idkelas, c.suku,
@@ -50,7 +50,7 @@ $sql = "SELECT c.nis, c.nama, c.panggilan, c.tahunmasuk, c.idkelas, c.suku,
 		  FROM siswa c, kelas k, tahunajaran t
 		 WHERE c.nis='$nis' AND k.replid = c.idkelas AND k.idtahunajaran = t.replid";
 $result = QueryDb($sql);
-$row_siswa = @mysql_fetch_array($result); 
+$row_siswa = @mysqli_fetch_array($result); 
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -66,7 +66,7 @@ $row_siswa = @mysql_fetch_array($result);
 <tr>
     <td align="left" valign="top" colspan="2">
 
-        <? getHeader($departemen) ?>
+        <?php getHeader($departemen) ?>
 
         <center>
             <font size="4"><strong>DATA SISWA</strong></font><br />
@@ -133,7 +133,7 @@ $row_siswa = @mysql_fetch_array($result);
                             <td >3.</td>
                             <td>Jenis Kelamin</td>
                             <td >:
-                                <? 	if ($row_siswa['kelamin']=="l")
+                                <?php 	if ($row_siswa['kelamin']=="l")
                                     echo "Laki-laki";
                                 if ($row_siswa['kelamin']=="p")
                                     echo "Perempuan";
@@ -296,12 +296,12 @@ $row_siswa = @mysql_fetch_array($result);
                             <td >Nama</td>
                             <td >:
                                 <?=$row_siswa['namaayah']?>
-                                <?
+                                <?php
                                 if ($row_siswa['almayah']==1)
                                     echo "&nbsp;(alm)";
                                 ?></td>
                             <td colspan="2"><?=$row_siswa['namaibu']?>
-                                <?
+                                <?php
                                 if ($row_siswa['almibu']==1)
                                     echo "&nbsp;(alm)";
                                 ?></td>
@@ -387,7 +387,7 @@ $row_siswa = @mysql_fetch_array($result);
                                        AND ds.nis = '$nis'
                                      ORDER BY td.urutan";
                             $res = QueryDb($sql);
-                            $ntambahandata = mysql_num_rows($res);
+                            $ntambahandata = mysqli_num_rows($res);
 
                             if ($ntambahandata > 0)
                             {
@@ -405,7 +405,7 @@ $row_siswa = @mysql_fetch_array($result);
                                 <?php
                                 $no = 33;
                                 $first = true;
-                                while($row = mysql_fetch_array($res))
+                                while($row = mysqli_fetch_array($res))
                                 {
                                     $no += 1;
                                     $replid = $row['replid'];

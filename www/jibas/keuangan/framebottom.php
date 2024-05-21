@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once("include/theme.php"); 
 /*if (isset($_REQUEST['theme'])){
 	$theme = (int)$_REQUEST['theme'];
@@ -50,7 +50,7 @@ require_once("include/sessioninfo.php");
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
 <script language="javascript" src="script/clock.js"></script>
-<script type="text/javascript" language="JavaScript">
+<script type="text/javascript" language="text/javascript">
 function get_fresh(){
 	document.location.reload();
 }
@@ -93,7 +93,7 @@ function BlinkText2(x,Current){
 			<img src="images/Keuangan2_24.png" width="25" height="31" alt=""></td>
 		<td width="100%" height="31" valign="top" background="images/Keuangan2_25.png">
         <span style="color:#FFFF00; font-family:Verdana; font-size:12px; padding-bottom:2px">
-		<?
+		<?php
 		if ($_SESSION['namakeuangan']=="landlord"){
 		echo  "Administrator JIBAS [Keuangan]";
 		} else {

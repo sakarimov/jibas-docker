@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -43,7 +43,7 @@ try
         $tahun = $_REQUEST['tahun'];
         $bagian = $_REQUEST['bagian'];
         
-        echo GetPegawai($idkegiatan, $bulan, $tahun, $bagian);
+        echo GetPegawai($idkegiatan, $bulan, $tahun);
     }
     else if ($op == "searchpegawai")
     {
@@ -53,7 +53,7 @@ try
         $filter = $_REQUEST['filter'];
         $keyword = $_REQUEST['keyword'];
         
-        echo SearchPegawai($idkegiatan, $bulan, $tahun, $filter, $keyword);
+        echo SearchPegawai($idkegiatan, $bulan, $tahun, $filter);
     }
     
     CloseDb();

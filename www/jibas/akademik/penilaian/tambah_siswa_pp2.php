@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -29,26 +29,26 @@ require_once('../include/theme.php');
 require_once('../include/db_functions.php');
 require_once('../library/departemen.php');
 
-if(isset($_REQUEST[nis])){
-	$nis = $_REQUEST[nis];
+if(isset($_REQUEST['nis'])){
+	$nis = $_REQUEST['nis'];
 }
-if(isset($_REQUEST[nama])){
-	$nama = $_REQUEST[nama];
+if(isset($_REQUEST['nama'])){
+	$nama = $_REQUEST['nama'];
 }
-if(isset($_REQUEST[departemen])){
-	$departemen = $_REQUEST[departemen];
+if(isset($_REQUEST['departemen'])){
+	$departemen = $_REQUEST['departemen'];
 }
-if(isset($_REQUEST[kelas])){
-	$kelas = $_REQUEST[kelas];
+if(isset($_REQUEST['kelas'])){
+	$kelas = $_REQUEST['kelas'];
 }
-if(isset($_REQUEST[jenis])){
-	$jenis = $_REQUEST[jenis];
+if(isset($_REQUEST['jenis'])){
+	$jenis = $_REQUEST['jenis'];
 }
-if(isset($_REQUEST[pelajaran])){
-	$pelajaran = $_REQUEST[pelajaran];
+if(isset($_REQUEST['pelajaran'])){
+	$pelajaran = $_REQUEST['pelajaran'];
 }
-if(isset($_REQUEST[semester])){
-	$semester = $_REQUEST[semester];
+if(isset($_REQUEST['semester'])){
+	$semester = $_REQUEST['semester'];
 }
 
 ?>
@@ -63,11 +63,11 @@ if(isset($_REQUEST[semester])){
 </script>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 
-<script language="JavaScript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
 </head>
 
 <body topmargin="0" leftmargin="10" marginheight="0" marginwidth="10"><br>
-<?
+<?php
 OpenDb();
 ?>
 <form action="tambah_siswa_pp2.php" method="post" name="main" onSubmit="return tekan()">
@@ -107,7 +107,7 @@ OpenDb();
 						<td class="header" height='30'>Nilai</td>
 						<td class="header" height='30'>Keterangan</td>
 					</tr>
-					<?
+					<?php
 					$query = "SELECT replid, tanggal, deskripsi ".
 							 "FROM jbsakad.ujian ".
 							 "WHERE idpelajaran = '$pelajaran' ".
@@ -115,30 +115,30 @@ OpenDb();
 							 "AND idsemester = '$semester' ".
 							 "AND idjenis = '$jenis' ";		
 					$result = QueryDb($query);
-					$jml_data = @mysql_num_rows($result);
+					$jml_data = @mysqli_num_rows($result);
 					
 					if($jml_data=="0"){
 					?>
 		<tr>
 			<td colspan='3' align='center' colspan='6'>Data Tidak Ada</td>
 		</tr>
-		<? 
+		<?php 
 	}else{
 	?>
 	<input type="hidden" name="num_data" value="<?=$jml_data ?>">	
-	<?
+	<?php
 	$i = 1;
-		while($row = @mysql_fetch_array($result)){
+		while($row = @mysqli_fetch_array($result)){
 	?>
-	<tr <?="bgcolor=#".($cnt%2?"ffffff":"EAECEE").""; ?>>
+	<tr <?="bgcolor=#".($cnt%2 !== 0?"ffffff":"EAECEE").""; ?>>
 		<td class='data'><?=$i ?>
-		<input type="hidden" name="ujian<?=$i ?>" value="<?=$row[replid] ?>">
+		<input type="hidden" name="ujian<?=$i ?>" value="<?=$row['replid'] ?>">
 		</td>
-		<td class='data'><?=$row[tanggal]; ?>
-		<input type="hidden" name="tanggal<?=$i ?>" value="<?=$row[tanggal] ?>">
+		<td class='data'><?=$row['tanggal']; ?>
+		<input type="hidden" name="tanggal<?=$i ?>" value="<?=$row['tanggal'] ?>">
 		</td>
-		<td class='data'><?=$row[deskripsi]; ?>
-		<input type="hidden" name="deskripsi<?=$i ?>" value="<?=$row[deskripsi] ?>">
+		<td class='data'><?=$row['deskripsi']; ?>
+		<input type="hidden" name="deskripsi<?=$i ?>" value="<?=$row['deskripsi'] ?>">
 		</td>
 		<td class='data'><select name="status<?=$i ?>">
 						<option value="0">Hadir/Mengumpulkan</option>
@@ -151,7 +151,7 @@ OpenDb();
 		<td class='data'><input type="text" name="nilai<?=$i ?>" size="2" value="0"></td>				
 		<td class='data'><input type="text" name="keterangan<?=$i ?>" value="siswa baru, belum mengikuti ujian ini"></td>		
 	</tr>
-	<?
+	<?php
 	$i++;
 	}
 	?>
@@ -167,10 +167,10 @@ OpenDb();
    </td>
   </tr>
 </table>
-<?
-if(isset($_POST[nis])) {
+<?php
+if(isset($_POST['nis'])) {
 	$i=1;
-	while($i < ($_POST[num_data]+1)){
+	while($i < ($_POST['num_data']+1)){
 		$uj = "ujian$i";
 		$sts = "status$i";
 		$nuj = "nilai$i";
@@ -178,22 +178,22 @@ if(isset($_POST[nis])) {
 
 	OpenDBi();
 		
-	$result = mysqli_query($conni,"CALL spTambahNilaiUjian('$_POST[$uj]','$_POST[nis]','$_POST[$nuj]','$_POST[ket]','$_POST[$sts]')") or die (mysqli_error($conni));
+	$result = mysqli_query($conni,"CALL spTambahNilaiUjian('".$_POST[$uj]."','".$_POST['nis']."','".$_POST[$nuj]."','".$_POST['ket']."','$_POST[$sts]')") or die (mysqli_error($conni));
 	$i++;
 	}
 	$i=1;
-	while($i < ($_POST[num_data]+1)){
+	while($i < ($_POST['num_data']+1)){
 		$uj = "ujian$i";
 		$sts = "status$i";
 		$nuj = "nilai$i";
 		$ket = "keterangan$i";	
 			
-			$query_nuj1 = "SELECT * FROM jbsakad.nilaiujian WHERE nilaiujian.idujian = '$_POST[$uj]'";
-			$result_nuj1 = QueryDb($query_nuj1) or die (mysql_error());
+			$query_nuj1 = "SELECT * FROM jbsakad.nilaiujian WHERE nilaiujian.idujian   = '".$_POST[$uj]."'";
+			$result_nuj1 = QueryDb($query_nuj1) or die (mysqli_error($mysqlconnection));
 	
 				$t=1;
-				while($row_nuj1 = @mysql_fetch_array($result_nuj1)){
-					$tota_nuj1 += $row_nuj1[nilaiujian];
+				while($row_nuj1 = @mysqli_fetch_array($result_nuj1)){
+					$tota_nuj1 += $row_nuj1['nilaiujian'];
 					$t++;
 				}
 				$ruk = $tota_nuj1/$t;	
@@ -201,9 +201,9 @@ if(isset($_POST[nis])) {
 				$query_ruk = "UPDATE jbsakad.ratauk SET nilaiRk = '$ruk' ".
 							 "WHERE idkelas = '$kelas' ".
 							 "AND idsemester = '$semester' ".
-							 "AND idujian = '$_POST[$uj]' ";
+							 "AND idujian   = '".$_POST[$uj]."' ";
 				
-				$result_ruk = QueryDb($query_ruk) or die (mysql_error());	
+				$result_ruk = QueryDb($query_ruk) or die (mysqli_error($mysqlconnection));	
 			$i++;		 
 		}	
 	
@@ -212,7 +212,7 @@ if(isset($_POST[nis])) {
 		opener.document.location.href = "tampil_nilai_pelajaran.php?departemen=<?=$departemen ?>&kelas=<?=$kelas ?>&pelajaran=<?=$pelajaran ?>&semester=<?=$semester ?>&jenis_penilaian=<?=$jenis ?>";
 		window.close();
 	</script>
-	<?
+	<?php
 	}
 }
 	CloseDb();

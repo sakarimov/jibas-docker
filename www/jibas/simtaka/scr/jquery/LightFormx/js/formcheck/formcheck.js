@@ -32,7 +32,7 @@
 		email - The value is restricted to valid email. This is a regex, you can change it with class options.
 		phone - The value is restricted to phone chars. This is a regex, you can change it with class options.
 		url: - The value is restricted to url. This is a regex, you can change it with class options.
-		confirm - The value has to be the same as the one passed in argument. f.e. confirm[password].
+		confirm - The value has to be the same as the one passed in argument. f.e. confirm['password'].
 		differs - The value has to be diferent as the one passed in argument. f.e. differs[user].
 		length - The value length is restricted by argument (f.e. length[6,10]). Use -1 as second argument to not set a maximum.
 
@@ -254,7 +254,7 @@ var FormCheck = new Class({
 	_validate : function(el) {
 		el.errors = [];
 		el.isOk = true;
-		//On valide l'élément qui n'est pas un radio ni checkbox
+		//On valide l'ï¿½lï¿½ment qui n'est pas un radio ni checkbox
 		el.validation.each(function(rule) {
 			if(this._isChildType(el)) {
 				if (this._validateGroup(el) == false) {

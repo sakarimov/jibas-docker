@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -41,16 +41,16 @@ $galleryid = $_REQUEST['galleryid'];
 OpenDb();
 $sql = "SELECT *
           FROM jbsvcr.gallery
-         WHERE replid = '$galleryid'";
+         WHERE replid = '".$galleryid."'";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     
     echo "Tidak ditemukan gallery!";
     exit();
 }
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 ?>
 <table border='0' cellpadding='2' cellspacing='0' width='98%'>
 <tr>
@@ -99,15 +99,15 @@ $row = mysql_fetch_array($res);
     </td>
     <td width="*" align="left" valign="top">
         <table cellpadding='0' cellspacing='0'>
-<?
+<?php
         $sql = "SELECT *
                   FROM jbsvcr.galleryfile
                  WHERE galleryid = '$galleryid'
                    AND iscover = 1";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_array($res2);
+        $row2 = mysqli_fetch_array($res2);
         $coverfile = $row2['location'] . "/" . $row2['filename'];
-        $coverinfo = str_replace("'", "`", $row2['fileinfo']);
+        $coverinfo = str_replace("'", "`", (string) $row2['fileinfo']);
 ?>
         <tbody>
         <tr>
@@ -153,7 +153,7 @@ $row = mysql_fetch_array($res);
     <td width="*" align="left">
         <table id='galed_tabGambar' cellpadding='0' cellspacing='0'>
         <thead>
-<?
+<?php
         $sql = "SELECT *
                   FROM jbsvcr.galleryfile
                  WHERE galleryid = '$galleryid'
@@ -161,10 +161,10 @@ $row = mysql_fetch_array($res);
         $res2 = QueryDb($sql);
         
         $n = 0;
-        while($row2 = mysql_fetch_array($res2))
+        while($row2 = mysqli_fetch_array($res2))
         {
             $file = $row2['location'] . "/" . $row2['filename'];
-            $info = str_replace("'", "`", $row2['fileinfo']);
+            $info = str_replace("'", "`", (string) $row2['fileinfo']);
             
             $n += 1; ?>
             
@@ -189,7 +189,7 @@ $row = mysql_fetch_array($res);
                     </a>       
                 </td>
             </tr>   
-<?
+<?php
         } // while
         echo "<input type='hidden' id='galed_ngambar' name='galed_ngambar' value='$n'>";
 ?>
@@ -229,6 +229,6 @@ $row = mysql_fetch_array($res);
 </table>
 <br><br><br>
 </form>    
-<?
+<?php
 CloseDb();
 ?> 

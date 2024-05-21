@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -53,9 +53,9 @@ if ($op == "348328947234923") {
 	$errmsg = "";
 	
 	if ($idbesarjtt > 0) {
-		$sql = "SELECT sum(jumlah) FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+		$sql = "SELECT sum(jumlah) FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$totalbayaran = $row[0];
 		
 		if ($totalbayaran > $besar) {
@@ -65,7 +65,7 @@ if ($op == "348328947234923") {
 			if ($totalbayaran == $besar)
 				$lunas = 1;
 				
-			$sql = "UPDATE besarjtt SET besar=$besar,keterangan='$_REQUEST[keterangan]',lunas=$lunas,pengguna='$pengguna' WHERE replid = '$idbesarjtt'";
+			$sql = "UPDATE besarjtt SET besar=$besar,keterangan='".$_REQUEST['keterangan']."',lunas=$lunas,pengguna='$pengguna' WHERE replid = '".$idbesarjtt."'";
 			QueryDb($sql);
 		}
 	} else {
@@ -96,13 +96,13 @@ if ($op == "348328947234923") {
 	$rekkas = "";
 	$rekpendapatan = "";
 	$rekpiutang = "";
-	$sql = "SELECT nama, rekkas, rekpendapatan, rekpiutang FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+	$sql = "SELECT nama, rekkas, rekpendapatan, rekpiutang FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		trigger_error("Tidak ditemukan data penerimaan", E_USER_ERROR);
 	} else {
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namapenerimaan = $row[0];
 		$rekkas = $row[1];
 		$rekpendapatan = $row[2];
@@ -111,34 +111,34 @@ if ($op == "348328947234923") {
 	
 	//Ambil nama siswa
 	$namasiswa = "";
-	$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$nis'";
+	$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$nis."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		trigger_error("Tidak ditemukan data siswa", E_USER_ERROR);
 	} else {
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namasiswa = $row[0];
 	}
 	
 	//Cari tahu apakah ini pelunasan?
 	$besarjtt = 0;
-	$sql = "SELECT besar FROM besarjtt WHERE replid = '$idbesarjtt'";
+	$sql = "SELECT besar FROM besarjtt WHERE replid = '".$idbesarjtt."'";
 	$result = QueryDb($sql); 
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		trigger_error("Tidak ditemukan data besarnya pembayaran", E_USER_ERROR);
 	} else {
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$besarjtt = $row[0];
 	}
 	
 	//Cari tahu jumlah pembayaran cicilan yang sudah terjadi
-	$sql = "SELECT jumlah FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+	$sql = "SELECT jumlah FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
 	$result = QueryDb($sql);
 	$jml = 0;
 	$cicilan = 0;
-	while ($row = mysql_fetch_row($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 		$jml += $row[0];
 		$cicilan++;
 	}
@@ -160,13 +160,13 @@ if ($op == "348328947234923") {
 	}
 		
 	//Ambil awalan dan cacah tahunbuku untuk bikin nokas;
-	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '$idtahunbuku'";
+	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		trigger_error("Tidak ditemukan data tahunbuku", E_USER_ERROR);
 	} else {
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$awalan = $row[0];
 		$cacah = $row[1];
 	}
@@ -228,14 +228,14 @@ if ($op == "348328947234923") {
 } else {
 
 	//Muncul pertama kali
-	$sql = "SELECT s.replid as replid, nama, telponsiswa as telpon, hpsiswa as hp, kelas as namakelas, alamatsiswa as alamattinggal FROM jbsakad.siswa s, jbsakad.kelas k WHERE s.idkelas = k.replid AND nis = '$nis'";
+	$sql = "SELECT s.replid as replid, nama, telponsiswa as telpon, hpsiswa as hp, kelas as namakelas, alamatsiswa as alamattinggal FROM jbsakad.siswa s, jbsakad.kelas k WHERE s.idkelas = k.replid AND nis = '".$nis."'";
 	
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		exit();
 	} else {
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		$replid = $row['replid'];
 		$nama = $row['nama'];
 		$telpon = $row['telpon'];
@@ -244,9 +244,9 @@ if ($op == "348328947234923") {
 		$alamattinggal = $row['alamattinggal'];
 	}
 	
-	$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+	$sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$namapenerimaan = $row[0];
 	
 }
@@ -411,16 +411,16 @@ function cetak() {
         <fieldset style="background:url(images/bttable400.png)">
         <legend><font size="2" color="#003300">
         <strong>Pembayaran Yang Harus Dilunasi</strong></font></legend>
-    <?
-        $sql = "SELECT replid AS id, besar, keterangan, lunas FROM besarjtt WHERE nis = '$nis' AND idpenerimaan = '$idpenerimaan'";
+    <?php
+        $sql = "SELECT replid AS id, besar, keterangan, lunas FROM besarjtt WHERE nis = '$nis' AND idpenerimaan = '".$idpenerimaan."'";
         $result = QueryDb($sql);
         $besar = "";
         $keterangan = "";
         $lunas = "";
         $idbesarjtt = 0;
     
-        if (mysql_num_rows($result) > 0) {
-            $row = mysql_fetch_array($result);
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_array($result);
             
             $besar = $row['besar'];
             $keterangan = $row['keterangan'];
@@ -447,7 +447,7 @@ function cetak() {
         <tr>
             <td><strong>Status</strong></td>
             <td>
-        <? 
+        <?php 
             $info = "<font color=red><strong>Belum Lunas</strong></font>";
             if ($lunas == 1)
                 $info = "<font color=blue><strong>Lunas</strong></font>";
@@ -455,22 +455,22 @@ function cetak() {
         ?>
             </td>
         </tr>
-        <?  if (getLevel() == 1) { ?> 
+        <?php  if (getLevel() == 1) { ?> 
         <tr>
             <td colspan="2" align="center">
             <input type="button" name="simpan" id="simpan" class="but" value="Simpan" onclick="simpan_besar()" />
             </td>
         </tr>
-        <? } ?>
+        <?php } ?>
         </table>
         </fieldset>
         </td>
     	<td>
-	<?  
+	<?php  
     if ($idbesarjtt > 0) { 
-        $sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+        $sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $nbayar = $row[0];
         
         $info = "Pembayaran Cicilan";
@@ -498,12 +498,12 @@ function cetak() {
             <td class="header" width="15%">Petugas</td>
             <td class="header">&nbsp;</td>
         </tr>
-        <? 
+        <?php 
         $sql = "SELECT p.replid AS id, j.nokas, date_format(p.tanggal, '%d-%b-%Y') as tanggal, p.keterangan, p.jumlah, p.petugas FROM penerimaanjtt p, besarjtt b, jurnal j WHERE p.idbesarjtt = b.replid AND j.replid = p.idjurnal AND b.replid = $idbesarjtt ORDER BY p.tanggal ASC";
         $result = QueryDb($sql);
         $cnt = 0;
         $total = 0;
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $total += $row['jumlah'];
         ?>
         <tr>
@@ -514,15 +514,15 @@ function cetak() {
             <td><?=$row['petugas'] ?></td>
             <td align="center">
             <a href="#" onclick="cetakkuitansi(<?=$row['id'] ?>)" title="Cetak Kuitansi Pembayaran" ><img src="images/ico/print.png" border="0" /></a>&nbsp;
-        <?  if (getLevel() == 1) { ?>
+        <?php  if (getLevel() == 1) { ?>
                 <a href="#" onclick="editpembayaran(<?=$row['id'] ?>)" title="Edit"><img src="images/ico/ubah.png" border="0" /></a>
-        <?	} ?>     
+        <?php } ?>     
             </td>
         </tr>
-        <?
+        <?php
         }
         ?>
-        <? $sisa = $besar - $total;?>
+        <?php $sisa = $besar - $total;?>
         <tr height="35">
             <td bgcolor="#996600" colspan="2" align="center"><font color="#FFFFFF"><strong>T O T A L</strong></font></td>
             <td bgcolor="#996600" align="right"><font color="#FFFFFF"><strong><?=FormatRupiah($total) ?></strong></font></td>
@@ -545,9 +545,9 @@ function cetak() {
         <tr>
             <td><strong>Tanggal</strong></td>
             <td><input type="text" name="tcicilan" id="tcicilan" readonly size="15" value="<?=date('d-m-Y') ?>" <?=$dis?>>
-            <?  if (getLevel() == 1) { ?>
+            <?php  if (getLevel() == 1) { ?>
             <a href="javascript:showCal('Calendar1');blank();"><img src="images/calendar.jpg" border="0"></a>
-            <? } ?>
+            <?php } ?>
             </td>
         </tr>
         <tr>
@@ -555,20 +555,20 @@ function cetak() {
             <td><textarea id="kcicilan" name="kcicilan" rows="3" cols="30" <?=$dis?>></textarea>
             </td>
         </tr>
-        <?  if (getLevel() == 1) { ?>
+        <?php  if (getLevel() == 1) { ?>
         <tr>
             <td colspan="2" align="center">
             <input type="button" name="scicilan" id="scicilan" class="but" value="Simpan" onclick="simpan_cicilan()" />
             </td>
         </tr>
-       	<? } ?>
+       	<?php } ?>
         </table>
     
         <br />
        
         </form>
         </fieldset>
-    <?  } ?>
+    <?php  } ?>
         	
 		<!-- EOF CONTENT -->
 		</td>
@@ -578,11 +578,11 @@ function cetak() {
 </tr>
 </table>
 
-<? if (strlen($errmsg) > 0) { ?>
+<?php if (strlen((string) $errmsg) > 0) { ?>
 <script language="javascript">
 alert('<?=$errmsg ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 
 </html>

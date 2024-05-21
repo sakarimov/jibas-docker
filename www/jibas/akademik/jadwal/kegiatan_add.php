@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,17 +50,17 @@ if (isset($_REQUEST['keterangan']))
 	
 if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
-	$sql = "SELECT * FROM aktivitaskalender WHERE kegiatan = '$kegiatan' AND idkalender = '$kalender'";
+	$sql = "SELECT * FROM aktivitaskalender WHERE kegiatan = '$kegiatan' AND idkalender = '".$kalender."'";
 	
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
 		?>
         <script language="javascript">
 			alert ('Nama kegiatan <?=$kegiatan?> sudah digunakan!');
 		</script>
-        <?	
+        <?php 
 		
 	} else {
 		$tanggalawal=TglDb($tglmulai);
@@ -76,7 +76,7 @@ if (isset($_REQUEST['Simpan'])) {
 			opener.refresh();
 			window.close();
 			</script>
-		<?
+		<?php
 		} 
 	}
 }
@@ -84,7 +84,7 @@ if (isset($_REQUEST['Simpan'])) {
 OpenDb();
 $sql = "SELECT k.kalender, t.tglmulai, t.tglakhir, k.departemen FROM kalenderakademik k, tahunajaran t WHERE k.replid = '$kalender' AND k.idtahunajaran = t.replid";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $departemen = $row['departemen'];
 $akademik = $row['kalender'];
 $periode = LongDateFormat($row['tglmulai']).' s/d '.LongDateFormat($row['tglakhir']);
@@ -106,7 +106,7 @@ CloseDb();
 <link href="../style/style.css" rel="stylesheet" type="text/css">
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script type="text/javascript" src="../script/tools.js"></script>
 <script type="text/javascript" src="../script/calendar.js"></script>
 <script type="text/javascript" src="../script/lang/calendar-en.js"></script>

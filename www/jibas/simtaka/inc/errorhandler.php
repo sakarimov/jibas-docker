@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 set_error_handler('errorHandler');
 
-function errorHandler ($errno, $errstr, $errfile, $errline, $errcontext) 
+function errorHandler ($errno, $errstr, $errfile, $errline) 
 {
    switch ($errno) 
    {
@@ -40,7 +40,7 @@ function errorHandler ($errno, $errstr, $errfile, $errline, $errcontext)
       case E_CORE_ERROR:
       case E_COMPILE_ERROR:
 		 		
-		 $r = rand(1, 30000);
+		 $r = random_int(1, 30000);
 		 
 		 if (file_exists("displayerror.php"))
 		 {

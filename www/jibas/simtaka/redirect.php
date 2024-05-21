@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 session_name("jbsperpus");
 session_start();
 
@@ -33,9 +33,9 @@ require_once('inc/db_functions.php');
 
 OpenDb();
    
-$username = trim($_POST[username]);
+$username = trim((string) $_POST['username']);
 if ($username=="jibas") $username="landlord";
-$password = trim($_POST[password]);
+$password = trim((string) $_POST['password']);
 
 $username = str_replace("'", "\'", $username);
 $username = str_replace("--", " ", $username);
@@ -49,8 +49,8 @@ if ($login == "landlord")
 {
 	$sql_la = "SELECT password FROM $db_name_user.landlord";
 	$result_la = QueryDb($sql_la) ;
-	$row_la=@mysql_fetch_array($result_la);
-	if (md5($password)==$row_la[password])
+	$row_la=@mysqli_fetch_array($result_la);
+	if (md5($password)==$row_la['password'])
 	{
 		$_SESSION['login'] = "landlord";
 		$_SESSION['tingkat'] = "0";
@@ -70,18 +70,18 @@ else
              WHERE l.login=p.nip 
                AND l.login=$username";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_array($result);
-	$jum = mysql_num_rows($result);
+	$row = mysqli_fetch_array($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0)
 	{
 		if ($row['aktif'] == 0)
 		{
 			?>
-			<script language="JavaScript">
+			<script language = "javascript" type = "text/javascript">
 				alert("Status pengguna sedang tidak aktif!");
 				document.location.href = "../simtaka/";
 			</script>
-			<?
+			<?php
 		}
 		else
 		{
@@ -90,32 +90,32 @@ else
                        WHERE login = $username  
 					     AND password = '".md5($password)."' 
 					     AND nip=login";
-			$result = QueryDb($query) or die(mysql_error());
-			$row = mysql_fetch_array($result);
-			$num = mysql_num_rows($result);
+			$result = QueryDb($query) or die(mysqli_error($mysqlconnection));
+			$row = mysqli_fetch_array($result);
+			$num = mysqli_num_rows($result);
 			if ($num != 0)
 			{
 				$q = "SELECT aktif,tingkat,departemen,info1 
                         FROM $db_name_user.hakakses 
                        WHERE login = $username  
 					     AND modul = 'SIMTAKA'";
-				$res = QueryDb($q) or die(mysql_error());
-				$r = mysql_fetch_array($res);
-				if ($r[aktif]==0)
+				$res = QueryDb($q) or die(mysqli_error($mysqlconnection));
+				$r = mysqli_fetch_array($res);
+				if ($r['aktif']==0)
 				{	?>
-					<script language="JavaScript">
+					<script language = "javascript" type = "text/javascript">
 						alert("Status pengguna sedang tidak aktif!");
 						document.location.href = "../simtaka/";
 					</script>
-				<?		
+				<?php 	
 				}
 				else
 				{
 					$_SESSION['login'] = $login;
-					$_SESSION['tingkat'] = $r[tingkat];
-					$_SESSION['perpustakaan'] = $r[departemen];
-					$_SESSION['idperpustakaan'] = $r[info1];
-					$_SESSION['nama'] = $row[nama];
+					$_SESSION['tingkat'] = $r['tingkat'];
+					$_SESSION['perpustakaan'] = $r['departemen'];
+					$_SESSION['idperpustakaan'] = $r['info1'];
+					$_SESSION['nama'] = $row['nama'];
 					$user_exists = true;
 				}
 			}
@@ -129,11 +129,11 @@ else
 
 if (!$user_exists)
 {	?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
         alert("Username atau password tidak cocok!");
         document.location.href = "../simtaka/";
     </script>
-	<?
+	<?php
 }
 else
 {
@@ -151,10 +151,10 @@ else
 	if (isset($_SESSION['login']) && isset($_SESSION['tingkat']))
 	{ 
 	?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
         top.location.href = "../simtaka/";
     </script>
-    <?
+    <?php
 	}
 	exit();
 }

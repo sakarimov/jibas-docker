@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetOwnerName($ownerid, $ownertype)
 {
     $sql = $ownertype == "S" ?
            "SELECT nama FROM jbsakad.siswa WHERE nis = '$ownerid'" :
-           "SELECT nama FROM jbssdm.pegawai WHERE nip = '$ownerid'";
+           "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$ownerid."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     else
@@ -44,7 +44,7 @@ function ShowTautan()
     
     // -- SHOW TAUTAN --
     $tautan = $row['tautan'];
-    if (strlen($tautan) > 0)
+    if (strlen((string) $tautan) > 0)
     {
         echo "<strong>Tautan:</strong><br>\r\n";
         echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -74,10 +74,10 @@ function ShowGambar()
                    AND filecate = 'pict'";
         $res = QueryDb($sql);
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $file = $row['location'] . "/" . $row['filename'];
-            $info = str_replace("'", "`", $row['fileinfo']);
+            $info = str_replace("'", "`", (string) $row['fileinfo']);
             //$info = "tessy";
             
             $no += 1;
@@ -137,13 +137,13 @@ function ShowDokumen()
                    AND filecate = 'doc'";
         $res = QueryDb($sql);
         $no = 0;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $replid = $row['replid'];
             $file = $FILESHARE_ADDR. "/" . $row['location'] . "/" . $row['filename'];
             $file = urlencode($file);
-            $info = str_replace("'", "`", $row['fileinfo']);
-            $name = urlencode($row['filename']);
+            $info = str_replace("'", "`", (string) $row['fileinfo']);
+            $name = urlencode((string) $row['filename']);
             
             echo "<a style='text-decoration: underline; font-weight: normal; color: blue; cursor: pointer;' onclick=\"not_DownloadDoc('$replid', '$file', '$name')\" title='$info'>\r\n";
             echo $row['filename'] . "\r\n";
@@ -162,7 +162,7 @@ function ShowPrevCommentLink($notesid)
     
     $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.notescomment
-                 WHERE notesid = '$notesid'";
+                 WHERE notesid = '".$notesid."'";
     $nCmt = (int)FetchSingle($sql);
     if ($nCmt <= $NotesViewActiveComment)
         return;
@@ -180,7 +180,7 @@ function ShowPrevCommentLink($notesid)
             </span>
         </td>
     </tr>
-<?
+<?php
 }
 
 function ShowPrevComment($notesid)
@@ -189,7 +189,7 @@ function ShowPrevComment($notesid)
     
     $sql = "SELECT COUNT(replid)
               FROM jbsvcr.notescomment
-             WHERE notesid = '$notesid'";
+             WHERE notesid = '".$notesid."'";
     $nCmt = (int)FetchSingle($sql);
     $sqlLimit = "LIMIT " . ($nCmt - $NotesViewActiveComment);
     
@@ -202,10 +202,10 @@ function ShowPrevComment($notesid)
                    $sqlLimit";
     
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -219,7 +219,7 @@ function ShowPrevComment($notesid)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='NotesViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='NotesViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -239,7 +239,7 @@ function ShowPrevComment($notesid)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -252,7 +252,7 @@ function ShowComment($notesid, $maxCommentId)
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsvcr.notescomment
-                 WHERE notesid = '$notesid'";
+                 WHERE notesid = '".$notesid."'";
         $nCmt = (int)FetchSingle($sql);
         if ($nCmt > $NotesViewActiveComment)
             $sqlLimit = "LIMIT " . ($nCmt - $NotesViewActiveComment) . ", $NotesViewActiveComment";
@@ -273,10 +273,10 @@ function ShowComment($notesid, $maxCommentId)
                AND replid > '$maxCommentId'
                    $sqlLimit";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
         return;
     
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $replid = $row['replid'];
         $ownertype = $row['ownertype'];
@@ -290,7 +290,7 @@ function ShowComment($notesid, $maxCommentId)
         <tr id='<?=$rowId?>'>
             <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
             <td class='NotesViewCommentCell' width='10%' align='center' valign='top'>
-                <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
+                <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='35'><br>
             </td>
             <td class='NotesViewCommentCell' width='*' align='left' valign='top'>
                 <div style='position: relative'>
@@ -310,7 +310,7 @@ function ShowComment($notesid, $maxCommentId)
                 </div>
             </td>
         </tr>
-        <?
+        <?php
     }
 }
 
@@ -363,7 +363,7 @@ function ShowCommentBox($notesid)
     </table>
     </fieldset>
 
-<?    
+<?php    
 }
 
 function GetMaxCommentId($notesid)
@@ -374,9 +374,9 @@ function GetMaxCommentId($notesid)
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         return $row[0];
     }
     
@@ -385,7 +385,7 @@ function GetMaxCommentId($notesid)
 
 function ValidateEditNotesLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
     {
         $info = "Anda tidak berhak mengubah notes ini!";
         return false;
@@ -396,7 +396,7 @@ function ValidateEditNotesLogin($login, $password, &$type, &$info)
 
 function ValidateDeleteNotesLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return ValidateAdminLogin($login, $password, $info);
     
     return ValidateLogin("", $login, $password, $type, $info);
@@ -404,7 +404,7 @@ function ValidateDeleteNotesLogin($login, $password, &$type, &$info)
 
 function ValidateDelCmtLogin($login, $password, &$type, &$info)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return ValidateAdminLogin($login, $password, $info);
     
     return ValidateLogin("", $login, $password, $type, $info);
@@ -412,7 +412,7 @@ function ValidateDelCmtLogin($login, $password, &$type, &$info)
 
 function ValidateNotesOwner($notesid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -428,7 +428,7 @@ function ValidateNotesOwner($notesid, $login)
 
 function ValidateCommentOwner($replid, $login)
 {
-    if (strtolower($login) == "jibas")
+    if (strtolower((string) $login) == "jibas")
         return true;
     
     $sql = "SELECT COUNT(replid)
@@ -454,7 +454,7 @@ function ValidateCommentOwner($replid, $login)
 function DeleteComment($replid)
 {
     $sql = "DELETE FROM jbsvcr.notescomment
-             WHERE replid = '$replid'";
+             WHERE replid = '".$replid."'";
     QueryDb($sql);         
 }
 
@@ -464,9 +464,9 @@ function DeleteNotes($notesid)
     
     $sql = "SELECT *
               FROM jbsvcr.notesfile
-             WHERE notesid = '$notesid'";
+             WHERE notesid = '".$notesid."'";
     $res = QueryDbEx($sql);
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $floc = $row['location'] . "/" . $row['filename'];
         $floc = "$FILESHARE_UPLOAD_DIR/$floc";
@@ -476,11 +476,11 @@ function DeleteNotes($notesid)
     }
     
     $sql = "DELETE FROM jbsvcr.notesfile
-             WHERE notesid = '$notesid'";
+             WHERE notesid = '".$notesid."'";
     QueryDbEx($sql);
     
     $sql = "DELETE FROM jbsvcr.notes
-             WHERE replid = '$notesid'";
+             WHERE replid = '".$notesid."'";
     QueryDbEx($sql);
 }
 ?>

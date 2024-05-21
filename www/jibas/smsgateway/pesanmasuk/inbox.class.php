@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class Inbox{
 	function Main(){
 		global $LMonth;
@@ -32,26 +32,26 @@ class Inbox{
                 <td style="padding-right:4px">Bulan</td>
                 <td style="padding-right:4px">
                 <select id="Month" class="Cmb" onchange="ChgCmb()">
-                    <?
+                    <?php
                     for ($i=1; $i<=12; $i++){
 						if ($Month=='')
-							$Month = date(m);
+							$Month = date('m');
                         ?>
                         <option value="<?=$i?>" <?=StringIsSelected($i,$Month)?>><?=$LMonth[$i-1]?></option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>
                 </td>
                 <td style="padding-right:2px">
                 <select id="Year" class="Cmb" onchange="ChgCmb()">
-                    <?
-                    for ($i=G_START_YEAR; $i<=date(Y); $i++){
+                    <?php
+                    for ($i=G_START_YEAR; $i<=date('Y'); $i++){
                         if ($Year=='')
-							$Year = date(Y);
+							$Year = date('Y');
 						?>
                         <option value="<?=$i?>" <?=StringIsSelected($i,$Year)?>><?=$i?></option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>
@@ -68,14 +68,14 @@ class Inbox{
             <td>Pesan</td>
             <td>&nbsp;</td>
           </tr>
-          <?
+          <?php
 		  $ID  = "";
 		  $sql = "SELECT * FROM inbox WHERE YEAR(ReceivingDateTime)='$Year' AND MONTH(ReceivingDateTime)='$Month' ORDER BY ID DESC";
 		  $res = QueryDb($sql);
-		  $num = @mysql_num_rows($res);
+		  $num = @mysqli_num_rows($res);
 		  if ($num>0){
 		  $cnt=1;
-		  while ($row = @mysql_fetch_array($res)){
+		  while ($row = @mysqli_fetch_array($res)){
 		  if ($ID=="")
 		  	  $ID = $row['ID'];
 		  else		
@@ -87,10 +87,10 @@ class Inbox{
 		  $bg = "";
 		  //if ($cnt%2==0)
 		  	//	$bg = "background-color:#cfddd1;";		
-		  $nohp  = str_replace("+62","",$row['SenderNumber']);	
+		  $nohp  = str_replace("+62","",(string) $row['SenderNumber']);	
           $sqlph = "SELECT nama FROM phonebook WHERE nohp LIKE '%$nohp'";
 		  $resph = QueryDb($sqlph);
-		  $rowph = @mysql_fetch_row($resph);
+		  $rowph = @mysqli_fetch_row($resph);
 		  $nama  = $rowph[0];
 		  ?>
           <tr style="cursor:pointer;<?=$bg?><?=$style?>" id="<?=$row['ID']?>" >
@@ -98,16 +98,16 @@ class Inbox{
             <td class="td Link" onclick="ReadMessage('<?=$row['ID']?>');">(<?=$row['SenderNumber']?>) <?php echo $nama ?></td>
             <td class="td" onclick="ReadMessage('<?=$row['ID']?>');"><?=FullDateFormat($row['ReceivingDateTime'])?></td>
             <td class="td" onclick="ReadMessage('<?=$row['ID']?>');">
-			<?
-			if (strlen($row['Text'])>50)
-				echo substr($row['Text'],0,50)."...";
+			<?php
+			if (strlen((string) $row['Text'])>50)
+				echo substr((string) $row['Text'],0,50)."...";
 			else
 				echo $row['Text'];
 			?>
             </td>
             <td class="td" align="center"><img onclick="DeleteRow(this,'<?=$row['ID']?>');" src="../images/ico/hapus.png" width="16" height="16" /></td>
           </tr>
-          <?
+          <?php
 		  $cnt++;
 		  }
 		  }
@@ -118,7 +118,7 @@ class Inbox{
 			</script>
           <input type="hidden" id="CurrentInboxIdList" style="width:100%" value="<?=$ID?>" />
           </div>
-        <?
+        <?php
 	}
 	
 }

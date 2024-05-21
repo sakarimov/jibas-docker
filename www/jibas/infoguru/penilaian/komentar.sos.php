@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -150,8 +150,8 @@ echo "<input type='hidden' id='nis' name='nis' value='$nis'>";
 echo "<input type='hidden' id='idpelajaran' name='idpelajaran' value='$pelajaran'>";
 echo "<input type='hidden' id='idtingkat' name='idtingkat' value='$tingkat'>";
 
-$arrjenis = array("SPI", "SOS");
-$arrnmjenis = array("Spiritual", "Sosial");
+$arrjenis = ["SPI", "SOS"];
+$arrnmjenis = ["Spiritual", "Sosial"];
 
 for($i = 0; $i < count($arrjenis); $i++)
 {
@@ -168,9 +168,9 @@ for($i = 0; $i < count($arrjenis); $i++)
              WHERE nis = '$nis'
                AND idsemester = '$semester'
                AND idkelas = '$kelas'
-               AND jenis = '$jenis'";
+               AND jenis = '".$jenis."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $idkomenrapor = $row[0];
         $predikat = $row[1];
@@ -220,6 +220,6 @@ echo "</form>";
 ?>
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

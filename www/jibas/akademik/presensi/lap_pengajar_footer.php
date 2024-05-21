@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -63,10 +63,10 @@ $op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM ppsiswa WHERE idpp = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM ppsiswa WHERE idpp = '".$_REQUEST['replid']."'";
 	$result = QueryDb($sql);
 	if($result){
-		$sql = "DELETE FROM presensipelajaran WHERE replid = '$_REQUEST[replid]'";
+		$sql = "DELETE FROM presensipelajaran WHERE replid = '".$_REQUEST['replid']."'";
 		QueryDb($sql);
 	}
 	CloseDb();	
@@ -140,12 +140,12 @@ function change_urut(urut,urutan) {
 <!-- TABLE UTAMA -->
 <tr>
 	<td>
-    <? 		
+    <?php 		
 	OpenDb();
 	$sql = "SELECT DAY(p.tanggal), MONTH(p.tanggal), YEAR(p.tanggal), p.jam, k.kelas, l.nama, s.status, p.keterlambatan, p.jumlahjam, p.materi, p.keterangan, p.replid FROM presensipelajaran p, kelas k, pelajaran l, statusguru s WHERE p.idkelas = k.replid AND p.idpelajaran = l.replid AND p.gurupelajaran = '$nip' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.jenisguru = s.replid AND k.idtahunajaran = '$tahunajaran' ORDER BY $urut $urutan";
 	
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 	?>  
      <table width="100%" border="0" align="center">
@@ -172,18 +172,18 @@ function change_urut(urut,urutan) {
       	<td width="6%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('p.jumlahjam','<?=$urutan?>')">Jam <?=change_urut('p.jumlahjam',$urut,$urutan)?></td>
       	<td width="17%" height="30" align="center" class="header">Materi</td>
       	<td width="*" height="30" align="center" class="header">Keterangan</td>
-		<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>      	
+		<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>      	
         <td width="3%" height="30" align="center" class="header"></td>
-		<? } ?>
+		<?php } ?>
 	</tr>
-	<? 
+	<?php 
     $cnt = 0;
-    while ($row = @mysql_fetch_row($result)) {					
+    while ($row = @mysqli_fetch_row($result)) {					
     ?>	
     <tr>        			
         <td height="25" align="center"><?=++$cnt?></td>
-        <td height="25" align="center"><?=$row[0].'-'.$row[1].'-'.substr($row[2],2,2)?></td>
-        <td height="25" align="center"><?=substr($row[3],0,5)?></td>
+        <td height="25" align="center"><?=$row[0].'-'.$row[1].'-'.substr((string) $row[2],2,2)?></td>
+        <td height="25" align="center"><?=substr((string) $row[3],0,5)?></td>
         <td height="25" align="center"><?=$row[4]?></td>
         <td height="25"><?=$row[5]?></td>
         <td height="25"><?=$row[6]?></td>
@@ -191,13 +191,13 @@ function change_urut(urut,urutan) {
         <td height="25" align="center"><?=$row[8]?></td>
         <td height="25"><?=$row[9]?></td>
         <td height="25"><?=$row[10]?></td>
-	<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>            
+	<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?>            
         <td height="25" align="center"> 
-        <a title="Hapus" href="JavaScript:hapus('<?=$row[11] ?>','<?=$row[0].'-'.$row[1].'-'.substr($row[2],2,2)?>','<?=substr($row[3],0,5)?>','<?=$row[4]?>','<?=$row[5]?>')"><img src="../images/ico/hapus.png" border="0" /></a>
+        <a title="Hapus" href="JavaScript:hapus('<?=$row[11] ?>','<?=$row[0].'-'.$row[1].'-'.substr((string) $row[2],2,2)?>','<?=substr((string) $row[3],0,5)?>','<?=$row[4]?>','<?=$row[5]?>')"><img src="../images/ico/hapus.png" border="0" /></a>
    		</td> 
-	<?	} ?>    
+	<?php } ?>    
     </tr>
- 	<?		
+ 	<?php 	
 	} 
 	CloseDb();	?>
 	</table>
@@ -211,27 +211,27 @@ function change_urut(urut,urutan) {
 		<td width="100" height="30" align="center" class="header">Pertemuan</td>
 		<td width="100" height="30" align="center" class="header">Jumlah Jam</td>
 	</tr>
-<? 	OpenDb();	
+<?php 	OpenDb();	
 	$sql = "SELECT replid, status FROM statusguru ORDER BY status" ;
 	$result = QueryDb($sql);	
-	while ($row = @mysql_fetch_array($result)) {
+	while ($row = @mysqli_fetch_array($result)) {
 		$replid = $row['replid'];
 		
 		$sql1 = "SELECT COUNT(*), SUM(p.jumlahjam) FROM presensipelajaran p, pelajaran l, kelas k WHERE p.gurupelajaran = '$nip' AND tanggal BETWEEN '$tglawal' AND '$tglakhir' AND jenisguru = '$replid' AND p.idpelajaran = l.replid AND p.idkelas = k.replid AND k.idtahunajaran = '$tahunajaran' ";
 		$result1 = QueryDb($sql1);	
-		$row1 = @mysql_fetch_row($result1);
+		$row1 = @mysqli_fetch_row($result1);
 ?>
 		<tr>	
     		<td height="25"><strong><?=$row['status']?></strong></td>
    		  <td height="25" align="center"><?=$row1[0]?></td> 	
 		  <td height="25" align="center"><?=$row1[1]?></td>    
 		</tr>
-<? 	} CloseDb(); ?>
+<?php 	} CloseDb(); ?>
 	</table>
     <script language='JavaScript'>
 		Tables('table', 1, 0);
 	</script> 	 
-<? 	} else { ?>
+<?php 	} else { ?>
 
 	 <table width="100%" border="0" align="center">         
 	<tr>
@@ -240,7 +240,7 @@ function change_urut(urut,urutan) {
 		</td>
 	</tr>
 	</table>
-<?	} ?>
+<?php } ?>
 	</td>
 </tr>      
 <!-- END OF TABLE UTAMA -->

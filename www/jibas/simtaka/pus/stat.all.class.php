@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,20 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CStat
 {
 	function OnStart()
 	{
 		$this->Limit=10;
-		if (isset($_REQUEST[Limit]))
-			$this->Limit = $_REQUEST[Limit];
+		if (isset($_REQUEST['Limit']))
+			$this->Limit = $_REQUEST['Limit'];
 			
-		$this->perpustakaan = $_REQUEST[perpustakaan];
-		$this->BlnAwal = $_REQUEST[BlnAwal];
-		$this->ThnAwal = $_REQUEST[ThnAwal];
-		$this->BlnAkhir = $_REQUEST[BlnAkhir];
-		$this->ThnAkhir = $_REQUEST[ThnAkhir];
+		$this->perpustakaan = $_REQUEST['perpustakaan'];
+		$this->BlnAwal = $_REQUEST['BlnAwal'];
+		$this->ThnAwal = $_REQUEST['ThnAwal'];
+		$this->BlnAkhir = $_REQUEST['BlnAkhir'];
+		$this->ThnAkhir = $_REQUEST['ThnAkhir'];
 	}
 	
 	function reload_page()
@@ -42,7 +42,7 @@ class CStat
 		<script language='JavaScript'>
 			document.location.href="pustaka.baru.php";
         </script>
-		<?
+		<?php
 	}
 	
 	function OnFinish()
@@ -51,7 +51,7 @@ class CStat
 		<script language='JavaScript'>
 			Tables('table', 1, 0);
 		</script>
-		<?
+		<?php
     }
 	
 	function GetPerpus()
@@ -64,20 +64,20 @@ class CStat
 		$result = QueryDb($sql); ?>
 	
 		<select name="perpustakaan" id="perpustakaan" class="cmbfrm"  onchange="chg()">
-<?
+<?php
 		if (SI_USER_LEVEL()!=2)
 		{
 			echo "<option value='-1' ".IntIsSelected('-1',$this->perpustakaan).">(Semua)</option>";
 		}
 		
-		while ($row = @mysql_fetch_row($result))
+		while ($row = @mysqli_fetch_row($result))
 		{
 			if ($this->perpustakaan=="")
 				$this->perpustakaan = $row[0];	?>
 			<option value="<?=$row[0]?>" <?=IntIsSelected($row[0],$this->perpustakaan)?>><?=$row[1]?></option>
-<?		}	?>
+<?php 	}	?>
 		</select>
-<?
+<?php
 	}
 	
 	function Content()
@@ -99,11 +99,11 @@ class CStat
                 <tr>
 					<td>Bulan</td>
                     <td width="*">
-<?						$yearnow = date(Y);	?>
+<?php 					$yearnow = date('Y');	?>
                         <table width="100%" border="0" cellspacing="0" cellpadding="1">
                         <tr>
                             <td>
-<?								echo "<select name='BlnAwal' id='BlnAwal' class='cmbfrm' onchange='chg()'>";
+<?php 							echo "<select name='BlnAwal' id='BlnAwal' class='cmbfrm' onchange='chg()'>";
                                 for ($i=1;$i<=12;$i++)
 								{
                                     if ($this->BlnAwal=="")
@@ -113,7 +113,7 @@ class CStat
                                 echo "</select>"; ?>
 							</td>
                             <td>
-<? 								echo "<select name='ThnAwal' id='ThnAwal' class='cmbfrm' onchange='chg()'>";
+<?php 								echo "<select name='ThnAwal' id='ThnAwal' class='cmbfrm' onchange='chg()'>";
                                 for ($i=$yearnow;$i>=$G_START_YEAR;$i--)
 								{
                                     if ($this->ThnAwal=="")
@@ -123,10 +123,10 @@ class CStat
                                 echo "</select>"; ?>
 							</td>
                             <td>
-<? 								echo "&nbsp;s.d.&nbsp;"; ?>
+<?php 								echo "&nbsp;s.d.&nbsp;"; ?>
 							</td>
                             <td>
-<? 								echo "<select name='BlnAkhir' id='BlnAkhir' class='cmbfrm' onchange='chg()'>";
+<?php 								echo "<select name='BlnAkhir' id='BlnAkhir' class='cmbfrm' onchange='chg()'>";
                                 for ($i=1;$i<=12;$i++)
 								{
                                     if ($this->BlnAkhir=="")
@@ -136,7 +136,7 @@ class CStat
                                 echo "</select>";?>
 							</td>
 							<td>
-<? 								echo "<select name='ThnAkhir' id='ThnAkhir' class='cmbfrm' onchange='chg()'>";
+<?php 								echo "<select name='ThnAkhir' id='ThnAkhir' class='cmbfrm' onchange='chg()'>";
                                 for ($i=$yearnow;$i>=$G_START_YEAR;$i--)
 								{
                                     if ($this->ThnAkhir=="")
@@ -162,7 +162,7 @@ class CStat
         </tr>
         <tr>
             <td colspan="2" valign="top">
-				<? if (isset($_REQUEST[ShowState]))
+				<?php if (isset($_REQUEST['ShowState']))
 				{
 					echo $this->ShowStatistik();
 				}
@@ -174,7 +174,7 @@ class CStat
         </tr>
         </table>
         <br />
-<?	}
+<?php }
 	
 	function ShowStatistik()
 	{
@@ -194,7 +194,7 @@ class CStat
 		$key = $this->ThnAwal."-".$this->BlnAwal."-01,".$this->ThnAkhir."-".$this->BlnAkhir."-31"; ?>
 		
 		<table width="100%" border="0" cellspacing="2" cellpadding="2">
-<? 		if (@mysql_num_rows($result)>0)
+<?php 		if (@mysqli_num_rows($result)>0)
 		{ ?>
         <tr>
 		    <td colspan="2" align="center" valign="top"><a href="javascript:Cetak()"><img src="../img/ico/print1.png" width="16" height="16" border="0" />&nbsp;Cetak</a></td>
@@ -207,7 +207,7 @@ class CStat
             	<img src="<?="statimage.php?type=pie&key=$key&Limit=$this->Limit&krit=3&perpustakaan=$this->perpustakaan" ?>" />
             </td>
 		</tr>
-<? 		} ?>
+<?php 		} ?>
 		<tr>
 			<td colspan="2" valign="top">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -220,9 +220,9 @@ class CStat
 							<td width='14%' align="center" class="header">Jumlah</td>
 							<td width='10%' align="center" class="header">&nbsp;</td>
 						</tr>
-<? 						if (@mysql_num_rows($result)>0)
+<?php 						if (@mysqli_num_rows($result)>0)
 						{
-							while ($row = @mysql_fetch_row($result))
+							while ($row = @mysqli_fetch_row($result))
 							{ 
 								$this->bulan = $row[1];
 								$this->tahun = $row[2];	  ?>
@@ -236,7 +236,7 @@ class CStat
 										</a>
 									</td>
 								</tr>
-<? 								$cnt++;
+<?php 								$cnt++;
 							} // while
 						}
 						else
@@ -244,7 +244,7 @@ class CStat
 						<tr>
 							<td height="20" align="center" colspan="4" class="nodata">Tidak ada data</td>
 						</tr>	
-<? 						} ?>
+<?php 						} ?>
 						</table>
 					</td>
 					<td valign="top">
@@ -255,6 +255,6 @@ class CStat
 			</td>
 		</tr>
 		</table>
-<?	}
+<?php }
 }
 ?>

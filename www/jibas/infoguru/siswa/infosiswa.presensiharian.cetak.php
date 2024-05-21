@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -36,15 +36,15 @@ OpenDb();
 
 $sql = "SELECT nama FROM siswa WHERE nis='$nis_aktif'";
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);         
+$row = mysqli_fetch_array($result);         
 $nama = $row['nama'];
 
 $sql = "SELECT a.departemen, a.tahunajaran, t.tingkat, k.kelas, a.tglmulai, a.tglakhir
 		  FROM tahunajaran a, kelas k, tingkat t
 		 WHERE k.idtahunajaran = a.replid AND k.idtingkat = t.replid
-		   AND k.replid = '$kelas'";
+		   AND k.replid = '".$kelas."'";
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $tglawal = $row['tglmulai'];
 $tglakhir = $row['tglakhir'];
 $departemen = $row['departemen'];
@@ -65,7 +65,7 @@ $tingkat = $row['tingkat'];
 <table border="0" cellpadding="10" cellspacing="5" width="780" align="left">
 <tr>
 	<td align="left" valign="top" colspan="2">
-<? getHeader($departemen) ?>
+<?php getHeader($departemen) ?>
 	
 <center>
   <font size="4"><strong>STATISTIK PRESENSI HARIAN</strong></font><br />
@@ -96,7 +96,7 @@ $tingkat = $row['tingkat'];
 <table width="100%">
 <tr>
 	<td colspan="2" align="center"> 
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql1 = "SELECT CONCAT(DATE_FORMAT(tanggal1,'%b'),' ',YEAR(tanggal1)) AS blnthn,
 						SUM(hadir), SUM(ijin), SUM(sakit),  SUM(alpa),SUM(cuti), MONTH(tanggal1)
 				   FROM presensiharian p, phsiswa ph
@@ -107,16 +107,16 @@ $tingkat = $row['tingkat'];
 				  ORDER BY YEAR(tanggal1), MONTH(tanggal1)";
 			  				  
 	$result1 = QueryDb($sql1);
-	$num = mysql_num_rows($result1);
+	$num = mysqli_num_rows($result1);
 	
-	$data = array();
+	$data = [];
 
-	while($row1 = mysql_fetch_row($result1)) {
-		$data[] = array($row1[1],$row1[2],$row1[3],$row1[4],$row1[5]);
+	while($row1 = mysqli_fetch_row($result1)) {
+		$data[] = [$row1[1], $row1[2], $row1[3], $row1[4], $row1[5]];
 		$legend_x[] = $row1[0];			
     }
 	
-	$legend_y = array('Hadir','Ijin','Sakit','Alpa', 'Cuti');
+	$legend_y = ['Hadir', 'Ijin', 'Sakit', 'Alpa', 'Cuti'];
 
     $graph = new CAsBarDiagram;
     $graph->bwidth = 10; // set one bar width, pixels
@@ -140,11 +140,11 @@ $tingkat = $row['tingkat'];
         <td width="15%" class="header">Alpa</td>
         <td width="15%" class="header">Cuti</td>
     </tr>
-	<? 
+	<?php 
     
     $result2 = QueryDb($sql1);
-    while ($row2 = @mysql_fetch_row($result2)) {		
-        $waktu = explode(" ",$row2[0]);
+    while ($row2 = @mysqli_fetch_row($result2)) {		
+        $waktu = explode(" ",(string) $row2[0]);
     ?>	
     <tr height="25">        			
         <td align="center"><?=NamaBulan($row2[6]).' '.$waktu[1]?></td>
@@ -155,7 +155,7 @@ $tingkat = $row['tingkat'];
         <td align="center"><?=$row2[5]?></td>
     </tr>
 			
-<?	} 
+<?php } 
 	CloseDb() ?>	
 	<!-- END TABLE CONTENT -->
 	</table>

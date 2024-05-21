@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -38,7 +38,7 @@ if (getLevel() == 2) { ?>
 	alert('Maaf, anda tidak berhak mengakses halaman ini!');
 	document.location.href = "<?=$sourcefrom ?>";
 </script>
-<? 	exit();
+<?php 	exit();
 } // end if
 
 $varbaris=10;
@@ -67,7 +67,7 @@ if (isset($_REQUEST['departemen']))
 	
 $op = $_REQUEST['op'];
 if ($op == "12134892y428442323x423") {
-	$sql = "DELETE FROM tahunbuku WHERE replid = '$_REQUEST[id]'";
+	$sql = "DELETE FROM tahunbuku WHERE replid = '".$_REQUEST['id']."'";
 	OpenDb();
 	QueryDb($sql);
 	CloseDb();
@@ -77,10 +77,10 @@ if ($op == "12134892y428442323x423") {
 
 if ($op == "d28xen32hxbd32dn239dx") {
 	OpenDb();	
-	$sql = "UPDATE tahunbuku SET aktif = 0 WHERE departemen = '$departemen'";
+	$sql = "UPDATE tahunbuku SET aktif = 0 WHERE departemen = '".$departemen."'";
 	QueryDb($sql);
 	
-	$sql = "UPDATE tahunbuku SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[id]'";
+	$sql = "UPDATE tahunbuku SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['id']."'";
 	QueryDb($sql);
 	CloseDb();
 	
@@ -219,26 +219,26 @@ function change_urut(urut,urutan) {
     	<td width="15%" rowspan="2">&nbsp;</td>
         <td align="left" width="30%"><strong>Departemen&nbsp;</strong>
     	<select name="departemen" id="departemen" onChange="change_dep()">
-<?		OpenDb();
+<?php 	OpenDb();
 		$dep = getDepartemen(getAccess());
 		foreach ($dep as $value) { 
 			if ($departemen == "")
 				$departemen = $value ?>
 	    	<option value="<?=$value ?>" <?=StringIsSelected($departemen, $value) ?> > <?=$value ?></option>
-<?  	} ?>     
+<?php  	} ?>     
 </select>
         </td>
-<? 	$sql_tot = "SELECT * FROM tahunbuku WHERE departemen='$departemen' ORDER BY replid"; 
+<?php 	$sql_tot = "SELECT * FROM tahunbuku WHERE departemen='$departemen' ORDER BY replid"; 
 
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql = "SELECT * FROM tahunbuku WHERE departemen='$departemen' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result = QueryDb($sql);
 	
-	if (@mysql_num_rows($result) > 0){       
+	if (@mysqli_num_rows($result) > 0){       
  ?>       
         <input type="hidden" name="total" id="total" value="<?=$total?>"/>
         <td align="right" width="80%">
@@ -257,14 +257,14 @@ function change_urut(urut,urutan) {
         <td width="40%">Keterangan</td>
         <td width="12%">&nbsp;</td>
 	</tr>
-    <?
+    <?php
 
 	if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while($row = mysql_fetch_array($result)) {
+	while($row = mysqli_fetch_array($result)) {
 	?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
@@ -273,21 +273,21 @@ function change_urut(urut,urutan) {
         <td align="center"><?=$row['awalan'] ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center">
-        <? if ($row['aktif'] == 1) { ?>
+        <?php if ($row['aktif'] == 1) { ?>
             <a href="#" onClick="newWindow('tahunbuku_edit.php?id=<?=$row['replid']?>', 'EditTahunBuku','480','340','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Tahun Buku!', this, event, '75px')" /></a>
-		<? } else { ?>
+		<?php } else { ?>
         	&nbsp;
-        <? } ?>            
+        <?php } ?>            
         </td>
     </tr>
-<?  }
+<?php  }
 	CloseDb(); ?>
     
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -312,17 +312,17 @@ function change_urut(urut,urutan) {
     <tr>
        	<td width="30%" align="left">Halaman
             <select name="hal" id="hal" onChange="change_hal()">
-            <?	for ($m=0; $m<$total; $m++) {?>
+            <?php for ($m=0; $m<$total; $m++) {?>
                  <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             dari <?=$total?> halaman
         </td>
         <td width="30%" align="right">Jumlah baris per halaman
             <select name="varbaris" id="varbaris" onChange="change_baris()">
-            <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+            <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
                 <option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-            <? 	} ?>
+            <?php 	} ?>
             </select>
         </td>
     </tr>
@@ -330,7 +330,7 @@ function change_urut(urut,urutan) {
 <!-- EOF CONTENT -->
 </td></tr>
 </table>
-<?	} else { ?>
+<?php } else { ?>
 	<td width = "60%"></td>
 </tr>
 </table>
@@ -349,7 +349,7 @@ function change_urut(urut,urutan) {
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

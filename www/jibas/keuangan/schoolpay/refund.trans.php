@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -41,7 +41,7 @@ $sql = "SELECT departemen
           FROM jbsfina.paymenttabungan
          WHERE jenis = 1";
 $res = QueryDb($sql);
-if ($row = mysql_fetch_row($res))
+if ($row = mysqli_fetch_row($res))
     $deptPeg = $row[0];
 
 // Ambil replid yg terlibat skrg supaya konsisten
@@ -59,10 +59,10 @@ $sql = "SELECT p.replid, p.tanggal
 $res = QueryDb($sql);
 
 $allIdPayment = "";
-$lsIdPaymentTanggal = array();
+$lsIdPaymentTanggal = [];
 $keyTanggal = "";
-$lsTanggal = array();
-while($row = mysql_fetch_row($res))
+$lsTanggal = [];
+while($row = mysqli_fetch_row($res))
 {
     $replid = $row[0];
     $tanggal = $row[1];
@@ -71,7 +71,7 @@ while($row = mysql_fetch_row($res))
     $allIdPayment .= $replid;
 
     $key = "#$tanggal@";
-    if (strpos($keyTanggal, $key) === false)
+    if (!str_contains($keyTanggal, $key))
     {
         $lsTanggal[] = $tanggal;
         $keyTanggal .= $key;
@@ -96,7 +96,7 @@ if ($departemen == $deptPeg)
              ORDER BY p.tanggal";
 
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $replid = $row[0];
         $tanggal = $row[1];
@@ -105,7 +105,7 @@ if ($departemen == $deptPeg)
         $allIdPayment .= $replid;
 
         $key = "#$tanggal@";
-        if (strpos($keyTanggal, $key) === false)
+        if (!str_contains($keyTanggal, $key))
         {
             $lsTanggal[] = $tanggal;
             $keyTanggal .= $key;
@@ -119,13 +119,13 @@ if ($departemen == $deptPeg)
 }
 
 // Tanggal dan tagihan transaksi siswa
-$lsTagihan = array();
+$lsTagihan = [];
 $sql = "SELECT p.tanggal, IFNULL(SUM(p.jumlah), 0) AS jumlah
           FROM jbsfina.paymenttrans p
          WHERE p.replid IN ($allIdPayment)
          GROUP BY p.tanggal";
 $res = QueryDb($sql);
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $tanggal = $row[0];
     $lsTagihan[$tanggal] = $row[1];
@@ -216,9 +216,9 @@ $nData = count($lsTanggal);
             $res = QueryDb($sql);
 
             echo "<select id='penerima' name='penerima' style='width: 250px'>";
-            while($row = mysql_fetch_row($res))
+            while($row = mysqli_fetch_row($res))
             {
-                echo "<option value='$row[0]'>$row[1]</option>";
+                echo "<option value='".$row[0]."'>".$row[1]."</option>";
             }
             echo "</select>";
 ?>

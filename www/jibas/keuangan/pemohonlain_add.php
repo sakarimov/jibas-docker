@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -29,14 +29,14 @@ require_once('include/db_functions.php');
 require_once('include/theme.php');
 require_once('include/sessioninfo.php');
 
-$MYSQL_ERROR_MSG = "";
+$mysqli_ERROR_MSG = "";
 if (isset($_REQUEST['simpan'])) {
 	OpenDb();
 	$sql = "SELECT * FROM pemohonlain WHERE nama = '".CQ($_REQUEST['nama'])."'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan!";
+	if (mysqli_num_rows($result) > 0) {
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan!";
 	} else {
 		$sql = "INSERT INTO pemohonlain SET nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."'";
 		$result = QueryDb($sql);
@@ -47,7 +47,7 @@ if (isset($_REQUEST['simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 ?>
@@ -62,7 +62,7 @@ if (isset($_REQUEST['simpan'])) {
 <link href="script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript">
 function validasi() {
@@ -127,11 +127,11 @@ function focusNext(elemName, evt) {
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen($mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

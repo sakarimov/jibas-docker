@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -34,7 +34,7 @@ OpenDb();
 $now = $th . "-" . $bln . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $n = $row[0];
 
 /*if ($bln == 4 || $bln == 6|| $bln == 9 || $bln == 11) 
@@ -47,8 +47,8 @@ else
 	$n = 31;*/
 ?>
 <select name="<?=$namatgl?>" id="<?=$namatgl?>" onchange="change_<?=$namatgl?>()">
-    <option value="">[Tgl]</option>  
-<? 	for($i=1;$i<=$n;$i++){ ?>      
+    <option value="">['Tgl']</option>  
+<?php 	for($i=1;$i<=$n;$i++){ ?>      
     <option value="<?=$i?>" <?=IntIsSelected($tgl, $i)?>><?=$i?></option>
-<?	} ?>           
+<?php } ?>           
 </select>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 |_______________________________________________________________|
 -->
 
-<?
+<?php
 
 //========
 //LICENSE
@@ -78,13 +78,13 @@ $to = 'yourname@domain.com';
 
 
 //User info (DO NOT EDIT!)
-$name = stripslashes($_POST['name']); //sender's name
-$email = stripslashes($_POST['email']); //sender's email
-$website = stripslashes($_POST['website']); //sender's website
+$name = stripslashes((string) $_POST['name']); //sender's name
+$email = stripslashes((string) $_POST['email']); //sender's email
+$website = stripslashes((string) $_POST['website']); //sender's website
 
 //The subject
 $subject  = "[LightFormX Contact Form] "; //The default subject. Will appear by default in all messages. Change this if you want.
-$subject .= stripslashes($_POST['subject']); // the subject
+$subject .= stripslashes((string) $_POST['subject']); // the subject
 
 
 //The message you will receive in your mailbox
@@ -94,7 +94,7 @@ $msg  = "From : $name \r\n";  //add sender's name to the message
 $msg .= "e-Mail : $email \r\n";  //add sender's email to the message
 $msg .= "Website : $website \r\n"; //add sender's website to the message
 $msg .= "Subject : $subject \r\n\n"; //add subject to the message (optional! It will be displayed in the header anyway)
-$msg .= "---Message--- \r\n".stripslashes($_POST['message'])."\r\n\n";  //the message itself
+$msg .= "---Message--- \r\n".stripslashes((string) $_POST['message'])."\r\n\n";  //the message itself
 
 //Extras: User info (Optional!)
 //Delete this part if you don't need it
@@ -141,7 +141,7 @@ $msg .= "User come from : ".$_SERVER["HTTP_REFERER"]; //Referrer
 </head>
 <body>
 <!-- The contact form starts here-->
-<?
+<?php
    if ($_SERVER['REQUEST_METHOD'] != 'POST'){
       $self = $_SERVER['PHP_SELF'];
 ?>
@@ -194,7 +194,7 @@ $msg .= "User come from : ".$_SERVER["HTTP_REFERER"]; //Referrer
 	</div> <!-- / footer -->
 
 
-<?
+<?php
 	} else {
 		error_reporting(0);
 

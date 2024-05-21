@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,9 +38,9 @@ ReadParam();
 $sql = "SELECT k.kelas, t.tingkat
           FROM jbsakad.kelas k, jbsakad.tingkat t
          WHERE k.idtingkat = t.replid
-           AND k.replid = '$kelas'";
+           AND k.replid = '".$kelas."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nmkelas = $row[0];
 $nmtingkat = $row[1];
 ?>
@@ -49,9 +49,9 @@ $nmtingkat = $row[1];
     <title>Ekspor Nilai Pelajaran</title>
     <link rel="stylesheet" type="text/css" href="../style/style.css">
     <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-    <script language="JavaScript" src="../script/tooltips.js"></script>
-    <script language="JavaScript" src="../script/tools.js"></script>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+    <script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
+    <script language = "javascript" type = "text/javascript">
     function cetakExcel()
     {
         var filename = document.getElementById("filename").value + "";
@@ -211,7 +211,7 @@ $nmtingkat = $row[1];
     <td style="border-style: none;">&nbsp;</td>
     <td style="border-style: none;">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT nis, nama 
           FROM siswa 
          WHERE idkelas = '$kelas' 
@@ -221,7 +221,7 @@ $sql = "SELECT nis, nama
 $res = QueryDb($sql);
 $no = 0;
 $rownum = 13;
-while($row = mysql_fetch_array($res))
+while($row = mysqli_fetch_array($res))
 {
     ?>
     <tr style="height: 24px;">
@@ -234,7 +234,7 @@ while($row = mysql_fetch_array($res))
         <td style="border-style: none;">&nbsp;</td>
         <td style="border-style: none;">&nbsp;</td>
     </tr>
-<?
+<?php
 }
 echo "</table>";
 
@@ -242,9 +242,9 @@ $sql = "SELECT k.kelas, t.tingkat, ta.tahunajaran
           FROM jbsakad.kelas k, jbsakad.tingkat t, jbsakad.tahunajaran ta
          WHERE k.idtingkat = t.replid
            AND k.idtahunajaran = ta.replid
-           AND k.replid = '$kelas'";
+           AND k.replid = '".$kelas."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nmkelas = $row[0];
 $nmtingkat = $row[1];
 $nmtahunajaran = $row[2];
@@ -269,4 +269,4 @@ $nmfile .= "TA-" . SafeName($nmtahunajaran) . ".xlsx";
 
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>

@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ function ShowCbVendor()
 
     echo "<select id='vendor' name='vendor' onchange='clearReport()' style='width: 250px'>";
     echo "<option value='@0#'>(Semua Vendor)</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -44,7 +44,7 @@ function ShowSelectTanggal1()
                    MONTH(DATE_SUB(NOW(), INTERVAL 7 DAY)),
                    DAY(DATE_SUB(NOW(), INTERVAL 7 DAY))";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $tahun = $row[0];
     $bulan = $row[1];
     $tanggal = $row[2];
@@ -83,7 +83,7 @@ function ShowSelectTanggal2()
                    MONTH(NOW()),
                    DAY(NOW())";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $tahun = $row[0];
     $bulan = $row[1];
     $tanggal = $row[2];
@@ -149,15 +149,15 @@ function ShowStatTransReport($showMenu)
               FROM jbsfina.paymenttrans
              WHERE tanggal BETWEEN '$dtStart' AND '$dtEnd'";
     if ($vendorId <> "@0#")
-        $sql .= " AND vendorid = '$vendorId'";
+        $sql .= " AND vendorid = '".$vendorId."'";
     $sql .= "ORDER BY tanggal";
 
     $res = QueryDb($sql);
 
-    $lsTanggal = array();
-    while($row = mysql_fetch_row($res))
+    $lsTanggal = [];
+    while($row = mysqli_fetch_row($res))
     {
-        $lsTanggal[] = array($row[0], $row[1]);
+        $lsTanggal[] = [$row[0], $row[1]];
     }
 
     if (count($lsTanggal) == 0)
@@ -192,7 +192,7 @@ function ShowStatTransReport($showMenu)
     $sb->AppendLine("</tr>");
 
 
-    $arrSub = array(0, 0, 0, 0, 0, 0);
+    $arrSub = [0, 0, 0, 0, 0, 0];
 
     $no = 0;
     for($i = 0; $i < count($lsTanggal); $i++)
@@ -210,10 +210,10 @@ function ShowStatTransReport($showMenu)
                  WHERE tanggal = '$tanggal'
                    AND jenis = 2 ";
         if ($vendorId <> "@0#")
-            $sql .= " AND vendorid = '$vendorId'";
+            $sql .= " AND vendorid = '".$vendorId."'";
 
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $counta = $row[0];
         $suma = $row[1];
         $rpa = FormatRupiah($suma);
@@ -229,10 +229,10 @@ function ShowStatTransReport($showMenu)
                  WHERE tanggal = '$tanggal'
                    AND jenis = 1 ";
         if ($vendorId <> "@0#")
-            $sql .= " AND vendorid = '$vendorId'";
+            $sql .= " AND vendorid = '".$vendorId."'";
 
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $countb = $row[0];
         $sumb = $row[1];
         $rpb = FormatRupiah($sumb);

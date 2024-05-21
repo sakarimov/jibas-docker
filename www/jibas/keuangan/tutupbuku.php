@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/errorhandler.php');
 require_once('include/sessioninfo.php');
@@ -36,7 +36,7 @@ if (getLevel() == 2)
 	alert('Maaf, anda tidak berhak mengakses halaman ini!'); 
 	window.history.go(-1);
 </script>
-<? 	exit();
+<?php 	exit();
 } // end if
 
 $errmsg = "";
@@ -173,7 +173,7 @@ function panggil(elem)
 }
 </script>
 </head>
-<?
+<?php
 OpenDb();
 ?>
 <body onLoad="document.getElementById('kategori').focus();">
@@ -223,12 +223,12 @@ OpenDb();
             <td align="left" width="35%"><strong>Departemen:</strong></td>
             <td align="left">
             <select name="departemen" id="departemen" style="width:100px" onKeyPress="return focusNext('ttutup', event)">
-            <?
+            <?php
             $dep = getDepartemen(getAccess());
             foreach($dep as $value) 
             {  ?>
                 <option value="<?=$value ?>"><?=$value ?></option>
-            <? } ?>    
+            <?php } ?>    
             </select>&nbsp;
             </td>
 	    </tr>
@@ -246,7 +246,7 @@ OpenDb();
         </table>
         </form>
         
-<?		if (strlen($errmsg) > 0) { ?>
+<?php 	if (strlen($errmsg) > 0) { ?>
             <br /><br /><br /><br />
             <table style="background-color:#FCF; border-color:#900;" width="80%" align="center">
             <tr>
@@ -255,7 +255,7 @@ OpenDb();
                 </td>
             </tr>
             </table>
-<?		} ?>        
+<?php 	} ?>        
         </td>
     </tr>
     </table>
@@ -263,7 +263,7 @@ OpenDb();
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 
-<?
+<?php
 CloseDb();
 ?>
 </body>

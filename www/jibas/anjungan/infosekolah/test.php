@@ -1,8 +1,8 @@
 <link rel="stylesheet" type="text/css" href="infosekolah.css">
-<?
+<?php
 require_once("infosekolah.common.func.php");
 
-$text = "KOMPAS.com — Kacamata pintar Google Glass selama ini punya kekurangan tidak dapat memberi suara dengan jelas dan baik kepada indera pendengaran manusia. Untuk mengatasi masalah itu, Google berencana membuat aksesori berupa earphone yang dibuat khusus untuk Google Glass.
+$text = "KOMPAS.com ï¿½ Kacamata pintar Google Glass selama ini punya kekurangan tidak dapat memberi suara dengan jelas dan baik kepada indera pendengaran manusia. Untuk mengatasi masalah itu, Google berencana membuat aksesori berupa earphone yang dibuat khusus untuk Google Glass.
 
 Earphone khusus itu memungkinkan pengguna Google Glass mendengar suara dengan sensasi stereo. Agar earphone terkoneksi dengan sistem di kacamata, pengguna harus menancapkan kabel earphone ke salah satu lubang penghubung yang ada di kacamata pintar.
 

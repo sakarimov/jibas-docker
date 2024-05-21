@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,7 +44,7 @@ $sql = "SELECT p.nama, p.replid AS pelajaran, a.dasarpenilaian, j.jenisujian, j.
 		   AND a.dasarpenilaian = dp.dasarpenilaian";
 $result=QueryDb($sql);
 
-$row=@mysql_fetch_array($result);
+$row=@mysqli_fetch_array($result);
 $namapel = $row['nama'];
 $pelajaran = $row['pelajaran'];
 $aspek = $row['keterangan'];
@@ -142,21 +142,21 @@ function focusNext(elemName, evt) {
             <td height="30" class="headerlong" align="center" width="4%">No</td>
             <td height="30" class="headerlong" align="center" width="10%">N I S</td>
             <td height="30" class="headerlong" align="center" width="*">Nama</td>
-        <?
+        <?php
         $sql_cek_ujian = "SELECT * FROM jbsakad.ujian WHERE idaturan='$idaturan' AND idkelas='$kelas' AND idsemester='$semester' ORDER by tanggal ASC";
         //echo $sql_cek_ujian;
         $result_cek_ujian=QueryDb($sql_cek_ujian);
-        $jumlahujian=@mysql_num_rows($result_cek_ujian);
+        $jumlahujian=@mysqli_num_rows($result_cek_ujian);
         $i=1;
-        while ($row_cek_ujian=@mysql_fetch_array($result_cek_ujian)){
+        while ($row_cek_ujian=@mysqli_fetch_array($result_cek_ujian)){
             $idujian[$i] = $row_cek_ujian['replid'];			
-            $tgl = explode("-",$row_cek_ujian['tanggal']);
+            $tgl = explode("-",(string) $row_cek_ujian['tanggal']);
             
         ?>
-           <td height="30" width="50" class="headerlong" align="center" onMouseOver="showhint('Deskripsi :\n <?=$row_cek_ujian[deskripsi]?>', this, event, '120px')"><?=$namajenis."-".$i?>&nbsp;
+           <td height="30" width="50" class="headerlong" align="center" onMouseOver="showhint('Deskripsi :\n <?=$row_cek_ujian['deskripsi']?>', this, event, '120px')"><?=$namajenis."-".$i?>&nbsp;
             <br /><?=$tgl[2]."/".$tgl[1]."/".substr($tgl[0],2)?>
             </td>
-        <?
+        <?php
             $i++;
         }
         ?>
@@ -164,14 +164,14 @@ function focusNext(elemName, evt) {
             <td height="30" class="headerlong" align="center" width="50">NA <?=$namajenis?>
             </td>
         </tr>
-        <?
+        <?php
         //if ($jumlahujian<>0){
             
             $sql_siswa="SELECT * FROM jbsakad.siswa WHERE idkelas='$kelas' AND aktif=1 ORDER BY nama ASC";
             $result_siswa=QueryDb($sql_siswa);
             $cnt=1;
-            $jumsiswa = mysql_num_rows($result_siswa);
-            while ($row_siswa=@mysql_fetch_array($result_siswa)){
+            $jumsiswa = mysqli_num_rows($result_siswa);
+            while ($row_siswa=@mysqli_fetch_array($result_siswa)){
                 $nilai = 0;	
                 
         ?>
@@ -179,18 +179,18 @@ function focusNext(elemName, evt) {
             <td align="center"><?=$cnt?></td>
             <td align="center"><?=$row_siswa['nis']?></a></td>
             <td><?=$row_siswa['nama']?></td>
-            <?	for ($j=1;$j<=count($idujian);$j++) { 
+            <?php for ($j=1;$j<=count($idujian);$j++) { 
                     echo "<td align='center'>";		
-                    $sql_cek_nilai_ujian="SELECT * FROM jbsakad.nilaiujian WHERE idujian='$idujian[$j]' AND nis='$row_siswa[nis]'";
+                    $sql_cek_nilai_ujian="SELECT * FROM jbsakad.nilaiujian WHERE idujian='".$idujian[$j]."' AND nis='".$row_siswa['nis']."'";
                     //echo $sql_cek_nilai_ujian;
                     $result_cek_nilai_ujian=QueryDb($sql_cek_nilai_ujian);
-                    $row_cek_nilai_ujian=@mysql_fetch_array($result_cek_nilai_ujian);
+                    $row_cek_nilai_ujian=@mysqli_fetch_array($result_cek_nilai_ujian);
                     $nilai = $nilai+$row_cek_nilai_ujian['nilaiujian'];
                     
-                    if (@mysql_num_rows($result_cek_nilai_ujian)>0){ 			
+                    if (@mysqli_num_rows($result_cek_nilai_ujian)>0){ 			
                             
                         echo $row_cek_nilai_ujian['nilaiujian'];
-                        if ($row_cek_nilai_ujian[keterangan]<>"")
+                        if ($row_cek_nilai_ujian['keterangan']<>"")
                             echo "<strong>*</strong>";
                         
                     } else { 
@@ -203,28 +203,28 @@ function focusNext(elemName, evt) {
             <td height="25" align="center"><?=round($nilai/count($idujian),2);?></td>
             <td height="25" align="center">
             
-            <?
-                $sql_get_nau_per_nis="SELECT nilaiAU,replid,keterangan FROM jbsakad.nau WHERE nis='$row_siswa[nis]' AND idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan'";
+            <?php
+                $sql_get_nau_per_nis="SELECT nilaiAU,replid,keterangan FROM jbsakad.nau WHERE nis='".$row_siswa['nis']."' AND idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan'";
 				
             	//echo $sql_get_nau_per_nis;			
                 $result_get_nau_per_nis=QueryDb($sql_get_nau_per_nis);
-                if (mysql_num_rows($result_get_nau_per_nis) > 0) {
-                    $row_get_nau_per_nis=@mysql_fetch_array($result_get_nau_per_nis);
+                if (mysqli_num_rows($result_get_nau_per_nis) > 0) {
+                    $row_get_nau_per_nis=@mysqli_fetch_array($result_get_nau_per_nis);
                     $na = $row_get_nau_per_nis['nilaiAU'];
 				?>	
 					<input type="hidden" name="nau[<?=$row_siswa['nis']?>][1]" value="<?=$row_get_nau_per_nis['replid'] ?>">
-           	<?  } else { 
+           	<?php  } else { 
                     $na = 0;
                 }
             ?>
                     
-                <input type="text" name="nau[<?=$row_siswa['nis']?>][0]" id="nau<?=$cnt?>" value="<?=$na?>" size="5" maxlength="5" <? if ($cnt == $jumsiswa) {?> onkeypress="focusNext('simpan',event);" <? } else { ?> onkeypress="focusNext('nau<?=(int)$cnt+1 ?>',event);" <? } ?> />
+                <input type="text" name="nau[<?=$row_siswa['nis']?>][0]" id="nau<?=$cnt?>" value="<?=$na?>" size="5" maxlength="5" <?php if ($cnt == $jumsiswa) {?> onkeypress="focusNext('simpan',event);" <?php } else { ?> onkeypress="focusNext('nau<?=(int)$cnt+1 ?>',event);" <?php } ?> />
                 
 
                 
             </td>
         </tr>
-        <? 	$cnt++;
+        <?php 	$cnt++;
             } 
         ?>
         </table>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -69,20 +69,20 @@ function change_dep() {
     <td align="left" width="100%">
     <p><strong>Departemen&nbsp;</strong> 
     <select name="departemen" id="departemen" onchange="change_dep()" style="width:150px;">
-<?	$dep = getDepartemen(getAccess());
+<?php $dep = getDepartemen(getAccess());
     foreach($dep as $value) {
         if ($departemen == "")
             $departemen = $value; ?>
         <option value="<?=$value ?>" <?=StringIsSelected($departemen, $value) ?>  > <?=$value ?></option>
-<?		} ?>            
+<?php 	} ?>            
     </select>
     </td>
 </tr>
 </table>
 <br /><br />
-<?	$sql = "SELECT replid AS id, nama FROM datapengeluaran WHERE aktif = 1 AND departemen='$departemen' ORDER BY nama";
+<?php $sql = "SELECT replid AS id, nama FROM datapengeluaran WHERE aktif = 1 AND departemen='$departemen' ORDER BY nama";
 	$request = QueryDb($sql);
-	if (mysql_num_rows($request) > 0) {
+	if (mysqli_num_rows($request) > 0) {
 ?>	
     <table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left" bordercolor="#000000">
     <!-- TABLE CONTENT -->
@@ -90,19 +90,19 @@ function change_dep() {
         <td class="header" width="4%" align="center">No</td>
         <td class="header" width="*" align="center">Pengeluaran</td>
     </tr>
-<?
+<?php
 	$cnt = 0;
-	while ($row = mysql_fetch_array($request)) { ?>
+	while ($row = mysqli_fetch_array($request)) { ?>
     <tr height="25" onClick="show_content(<?=$row['id'] ?>)" style="cursor:pointer;">
     	<td align="center"><?=++$cnt?></td>
         <td><a href="JavaScript:show_content(<?=$row['id'] ?>)"><?=$row['nama'] ?></a></td>
     </tr>
-<?	} //end while ?>
+<?php } //end while ?>
 	</table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
-<?	} else { ?>
+<?php } else { ?>
 	&nbsp;
    
 	<table width="100%" border="0" align="center">          
@@ -113,13 +113,13 @@ function change_dep() {
 	</tr>
 	</table>  
 	
-<? } ?> 
+<?php } ?> 
 	</td>
 </tr>
 <!-- END TABLE CENTER -->    
 </table>    
 
-<?
+<?php
 CloseDb();
 ?>
 </body>

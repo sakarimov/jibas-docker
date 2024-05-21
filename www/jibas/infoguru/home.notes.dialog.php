@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("include/sessionchecker.php");
 require_once("include/sessioninfo.php");
 require_once("include/config.php");
@@ -19,7 +19,7 @@ $sql = "SELECT c.nis, s.nama AS namasis, DATE_FORMAT(c.tanggal, '%d-%M-%Y') AS t
            AND c.replid = $replid";
            
 $res = QueryDb($sql);
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 ?>
 <table id="Table_01" width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
@@ -48,10 +48,10 @@ $row = mysql_fetch_array($res);
 		<tr>
 			<td width='14%' valign='top' align='center'>
 				<br>	
-<?
+<?php
 				if ($row['isnull'] == 0)
 				{
-					$pict = base64_encode($row['foto']);    
+					$pict = base64_encode((string) $row['foto']);    
 				}
 				else
 				{
@@ -84,6 +84,6 @@ $row = mysql_fetch_array($res);
 	<td><img src="images/BGNews_09.png" width="18" height="20" alt=""></td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

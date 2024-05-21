@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once("../include/config.php");
@@ -67,7 +67,7 @@ $newInput = (int)FetchSingle($sql) == 0;
     <td width="200" align="center" class="header">Keterangan</td>
     <td width="100" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT pg.nip, pg.nama, IF(p.status IS NULL, -1, p.status),
                p.jammasuk, p.jampulang, p.keterangan, IF(p.replid IS NULL, -1, p.replid)
           FROM jbssdm.pegawai pg
@@ -90,15 +90,15 @@ $sql = "SELECT pg.nip, pg.nama, IF(p.status IS NULL, -1, p.status),
 
 $res = QueryDb($sql);
 $n = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $n++;
     
     echo "<tr>";
-    echo "<input type='hidden' id='replid$n' name='replid$n' value='$row[6]'>";
+    echo "<input type='hidden' id='replid$n' name='replid$n' value='".$row[6]."'>";
     echo "<td align='center'>$n</td>";
-    echo "<td align='center'>$row[0] <input type='hidden' name='nip$n' id='nip$n' value='$row[0]'></td>";
-    echo "<td align='left'>$row[1]</td>";
+    echo "<td align='center'>$row[0] <input type='hidden' name='nip$n' id='nip$n' value='".$row[0]."'></td>";
+    echo "<td align='left'>".$row[1]."</td>";
     
     echo "<td align='center'>";
     echo "<select name='status$n' id='status$n'>";
@@ -138,7 +138,7 @@ while($row = mysql_fetch_row($res))
     echo $copyOut;
     echo "</td>";
     
-    echo "<td align='left'><input type='text' name='ket$n' id='ket$n' value='$row[5]' size='27' maxlength='255'></td>";
+    echo "<td align='left'><input type='text' name='ket$n' id='ket$n' value='".$row[5]."' size='27' maxlength='255'></td>";
     echo "<td align='center'>";
     if (!$newInput)
         echo "<input type='button' value='Simpan' onclick='SaveEdit($n)'>";
@@ -172,17 +172,17 @@ else
 ?>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>
 
-<?
+<?php
 function GetHourMinute($strtime, &$hour, &$minute)
 {
-    if (strpos($strtime, ":") !== FALSE)
+    if (str_contains((string) $strtime, ":"))
     {
-        $temp = split(":", $strtime);
+        $temp = explode(":", (string) $strtime);
         $hour = $temp[0];
         $minute = $temp[1];
         

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -48,8 +48,8 @@ $tanggal2 = "";
 if (isset($_REQUEST['tanggal2']))
 	$tanggal2 = $_REQUEST['tanggal2'];
 
-$tgl1 = explode(' ',$tanggal1);
-$tgl2 = explode(' ',$tanggal2);
+$tgl1 = explode(' ',(string) $tanggal1);
+$tgl2 = explode(' ',(string) $tanggal2);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -88,13 +88,13 @@ $tgl2 = explode(' ',$tanggal2);
     <td class="header" width="*"><strong><font size="2" face="Arial">Detail Jurnal</font></strong></td>
     <td class="header" width="15%"><strong><font size="2" face="Arial">Petugas</font></strong></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT DISTINCT ai.petugas AS petugasubah, j.transaksi, date_format(ai.tanggal, '%d-%b-%Y %H:%i:%s') as tanggalubah, aj.replid AS id, aj.idaudit, aj.status, aj.nokas, date_format(aj.tanggal, '%d-%b-%Y') AS tanggal, aj.petugas, aj.keterangan, aj.petugas, ai.alasan FROM auditjurnal aj, auditinfo ai, jurnal j WHERE aj.idaudit = ai.replid AND ai.idsumber = j.replid AND ai.departemen = '$departemen' AND ai.sumber='jurnalumum' AND ai.tanggal BETWEEN '$tanggal1 00:00:00' AND '$tanggal2 23:59:59' ORDER BY aj.idaudit DESC, ai.tanggal DESC, aj.status ASC";
 $result = QueryDb($sql);
 $cnt = 0;
 $no = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$status = $row['status'];
 	$idaudit = $row['idaudit'];
 	$statusdata = "Data Lama";
@@ -131,7 +131,7 @@ while ($row = mysql_fetch_array($result)) {
             </tr>
             </table>      	</td>
     </tr>
-<?  } ?>
+<?php  } ?>
 	<tr>
 		<td><font size="2" face="Arial">
 	    <?=$statusdata ?>
@@ -144,10 +144,10 @@ while ($row = mysql_fetch_array($result)) {
 	    </font></td>
 	    <td bgcolor="#E8FFE8">
             <table cellpadding="5" cellspacing="0" border="1" style="border-collapse:collapse" width="100%" bgcolor="#FFFFFF">
-    <?		$nokas = $row['nokas'];
+    <?php 	$nokas = $row['nokas'];
             $sql = "SELECT ajd.koderek, ra.nama, ajd.debet, ajd.kredit FROM auditjurnaldetail ajd, jurnal j, rekakun ra WHERE ajd.idjurnal = j.replid AND ajd.koderek = ra.kode AND j.nokas = '$nokas' AND ajd.status = '$status' AND idaudit='$idaudit' ORDER BY ajd.replid";
 			$result2 = QueryDb($sql);            
-			while ($row2 = mysql_fetch_row($result2)) {  ?>
+			while ($row2 = mysqli_fetch_row($result2)) {  ?>
             <tr>
             	<td width="*"><font size="2" face="Arial">
            	    <?=$row2[0] . " " . $row2[1] ?>
@@ -159,13 +159,13 @@ while ($row = mysql_fetch_array($result)) {
                 <?=$row2[3] ?>
                 </font></td>
             </tr>
-	<?		} ?>            
+	<?php 	} ?>            
             </table>        </td>
 	    <td align="center"><font size="2" face="Arial">
         <?=$row['petugas']; ?>
 	    </font></td>
 	</tr>
-<?
+<?php
 	$cnt++;
 }
 CloseDb();

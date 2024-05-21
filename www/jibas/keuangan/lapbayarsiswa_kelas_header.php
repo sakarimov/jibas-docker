@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -72,7 +72,7 @@ if ($idkategori == "SKR")
 <head>
 <link rel="stylesheet" type="text/css" href="style/style.css">
 <link rel="stylesheet" type="text/css" href="style/tooltips.css">
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script src="script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -184,26 +184,26 @@ function focusNext(elemName, evt) {
         <td width="18%"><strong>Departemen </strong></td>
         <td>
     	<select id="departemen" name="departemen" style="width:188px" onchange="change_dep()" onKeyPress="return focusNext('idangkatan', event)">
-   <?
+   <?php
         OpenDb();
         $dep = getDepartemen(getAccess());
         foreach($dep as $value) {
             if ($departemen == "")
                 $departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?>><?=$value ?></option>
-        <? } ?>  
+        <?php } ?>  
     	</select>
         <strong>Angkatan </strong>
         </td>
         <td>
         <select id="idangkatan" name="idangkatan" style="width:100px" onchange="change_ang()" onKeyPress="return focusNext('idtingkat', event)">
-        <? 	$sql = "SELECT replid, angkatan FROM jbsakad.angkatan WHERE departemen = '$departemen' AND aktif = 1 ORDER BY angkatan";
+        <?php 	$sql = "SELECT replid, angkatan FROM jbsakad.angkatan WHERE departemen = '$departemen' AND aktif = 1 ORDER BY angkatan";
             $result = QueryDb($sql);
-            while($row = mysql_fetch_row($result)) {
+            while($row = mysqli_fetch_row($result)) {
                 if ($idangkatan == 0)
                     $idangkatan = $row[0]; ?>
                 <option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idangkatan)?> > <?=$row[1]?></option>
-        <? } ?>
+        <?php } ?>
         </select>
         </td>
     </tr>
@@ -212,26 +212,26 @@ function focusNext(elemName, evt) {
         <td>
         <select name="idtingkat" id="idtingkat" onChange="change_ang()" style="width:80px;" onkeypress="return focusNext('lunas', event)" >
         <option value="-1" <?=IntIsSelected(-1, $idtingkat)?>>(Semua)</option>
-        <?
+        <?php
            
 			$sql="SELECT * FROM jbsakad.tingkat WHERE departemen='$departemen' AND aktif = 1 ORDER BY urutan";
             $result=QueryDb($sql);
 			
-            while ($row=@mysql_fetch_array($result)){
+            while ($row=@mysqli_fetch_array($result)){
 				
         ?> 
             <option value="<?=$row['replid']?>" <?=IntIsSelected($row['replid'], $idtingkat)?>><?=$row['tingkat']?></option>
-        <? 	} ?> 
+        <?php 	} ?> 
         </select>
        
         <select id="idkelas" name="idkelas" style="width:103px" onchange="change_kelas()" <?=$dis?> onkeypress="return focusNext('lunas', event)">
         <option value="-1">(Semua)</option>
-		<?  $sql = "SELECT DISTINCT k.replid, k.kelas FROM jbsakad.tahunajaran t, jbsakad.kelas k WHERE t.replid = k.idtahunajaran AND k.aktif = 1 AND k.idtingkat = '$idtingkat' AND t.aktif = 1 ORDER BY k.kelas";
+		<?php  $sql = "SELECT DISTINCT k.replid, k.kelas FROM jbsakad.tahunajaran t, jbsakad.kelas k WHERE t.replid = k.idtahunajaran AND k.aktif = 1 AND k.idtingkat = '$idtingkat' AND t.aktif = 1 ORDER BY k.kelas";
             $result = QueryDb($sql);
-            while($row = mysql_fetch_row($result)) {
+            while($row = mysqli_fetch_row($result)) {
         ?>       
                 <option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idkelas)?> > <?=$row[1]?></option>
-        <? 	} ?>
+        <?php 	} ?>
                 
         </select>
         <strong>Status </strong>
@@ -250,22 +250,22 @@ function focusNext(elemName, evt) {
         <td><strong>Pembayaran </strong></td>
         <td colspan="2"> 
         <select name="idkategori" id="idkategori" style="width:188px;" onchange="change_kate()" onkeypress="return focusNext('idpenerimaan', event)">
-        <?  $sql = "SELECT kode, kategori FROM kategoripenerimaan WHERE kode IN ('JTT','SKR') ORDER BY urutan";
+        <?php  $sql = "SELECT kode, kategori FROM kategoripenerimaan WHERE kode IN ('JTT','SKR') ORDER BY urutan";
             $result = QueryDb($sql);
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 if ($idkategori == "")
                     $idkategori = $row['kode']  ?>
                 <option value="<?=$row['kode'] ?>" <?=StringIsSelected($idkategori, $row['kode']) ?> > <?=$row['kategori'] ?></option>
-        <? } ?>
+        <?php } ?>
         </select>       
         <select name="idpenerimaan" id="idpenerimaan" style="width:175px;" onchange="change_penerimaan()" onkeypress="return focusNext('tampil', event)">
-        <?  $sql = "SELECT replid, nama FROM datapenerimaan WHERE aktif = 1 AND idkategori = '$idkategori' AND departemen = '$departemen' ORDER BY replid DESC";
+        <?php  $sql = "SELECT replid, nama FROM datapenerimaan WHERE aktif = 1 AND idkategori = '$idkategori' AND departemen = '$departemen' ORDER BY replid DESC";
             $result = QueryDb($sql);
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 if ($idpenerimaan == 0) 
                     $idpenerimaan = $row['replid'];  ?>
                 <option value="<?=$row['replid'] ?>" <?=IntIsSelected($row['replid'], $idpenerimaan) ?> > <?=$row['nama'] ?></option>
-        <? } ?>
+        <?php } ?>
         </select>&nbsp;        
         
         </td>
@@ -288,7 +288,7 @@ function focusNext(elemName, evt) {
    	</td>
 </tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 </body>
 </html>
 <script language="javascript">

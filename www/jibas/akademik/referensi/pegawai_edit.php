@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/theme.php");
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
@@ -33,9 +33,9 @@ require_once('../cek.php');
 OpenDb();
 
 $replid = $_REQUEST["replid"];
-$sql_pegawai = "SELECT * FROM jbssdm.pegawai WHERE replid = '$replid'";
+$sql_pegawai = "SELECT * FROM jbssdm.pegawai WHERE replid = '".$replid."'";
 $result_pegawai = QueryDb($sql_pegawai);
-$row_pegawai = @mysql_fetch_array($result_pegawai);
+$row_pegawai = @mysqli_fetch_array($result_pegawai);
 
 $bagian = $row_pegawai['bagian'];
 $nip = $row_pegawai['nip'];
@@ -45,7 +45,7 @@ $gelarakhir = $row_pegawai['gelarakhir'];
 $panggilan = $row_pegawai['panggilan'];
 $kelamin = $row_pegawai['kelamin'];
 $tempatlahir = $row_pegawai['tmplahir'];
-$lahir = explode("-",$row_pegawai['tgllahir']);
+$lahir = explode("-",(string) $row_pegawai['tgllahir']);
 $tgllahir = $lahir[2];
 $blnlahir = $lahir[1];
 $thnlahir = $lahir[0];
@@ -108,7 +108,7 @@ if (isset($_REQUEST['simpan']))
 	$uploadedtypefile = $foto['type'];
 	$uploadedsizefile = $foto['size'];
 		
-	if (strlen($uploadedfile) != 0)
+	if (strlen((string) $uploadedfile) != 0)
 	{
 		$tmp_path = realpath(".") . "/../../temp";
 		$tmp_exists = file_exists($tmp_path) && is_dir($tmp_path);
@@ -133,14 +133,14 @@ if (isset($_REQUEST['simpan']))
 	
 	$query_cek = "SELECT * FROM jbssdm.pegawai WHERE nip = '$nip' AND replid <> '$replid'";
 	$result_cek = QueryDb($query_cek);
-	$num_cek = @mysql_num_rows($result_cek);
+	$num_cek = @mysqli_num_rows($result_cek);
 	if($num_cek > 0) 
 	{
 		$ERROR_MSG = "NIP ".$nip." sudah digunakan!";
 	} 
 	else 
 	{
-		$nama = str_replace("'", "`", $nama);
+		$nama = str_replace("'", "`", (string) $nama);
 		$query = "UPDATE jbssdm.pegawai 
 					 SET nip='$nip', nama='$nama', gelarawal='$gelarawal', gelarakhir='$gelarakhir', panggilan='$panggilan', tmplahir='$tempatlahir', 
 					 	 tgllahir='$lahir', agama='$agama', suku='$suku',nikah='$menikah', noid='$identitas',alamat='$alamat',
@@ -156,17 +156,17 @@ if (isset($_REQUEST['simpan']))
 
 		if($result) 
 		{  ?>
-        <script language="JavaScript">
+        <script language = "javascript" type = "text/javascript">
 			parent.opener.location.href="pegawai.php?bagian=<?=$bagian ?>";
     		window.close();
        	</script>
-<? 		} 
+<?php 		} 
    		else 
 		{          ?>
-            <script language="JavaScript">
+            <script language = "javascript" type = "text/javascript">
             	alert("Gagal menyimpan data!");
            </script>
-<?  	}
+<?php  	}
 	}
 }
 
@@ -179,10 +179,10 @@ $n = JmlHari($blnlahir, $thnlahir);
 <title>JIBAS SIMAKA [Ubah Pegawai]</title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/ajax.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript" src="../script/validasi.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/ajax.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/validasi.js"></script>
 <script language="javascript">
 var win = null;
 
@@ -459,7 +459,7 @@ function cek_form() {
 	}
 	
 	if (file.length>0){
-		var x = file.split('.');
+		var x = file.explode('.');
 		ext = x[(x.length-1)];
 		if (ext!='JPG' && ext!='jpg' && ext!='Jpg' && ext!='JPg' && ext!='JPEG' && ext!='jpeg'){
 			alert ('Format Gambar harus ber-extensi jpg atau JPG !');
@@ -524,15 +524,15 @@ function change_bln() {
       	<td width="25%"><strong>Bagian</strong></td>
       	<td>
         <select name="bagian" id="bagian" onKeyPress="return focusNext('nip', event)" style="width:135px" onFocus="panggil('bagian')">
-      	<?
+      	<?php
       
         $sql_bagian="SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan ASC";
         $result_bagian=QueryDb($sql_bagian);
-        while ($row_bagian=@mysql_fetch_array($result_bagian)){
+        while ($row_bagian=@mysqli_fetch_array($result_bagian)){
       	?>
         <option value="<?=$row_bagian['bagian']?>" <?=StringIsSelected($row_bagian['bagian'],$bagian)?>>            
         <?=$row_bagian['bagian']?></option>
-      	<? } ?>
+      	<?php } ?>
       	</select></td>
         <td width="30%" rowspan="8" bgcolor="#FFFFFF" valign="middle">
         <table width="100%" border="0">
@@ -570,11 +570,11 @@ function change_bln() {
     <tr>
        	<td><strong>Jenis Kelamin</strong></td>
         <td><input type="radio" name="kelamin"  id="kelamin" value="l" 
-    	<? 	if ($kelamin=="l") 
+    	<?php 	if ($kelamin=="l") 
     			echo "checked='checked'";
     	?> onKeyPress="return focusNext('gelar', event)"/>&nbsp;Laki-laki&nbsp;&nbsp;
         	<input type="radio" name="kelamin" value="p"
-    	<? 	if ($kelamin=="p") 
+    	<?php 	if ($kelamin=="p") 
     			echo "checked='checked'";
     	?> onKeyPress="return focusNext('tempatlahir', event)"/>&nbsp;Perempuan</td>
    	</tr>
@@ -586,14 +586,14 @@ function change_bln() {
       	<td><strong>Tanggal Lahir</strong></td>
       	<td colspan="2">
         <select name="tgllahir" id="tgllahir"  onKeyPress="return focusNext('blnlahir', event)" onFocus="panggil('tgllahir')"> 
-    <? 	for($i=1;$i<=$n;$i++){   ?>      
+    <?php 	for($i=1;$i<=$n;$i++){   ?>      
         <option value="<?=$i?>" <?=IntIsSelected($tgllahir, $i)?>><?=$i?></option>
-    <?	} ?>
+    <?php } ?>
         </select>
         <select name="blnlahir" id="blnlahir" onKeyPress="return focusNext('thnlahir', event)"  onChange="change_bln()"  onFocus="panggil('blnlahir')">
-    <? 	for ($i=1;$i<=12;$i++) { ?>
+    <?php 	for ($i=1;$i<=12;$i++) { ?>
         <option value="<?=$i?>" <?=IntIsSelected($blnlahir, $i)?>><?=$bulan_pjg[$i]?></option>	
-    <?	}	?>
+    <?php }	?>
         </select>
         <input type="text" name="thnlahir" id="thnlahir" size="5" maxlength="4" onFocus="showhint('Tahun Lahir tidak boleh kosong!', this, event, '100px');panggil('thnlahir')"  value="<?=$thnlahir?>"  onKeyPress="return focusNext('agama', event)"/></td>
     </tr>
@@ -603,44 +603,44 @@ function change_bln() {
         <div id="agama_info">
         <select name="agama" id="agama" class="ukuran"  onKeyPress="return focusNext('suku', event)"onFocus="panggil('agama')">
         <option value="">[Pilih Agama]</option>
-        <?
+        <?php
         $query_a="select agama from jbsumum.agama order by urutan asc " ;
-        $result_a=QueryDb($query_a) or (mysql_error()) ;
-        while($row_a=mysql_fetch_array($result_a)) 	{
+        $result_a=QueryDb($query_a) or (mysqli_error($mysqlconnection)) ;
+        while($row_a=mysqli_fetch_array($result_a)) 	{
         ?>
-        <option value="<?=$row_a[agama]?>"<?=StringIsSelected($agama,$row_a[agama])?> ><?=$row_a[agama]?>
+        <option value="<?=$row_a['agama']?>"<?=StringIsSelected($agama,$row_a['agama'])?> ><?=$row_a['agama']?>
         </option>
-        <? } ?>
+        <?php } ?>
         </select>
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <img src="../images/ico/tambah.png" border="0" onClick="tambah_agama();" onMouseOver="showhint('Tambah Agama!', this, event, '50px')">   
-        <? } ?>	 </div>     </td>
+        <?php } ?>	 </div>     </td>
     </tr>
     <tr>
         <td><strong>Suku</strong></td>
         <td colspan="2"><div id="suku_info">
         <select name="suku" id="suku" class="ukuran"  onKeyPress="return focusNext('menikah', event)" onFocus="panggil('suku')">
         <option value="">[Pilih Suku]</option>
-        <?
+        <?php
         $query_s="select suku from jbsumum.suku order by urutan asc " ;
-        $result_s=QueryDb($query_s) or (mysql_error()) ;
-        while($row_s=mysql_fetch_array($result_s)) {
+        $result_s=QueryDb($query_s) or (mysqli_error($mysqlconnection)) ;
+        while($row_s=mysqli_fetch_array($result_s)) {
         ?>
-        <option value=<?=$row_s[suku]?> <?=StringIsSelected($suku,$row_s[suku])?>><?=$row_s[suku]?></option>
-        <? } ?>
+        <option value=<?=$row_s['suku']?> <?=StringIsSelected($suku,$row_s['suku'])?>><?=$row_s['suku']?></option>
+        <?php } ?>
         </select>
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <img src="../images/ico/tambah.png" border="0" onClick="tambah_suku();" onMouseOver="showhint('Tambah Suku!', this, event, '50px')">
-        <? } ?>
+        <?php } ?>
         </div>     </td>
     </tr>
     <tr>
         <td>Menikah</td>
         <td colspan="2">
-        <input type="radio" name="menikah" id="menikah" value="menikah" <? if ($menikah== 'menikah') echo 'checked';?>  onKeyPress="return focusNext('identitas', event)"/>&nbsp;Sudah&nbsp;
-        <input type="radio" name="menikah"  id="menikah" value="belum" <? if ($menikah == 'belum') echo 'checked';?>  onKeyPress="return focusNext('identitas', event)"/>&nbsp;Belum&nbsp;
+        <input type="radio" name="menikah" id="menikah" value="menikah" <?php if ($menikah== 'menikah') echo 'checked';?>  onKeyPress="return focusNext('identitas', event)"/>&nbsp;Sudah&nbsp;
+        <input type="radio" name="menikah"  id="menikah" value="belum" <?php if ($menikah == 'belum') echo 'checked';?>  onKeyPress="return focusNext('identitas', event)"/>&nbsp;Belum&nbsp;
         <input name="menikah" type="radio" id="menikah" value="tak_ada" 
-        <? if ($menikah == 'tak_ada' || $menikah =="") echo 'checked';?> onKeyPress="return focusNext('identitas', event)"/>&nbsp;(Tidak ada data) 
+        <?php if ($menikah == 'tak_ada' || $menikah =="") echo 'checked';?> onKeyPress="return focusNext('identitas', event)"/>&nbsp;(Tidak ada data) 
         </td>
     </tr>
     <tr>
@@ -698,13 +698,13 @@ function change_bln() {
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class PengumumanAjax
 {
 	function OnStart()
@@ -110,7 +110,7 @@ class PengumumanAjax
 			<td width="100">HP Siswa</td>
 			<td><input type="checkbox" id="CheckAllSiswa"></td>
 		</tr>
-<?			if ($Source=='Pilih')
+<?php 		if ($Source=='Pilih')
 			{
 				$sql = "SELECT nis, nama, hpsiswa, pinsiswa
 						  FROM $db_name_akad.siswa
@@ -129,16 +129,16 @@ class PengumumanAjax
 			}
 			$sql .= "  ORDER BY nama";	
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0)
 			{
 				$cnt=1;
-				while ($row = @mysql_fetch_array($res))
+				while ($row = @mysqli_fetch_array($res))
 				{
-					$hp = trim($row['hpsiswa']);
+					$hp = trim((string) $row['hpsiswa']);
 					if (strlen($hp) < 7)
 						continue;
-					if (substr($hp, 0, 1) == "#")
+					if (str_starts_with($hp, "#"))
 						continue;
 			?>
 			<tr>
@@ -151,7 +151,7 @@ class PengumumanAjax
 						   nip="<?=$row['nis']?>" pin="<?=$row['pinsiswa']?>">
 				</td>
 			</tr>
-<?				$cnt++;
+<?php 			$cnt++;
 				}
 			}
 			else
@@ -160,9 +160,9 @@ class PengumumanAjax
 			<tr>
 				<td colspan="5" class="Ket" align="center">Tidak ada data</td>
 			</tr>
-<?			}	?>
+<?php 		}	?>
 		</table>
-        <?
+        <?php
 	}
 	
 	function GetTableCalonSiswa()
@@ -182,7 +182,7 @@ class PengumumanAjax
 	        <td>HP Calon Siswa</td>
 	        <td><input type="checkbox" id="CheckAllCalonSiswa"></td>
 		</tr>
-<?		if ($Source == 'Pilih')
+<?php 	if ($Source == 'Pilih')
 		{
 			$sql = "SELECT nopendaftaran, nama, hpsiswa, info3
 					  FROM $db_name_akad.calonsiswa
@@ -203,16 +203,16 @@ class PengumumanAjax
 		
 		//echo "$sql";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		if ($num > 0)
 		{
 			$cnt = 1;
-			while ($row = @mysql_fetch_array($res))
+			while ($row = @mysqli_fetch_array($res))
 			{
-				$hp = trim($row['hpsiswa']);
+				$hp = trim((string) $row['hpsiswa']);
 				if (strlen($hp) < 7)
 					continue;
-				if (substr($hp, 0, 1) == "#")
+				if (str_starts_with($hp, "#"))
 					continue; ?>
 			<tr>
 				<td align="center" class="td"><?=$cnt?></td>
@@ -226,7 +226,7 @@ class PengumumanAjax
 				</td>
 			</tr>
 			
-<?			$cnt++;
+<?php 		$cnt++;
 			}
 		}
 		else
@@ -234,9 +234,9 @@ class PengumumanAjax
 			<tr>
 				<td colspan="5" class="Ket" align="center">Tidak ada data</td>
 			</tr>
-<?			}	?>
+<?php 		}	?>
 		</table>
-        <?
+        <?php
 	}
 	
 	function GetTableOrtuCalonSiswa()
@@ -257,7 +257,7 @@ class PengumumanAjax
 	        <td>HP Ortu Calon Siswa</td>
 	        <td><input type="checkbox" id="CheckAllOrtuCS"></td>
 		</tr>
-<?		if ($Source == 'Pilih')
+<?php 	if ($Source == 'Pilih')
 		{
 			$sql = "SELECT nopendaftaran, nama, namaayah, hportu, info1, info2, info3
 					  FROM $db_name_akad.calonsiswa
@@ -278,35 +278,35 @@ class PengumumanAjax
 		
 		//echo "$sql";
 		$res = QueryDb($sql);
-		$num = @mysql_num_rows($res);
+		$num = @mysqli_num_rows($res);
 		if ($num > 0)
 		{
 			$cnt = 1;
-			while ($row = @mysql_fetch_array($res))
+			while ($row = @mysqli_fetch_array($res))
 			{
 				$n = 0;  
-				$hparr = array();
+				$hparr = [];
 					
-				$temp = trim($row['hportu']);
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['hportu']);
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 				{
 					$hparr[$n] = $temp;
 					$n += 1;
 				}
 					
-				$temp = trim($row['info1']);  
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['info1']);  
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 				{
 					$hparr[$n] = $temp;
 					$n += 1;
 				}
 					  
-				$temp = trim($row['info2']);    
-				if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+				$temp = trim((string) $row['info2']);    
+				if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 					$hparr[$n] = $temp;
 					
 				$namaortu = $row['namaayah'];
-				if (strlen($row['namaayah']) == 0)
+				if (strlen((string) $row['namaayah']) == 0)
 					$namaortu = "Ortu " . $row['nama'];
 				
 				$nama = $row['nama'];	
@@ -326,7 +326,7 @@ class PengumumanAjax
 					               pinibu="<?=$row['info3']?>" pin="<?=$row['info3']?>">
 					    </td>			
 					</tr>
-<?					$cnt++;	
+<?php 				$cnt++;	
 				} // end for
 			} // end while 
 		}
@@ -335,9 +335,9 @@ class PengumumanAjax
 			<tr>
 				<td colspan="5" class="Ket" align="center">Tidak ada data</td>
 			</tr>
-<?			}	?>
+<?php 		}	?>
 		</table>
-        <?
+        <?php
 	}
 	
 	function GetTableOrtu()
@@ -360,7 +360,7 @@ class PengumumanAjax
 			<td>HP Ortu Siswa</td>
 			<td><input type="checkbox" id="CheckAllOrtu"></td>
 		  </tr>
-		  <?
+		  <?php
 			if ($Source=='Pilih')
 			{
 				$sql = "SELECT * FROM $db_name_akad.siswa WHERE aktif=1 AND idkelas='$kls'";
@@ -376,35 +376,35 @@ class PengumumanAjax
 			$sql .= " ORDER BY nama";
 			//echo $sql;
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0)
 			{
 				$cnt = 1;
-				while ($row = @mysql_fetch_array($res))
+				while ($row = @mysqli_fetch_array($res))
 				{
 					$n = 0;
-					$hparr = array();
+					$hparr = [];
 					
-					$temp = trim($row['hportu']);
-					if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+					$temp = trim((string) $row['hportu']);
+					if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 					{
 						$hparr[$n] = $temp;
 						$n += 1;
 					}
 				
-					$temp = trim($row['info1']);  
-					if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+					$temp = trim((string) $row['info1']);  
+					if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 					{
 						$hparr[$n] = $temp;
 						$n += 1;
 					}
 				  
-					$temp = trim($row['info2']);    
-					if (strlen($temp) >= 7 && substr($temp, 0, 1) != "#")
+					$temp = trim((string) $row['info2']);    
+					if (strlen($temp) >= 7 && !str_starts_with($temp, "#"))
 						$hparr[$n] = $temp;
 						
 					$namaortu = $row['namaayah'];
-					if (strlen($row['namaayah']) == 0)
+					if (strlen((string) $row['namaayah']) == 0)
 						$namaortu = $row['nama'];
 					
 					$nama = $row['nama'];
@@ -423,7 +423,7 @@ class PengumumanAjax
 									   pinayah="<?=$row['pinsiswa']?>" pinibu="<?=$row['pinsiswa']?>">
 							</td>
 						</tr>
-<?						$cnt++;
+<?php 					$cnt++;
 					} // end for
 				} // end while
 			} else {
@@ -431,11 +431,11 @@ class PengumumanAjax
 		  <tr>
 			<td colspan="5" class="Ket" align="center">Tidak ada data</td>
 		  </tr>
-		  <?
+		  <?php
 			}
 				?>
 		</table>
-        <?
+        <?php
 	}
 
 	function GetFilterSiswa()
@@ -448,7 +448,7 @@ class PengumumanAjax
 		$dep = $this->dep; ?>
 		
 		<select id="CmbKlsSis" name="CmbKlsSis" class="Cmb" onchange="ChgCmbKlsSis()">
-<?		$sql = "SELECT k.replid,k.kelas
+<?php 	$sql = "SELECT k.replid,k.kelas
 				  FROM $db_name_akad.kelas k, $db_name_akad.tingkat ti, $db_name_akad.tahunajaran ta
 				 WHERE k.aktif=1
 				   AND ta.aktif=1
@@ -459,14 +459,14 @@ class PengumumanAjax
 				   AND ti.departemen='$dep'
 				 ORDER BY k.kelas"; 
 		$res = QueryDb($sql);
-		while ($row = @mysql_fetch_row($res))
+		while ($row = @mysqli_fetch_row($res))
 		{
 			if ($kls == "")
 				$kls = $row[0];	?>
 			<option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-<?		}	?>
+<?php 	}	?>
 		</select>
-        <?
+        <?php
 	}
 	
 	function GetProsesCalonSiswa($elname, $actname)
@@ -476,18 +476,18 @@ class PengumumanAjax
 		$dep = $this->dep; ?>
 		
 		<select id="<?=$elname?>" name="<?=$elname?>" class="Cmb" onchange="<?=$actname?>">
-<?		$sql = "SELECT replid, proses
+<?php 	$sql = "SELECT replid, proses
 				  FROM $db_name_akad.prosespenerimaansiswa
 				 WHERE departemen = '$dep'
 				   AND aktif = 1
 				 ORDER BY proses"; 
 		$res = QueryDb($sql);
-		while ($row = @mysql_fetch_row($res))
+		while ($row = @mysqli_fetch_row($res))
 		{	?>
             <option value="<?=$row[0]?>"><?=$row[1]?></option>
-<?		}	?>
+<?php 	}	?>
 		</select>
-        <?
+        <?php
 	}
 	
 	function GetKelompokCalonSiswa($elname, $actname)
@@ -497,17 +497,17 @@ class PengumumanAjax
 		$proses = $this->proses ?>
 		
 		<select id="<?=$elname?>" name="<?=$elname?>" class="Cmb" onchange="<?=$actname?>">
-<?		$sql = "SELECT replid, kelompok
+<?php 	$sql = "SELECT replid, kelompok
                   FROM $db_name_akad.kelompokcalonsiswa
 		  	     WHERE idproses = '$proses'
 				 ORDER BY kelompok"; 
         $res = QueryDb($sql);
-		while ($row = @mysql_fetch_row($res))
+		while ($row = @mysqli_fetch_row($res))
         {	?>
             <option value="<?=$row[0]?>"><?=$row[1]?></option>
-<?		}	?>
+<?php 	}	?>
 		</select>
-        <?
+        <?php
 	}
 
 	function GetFilterOrtu(){
@@ -520,21 +520,21 @@ class PengumumanAjax
 		
 		?>
 				<select id="CmbKlsOrtu" name="CmbKlsOrtu" class="Cmb" onchange="ChgCmbKlsOrtu()">
-					<?
+					<?php
 					$sql = "SELECT k.replid,k.kelas FROM $db_name_akad.kelas k, $db_name_akad.tingkat ti, $db_name_akad.tahunajaran ta ".
 						   "WHERE k.aktif=1 AND ta.aktif=1 AND ti.aktif=1 AND k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid ".
 						   "AND ta.departemen='$dep' AND ti.departemen='$dep' ORDER BY k.kelas"; 
 					$res = QueryDb($sql);
-					while ($row = @mysql_fetch_row($res)){
+					while ($row = @mysqli_fetch_row($res)){
 						if ($kls=="")
 							$kls=$row[0];
 					?>
 				<option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-					<?
+					<?php
 					}
 					?>
 				</select>
-        <?
+        <?php
 	}
 	
 	function GetPegawai(){
@@ -569,13 +569,13 @@ class PengumumanAjax
 					<td class="td">
 					  <select id="CmbBagPeg" name="CmbBagPeg" class="Cmb" onchange="ChgCmbBagPeg(this.value)">
 						<option value="-1" <?=StringIsSelected('-1',$bag)?>>- Semua Bagian -</option>
-						<?
+						<?php
 							$sql = "SELECT bagian FROM $db_name_sdm.bagianpegawai";
 							$res = QueryDb($sql);
-							while ($row = @mysql_fetch_row($res)){
+							while ($row = @mysqli_fetch_row($res)){
 							?>
 						<option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$bag)?>><?=$row[0]?></option>
-						<?
+						<?php
 							}
 							?>
 						</select>
@@ -616,16 +616,16 @@ class PengumumanAjax
 				<td>No. Ponsel</td>
 				<td><input type="checkbox" id="CheckAllPegawai"></td>
 			  </tr>
-			  <?
+			  <?php
 				if ($bag=='-1')
 					$sql = "SELECT * FROM $db_name_sdm.pegawai ORDER BY nama";
 				else
 					$sql = "SELECT * FROM $db_name_sdm.pegawai WHERE bagian='$bag' ORDER BY nama";
 				$res = QueryDb($sql);
-				$num = @mysql_num_rows($res);
+				$num = @mysqli_num_rows($res);
 				if ($num>0){
 					$cnt=1;
-					while ($row = @mysql_fetch_array($res)){
+					while ($row = @mysqli_fetch_array($res)){
 			  ?>
 			  <tr>
 				<td align="center" class="td"><?=$cnt?></td>
@@ -633,13 +633,13 @@ class PengumumanAjax
 				<td class="td"><?=$row['nama']?></td>
 				<td class="td"><?=$row['handphone']?></td>
 				<td class="td" align="center">
-				<? if (strlen($row['handphone'])>0){ ?>
+				<?php if (strlen((string) $row['handphone'])>0){ ?>
 				<input type="checkbox" class="checkboxpegawai" hp="<?=$row['handphone']?>" nama="<?=$row['nama']?>" nip="<?=$row['nip']?>"  pin="<?=$row['pinpegawai']?>">
 				<!--span style="cursor:pointer" class="Link" onclick="InsertNewReceipt('<?=$row['handphone']?>','<?=$row['nama']?>','<?=$row['nip']?>')" align="center" />Pilih</span-->
-				<? } ?>
+				<?php } ?>
 				</td>
 			  </tr>
-			  <?
+			  <?php
 					$cnt++;
 					}
 				} else {
@@ -647,7 +647,7 @@ class PengumumanAjax
 			  <tr>
 				<td colspan="4" class="Ket" align="center">Tidak ada data</td>
 			  </tr>
-			  <?
+			  <?php
 				}
 					?>
 			</table>
@@ -655,7 +655,7 @@ class PengumumanAjax
 			</td>
 		  </tr>
 		</table>
-        <?
+        <?php
 	}
 	
 	function GetSiswa(){
@@ -674,15 +674,15 @@ class PengumumanAjax
                     <td style="padding-right:4px">Departemen</td>
                     <td class="td">
                       <select id="CmbDepSis" name="CmbDepSis" class="Cmb" onchange="ChgCmbDepSis()">
-                            <?
+                            <?php
                             $sql = "SELECT departemen FROM $db_name_akad.departemen WHERE aktif=1 ORDER BY urutan";
                             $res = QueryDb($sql);
-                            while ($row = @mysql_fetch_row($res)){
+                            while ($row = @mysqli_fetch_row($res)){
                             if ($dep=="")
                                 $dep=$row[0];
                             ?>
                         <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$dep)?>><?=$row[0]?></option>
-                            <?
+                            <?php
                             }
                             ?>
                         </select>
@@ -690,15 +690,15 @@ class PengumumanAjax
                     <td class="td">Tingkat</td>
                     <td class="td">
                         <select id="CmbTktSis" name="CmbTktSis" class="Cmb" onchange="ChgCmbTktThnSis()">
-                            <?
+                            <?php
                             $sql = "SELECT replid,tingkat FROM $db_name_akad.tingkat WHERE aktif=1 AND departemen='$dep'";
                             $res = QueryDb($sql);
-                            while ($row = @mysql_fetch_row($res)){
+                            while ($row = @mysqli_fetch_row($res)){
                             if ($tkt=="")
                                 $tkt=$row[0];
                             ?>
                         <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$tkt)?>><?=$row[1]?></option>
-                            <?
+                            <?php
                             }
                             ?>
                         </select>
@@ -708,15 +708,15 @@ class PengumumanAjax
                     <td style="padding-right:4px">Tahun Ajaran</td>
                     <td class="td">
                         <select id="CmbThnSis" name="CmbThnSis" class="Cmb" onchange="ChgCmbTktThnSis()">
-                            <?
+                            <?php
                             $sql = "SELECT replid,tahunajaran FROM $db_name_akad.tahunajaran WHERE aktif=1 AND departemen='$dep'";
                             $res = QueryDb($sql);
-                            while ($row = @mysql_fetch_row($res)){
+                            while ($row = @mysqli_fetch_row($res)){
                             if ($thn=="")
                                 $thn=$row[0];
                             ?>
                         <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$thn)?>><?=$row[1]?></option>
-                            <?
+                            <?php
                             }
                             ?>
                         </select>
@@ -724,15 +724,15 @@ class PengumumanAjax
                     <td class="td">Kelas</td>
                     <td class="td">
                         <select id="CmbKlsSis" name="CmbKlsSis" class="Cmb" onchange="ChgCmbKlsSis()">
-                            <?
+                            <?php
                             $sql = "SELECT replid,kelas FROM $db_name_akad.kelas WHERE aktif=1 AND idtahunajaran='$thn' AND idtingkat='$tkt' ";
                             $res = QueryDb($sql);
-                            while ($row = @mysql_fetch_row($res)){
+                            while ($row = @mysqli_fetch_row($res)){
                             if ($kls=="")
                                 $kls=$row[0];
                             ?>
                         <option value="<?=$row[0]?>" <?=StringIsSelected($row[0],$kls)?>><?=$row[1]?></option>
-                            <?
+                            <?php
                             }
                             ?>
                         </select>
@@ -773,13 +773,13 @@ class PengumumanAjax
                 <td>No. Ponsel Siswa</td>
                 <td>&nbsp;</td>
               </tr>
-              <?
+              <?php
                 $sql = "SELECT * FROM $db_name_akad.siswa WHERE aktif=1 AND idkelas='$kls' ORDER BY nama";
                 $res = QueryDb($sql);
-                $num = @mysql_num_rows($res);
+                $num = @mysqli_num_rows($res);
                 if ($num>0){
                     $cnt=1;
-                    while ($row = @mysql_fetch_array($res)){
+                    while ($row = @mysqli_fetch_array($res)){
               ?>
               <tr>
                 <td align="center" class="td"><?=$cnt?></td>
@@ -787,12 +787,12 @@ class PengumumanAjax
 				<td class="td"><?=$row['nama']?></td>
                 <td class="td"><?=$row['hpsiswa']?></td>
                 <td class="td" align="center">
-                <? if (strlen($row['hpsiswa'])>0){ ?>
+                <?php if (strlen((string) $row['hpsiswa'])>0){ ?>
                 <span style="cursor:pointer" align="center" class="Link" onclick="InsertNewReceipt2('<?=$row['hpsiswa']?>_<?=$row['hportu']?>','<?=$row['nama']?>_<?=$row['namaayah']?>','<?=$row['nis']?>')"  />Pilih</span>
-                <? } ?>
+                <?php } ?>
                 </td>
               </tr>
-              <?
+              <?php
                     $cnt++;
                     }
                 } else {
@@ -800,7 +800,7 @@ class PengumumanAjax
               <tr>
                 <td colspan="5" class="Ket" align="center">Tidak ada data</td>
               </tr>
-              <?
+              <?php
                 }
                     ?>
             </table>
@@ -808,7 +808,7 @@ class PengumumanAjax
             </td>
           </tr>
         </table>
-    <?
+    <?php
 	}
 	
 	function GetTablePegawai(){
@@ -833,7 +833,7 @@ class PengumumanAjax
 			<td>No. Ponsel</td>
 			<td><input type="checkbox" id="CheckAllPegawai"></td>
 		  </tr>
-		  <?
+		  <?php
 			if ($Source=='Pilih'){
 				if ($bag=='-1')
 					$sql = "SELECT * FROM $db_name_sdm.pegawai ORDER BY nama";
@@ -848,10 +848,10 @@ class PengumumanAjax
 			}
 			//echo $sql;
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0){
 				$cnt=1;
-				while ($row = @mysql_fetch_array($res)){
+				while ($row = @mysqli_fetch_array($res)){
 		  ?>
 		  <tr>
 			<td align="center" class="td"><?=$cnt?></td>
@@ -859,13 +859,13 @@ class PengumumanAjax
 			<td class="td"><?=$row['nama']?></td>
 			<td class="td"><?=$row['handphone']?></td>
 			<td class="td" align="center">
-			<? if (strlen($row['handphone'])>0){ ?>
+			<?php if (strlen((string) $row['handphone'])>0){ ?>
 			<!--span style="cursor:pointer" class="Link" onclick="InsertNewReceipt('<?=$row['handphone']?>','<?=$row['nama']?>','<?=$row['nip']?>')" align="center"  />Pilih</span-->
 			<input type="checkbox" class="checkboxpegawai" hp="<?=$row['handphone']?>" nama="<?=$row['nama']?>" nip="<?=$row['nip']?>" pin="<?=$row['pinpegawai']?>">
-			<? } ?>
+			<?php } ?>
 			</td>
 		  </tr>
-		  <?
+		  <?php
 				$cnt++;
 				}
 			} else {
@@ -873,11 +873,11 @@ class PengumumanAjax
 		  <tr>
 			<td colspan="4" class="Ket" align="center">Tidak ada data</td>
 		  </tr>
-		  <?
+		  <?php
 			}
 				?>
 		</table>
-		<?
+		<?php
 	}
 }
 ?>

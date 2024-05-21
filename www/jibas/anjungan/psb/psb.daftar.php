@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -36,7 +36,7 @@ OpenDb();
         Departemen:
     </td>
     <td width="*" align="left">
-<?      ShowDepartemenCombo() ?>        
+<?php      ShowDepartemenCombo() ?>        
     </td>
     <td width="45%" align="left" valign="middle" rowspan="3">
         <input type="button" value="Lihat" class="but" style="width: 100px; height: 40px;" onclick="psb_ShowDaftarPsb()">
@@ -48,7 +48,7 @@ OpenDb();
     </td>
     <td width="*" align="left">
         <div id="psb_divProses">
-<?      ShowPenerimaanCombo($selDept) ?>
+<?php      ShowPenerimaanCombo($selDept) ?>
         </div>
     </td>
 </tr>
@@ -58,7 +58,7 @@ OpenDb();
     </td>
     <td width="*" align="left">
         <div id="psb_divKelompok">
-<?      ShowKelompokCombo($selProses) ?>
+<?php      ShowKelompokCombo($selProses) ?>
         </div>
     </td>
 </tr>
@@ -67,6 +67,6 @@ OpenDb();
 <hr width='96%' style='display: block; height: 1px; border: 0; border-top: 1px solid #557d1d; '>
 <div id="psb_divDaftar" style="width: 99%; height: 30px; overflow: auto;">
 </div>    
-<?
+<?php
 CloseDb();
 ?>

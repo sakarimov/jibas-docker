@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -72,7 +72,7 @@ function excel() {
 <!-- TABLE CENTER -->
 <tr>
 	<td>
-    <? 
+    <?php 
     OpenDb();
 	$sql = "SELECT ra.nama, ra.kode, k.kategori, SUM(jd.debet) AS debet, SUM(jd.kredit) AS kredit 
 	          FROM rekakun ra, katerekakun k, jurnal j, jurnaldetail jd 
@@ -80,7 +80,7 @@ function excel() {
 			   AND j.idtahunbuku = '$idtahunbuku' AND j.tanggal BETWEEN '$tanggal1' AND '$tanggal2' 
 		  GROUP BY ra.nama, ra.kode, k.kategori ORDER BY k.urutan, ra.kode;";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 	?>
     <table border="0" width="100%" align="center">
     <tr>
@@ -100,11 +100,11 @@ function excel() {
         <td class="header" width="20%" align="center">Debet</td>
         <td class="header" width="20%" align="center">Kredit</td>
     </tr>
-	<?
+	<?php
     $cnt = 0;
     $totaldebet = 0;
     $totalkredit = 0;
-    while($row = mysql_fetch_array($result)) {
+    while($row = mysqli_fetch_array($result)) {
         $kategori = $row['kategori'];
         switch($kategori) {
             case 'HARTA':
@@ -132,7 +132,7 @@ function excel() {
         <td align="right"><?=$debet ?></td>
         <td align="right"><?=$kredit ?></td>
     </tr>
-    <?
+    <?php
     }
     CloseDb();
     ?>
@@ -145,7 +145,7 @@ function excel() {
     <script language='JavaScript'>
         Tables('table', 1, 0);
     </script>
-<? } else { ?>
+<?php } else { ?>
     <table width="100%" border="0" align="center">          
     <tr>
         <td align="center" valign="middle" height="300">
@@ -154,7 +154,7 @@ function excel() {
         </td>
     </tr>
     </table>  
-<? } ?>
+<?php } ?>
 	</td>
 </tr>
 </table>

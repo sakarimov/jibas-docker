@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function KataAngka($num) {
 	switch($num) {
 		case 0:	return "";			break;
@@ -143,13 +143,13 @@ function FormatRupiah($value) {
 }
 
 function UnformatRupiah($value) {
-	$pos = strpos($value, "(");
+	$pos = strpos((string) $value, "(");
 
 	$negatif = true;
 	if ($pos === false) 
 		$negatif = false;
 
-	$value = str_replace("Rp","",$value);
+	$value = str_replace("Rp","",(string) $value);
 	$value = str_replace(".","",$value);
 	$value = str_replace(" ","",$value);
 	$value = str_replace("(","",$value);

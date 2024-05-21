@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -63,8 +63,8 @@ if(isset($_POST["semester"])){
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript">
 function change_sel(){
     var departemen = document.filter_laporan_rapor.departemen.value;
     document.location.href="filter_laporan_nilai_rapor.php?departemen="+departemen;
@@ -179,7 +179,7 @@ function show()
 </script>
 </head>
 <body class="filter" topmargin="0" leftmargin="0">
-<?
+<?php
 OpenDb();
 if (!isset($_POST['lihat'])) {
 ?>
@@ -190,29 +190,29 @@ if (!isset($_POST['lihat'])) {
             <td width="120"><strong>Departemen</strong></td>
             <td width="200">
             <select name="departemen" id="departemen"  style="width:150px;" onChange="change_sel();">
-              <?	$dep = getDepartemen(SI_USER_ACCESS());    
+              <?php $dep = getDepartemen(SI_USER_ACCESS());    
 	foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                   <?=$value ?> 
                   </option>
-              <?	} ?>
+              <?php } ?>
               </select>			</td>
 			
             <td width="120"><strong>Semester</strong></td>
             <td width="280">
-<?
+<?php
 
             $query_s = "SELECT replid, semester FROM jbsakad.semester ".
                         "WHERE departemen = '$departemen' AND aktif = '1' ORDER BY semester ASC";
             $result_s = QueryDb($query_s);
 
-            $row_s = @mysql_fetch_array($result_s);
+            $row_s = @mysqli_fetch_array($result_s);
                 
             ?>
-            <input type="hidden" name="semester" value="<?=$row_s[replid]?>">
-			<input type="text" size="21" value="<?=$row_s[semester]?>" readonly class="disabled">			</td>
+            <input type="hidden" name="semester" value="<?=$row_s['replid']?>">
+			<input type="text" size="21" value="<?=$row_s['semester']?>" readonly class="disabled">			</td>
             <td align="left" valign="middle" width="72" rowspan="4"><img src="../images/view.png" width="48" height="48" border="0" onClick="show()" style="cursor:pointer;"></td>
           <td align="right" valign="top" width="*" rowspan="4">
           <font size="4" face="Verdana, Arial, Helvetica, sans-serif" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="4" face="Verdana, Arial, Helvetica, sans-serif" color="Gray">Nilai Rapor Siswa</font><br />
@@ -221,25 +221,25 @@ if (!isset($_POST['lihat'])) {
         <tr>
             <td><strong>Tingkat</strong></td>
             <td><select name="tingkat" id="tingkat" size="1" style="width:150px;" onChange="change_sel2();">
-<?
+<?php
 
             $query_t = "SELECT replid, tingkat FROM jbsakad.tingkat ".
                         "WHERE departemen = '$departemen' AND aktif = '1' ORDER BY urutan ASC";
             $result_t = QueryDb($query_t);
 
             $i = 0;
-            while ($row_t = @mysql_fetch_array($result_t)) {
+            while ($row_t = @mysqli_fetch_array($result_t)) {
                 if($tingkat == "") {
-                    $tingkat = $row_t[replid];
+                    $tingkat = $row_t['replid'];
                     $sel[$i] = "selected";
                 }
-                elseif($tingkat == $row_t[replid]) {
+                elseif($tingkat == $row_t['replid']) {
 				    $sel[$i] = "selected";
                 }else {
                     $sel[$i] = "";
                 }
                 echo "
-                    <option value='$row_t[replid]' $sel[$i]>$row_t[tingkat]</option>
+                    <option value='".$row_t['replid']."' $sel[$i]>".$row_t['tingkat']."</option>
                 ";
                 $i++;
             }
@@ -248,13 +248,13 @@ if (!isset($_POST['lihat'])) {
 			
 			<td><strong>Kelas</strong></td>
             <td><select name="kelas" id="kelas" size="1" style="width:150px;" onChange="change_sel4()">
-            <?
+            <?php
             $query_th = "SELECT replid, tahunajaran FROM jbsakad.tahunajaran ".
                         "WHERE departemen = '$departemen' AND aktif = '1' ";
             $result_th = QueryDb($query_th);
-            $row_th = @mysql_fetch_array($result_th);
-            $tahun = $row_th[tahunajaran];
-            $replid = $row_th[replid];
+            $row_th = @mysqli_fetch_array($result_th);
+            $tahun = $row_th['tahunajaran'];
+            $replid = $row_th['replid'];
 
             $query_k = "SELECT replid, kelas FROM jbsakad.kelas ".
                         "WHERE idtingkat = '$tingkat' ".
@@ -262,18 +262,18 @@ if (!isset($_POST['lihat'])) {
             $result_k = QueryDb($query_k);
 
             $i = 0;
-            while ($row_k = @mysql_fetch_array($result_k)) {
+            while ($row_k = @mysqli_fetch_array($result_k)) {
                 if($kelas == "") {
-                    $kelas = $row_k[replid];
+                    $kelas = $row_k['replid'];
                     $sel[$i] = "selected";
                 }
-                elseif($kelas == $row_k[replid]) {
+                elseif($kelas == $row_k['replid']) {
 				    $sel[$i] = "selected";
                 }else {
                     $sel[$i] = "";
                 }
                 echo "
-                    <option value='$row_k[replid]' $sel[$i]>$row_k[kelas]</option>
+                    <option value='".$row_k['replid']."' $sel[$i]>".$row_k['kelas']."</option>
                 ";
                 $i++;
             }
@@ -297,7 +297,7 @@ if (!isset($_POST['lihat'])) {
                       FROM jbsakad.tahunajaran 
                      WHERE replid='$replid'";
             $res = QueryDb($sql);
-            $row = @mysql_fetch_array($res);
+            $row = @mysqli_fetch_array($res);
             $yy1 = $row[0];
             $mm1 = $row[1];
             $dd1 = $row[2];
@@ -317,7 +317,7 @@ if (!isset($_POST['lihat'])) {
     </table>
     </form>
 
-<?
+<?php
 }
 CloseDb();
 

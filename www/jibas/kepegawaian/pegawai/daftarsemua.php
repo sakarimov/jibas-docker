@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -34,7 +34,7 @@ $nip = $_REQUEST['nip'];
 $sql = "SELECT * FROM pegawai WHERE nip='$nip'";
 
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 $nama = $row['nama'];
 $gelarawal = $row['gelarawal'];
@@ -183,12 +183,12 @@ function Cetak() {
                AND ds.nip = '$nip'
              ORDER BY td.urutan   ";
     $res = QueryDb($sql);
-    $ntambahandata = mysql_num_rows($res);
+    $ntambahandata = mysqli_num_rows($res);
 
     if ($ntambahandata > 0)
     {
         $first = true;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             $replid = $row['replid'];
@@ -218,7 +218,7 @@ function Cetak() {
                     <?=$data?>
                 </td>
             </tr>
-        <?  }
+        <?php  }
     }
     ?>
 </table>
@@ -239,25 +239,25 @@ function Cetak() {
     <td width="35%" align="center" class="header">Jadwal Pensiun</td>
 	<td width="45%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT replid, DATE_FORMAT(tanggal,'%d %M %Y') AS ftmt, keterangan FROM jadwal WHERE nip='$nip' AND jenis='pensiun'";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
 	$cnt = 0;
-	while ($row = mysql_fetch_array($result)) { ?>
+	while ($row = mysqli_fetch_array($result)) { ?>
 	<tr height="25">
 		<td align="center"><?=++$cnt?></td>
 	    <td align="center"><?=$row['ftmt']?></td>
 	    <td align="left"><?=$row['keterangan']?></td>
 	</tr>
-<?	} // while 
+<?php } // while 
 } else { ?>
 	<tr height="80">
     	<td colspan="3" align="center" valign="middle">
             <font color="#999999"><strong>Belum ada jadwal pensiun pegawai ini.</font>
         </td>
     </tr>
-<? 
+<?php 
 } // end if
 ?>
 </table>
@@ -283,11 +283,11 @@ if (mysql_num_rows($result) > 0) {
     <td width="20%" align="center" class="header">SK</td>
     <td width="25%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT replid, golongan, terakhir, DATE_FORMAT(tmt,'%d %M %Y') AS ftmt, sk, keterangan FROM peggol WHERE nip = '$nip' ORDER BY tmt DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -296,7 +296,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -320,11 +320,11 @@ while ($row = mysql_fetch_array($result)) {
     <td width="20%" align="center" class="header">SK</td>
     <td width="15%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT p.replid, p.jenis, p.namajab, DATE_FORMAT(p.tmt,'%d %M %Y') AS ftmt, p.sk, p.keterangan, p.terakhir FROM pegjab p WHERE p.nip = '$nip' ORDER BY tmt DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -333,7 +333,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -357,11 +357,11 @@ while ($row = mysql_fetch_array($result)) {
     <td width="20%" align="center" class="header">SK</td>
     <td width="28%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT p.replid, p.iddiklat, d.diklat, p.tahun, p.sk, p.keterangan, p.terakhir FROM pegdiklat p, diklat d WHERE p.nip = '$nip' AND p.iddiklat = d.replid ORDER BY p.tahun DESC, p.replid DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -370,7 +370,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -396,12 +396,12 @@ while ($row = mysql_fetch_array($result)) {
     <td width="20%" align="center" class="header">SK</td>
     <td width="23%" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.tingkat, ps.sekolah, ps.sk, ps.lulus, ps.keterangan, ps.terakhir FROM pegsekolah ps 
         WHERE ps.nip = '$nip' ORDER BY ps.lulus DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -411,7 +411,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="left"><?=$row['sk']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -436,14 +436,14 @@ while ($row = mysql_fetch_array($result)) {
     <td width="7%" align="center" class="header">Tahun</td>
     <td width="*" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.sertifikat, ps.lembaga, ps.tahun, ps.keterangan, ps.terakhir
           FROM pegserti ps 
          WHERE ps.nip = '$nip'
          ORDER BY ps.tahun DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
@@ -452,7 +452,7 @@ while ($row = mysql_fetch_array($result)) {
     <td align="center"><?=$row['tahun']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -478,14 +478,14 @@ while ($row = mysql_fetch_array($result)) {
     <td width="20%" align="center" class="header">Jabatan</td>
     <td width="*" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.thnawal, ps.thnakhir, ps.tempat, ps.jabatan, ps.keterangan, ps.terakhir
           FROM pegkerja ps 
          WHERE ps.nip = '$nip'
          ORDER BY ps.thnawal DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 ?>
 <tr height="25">
@@ -496,7 +496,7 @@ while ($row = mysql_fetch_array($result))
     <td align="left"><?=$row['jabatan']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -523,21 +523,21 @@ while ($row = mysql_fetch_array($result))
     <td width="15%" align="center" class="header">Email</td>
     <td width="*" align="center" class="header">Keterangan</td>
 </tr>
-<?
+<?php
 $sql = "SELECT ps.replid, ps.nama, ps.alm, ps.hubungan, ps.tgllahir, ps.hp, ps.email, ps.keterangan
           FROM pegkeluarga ps 
          WHERE ps.nip = '$nip'
          ORDER BY ps.nama";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 ?>
 <tr height="25">
 	<td align="center"><?=++$cnt?></td>
     <td align="left">
 	<?=$row['nama']?>
-	<? if ((int)$row['alm'] == 1) echo " (alm)"; ?>
+	<?php if ((int)$row['alm'] == 1) echo " (alm)"; ?>
 	</td>
     <td align="left"><?=$row['hubungan']?></td>
     <td align="left"><?=$row['tgllahir']?></td>
@@ -545,7 +545,7 @@ while ($row = mysql_fetch_array($result))
 	<td align="left"><?=$row['email']?></td>
     <td align="left"><?=$row['keterangan']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -554,7 +554,7 @@ while ($row = mysql_fetch_array($result))
 </table>
 
 
-<?
+<?php
 CloseDb();
 ?>    
 </td></tr>

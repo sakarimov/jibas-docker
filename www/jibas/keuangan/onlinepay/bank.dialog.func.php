@@ -10,7 +10,7 @@ function LoadValue()
 
     $sql = "SELECT * FROM jbsfina.bank WHERE replid = $bankReplid";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $bank = $row["bank"];
         $bankNo = $row["bankno"];
@@ -21,7 +21,7 @@ function LoadValue()
         $rekPendapatan = $row["rekpendapatan"];
     }
 
-    $sql = "SELECT COUNT(*) FROM jbsfina.banktrans WHERE bankno = '$bankNo'";
+    $sql = "SELECT COUNT(*) FROM jbsfina.banktrans WHERE bankno = '".$bankNo."'";
     $res = QueryDb($sql);
     $row = mysqli_fetch_row($res);
     $useInTrans = $row[0] != 0;
@@ -37,10 +37,10 @@ function ShowSelectRek($kategori, $nama, $defValue)
     $readOnly = $isReadOnly ? "disabled" : "";
 
     echo "<select id='$nama' name='$nama' class='inputbox' style='width: 250px' $readOnly>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $sel = $row[0] == $defValue ? "selected" : "";
-        echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[0]. $row[1]."</option>";
     }
     echo "</select>";
 }
@@ -110,7 +110,7 @@ function SimpanBank()
 
 function createJsonReturn($status, $message)
 {
-    $ret = array($status, $message);
-    return json_encode($ret);
+    $ret = [$status, $message];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 ?>

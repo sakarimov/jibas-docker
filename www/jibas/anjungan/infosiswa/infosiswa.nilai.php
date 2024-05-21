@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/common.php');
 require_once('../include/db_functions.php');
@@ -48,13 +48,13 @@ do
 			 WHERE nis = '$check_nis'";
 	
 	$result = QueryDb($sql);
-	$nrow = mysql_num_rows($result);
+	$nrow = mysqli_num_rows($result);
 	if ($nrow > 0)
 	{
-		$row = mysql_fetch_array($result);
-		$dep[] = array($row['departemen'], $check_nis);
+		$row = mysqli_fetch_array($result);
+		$dep[] = [$row['departemen'], $check_nis];
 		
-		if (strlen($row['nislama']) > 0)
+		if (strlen((string) $row['nislama']) > 0)
 			$check_nis = $row['nislama'];
 		else
 			$nrow = 0;
@@ -69,9 +69,9 @@ $sql_ajaran = "SELECT DISTINCT(t.replid), t.tahunajaran
 				ORDER BY t.replid DESC";
 $result_ajaran = QueryDb($sql_ajaran);
 $k = 0;
-while ($row_ajaran = @mysql_fetch_array($result_ajaran))
+while ($row_ajaran = @mysqli_fetch_array($result_ajaran))
 {
-	$ajaran[$k] = array($row_ajaran['replid'], $row_ajaran['tahunajaran']);
+	$ajaran[$k] = [$row_ajaran['replid'], $row_ajaran['tahunajaran']];
 	$k++;
 }
 
@@ -84,9 +84,9 @@ $sql_kls = "SELECT DISTINCT(r.idkelas), k.kelas, t.tingkat, k.idtahunajaran
 			 WHERE r.nis = '$nis' AND r.idkelas = k.replid AND k.idtingkat = t.replid ";
 $result_kls = QueryDb($sql_kls);
 $j = 0;
-while ($row_kls = @mysql_fetch_array($result_kls))
+while ($row_kls = @mysqli_fetch_array($result_kls))
 {
-	$kls[$j] = array($row_kls['idkelas'], $row_kls['kelas'], $row_kls['tingkat'], $row_kls['idtahunajaran']);
+	$kls[$j] = [$row_kls['idkelas'], $row_kls['kelas'], $row_kls['tingkat'], $row_kls['idtahunajaran']];
 	if ($row_kls['idtahunajaran']==$tahunajaran)
 		$kelas = $row_kls['idkelas'];	
 	$j++;
@@ -116,9 +116,9 @@ if (isset($_REQUEST['pelajaran']))
 	</td>
 	<td width="*"> 
 		<select name="departemen" class="cmbfrm" id="departemen" style="width:150px" onChange="ChangeNilaiOption2('departemen')">
-<? 		for ($i=0; $i<sizeof($dep); $i++) { ?>        	
+<?php 		for ($i=0; $i<sizeof($dep); $i++) { ?>        	
 			<option value="<?=$i ?>" <?=IntIsSelected($i, $departemen) ?> > <?=$dep[$i][0] ?> </option>
-<? 		} ?>
+<?php 		} ?>
 		</select>
 	</td>
 	<td class="gry"><strong class="news_content1">
@@ -126,10 +126,10 @@ if (isset($_REQUEST['pelajaran']))
 	</td>
 	<td>
 		<select name="kelas" class="cmbfrm" id="kelas" style="width:200px" onChange="ChangeNilaiOption2('kelas')">
-<? 			for ($j=0; $j<sizeof($kls); $j++) {
+<?php 			for ($j=0; $j<sizeof($kls); $j++) {
 			if ($kls[$j][3] == $tahunajaran) {	?>
 				<option value="<?=$kls[$j][0] ?>" <?=IntIsSelected($kls[$j][0], $kelas) ?> > <?=$kls[$j][2]." - ".$kls[$j][1] ?> </option>
-<? 				}
+<?php 				}
 		} ?>
 		</select>    
 	</td>
@@ -140,9 +140,9 @@ if (isset($_REQUEST['pelajaran']))
 	</td>
 	<td>
 		<select name="tahunajaran" class="cmbfrm" id="tahunajaran" style="width:150px" onChange="ChangeNilaiOption2('tahunajaran')">
-<? 			for($k=0; $k<sizeof($ajaran); $k++) { ?>
+<?php 			for($k=0; $k<sizeof($ajaran); $k++) { ?>
 			<option value="<?=$ajaran[$k][0] ?>" <?=IntIsSelected($ajaran[$k][0], $tahunajaran) ?> ><?=$ajaran[$k][1]?> </option>
-<? 			} ?>
+<?php 			} ?>
 		</select>    
 	</td>
 	<td class="gry">
@@ -150,18 +150,18 @@ if (isset($_REQUEST['pelajaran']))
 	</td>
 	<td>
 		<select name="pelajaran" class="cmbfrm" id="pelajaran" style="width:200px" onChange="ChangeNilaiOption2('pelajaran')">
-<? 			$sql = "SELECT DISTINCT p.replid, p.nama
+<?php 			$sql = "SELECT DISTINCT p.replid, p.nama
 			  		  FROM ujian u, pelajaran p, nilaiujian n
 					 WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas'
 					   AND u.replid = n.idujian AND n.nis = '$nis'
 					 ORDER BY p.nama";
 			$result = QueryDb($sql); 				
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 				if ($pelajaran == "") 
 					$pelajaran = $row['replid'];  ?>
 				<option value="<?=$row['replid']?>" <?=IntIsSelected($row['replid'], $pelajaran) ?> > 
 				<?=$row['nama']?> </option>
-<? 				} ?>
+<?php 				} ?>
 		</select>    
 	</td>
 	</tr>
@@ -170,18 +170,18 @@ if (isset($_REQUEST['pelajaran']))
 </tr>
 <tr>
 <td><!-- 2 -->
-<? 	if ($pelajaran <> "" && $kelas <> "") { ?>
+<?php 	if ($pelajaran <> "" && $kelas <> "") { ?>
 	<br />
 	<div id="TabbedPanels3" class="TabbedPanels">
 		<ul class="TabbedPanelsTabGroup">
-<? 			$depart = $dep[$departemen][0];
+<?php 			$depart = $dep[$departemen][0];
 			$sql_sem = "SELECT * FROM semester WHERE departemen = '$depart' ORDER BY replid";
 			$result_sem = QueryDb($sql_sem);
-			$numsem = @mysql_num_rows($result_sem);
+			$numsem = @mysqli_num_rows($result_sem);
 			
 			$id = 0;
 			$arrsem;
-			while ($row_sem = @mysql_fetch_array($result_sem))
+			while ($row_sem = @mysqli_fetch_array($result_sem))
 			{
 				$arrsem[] = $row_sem['replid'];
 				$namasem[] = $row_sem['semester'];
@@ -190,10 +190,10 @@ if (isset($_REQUEST['pelajaran']))
 				if ($nmsem == "") 
 					$nmsem = $row_sem['semester'];	?>
 				<li class="TabbedPanelsTab" tabindex="0" id="<?=$id?>" onclick="ChangeTabNilai('<?=$id++?>')"><?=$row_sem['semester']?></li>    
-<? 			} ?>
+<?php 			} ?>
 		</ul>
 		<div class="TabbedPanelsContentGroup">
-<? 			for($i=1; $i<=$numsem; $i++)
+<?php 			for($i=1; $i<=$numsem; $i++)
 			{
 				$semester = $arrsem[$i - 1];
 				$nmsem = $namasem[$i - 1];
@@ -203,23 +203,23 @@ if (isset($_REQUEST['pelajaran']))
 				<table width="100%" border="0" height="100%" >
 				<tr>
 					<td width="72%" valign="top">
-<?						$sql = "SELECT * FROM pelajaran WHERE replid = $pelajaran ";
+<?php 					$sql = "SELECT * FROM pelajaran WHERE replid = $pelajaran ";
 						$result = QueryDb($sql);
-						$row = mysql_fetch_array($result); ?>	
-						<font color="#000000" size="3" class="news_content1">Pelajaran <?=$row[nama]?><br />Semester <?=$nmsem?> </font>
+						$row = mysqli_fetch_array($result); ?>	
+						<font color="#000000" size="3" class="news_content1">Pelajaran <?=$row['nama']?><br />Semester <?=$nmsem?> </font>
 					</td> 
 					<td width="28%" align="right" valign="top"> 
 						&nbsp;
 					</td>
 				</tr>
-<?				$sql = "SELECT j.replid, j.jenisujian
+<?php 			$sql = "SELECT j.replid, j.jenisujian
 						  FROM jenisujian j, ujian u
 						 WHERE j.idpelajaran = '$pelajaran' AND u.idjenis = j.replid
 						 GROUP BY j.jenisujian";
 				$result = QueryDb($sql);
-				if (mysql_num_rows($result) > 0)
+				if (mysqli_num_rows($result) > 0)
 				{ //2
-					while($row = @mysql_fetch_array($result))
+					while($row = @mysqli_fetch_array($result))
 					{	//1		?>
 						<tr>
 							<td colspan="2"> 
@@ -227,15 +227,15 @@ if (isset($_REQUEST['pelajaran']))
 							
 							<fieldset>
 							<legend><span class="news_title2"><?=$row['jenisujian']?></span></legend><br/>
-<?	 						$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan
+<?php  						$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan
 									   FROM ujian u, pelajaran p, nilaiujian n
 									  WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas'
 									    AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$semester."'
-										AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis'
+										AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis'
 									  ORDER BY u.tanggal";
 							$result1 = QueryDb($sql1);
 							
-							if (@mysql_num_rows($result1) > 0)
+							if (@mysqli_num_rows($result1) > 0)
 							{ // if nilai ?>
 								<table border="1" width="100%" id="table19" class="tab" >
 								<tr class="header" align="center" height="30">		
@@ -244,12 +244,12 @@ if (isset($_REQUEST['pelajaran']))
 									<td width="10%">Nilai</td>
 									<td width="*">Keterangan</td>
 								</tr>
-<?								$sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$semester."' AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis' ";
+<?php 							$sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$semester."' AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis' ";
 								$result2 = QueryDb($sql2);	
-								$row2 = @mysql_fetch_array($result2);
-								$rata = $row2[rata];
+								$row2 = @mysqli_fetch_array($result2);
+								$rata = $row2['rata'];
 								$cnt = 1;
-								while($row1 = @mysql_fetch_array($result1))
+								while($row1 = @mysqli_fetch_array($result1))
 								{ ?>
 									<tr>        			
 										<td width="5" height="25" align="center"><?=$cnt?></td>
@@ -257,7 +257,7 @@ if (isset($_REQUEST['pelajaran']))
 										<td width="10" height="25" align="center"><?=$row1[1]?></td>
 										<td height="25"><?=$row1[2]?></td>            
 									</tr>	
-<?									$cnt++;
+<?php 								$cnt++;
 								}	?>
 								<tr>        			
 									<td colspan="2" height="25" align="center"><strong>Nilai rata rata</strong></td>
@@ -265,7 +265,7 @@ if (isset($_REQUEST['pelajaran']))
 									<td height="25">&nbsp;</td>            
 								</tr>
 								</table>
-<? 							} 
+<?php 							} 
 							else
 							{ ?>
 								<table width="100%" border="0" align="center" id="table1">          
@@ -275,13 +275,13 @@ if (isset($_REQUEST['pelajaran']))
 									</td>
 								</tr>
 								</table>
-<? 							} // if nilai ?>
+<?php 							} // if nilai ?>
 							</fieldset>
 							
 							</td>	
 						</tr>
-<?					} // while 1 ?>
-<? 				}
+<?php 				} // while 1 ?>
+<?php 				}
 				else
 				{ //2 ?>
 					<tr>
@@ -295,13 +295,13 @@ if (isset($_REQUEST['pelajaran']))
 						</table>
 						</td>
 					</tr>
-<? 				} //2?>
+<?php 				} //2?>
 				</table>
 		</div> <!-- class="TabbedPanelsContent" -->
-<? 	} //for next jumlah div TabbedPanelsContent?>
+<?php 	} //for next jumlah div TabbedPanelsContent?>
 	</div> <!-- class="TabbedPanelsContentGroup" -->
 </div> <!-- id="TabbedPanels3" -->
-<?
+<?php
 	}
 	else
 	{ ?>
@@ -312,7 +312,7 @@ if (isset($_REQUEST['pelajaran']))
 			</td>
 		</tr>
 		</table>   
-<? 	} ?>
+<?php 	} ?>
 	</td><!-- 2 -->
 </tr>
 </table>   

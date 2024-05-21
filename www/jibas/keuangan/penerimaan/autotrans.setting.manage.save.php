@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ require_once('../include/compatibility.php');
 
 function SafeText($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     $text = str_replace("<", "&lt;", $text);
     $text = str_replace(">", "&gt;", $text);
 
@@ -44,8 +44,8 @@ $urutan = $_REQUEST["urutan"];
 $keterangan = SafeText($_REQUEST["keterangan"]);
 $smsinfo = isset($_REQUEST["smsinfo"]) ? 1 : 0;
 
-$temp = str_replace("`", "\"", $_REQUEST["lsPenerimaan"]);
-$lsPenerimaan = json_decode($temp);
+$temp = str_replace("`", "\"", (string) $_REQUEST["lsPenerimaan"]);
+$lsPenerimaan = json_decode($temp, null, 512, JSON_THROW_ON_ERROR);
 
 OpenDb();
 
@@ -64,14 +64,14 @@ else
 {
     $sql = "INSERT INTO jbsfina.autotrans 
                SET judul = '$judul', aktif = 1, kelompok = $kelompok, smsinfo = $smsinfo,  
-                   urutan = $urutan, keterangan = '$keterangan', departemen = '$departemen'";
+                   urutan = $urutan, keterangan = '$keterangan', departemen = '".$departemen."'";
     QueryDbTrans($sql, $success);
 
     if ($success)
     {
         $sql = "SELECT LAST_INSERT_ID()";
         $res = QueryDbTrans($sql, $success);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $idAutoTrans = $row[0];
     }
 }
@@ -94,7 +94,7 @@ for($i = 0; $success && $i < count($lsPenerimaan); $i++)
             $sql = "INSERT INTO jbsfina.autotransdata 
                        SET idautotrans = $idAutoTrans, idpenerimaan = $info->IdPenerimaan, 
                            besar = $info->Besar, aktif = $info->Aktif, urutan = $info->Urutan, 
-                           keterangan = '$keterangan'";
+                           keterangan = '".$keterangan."'";
             QueryDbTrans($sql, $success);
         }
         else

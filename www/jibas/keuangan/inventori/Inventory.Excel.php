@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -35,7 +35,7 @@ OpenDb();
 
 $sql = "SELECT kelompok FROM jbsfina.kelompokbarang WHERE replid='$idkelompok'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $namakelompok = $row[0];
 
 header('Content-Type: application/vnd.ms-excel'); //IE and Opera  
@@ -76,29 +76,29 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
     <td width="250" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Harga</font></strong></td>
     <td width="250" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Total</font></strong></td>
 </tr>
-<?
+<?php
 $sql = "SELECT * FROM jbsfina.barang WHERE idkelompok='$idkelompok'";
 $result = QueryDb($sql);
 $no = 0;
-while($row = mysql_fetch_array($result))
+while($row = mysqli_fetch_array($result))
 {
     $no += 1;
     
-    $jumlah = (int)$row[jumlah];
-    $harga = (int)$row[info1];
+    $jumlah = (int)$row['jumlah'];
+    $harga = (int)$row['info1'];
     $total = $jumlah * $harga;
 ?>
 <tr>
     <td><?=$no?></td>
-    <td><?=$row[kode]?></td>
-    <td><?=$row[nama]?></td>
-    <td><?=$row[tglperolehan]?></td>
-    <td><?=$row[kondisi]?></td>
-    <td><?=$jumlah . " " . $row[satuan]?></td>
+    <td><?=$row['kode']?></td>
+    <td><?=$row['nama']?></td>
+    <td><?=$row['tglperolehan']?></td>
+    <td><?=$row['kondisi']?></td>
+    <td><?=$jumlah . " " . $row['satuan']?></td>
     <td><?=$harga?></td>
     <td><?=$total?></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

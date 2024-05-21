@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once("../include/config.php");
@@ -37,7 +37,7 @@ if (!isset($_REQUEST['tahun1']))
                    MONTH(DATE_SUB(NOW(), INTERVAL 30 DAY)) AS MM2, 
                    YEAR(DATE_SUB(NOW(), INTERVAL 30 DAY)) AS YY2";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     $tanggal1 = $row[0];
     $bulan1 = $row[1];
@@ -112,7 +112,7 @@ showPresence = function()
 		
 Tanggal:
 <select name="tahun2" id="tahun2" onchange="changeDate()">
-<?
+<?php
 for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 {
 	$sel = $i == $tahun2 ? "selected" : "";
@@ -121,7 +121,7 @@ for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 ?>
 </select>
 <select name="bulan2" id="bulan2" onchange="changeDate()">
-<?
+<?php
 for($i = 1; $i <= 12; $i++)
 {
 	$sel = $i == $bulan2 ? "selected" : "";
@@ -130,7 +130,7 @@ for($i = 1; $i <= 12; $i++)
 ?>
 </select>
 <select name="tanggal2" id="tanggal2" onchange="changeDay()">
-<?
+<?php
 for($i = 1; $i <= $maxDay2; $i++)
 {
 	$sel = $i == $tanggal2 ? "selected" : "";
@@ -140,7 +140,7 @@ for($i = 1; $i <= $maxDay2; $i++)
 </select>
 &nbsp;s/d&nbsp;
 <select name="tahun1" id="tahun1" onchange="changeDate()">
-<?
+<?php
 for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 {
 	$sel = $i == $tahun1 ? "selected" : "";
@@ -149,7 +149,7 @@ for($i = $G_START_YEAR; $i <= date('Y'); $i++)
 ?>
 </select>
 <select name="bulan1" id="bulan1" onchange="changeDate()">
-<?
+<?php
 for($i = 1; $i <= 12; $i++)
 {
 	$sel = $i == $bulan1 ? "selected" : "";
@@ -158,7 +158,7 @@ for($i = 1; $i <= 12; $i++)
 ?>
 </select>
 <select name="tanggal1" id="tanggal1" onchange="changeDay()">
-<?
+<?php
 for($i = 1; $i <= $maxDay1; $i++)
 {
 	$sel = $i == $tanggal1 ? "selected" : "";

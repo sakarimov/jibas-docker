@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -58,7 +58,7 @@ if (isset($_REQUEST['urutan']))
 <head>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pencarian Siswa[Menu]</title>
+<title>Pencarian Siswa['Menu']</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
@@ -148,7 +148,7 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
 <input type="hidden" name="departemen" id="departemen" value="<?=$departemen?>">
 <input type="hidden" name="cari" id="cari" value="<?=$cari?>">
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis?>">
-<?
+<?php
 	OpenDb();
 	if ($jenis!="kondisi" && $jenis!="status" && $jenis!="agama" && $jenis!="suku" && $jenis!="darah")
 	{
@@ -186,12 +186,12 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
 	}
 	
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$result_siswa = QueryDb($sql_siswa);
-	if (mysql_num_rows($result_siswa) > 0) { 
+	if (mysqli_num_rows($result_siswa) > 0) { 
 ?>
 	<input type="hidden" name="total" id="total" value="<?=$total?>"/>
     <table border="0" width="100%">
@@ -218,14 +218,14 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
         <td width="10%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urutan('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></td>
     	<td width="8%">Detail</td>
   	</tr>
-	<?
+	<?php
 
 		if ($page==0)
 			$cnt_siswa = 1;
 		else 
 			$cnt_siswa = (int)$page*(int)$varbaris+1;
 		
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {		
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {		
 	?>
   	<tr height="25"> 
   		<td align="center"><?=$cnt_siswa?></td>
@@ -236,34 +236,34 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
     	<td align="center"><?=$row_siswa ['tingkat']?></td>
     	<td align="center"><?=$row_siswa['kelas']?></td>
         <td align="center">
-		<?
+		<?php
 		if ($row_siswa['aktif']==1){
 			echo "Aktif";
 		} elseif ($row_siswa['aktif']==0){
 			echo "Tidak Aktif ";
 			if ($row_siswa['alumni']==1){
-				$sql_get_al="SELECT a.tgllulus FROM jbsakad.alumni a WHERE a.nis='$row_siswa[nis]'";
+				$sql_get_al="SELECT a.tgllulus FROM jbsakad.alumni a WHERE a.nis='".$row_siswa['nis']."'";
 				//echo $sql_get_al;
 				$res_get_al=QueryDb($sql_get_al);
-				$row_get_al=@mysql_fetch_array($res_get_al);
-				echo "<br><a style='cursor:pointer;' title='Lulus Tgl: ".LongDateFormat($row_get_al[tgllulus])."'>[Alumnus]</a>";
+				$row_get_al=@mysqli_fetch_array($res_get_al);
+				echo "<br><a style='cursor:pointer;' title='Lulus Tgl: ".LongDateFormat($row_get_al['tgllulus'])."'>['Alumnus']</a>";
 			}
 			if ($row_siswa['statusmutasi']!=NULL){
-				$sql_get_mut="SELECT m.tglmutasi,j.jenismutasi FROM jbsakad.jenismutasi j, jbsakad.mutasisiswa m WHERE j.replid='$row_siswa[statusmutasi]' AND m.nis='$row_siswa[nis]' AND j.replid=m.jenismutasi";	
+				$sql_get_mut="SELECT m.tglmutasi,j.jenismutasi FROM jbsakad.jenismutasi j, jbsakad.mutasisiswa m WHERE j.replid='".$row_siswa['statusmutasi']."' AND m.nis='".$row_siswa['nis']."' AND j.replid=m.jenismutasi";	
 				$res_get_mut=QueryDb($sql_get_mut);
-				$row_get_mut=@mysql_fetch_array($res_get_mut);
-				//echo "<br><a href=\"NULL\" onmouseover=\"showhint('".$row_get_mut[jenismutasi]."<br>".$row_get_mut['tglmutasi']."', this, event, '50px')\"><u>[Termutasi]</u></a>";
-				echo "<br><a style='cursor:pointer;' title='".$row_get_mut[jenismutasi]."\n Tgl ".LongDateFormat($row_get_mut['tglmutasi'])."'>[Termutasi]</a>";
+				$row_get_mut=@mysqli_fetch_array($res_get_mut);
+				//echo "<br><a href=\"NULL\" onmouseover=\"showhint('".$row_get_mut['jenismutasi']."<br>".$row_get_mut['tglmutasi']."', this, event, '50px')\"><u>['Termutasi']</u></a>";
+				echo "<br><a style='cursor:pointer;' title='".$row_get_mut['jenismutasi']."\n Tgl ".LongDateFormat($row_get_mut['tglmutasi'])."'>['Termutasi']</a>";
 			}
 		}
 		?></td>
     	<td align="center">
-			<a href="JavaScript:edit(<?=$row_siswa[replid]?>, '<?=$departemen?>', <?= $row_siswa[idtahunajaran] ?>, <?= $row_siswa[idtingkat] ?>, <?= $row_siswa[idkelas] ?>)" /><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Data Siswa!', this, event, '80px')"/></a>&nbsp;
-			<a href="#" onclick="newWindow('../library/detail_siswa.php?replid=<?=$row_siswa[replid]?>','TampilSiswa',790,610,'resizable=1,scrollbars=1,status=0,toolbar=0')" >
+			<a href="JavaScript:edit(<?=$row_siswa['replid']?>, '<?=$departemen?>', <?= $row_siswa['idtahunajaran'] ?>, <?= $row_siswa['idtingkat'] ?>, <?= $row_siswa['idkelas'] ?>)" /><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Data Siswa!', this, event, '80px')"/></a>&nbsp;
+			<a href="#" onclick="newWindow('../library/detail_siswa.php?replid=<?=$row_siswa['replid']?>','TampilSiswa',790,610,'resizable=1,scrollbars=1,status=0,toolbar=0')" >
 			<img src="../images/ico/lihat.png" border="0" onmouseover="showhint('Lihat detail!', this, event, '50px')" /></a>
 		</td>
   	</tr>
-  	<?		$cnt_siswa++;
+  	<?php 	$cnt_siswa++;
 		}
 		CloseDb();
 	?>
@@ -273,7 +273,7 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
 	    Tables('table', 1, 0);
     </script>
  
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -298,19 +298,19 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -324,15 +324,15 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=10; $m <= 100; $m=$m+10) { ?>
+        <?php 	for ($m=10; $m <= 100; $m=$m+10) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
    
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center" height="300">          
 <tr>
@@ -343,7 +343,7 @@ function edit(replid, departemen, tahunajaran, tingkat, kelas )
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 <!-- END TABLE CENTER -->    

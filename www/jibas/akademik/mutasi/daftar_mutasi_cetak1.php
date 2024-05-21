@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -37,7 +37,7 @@ $tahun=$_REQUEST['tahun'];
 <head>
 <title>Daftar Mutasi Siswa</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<SCRIPT type="text/javascript" language="JavaScript" src="../script/tables.js"></SCRIPT>
+<SCRIPT type="text/javascript" language="text/javascript" src="../script/tables.js"></SCRIPT>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/common.js"></script>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/tools.js"></script>
 	<SCRIPT type="text/javascript" language="javascript" src="../script/tooltips.js"></script>
@@ -57,7 +57,7 @@ $tahun=$_REQUEST['tahun'];
 <body>
 <table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0" >
   <tr>
-    <td valign="top"><? include('../library/headercetak.php'); ?></td>
+    <td valign="top"><?php include('../library/headercetak.php'); ?></td>
   </tr>
   <tr>
     <td valign="top">
@@ -72,9 +72,9 @@ $tahun=$_REQUEST['tahun'];
               <strong>Departemen :
               <?=$departemen?>
               <br>
-              <? if (isset($_REQUEST['tahun'])){ ?>
+              <?php if (isset($_REQUEST['tahun'])){ ?>
               Tahun Mutasi : 
-              <?=$tahun?><? } ?>
+              <?=$tahun?><?php } ?>
                 </strong></div>
           <br>          </td>
         </tr>
@@ -89,7 +89,7 @@ $tahun=$_REQUEST['tahun'];
             <td width="198" height="30" class="header"><div align="center"><span class="style7">Keterangan Mutasi</span></div></td>
           </tr>
 		  <tr><td colspan="6">&nbsp;</td></tr>
-		  <? 
+		  <?php 
 	OpenDb();
 	if (isset($_REQUEST['tahun'])){	
 	$query_mutasi="SELECT s.nis,s.nama,s.statusmutasi,j.jenismutasi,m.tglmutasi,m.keterangan FROM jbsakad.siswa s, jbsakad.jenismutasi j, jbsakad.angkatan a, jbsakad.departemen d, jbsakad.mutasisiswa m WHERE d.departemen='$departemen' AND d.departemen=a.departemen AND a.replid=s.idangkatan AND j.replid=s.statusmutasi AND j.replid=m.jenismutasi AND YEAR(m.tglmutasi)='$tahun' AND s.nis=m.nis ORDER BY j.replid";
@@ -98,7 +98,7 @@ $tahun=$_REQUEST['tahun'];
 	}
 	$result_mutasi=QueryDb($query_mutasi);
 		  $a=0;
-		  while($row_mutasi=mysql_fetch_row($result_mutasi)){$a++;
+		  while($row_mutasi=mysqli_fetch_row($result_mutasi)){$a++;
 		  ?>
           <tr>
             <td height="25"><?=$a; ?></td>
@@ -109,15 +109,15 @@ $tahun=$_REQUEST['tahun'];
             <td height="25"><?=$row_mutasi[5]?></td>
           </tr>
           <tr><td colspan="8" align="center">&nbsp;</td></tr>
-		  <?
+		  <?php
 		  }
-		  if(mysql_num_rows($result_mutasi)==0)
+		  if(mysqli_num_rows($result_mutasi)==0)
 		  	{
 		?>
 		<tr>
 			<td height="25" colspan="8" align="center"> "Data Belum Ada"</td>
 		</tr>	
-		<?	
+		<?php 
 			}
 		CloseDb();
 		  ?>

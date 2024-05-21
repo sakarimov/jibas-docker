@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -44,17 +44,17 @@ if (isset($_REQUEST['btSimpan']))
 {
 	$eselon = $_REQUEST['cbEselon'];
 	$jabatan = $_REQUEST['txJabatan'];
-	$singkatan = strtoupper($_REQUEST['txSingkatan']);
+	$singkatan = strtoupper((string) $_REQUEST['txSingkatan']);
 	$satker = $_REQUEST['cbSatKer'];
 	$sql = "INSERT INTO jabatan SET rootid=$rootid, eselon='$eselon', jabatan='$jabatan', singkatan='$singkatan', satker='$satker'";
 	QueryDb($sql);
-	CloseDb($sql);
+	CloseDb();
 	?>
 	<script language="javascript">
 		opener.RefreshPage(<?=$rootid?>);
 		window.close();
     </script>    
-    <?
+    <?php
 	exit();
 }
 ?>
@@ -75,7 +75,7 @@ function TambahJabatan(rootid) {
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff">
 
-<?
+<?php
 OpenDb();
 ?>
 <form name="main" method="post">
@@ -84,17 +84,17 @@ OpenDb();
 <tr>
 	<td class="header" colspan="2" align="center"><?=$title?></td>
 </tr>
-<? 
+<?php 
 if ($rootid != 0) { 
 	$sql = "SELECT singkatan FROM jabatan WHERE replid = $rootid";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$jab = $row[0]; ?>
 <tr>
 	<td align="right" width="120">Jabatan :</td>
     <td align="left"><input type="text" name="txParentJabatan" id="txParentJabatan" style="background-color:#CCCCCC" readonly size="30" maxlength="255" value="<?=$jab?>" /></td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
 	<td align="right" width="120"><?=$label?> :</td>
     <td align="left"><input type="text" name="txJabatan" id="txJabatan" size="50" maxlength="255" /></td>
@@ -107,11 +107,11 @@ if ($rootid != 0) {
 	<td align="right">Eselon :</td>
     <td align="left">
     <select name="cbEselon" id="cbEselon" onKeyPress="return focusNext('txSingkatan', event)">
-<?	$sql = "SELECT eselon FROM eselon WHERE urutan >= 1 ORDER BY urutan";
+<?php $sql = "SELECT eselon FROM eselon WHERE urutan >= 1 ORDER BY urutan";
 	$result = QueryDb($sql);
-	while ($row = mysql_fetch_row($result)) { ?>    
+	while ($row = mysqli_fetch_row($result)) { ?>    
     	<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $eselon)?> ><?=$row[0]?></option>
-<?	} ?>    
+<?php } ?>    
     </select>&nbsp;
     </td>
 </tr>
@@ -119,12 +119,12 @@ if ($rootid != 0) {
 	<td align="right">Satuan Kerja :</td>
     <td align="left">
     <select name="cbSatKer" id="cbSatKer">
-<? 		 $sql = "SELECT satker, nama FROM satker";
+<?php 		 $sql = "SELECT satker, nama FROM satker";
 		 $result = QueryDb($sql);
-		 while ($row = mysql_fetch_row($result)) { ?>
+		 while ($row = mysqli_fetch_row($result)) { ?>
          	<option value="<?=$row[0]?>"><?=$row[1]?></option>
 
-<?		 } ?>        
+<?php 	 } ?>        
     </select>
     </td>
 </tr>
@@ -136,7 +136,7 @@ if ($rootid != 0) {
 </tr>
 </table>
 </form>
-<?
+<?php
 CloseDb();
 ?>
 </body>

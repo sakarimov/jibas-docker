@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -43,13 +43,13 @@ $tglakhir = $_REQUEST['tglakhir'];
 $urut = $_REQUEST['urut'];
 $urutan = $_REQUEST['urutan'];
 
-$filter1 = "AND t.departemen = '$departemen'";
+$filter1 = "AND t.departemen = '".$departemen."'";
 if ($tingkat <> -1) 
-	$filter1 = "AND k.idtingkat = '$tingkat'";
+	$filter1 = "AND k.idtingkat = '".$tingkat."'";
 
 $filter2 = "";
 if ($kelas <> -1) 
-	$filter2 = "AND k.replid = '$kelas'";
+	$filter2 = "AND k.replid = '".$kelas."'";
 	
 OpenDb();
 $sql = "SELECT t.departemen, a.tahunajaran, s.semester, k.kelas, t.tingkat 
@@ -62,7 +62,7 @@ $sql = "SELECT t.departemen, a.tahunajaran, s.semester, k.kelas, t.tingkat
            AND s.replid = '$semester' $filter1 $filter2";
 
 $result = QueryDB($sql);	
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -114,13 +114,13 @@ $row = mysql_fetch_array($result);
 <tr>
 	<td><span class="style4">Tingkat</span></td>
     <td colspan="9"><span class="style4">: 
-      <? if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?>
+      <?php if ($tingkat == -1) echo "Semua Tingkat"; else echo $row['tingkat']; ?>
     </span></td>
 </tr>
 <tr>
 	<td><span class="style4">Kelas</span></td>
     <td colspan="9"><span class="style4">: 
-      <? if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?>
+      <?php if ($kelas == -1) echo "Semua Kelas"; else echo $row['kelas']; ?>
     </span></td>
 </tr>
 <tr>
@@ -129,11 +129,11 @@ $row = mysql_fetch_array($result);
 </tr>
 </table>
 <br />
-<? 	OpenDb();
+<?php 	OpenDb();
 	$sql = "SELECT s.nis, s.nama, SUM(ph.hadir), SUM(ph.ijin) AS ijin, SUM(ph.sakit) AS sakit, SUM(ph.alpa) AS alpa, SUM(ph.cuti) AS cuti, k.kelas, s.hportu, s.emailayah, s.alamatortu, s.telponortu, s.hpsiswa, s.emailsiswa, s.aktif, s.emailibu FROM siswa s LEFT JOIN (phsiswa ph INNER JOIN presensiharian p ON p.replid = ph.idpresensi) ON ph.nis = s.nis, kelas k, tingkat t WHERE k.replid = s.idkelas AND k.idtingkat = t.replid $filter1 $filter2 AND p.idsemester = '$semester' AND (((p.tanggal1 BETWEEN '$tglawal' AND '$tglakhir') OR (p.tanggal2 BETWEEN '$tglawal' AND '$tglakhir')) OR (('$tglawal' BETWEEN p.tanggal1 AND p.tanggal2) OR ('$tglakhir' BETWEEN p.tanggal1 AND p.tanggal2))) GROUP BY s.nis HAVING ijin>0 OR sakit>0 OR cuti>0 OR alpa>0 ORDER BY $urut $urutan";
 	
 	$result = QueryDb($sql);
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0) { 
 ?>
 	<table class="tab" id="table" border="1" cellpadding="2" style="border-collapse:collapse" cellspacing="2" width="100%" align="left">
@@ -150,9 +150,9 @@ $row = mysql_fetch_array($result);
         <td width="5%" bgcolor="#CCCCCC" class="style6 style5 header"><strong>Cuti</strong></td>
         
     </tr>
-<?		
+<?php 	
 	$cnt = 0;
-	while ($row = mysql_fetch_row($result)) { ?>
+	while ($row = mysqli_fetch_row($result)) { ?>
     <tr height="25" valign="middle">    	
     	<td align="center" valign="middle"><span class="style7">
    	    <?=++$cnt?>
@@ -196,7 +196,7 @@ $row = mysql_fetch_array($result);
                 <td>Email</td>
                 <td>:&nbsp;</td>
               	<td>
-				<? 	if ($row[9] <> "" && $row[15] <> "")
+				<?php 	if ($row[9] <> "" && $row[15] <> "")
 						echo $row[9].", ".$row[15];
 				 	elseif ($row[15] == "")
 						echo $row[9];
@@ -248,11 +248,11 @@ $row = mysql_fetch_array($result);
         </br>
         </span></td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     <!-- END TABLE CONTENT -->
 </table>	
-<? 	} ?>
+<?php 	} ?>
 
 </body>
 <script language="javascript">

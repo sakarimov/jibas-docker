@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -74,14 +74,14 @@ function pilih(id,nama_dep,nama_pel) {
     <td align="left" width="100%">
       <p><strong>Departemen&nbsp;</strong>
             <select name="departemen" id="departemen" onchange="tampil()" style="width:50%;">
-         <?	$dep = getDepartemen(SI_USER_ACCESS());    
+         <?php $dep = getDepartemen(SI_USER_ACCESS());    
 	foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
               <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                 <?=$value ?> 
                 </option>
-                <?	} ?>
+                <?php } ?>
             </select></td>
     <td>
         <!--<input type="button" name="tampil" value="Tampilkan Semua Guru" class="but"/>   -->
@@ -90,10 +90,10 @@ function pilih(id,nama_dep,nama_pel) {
     </tr>
 	</table>  <br />
         <br />	
-<?	OpenDb();
+<?php OpenDb();
 	$sql = "SELECT pel.replid as replid,pel.nama as nama,pel.departemen as departemen FROM pelajaran pel,guru g WHERE pel.departemen = '$departemen' AND pel.aktif=1 AND g.nip='".SI_USER_ID()."' AND g.idpelajaran=pel.replid ORDER BY pel.nama";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result)>0){
+	if (@mysqli_num_rows($result)>0){
 ?>
 	<table class="tab" id="table" border="1" cellpadding="2" style="border-collapse:collapse" cellspacing="2" width="100%" align="left" bordercolor="#000000">
     <!-- TABLE CONTENT -->
@@ -103,17 +103,17 @@ function pilih(id,nama_dep,nama_pel) {
         <td width="96%" class="header" align="center">Pelajaran</td>
     </tr>
     
-     <?
+     <?php
 		
 		$cnt = 0;
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25" onClick="pilih('<?=$row[0]?>','<?=$row[2]?>','<?=$row[1]?>')" style="cursor:pointer;">   	
        	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row[1]?></td>
             
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); 
 ?>	
 	<!-- END TABLE CONTENT -->
@@ -121,31 +121,31 @@ function pilih(id,nama_dep,nama_pel) {
 	<script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>  
-<?	} else { ?>
+<?php } else { ?>
 	&nbsp;
    
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
-        <? if (isset($departemen)) {	?>
+        <?php if (isset($departemen)) {	?>
     		<font size = "2" color ="red"><b>Tidak ditemukan adanya data. <br /><br />Tambah data pelajaran pada departemen <?=$departemen?> di menu Pendataan Pelajaran pada bagian Guru & Pelajaran. </b></font>
-        <? } else { ?> 
+        <?php } else { ?> 
               <font size = "2" color ="red"><b>Belum ada data Departemen.
               <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
               </b></font>
-		<? } ?> 
+		<?php } ?> 
 		</td>
 	</tr>
 	</table>  
 	
-<? } ?> 
+<?php } ?> 
 	</td>
 </tr>
 <!-- END TABLE CENTER -->    
 </table>    
 
     
-<?	CloseDb() ?>    
+<?php CloseDb() ?>    
   
 
 </body>

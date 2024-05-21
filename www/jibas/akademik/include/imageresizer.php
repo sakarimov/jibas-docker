@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,20 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 
 class ImageResizer
 {
 	// 1 gif, 2 jpg, 3 png, 6 bmp
-	private $SupportedImageTypes = array(1, 2, 3, 6);
+	private array $SupportedImageTypes = [1, 2, 3, 6];
 
 	public function Resize($foto, $newwidth, $newheight, $quality, $output)
 	{
 		$uploadedfile = $foto['tmp_name'];	
-		if (strlen($uploadedfile) != 0)
+		if (strlen((string) $uploadedfile) != 0)
 		{
 			// get image size
-			list($width, $height, $imgtype) = getimagesize($uploadedfile);
+			[$width, $height, $imgtype] = getimagesize($uploadedfile);
 			
 			// check supperted image type
 			if (!in_array($imgtype, $this->SupportedImageTypes))
@@ -84,7 +84,7 @@ class ImageResizer
 			if ($imgtype == 2) // "image/jpeg"
 				imagejpeg($tmp, $output, $quality);
 			elseif ($imgtype == 1) // "image/gif"
-				imagegif($tmp, $output, $quality);
+				imagegif($tmp, $output);
 			elseif ($imgtype == 3) // "image/png"
 				imagepng($tmp, $output, $quality);
 			elseif ($imgtype == 6) // "image/png"
@@ -131,7 +131,7 @@ class ImageResizer
 			$f = fopen($filename, "wb"); 
 			foreach ($header AS $h) 
 			{ 
-				fwrite($f, $h); 
+				fwrite($f, (string) $h); 
 			} 
 			 
 			//save pixels 
@@ -140,7 +140,7 @@ class ImageResizer
 				for ($x=0; $x<$wid; $x++) 
 				{ 
 					$rgb = imagecolorat($img, $x, $y); 
-					fwrite($f, $this->byte3($rgb)); 
+					fwrite($f, (string) $this->byte3($rgb)); 
 				} 
 				fwrite($f, $wid_pad); 
 			} 
@@ -197,7 +197,7 @@ class ImageResizer
 		for ($y=$hei-1; $y>=0; $y--) 
 		{ 
 			$row = fread($f, $wid2); 
-			$pixels = str_split($row, 3); 
+			$pixels = str_explode($row, 3); 
 			for ($x=0; $x<$wid; $x++) 
 			{ 
 				imagesetpixel($img, $x, $y, $this->dwordize($pixels[$x])); 

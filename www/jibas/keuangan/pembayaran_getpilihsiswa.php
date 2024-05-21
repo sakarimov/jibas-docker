@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -54,13 +54,13 @@ OpenDb();
     <td width="100">Angkatan:</td>
     <td>
     <select id="idangkatan" name="idangkatan" style="width:150px" onchange="change_ang()">
-<?      $sql = "SELECT replid, angkatan FROM jbsakad.angkatan WHERE departemen = '$departemen' ORDER BY replid";
+<?php      $sql = "SELECT replid, angkatan FROM jbsakad.angkatan WHERE departemen = '$departemen' ORDER BY replid";
         $result = QueryDb($sql);
-        while($row = mysql_fetch_row($result)) {
+        while($row = mysqli_fetch_row($result)) {
             if ($idangkatan == 0)
                 $idangkatan = $row[0]; ?>
             <option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idangkatan)?> > <?=$row[1]?></option>
-<?     } ?>
+<?php     } ?>
     </select>
     </td>
 </tr>    
@@ -68,13 +68,13 @@ OpenDb();
     <td width="100">Kelas:</td>
     <td>
     <select id="idkelas" name="idkelas" style="width:150px" onchange="change_kel()">
-<?      $sql = "SELECT DISTINCT idkelas, kelas as namakelas FROM jbsakad.siswa, jbsakad.kelas, jbsakad.tingkat, jbsakad.tahunajaran  WHERE jbsakad.siswa.idkelas = jbsakad.kelas.replid AND idangkatan='$idangkatan' AND jbsakad.kelas.idtahunajaran = jbsakad.tahunajaran.replid AND jbsakad.kelas.idtingkat = jbsakad.tingkat.replid ORDER BY idkelas";
+<?php      $sql = "SELECT DISTINCT idkelas, kelas as namakelas FROM jbsakad.siswa, jbsakad.kelas, jbsakad.tingkat, jbsakad.tahunajaran  WHERE jbsakad.siswa.idkelas = jbsakad.kelas.replid AND idangkatan='$idangkatan' AND jbsakad.kelas.idtahunajaran = jbsakad.tahunajaran.replid AND jbsakad.kelas.idtingkat = jbsakad.tingkat.replid ORDER BY idkelas";
         $result = QueryDb($sql);
-        while($row = mysql_fetch_row($result)) {
+        while($row = mysqli_fetch_row($result)) {
             if ($idkelas == 0)
                 $idkelas = $row[0];  ?>
             <option value="<?=$row[0]?>" <?=IntIsSelected($row[0], $idkelas)?> > <?=$row[1]?></option>
-<?      } ?>
+<?php      } ?>
     </select>
     </td>
 </tr>    
@@ -85,11 +85,11 @@ OpenDb();
     <td class="header" width="30%" align="center">NIS</td>
     <td class="header">Nama</td>
 </tr>
-<? 
+<?php 
 $sql = "SELECT nis, nama FROM jbsakad.siswa WHERE idkelas = '$idkelas' ORDER BY nama";
 $result = QueryDb($sql);
 $no = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 ?>
 <input type="hidden" name="isnew<?=$no?>" id="isnew<?=$no?>" value="<?=$isnew ?>" />
 <tr height="25">
@@ -98,8 +98,8 @@ while ($row = mysql_fetch_array($result)) {
     <a href="JavaScript:show_bayar('<?=$row['nis'] ?>')"><?=$row['nis'] ?></a></font></td>
     <td><font size="1"><?=$row['nama'] ?></font></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
-<?  CloseDb() ?>
+<?php  CloseDb() ?>

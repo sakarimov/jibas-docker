@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -34,7 +34,7 @@ if (isset($_REQUEST['op']))
 if ($op == "bzux834hx8x7x934983xihxf084")
 {
 	OpenDb();
-	$sql="DELETE FROM jbsvcr.beritaguru WHERE replid='$_REQUEST[replid]'";
+	$sql="DELETE FROM jbsvcr.beritaguru WHERE replid='".$_REQUEST['replid']."'";
 	$result=QueryDb($sql);
 	CloseDb();
 }
@@ -121,22 +121,22 @@ function chg_title_color(id,stat){
 -->
 </style>
 </head>
-<body <? //if($bulan=="" && $tahun=="") { ?> <? //} ?>><!--onload="fill_month_and_year();"-->
+<body <?php //if($bulan=="" && $tahun=="") { ?> <?php //} ?>><!--onload="fill_month_and_year();"-->
 <input type="hidden" name="bulan" id="bulan" value="<?=$bulan?>" />
 <input type="hidden" name="tahun" id="tahun" value="<?=$tahun?>" />
 <table width="100%" border="0" cellspacing="0">
   <tr>
-  <? OpenDb();
+  <?php OpenDb();
   $sql_tot="SELECT b.replid as replid, b.judul as judul, DATE_FORMAT(b.tanggal, '%e %b %Y') as tanggal, TIME_FORMAT(b.tanggal, '%H:%i') as waktu, ".
   		"b.abstrak as abstrak, b.isi as isi, p.nama as nama, p.nip as nip FROM jbsvcr.beritaguru b, jbssdm.pegawai p ".
 		"WHERE p.nip=b.idguru AND MONTH(b.tanggal)='$bulan' AND YEAR(b.tanggal)='$tahun' ORDER BY replid DESC";
   //echo $sql1;
   $result_tot=QueryDb($sql_tot);
-  $total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
+  $total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
   CloseDb();
 	?>
 	<td scope="row" align="left">
-	<?
+	<?php
 	if ($total!=0){
 		if ($page==0){ 
 		$disback="style='visibility:hidden;position:absolute;'";
@@ -159,15 +159,15 @@ function chg_title_color(id,stat){
     Halaman : 
 	<input <?=$disback?> type="button" class="but" title="Sebelumnya" name="back" value="<" onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
 	<select name="page" id="page" onchange="chg_page()">
-	<? for ($p=1;$p<=$total;$p++){ ?>
+	<?php for ($p=1;$p<=$total;$p++){ ?>
 		<option value="<?=$p-1?>" <?=StringIsSelected($page,$p-1)?>><?=$p;?></option>
-	<? } ?>
+	<?php } ?>
 	</select>   
     <input <?=$disnext?> type="button" class="but" name="next" title="Selanjutnya" value=">" onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">&nbsp;dari&nbsp;<?=$total?> 
-	<? } ?><br><br>
+	<?php } ?><br><br>
     
     <table width="80%" border="0" cellspacing="5" cellpadding="5" align="left">
-          <?
+          <?php
 		  OpenDb();
 		  
 		
@@ -176,26 +176,26 @@ function chg_title_color(id,stat){
 				"WHERE p.nip=b.idguru AND MONTH(b.tanggal)='$bulan' AND YEAR(b.tanggal)='$tahun' ORDER BY replid DESC LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		  //echo $sql1;
 		  $result1=QueryDb($sql1);
-		  if (@mysql_num_rows($result1)>0){
+		  if (@mysqli_num_rows($result1)>0){
 		  $i=1;
 		  if ($page==0){
 		  $cnt=1;
 		  } else {
 		  $cnt=(int)$page*(int)$varbaris+1;
 		  }
-		  while ($row1=@mysql_fetch_array($result1)){
+		  while ($row1=@mysqli_fetch_array($result1)){
 		  if ($i==1 || $i%3==1){
 		  	?>
             <tr>
-          	<?
+          	<?php
 		  }
 			?>
         		<td align='center' valign='top'>
-            <?
+            <?php
 		  ?>
-		  <? if (@mysql_num_rows($result1)==1) { ?>
+		  <?php if (@mysqli_num_rows($result1)==1) { ?>
             <div style="margin-left:100px" align="left">
-		  <? } ?>
+		  <?php } ?>
             <table width="300" border="0" cellspacing="0" cellpadding="0" style="cursor:pointer;" align="left">
               <tr onclick="bacaberita('<?=$row1['replid']?>')" onmouseover="chg_title_color('title<?=$row1['replid']?>','1')" onmouseout="chg_title_color('title<?=$row1['replid']?>','0')">
                 <td align="left"><img src="../../images/ico/arr1.gif" />&nbsp;<em><span style="font-size: 9px; color:#990000"><?=$row1['tanggal']?>&nbsp;<?//=$row1['waktu']?>
@@ -209,7 +209,7 @@ function chg_title_color(id,stat){
               </tr>
               <tr onclick="bacaberita('<?=$row1['replid']?>')" onmouseover="chg_title_color('title<?=$row1['replid']?>','1')" onmouseout="chg_title_color('title<?=$row1['replid']?>','0')">
                 <td colspan="2" align="left">
-					<?=$row1[abstrak];
+					<?=$row1['abstrak'];
 						//$is=$row1['isi'];
 						//echo removetag($is,200)."...";
                     ?>
@@ -217,14 +217,14 @@ function chg_title_color(id,stat){
               </tr>
               <tr>
               	<td colspan="2" align="right">
-              		<? if ($row1[nip]==$idguru){ ?>
-                        <img src="../../images/ico/ubah.png" border="0" onclick="ubah('<?=$row1[replid]?>','<?=$page?>')" style="cursor:pointer;" title="Ubah Berita ini !" />&nbsp;<img src="../../images/ico/hapus.png" border="0" onclick="hapus('<?=$row1[replid]?>')" style="cursor:pointer;" title="Hapus Berita ini !" />
-	                <? } ?>              	</td>
+              		<?php if ($row1['nip']==$idguru){ ?>
+                        <img src="../../images/ico/ubah.png" border="0" onclick="ubah('<?=$row1['replid']?>','<?=$page?>')" style="cursor:pointer;" title="Ubah Berita ini !" />&nbsp;<img src="../../images/ico/hapus.png" border="0" onclick="hapus('<?=$row1['replid']?>')" style="cursor:pointer;" title="Hapus Berita ini !" />
+	                <?php } ?>              	</td>
               </tr>
             </table>
-          <? if (@mysql_num_rows($result1)==1) { ?>
+          <?php if (@mysqli_num_rows($result1)==1) { ?>
             </div>
-		  <? } ?>
+		  <?php } ?>
 			<br />
 		<?="</td>";
 		if ($i%3==0)
@@ -234,7 +234,7 @@ function chg_title_color(id,stat){
 		} else {
 		?>
         <div align="center" class="divNotif">Tidak ada berita Guru</div>
-        <?
+        <?php
 		}
 		?>
         </td>

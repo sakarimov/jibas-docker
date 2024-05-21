@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -506,7 +506,7 @@ table.MsoTableGrid
 <table width="100%" border="0" cellspacing="0">
   <tr>
     <td align="center">
-    <?
+    <?php
     if ($stat==6){
     	$sql = "SELECT j.satker, SUM(IF(p.kelamin = 'L', 1, 0)) AS Pria, SUM(IF(p.kelamin = 'P', 1, 0)) AS Wanita
 				  FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
@@ -515,13 +515,13 @@ table.MsoTableGrid
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result)) {
-			$data[] = array($row[1], $row[2]);
+		while($row = mysqli_fetch_row($result)) {
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Pria", "Wanita");
+		$legend_y = ["Pria", "Wanita"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pegawai Berdasarkan Jenis Kelamin</font>"; // title for the diagram
 		
@@ -542,13 +542,13 @@ table.MsoTableGrid
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result)) {
-			$data[] = array($row[1], $row[2]);
+		while($row = mysqli_fetch_row($result)) {
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Nikah", "Belum");
+		$legend_y = ["Nikah", "Belum"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pegawai Berdasarkan Status Pernikahan</font>"; 
 		
@@ -568,13 +568,13 @@ table.MsoTableGrid
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result)) {
-			$data[] = array($row[1], $row[2]);
+		while($row = mysqli_fetch_row($result)) {
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Sudah", "Belum");
+		$legend_y = ["Sudah", "Belum"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pejabat Struktural Berdasarkan Diklat</font>"; // title for the diagram
 		
@@ -588,7 +588,7 @@ table.MsoTableGrid
     } else {
 	?>
 		<img width="550" width="300" src='<?= $url . "statimage.php?dotype=bar-$stat" ?>' />
-	<? } ?>
+	<?php } ?>
     </td>
     <td align="center"><img width="550" width="300" src='<?= $url . "statimage.php?dotype=pie-$stat" ?>' /></td>
   </tr>
@@ -598,20 +598,20 @@ mso-fareast-font-family:Calibri;mso-bidi-font-family:"Times New Roman";
 mso-ansi-language:EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA'><br
 clear=all style='mso-special-character:line-break;page-break-before:always'>
 </span>
-<? if ($stat!=5){ ?>
+<?php if ($stat!=5){ ?>
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
-<? } ?>
+<?php } ?>
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 <table width="1150" border="0" cellspacing="0" align="center">
   <tr>
     <td colspan="2" align="center"><span class="style19">REKAP JUMLAH PEGAWAI BERDASARKAN <?=$judul?></span></td>
     </tr>
 </table>
-<? if ($stat!=5){ ?>
+<?php if ($stat!=5){ ?>
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
-<? } ?>
+<?php } ?>
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
-<? if ($stat==1){ ?>
+<?php if ($stat==1){ ?>
 <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="80%" align="center">
 <tr height="30">
 	<td width="5%" align="center" bgcolor="#666666" class="style2 header"><span class="style68">No</span></td>
@@ -620,7 +620,7 @@ clear=all style='mso-special-character:line-break;page-break-before:always'>
       Pegawai</span></td>
     <td width="20%" align="center" bgcolor="#666666" class="style2 header"><span class="style68">Persentase</span></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT j.satker, COUNT(p.nip) FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
      	  WHERE p.aktif = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid AND NOT j.satker IS NULL
@@ -628,7 +628,7 @@ $sql = "SELECT j.satker, COUNT(p.nip) FROM pegawai p, peglastdata pl, pegjab pj,
 $result = QueryDb($sql);
 $cnt = 0;
 $total = 0;
-while ($row = mysql_fetch_row($result)) 
+while ($row = mysqli_fetch_row($result)) 
 {
 	$cnt++;
 	$data[$cnt-1][0] = $row[0];
@@ -650,7 +650,7 @@ for($i = 0; $i < $cnt; $i++)
     <td align="center" valign="top"><?=$data[$i][1]?></td>
     <td align="center" valign="top"><?=$pct?>%</td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
@@ -660,21 +660,21 @@ for($i = 0; $i < $cnt; $i++)
     <td style="background-color:#CCCCCC" align="center" valign="middle"><strong>100%</strong></td>
 </tr>
 </table>
-<? } ?>
+<?php } ?>
 
-<?
+<?php
 if ($stat==2){
 OpenDb();
 $sql = "SELECT tingkat FROM pendidikan ORDER BY urutan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$tingkat[] = $row[0];
 }
 $width = floor(60 / count($tingkat));
 
 $sql = "SELECT satker FROM satker";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$satker[] = $row['satker'];
 }
 
@@ -684,7 +684,7 @@ $sql = "SELECT j.satker, ps.tingkat, COUNT(p.nip) AS cnt FROM
         pl.idpegjab = pj.replid AND pj.idjabatan = j.replid AND NOT j.satker IS NULL GROUP BY j.satker, ps.sekolah 
         ORDER BY pd.urutan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$s = $row['satker'];
 	$t = $row['tingkat'];
 	$data[$s][$t] = $row['cnt'];
@@ -694,14 +694,14 @@ while ($row = mysql_fetch_array($result)) {
 <tr height="25">
 	<td width="5%" align="center" bgcolor="#666666" class="style2 header"><span class="style69">No</span></td>
     <td width="23%" align="center" bgcolor="#666666" class="style2 header"><span class="style69">Satuan Kerja</span></td>
-<? 	for ($i = 0; $i < count($tingkat); $i++) { ?>
+<?php 	for ($i = 0; $i < count($tingkat); $i++) { ?>
 	<td width="<?=$width?>%" align="center" bgcolor="#666666" class="header">	  <span class="style4 style70">
 	  <?=$tingkat[$i]?>
 	</span> </td>
-<? 	} ?>    
+<?php 	} ?>    
     <td width="10%" align="center" bgcolor="#666666" class="style2 header"><span class="style70"><strong>Jumlah</strong></span></td>
 </tr>
-<?
+<?php
 $cnt = 0;
 for($i = 0; $i < count($satker); $i++) {
 	$sk = $satker[$i];
@@ -709,7 +709,7 @@ for($i = 0; $i < count($satker); $i++) {
 <tr height="20">
 	<td align="center" valign="top"><?=++$cnt?></td>
     <td align="left" valign="top"><?=$sk?></td>
-    <? 
+    <?php 
 	$jrow = 0;
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
@@ -718,19 +718,19 @@ for($i = 0; $i < count($satker); $i++) {
 		$jrow += $nilai; 
 		$ttingkat[$t] += $nilai; ?>
 	    <td align="center" valign="top"><?=$nilai?></td>
-    <? 
+    <?php 
 	}
 	$tjrow += $jrow;
 	?>
     <td align="center" valign="top"><?=$jrow?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>JUMLAH</strong></td>
-    <? 
+    <?php 
 	$total = 0;
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
@@ -738,16 +738,16 @@ for($i = 0; $i < count($satker); $i++) {
 		$nilai = $ttingkat[$t]; 
 		$total += $nilai; ?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$nilai?></strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$total?></strong></td>
 </tr>
-<? if ($total > 0) { ?>
+<?php if ($total > 0) { ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>PERSENTASE</strong></td>
-    <? 
+    <?php 
 	for($j = 0; $j < count($tingkat); $j++) 
 	{ 
 		$t = $tingkat[$j];
@@ -755,27 +755,27 @@ for($i = 0; $i < count($satker); $i++) {
 		$pct = "";
 		$pct = round($nilai / $total, 2) * 100;	?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$pct?>%</strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>100%</strong></td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
-<? } ?>
-<? if ($stat==3){ ?>
-<?
+<?php } ?>
+<?php if ($stat==3){ ?>
+<?php
 OpenDb();
 $sql = "SELECT golongan FROM golongan ORDER BY urutan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$gol[] = $row[0];
 }
 $width = floor(75 / count($gol));
 
 $sql = "SELECT satker FROM satker";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$satker[] = $row['satker'];
 }
 
@@ -784,7 +784,7 @@ $sql = "SELECT j.satker, pg.golongan, count(p.nip) AS cnt FROM
  		WHERE p.aktif = 1 AND p.pns = 1 AND p.nip = pl.nip AND pl.idpeggol = pg.replid AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid        AND NOT j.satker IS NULL 
 		GROUP BY j.satker, pg.golongan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$s = $row['satker'];
 	$g = $row['golongan'];
 	$data[$s][$g] = $row['cnt'];
@@ -795,14 +795,14 @@ CloseDb();
 <tr height="30">
 	<td width="3%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>No</strong></span></td>
     <td width="12%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>Satuan Kerja</strong></span></td>
-<? 	for ($i = 0; $i < count($gol); $i++) { ?>
+<?php 	for ($i = 0; $i < count($gol); $i++) { ?>
 	<td width="<?=$width?>%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>
 	  <?=$gol[$i]?>
 	</strong></span></td>
-<? 	} ?>    
+<?php 	} ?>    
     <td width="10%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>Jumlah</strong></span></td>
 </tr>
-<?
+<?php
 $cnt = 0;
 for($i = 0; $i < count($satker); $i++) {
 	$sk = $satker[$i];
@@ -810,7 +810,7 @@ for($i = 0; $i < count($satker); $i++) {
 <tr height="25">
 	<td align="center" valign="top"><?=++$cnt?></td>
     <td align="left" valign="top"><?=$sk?></td>
-    <? 
+    <?php 
 	$jrow = 0;
 	for($j = 0; $j < count($gol); $j++) 
 	{ 
@@ -819,19 +819,19 @@ for($i = 0; $i < count($satker); $i++) {
 		$jrow += $nilai; 
 		$tgol[$g] += $nilai; ?>
 	    <td align="center" valign="top"><?=$nilai?></td>
-    <? 
+    <?php 
 	}
 	$tjrow += $jrow;
 	?>
     <td align="center" valign="top"><?=$jrow?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>JUMLAH</strong></td>
-    <? 
+    <?php 
 	$total = 0;
 	for($j = 0; $j < count($gol); $j++) 
 	{ 
@@ -839,16 +839,16 @@ for($i = 0; $i < count($satker); $i++) {
 		$nilai = $tgol[$g]; 
 		$total += $nilai; ?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$nilai?></strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$total?></strong></td>
 </tr>
-<? if ($total > 0) { ?>
+<?php if ($total > 0) { ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>PERSENTASE</strong></td>
-    <? 
+    <?php 
 	for($j = 0; $j < count($gol); $j++) 
 	{ 
 		$g = $gol[$j];
@@ -856,17 +856,17 @@ for($i = 0; $i < count($satker); $i++) {
 		$pct = "";
 		$pct = round($nilai / $total, 2) * 100;	?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$pct?>%</strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>100%</strong></td>
 </tr>
-<? } 
+<?php } 
 
 ?>
 </table>
-<? } ?>
-<? if ($stat==4){ ?>
+<?php } ?>
+<?php if ($stat==4){ ?>
 <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="80%" align="center">
 <tr height="25">
 	<td width="5%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>No</strong></span></td>
@@ -881,7 +881,7 @@ for($i = 0; $i < count($satker); $i++) {
     <td width="7%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>56></strong></span></td>
     <td width="10%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>Jumlah</strong></span></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT XX.G, j.satker, COUNT(XX.nip) AS cnt FROM (
   SELECT nip, IF(usia < 24, '<24',
@@ -896,18 +896,18 @@ WHERE XX.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid  A
 GROUP BY XX.G, j.satker";
 
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) 
+while ($row = mysqli_fetch_array($result)) 
 {
 	$g = $row['G'];
 	$s = $row['satker'];
 	$data[$s][$g] = $row['cnt'];
 }
 
-$usia = array("<24", "24-29", "30-34", "35-39", "40-44", "45-49", "50-55", ">56");
+$usia = ["<24", "24-29", "30-34", "35-39", "40-44", "45-49", "50-55", ">56"];
 
 $sql = "SELECT satker FROM satker";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) 
+while ($row = mysqli_fetch_array($result)) 
 {
 	$satker[] = $row['satker'];
 }
@@ -920,7 +920,7 @@ for($i = 0; $i < count($satker); $i++) {
 <tr height="20">
 	<td align="center" valign="top"><?=++$cnt?></td>
     <td align="left" valign="top"><?=$sk?></td>
-    <? 
+    <?php 
 	$jrow = 0;
 	for($j = 0; $j < count($usia); $j++) 
 	{ 
@@ -929,19 +929,19 @@ for($i = 0; $i < count($satker); $i++) {
 		$jrow += $nilai; 
 		$tusia[$u] += $nilai; ?>
 	    <td align="center" valign="top"><?=$nilai?></td>
-    <? 
+    <?php 
 	}
 	$tjrow += $jrow;
 	?>
     <td align="center" valign="top"><?=$jrow?></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>JUMLAH</strong></td>
-    <? 
+    <?php 
 	$total = 0;
 	for($j = 0; $j < count($usia); $j++) 
 	{ 
@@ -949,16 +949,16 @@ for($i = 0; $i < count($satker); $i++) {
 		$nilai = $tusia[$u]; 
 		$total += $nilai; ?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$nilai?></strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$total?></strong></td>
 </tr>
-<? if ($total > 0) { ?>
+<?php if ($total > 0) { ?>
 <tr height="30">
 	<td style="background-color:#E9E9E9" align="center" valign="top">&nbsp;</td>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>PERSENTASE</strong></td>
-    <? 
+    <?php 
 	for($j = 0; $j < count($usia); $j++) 
 	{ 
 		$u = $usia[$j];
@@ -966,16 +966,16 @@ for($i = 0; $i < count($satker); $i++) {
 		$pct = "";
 		$pct = round($nilai / $total, 2) * 100;	?>
 	    <td style="background-color:#E9E9E9" align="center" valign="middle"><strong><?=$pct?>%</strong></td>
-    <? 
+    <?php 
 	}
 	?>
     <td style="background-color:#E9E9E9" align="center" valign="middle"><strong>100%</strong></td>
 </tr>
-<? } ?>
+<?php } ?>
 </table>
-<? } ?>
-<? if ($stat==5){ ?>
-<?
+<?php } ?>
+<?php if ($stat==5){ ?>
+<?php
 OpenDb();
 
 $idgroup;
@@ -995,13 +995,13 @@ function traversediklat($idxgroup, $rootid) {
 	
 	$sql = "SELECT replid, diklat FROM diklat WHERE rootid=$rootid";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
-		while($row = mysql_fetch_row($result)) {
-			if (strlen($iddiklat[$idxgroup]) > 0)
+	if (mysqli_num_rows($result) > 0) {
+		while($row = mysqli_fetch_row($result)) {
+			if (strlen((string) $iddiklat[$idxgroup]) > 0)
 				$iddiklat[$idxgroup] = $iddiklat[$idxgroup] . ",";
 			$iddiklat[$idxgroup] = $iddiklat[$idxgroup] . $row[0];
 			
-			if (strlen($namadiklat[$idxgroup]) > 0)
+			if (strlen((string) $namadiklat[$idxgroup]) > 0)
 				$namadiklat[$idxgroup] = "/ " . $namadiklat[$idxgroup];
 			$namadiklat[$idxgroup] = $row[1] . $namadiklat[$idxgroup];
 		
@@ -1021,13 +1021,13 @@ function traversediklatf($idxgroup, $rootid) {
 	
 	$sql = "SELECT replid, diklat FROM diklat WHERE rootid=$rootid";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
-		while($row = mysql_fetch_row($result)) {
-			if (strlen($iddiklatf[$idxgroup]) > 0)
+	if (mysqli_num_rows($result) > 0) {
+		while($row = mysqli_fetch_row($result)) {
+			if (strlen((string) $iddiklatf[$idxgroup]) > 0)
 				$iddiklatf[$idxgroup] = $iddiklatf[$idxgroup] . ",";
 			$iddiklatf[$idxgroup] = $iddiklatf[$idxgroup] . $row[0];
 			
-			if (strlen($namadiklatf[$idxgroup]) > 0)
+			if (strlen((string) $namadiklatf[$idxgroup]) > 0)
 				$namadiklatf[$idxgroup] = "/ " . $namadiklatf[$idxgroup];
 			$namadiklatf[$idxgroup] = $row[1] . $namadiklatf[$idxgroup];
 		
@@ -1050,10 +1050,10 @@ function traversediklatf($idxgroup, $rootid) {
     <td align="center" bgcolor="#F2F2F2" colspan="4" width="200">Diklat Fungsional</td>
 </tr>
 <tr height="25">
-<?
+<?php
 $sql = "SELECT replid, diklat FROM diklat WHERE tingkat=2 AND jenis='S' ORDER BY diklat";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$idgroup[] = $row[0];
 	
 	$namadiklat[] = $row[1] . "";
@@ -1065,7 +1065,7 @@ for($i = 0; $i < count($idgroup); $i++) {
 
 $sql = "SELECT replid, diklat FROM diklat WHERE tingkat=2 AND jenis='F' ORDER BY diklat";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$idgroupf[] = $row[0];
 	
 	$namadiklatf[] = $row[1] . "";
@@ -1085,14 +1085,14 @@ for($i = 0; $i < count($idgroupf); $i++)
 ?>
 </tr>
 
-<?
+<?php
 
 $eselon;
 $jpeg;
 
 $sql = "SELECT DISTINCT eselon FROM jabatan ORDER BY eselon";
 $result = QueryDb($sql);
-while($row = mysql_fetch_row($result)) 
+while($row = mysqli_fetch_row($result)) 
 	$eselon[] = $row[0];			
 
 $data;
@@ -1107,7 +1107,7 @@ for($i = 0; $i < $neselon; $i++) {
 			  AND pj.idjabatan = j.replid AND pj.jenis = jj.jenis 
 			  AND j.eselon ='$es' AND jj.jabatan = 'S'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$jp = $row[0];
 	
 	$data[$i][0] = $jp;
@@ -1115,7 +1115,7 @@ for($i = 0; $i < $neselon; $i++) {
 <tr height="25">
 	<td align="left" valign="middle"><?=$eselon[$i]?></td>
     <td align="center" valign="middle"><?=$jp?></td>
-<?	$nrow = 0;
+<?php $nrow = 0;
 	for ($j = 0; $j < $ndiklat; $j++) {
 		$idstr = $iddiklat[$j];
 		
@@ -1123,7 +1123,7 @@ for($i = 0; $i < $neselon; $i++) {
 	    	    WHERE  p.aktif = 1 AND p.pns = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid AND pj.jenis = jj.jenis
 				AND jj.jabatan = 'S' AND j.eselon = '$es' AND pl.idpegdiklat = pd.replid AND pd.iddiklat IN ($idstr)";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);	
+		$row = mysqli_fetch_row($result);	
 		$cnt = "-";
 		if ($row[0] > 0) {	
 			$cnt = $row[0];	
@@ -1133,38 +1133,38 @@ for($i = 0; $i < $neselon; $i++) {
 			$data[$i][$j + 1] = 0;
 		} ?>
     <td align="center" valign="middle"><?=$cnt?></td>
-<?	} 
+<?php } 
 	$data[$i][$ndiklat + 1] = $nrow;
 	$data[$i][$ndiklat + 2] = $jp - $nrow;
 	?>    
 	<td align="center" valign="middle"><?=$nrow?></td>
     <td align="center" valign="middle"><?=$jp - $nrow?></td>
-<?	for ($j = 0; $j < count($iddiklatf); $j++) { ?>
+<?php for ($j = 0; $j < count($iddiklatf); $j++) { ?>
 	<td align="center" valign="middle">-</td>
-<?	} ?>    
+<?php } ?>    
 </tr>
-<?
+<?php
 }
 ?>
 
 <tr height="30">
 	<td align="left"  bgcolor="#99CC00" valign="middle"><strong>SUB JUMLAH</strong></td>
-<?	for($i = 0; $i < $ndiklat + 3; $i++) { 
+<?php for($i = 0; $i < $ndiklat + 3; $i++) { 
 		$sum = 0;
 		for($j = 0; $j < $neselon; $j++) 
 			$sum += $data[$j][$i] ?> 
 	<td align="center"  bgcolor="#99CC00" valign="middle"><strong><?=$sum?></strong></td>	            
-<?	} ?>    
-<?	for ($j = 0; $j < count($iddiklatf); $j++) { ?>
+<?php } ?>    
+<?php for ($j = 0; $j < count($iddiklatf); $j++) { ?>
 	<td align="center"  bgcolor="#99CC00" valign="middle">-</td>
-<?	} ?>    
+<?php } ?>    
 </tr>
 
-<?
+<?php
 $sql = "SELECT jenis FROM jenisjabatan WHERE jabatan='F' ORDER BY jenis";
 $result = QueryDb($sql);
 $jabf;
-while ($row = mysql_fetch_row($result)) 
+while ($row = mysqli_fetch_row($result)) 
 	$jabf[] = $row[0];
 $njabf = count($jabf);
 
@@ -1179,7 +1179,7 @@ for($i = 0; $i < $njabf; $i++) {
 			  AND pj.jenis = jj.jenis AND pj.jenis ='$jab' AND jj.jabatan = 'F'";
 			  
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$jp = $row[0];
 	$totpeg += $jp;
 	
@@ -1187,10 +1187,10 @@ for($i = 0; $i < $njabf; $i++) {
 <tr height="30">
 	<td align="left" valign="middle"><?=$jabf[$i]?></td>
     <td align="center" valign="middle"><?=$jp?></td>
-<?	for ($j = 0; $j < $ndiklat + 2; $j++) { 	?>
+<?php for ($j = 0; $j < $ndiklat + 2; $j++) { 	?>
 	<td align="center" valign="middle">-</td>
-<?	} ?>    
-<?	for ($j = 0; $j < $ndiklatf; $j++) {
+<?php } ?>    
+<?php for ($j = 0; $j < $ndiklatf; $j++) {
 		$idstr = $iddiklatf[$j];
 		
 		$sql = "SELECT count(*) FROM pegawai p, peglastdata pl, pegdiklat pd, pegjab pj, jenisjabatan jj
@@ -1198,7 +1198,7 @@ for($i = 0; $i < $njabf; $i++) {
 				AND jj.jabatan = 'F' AND pj.jenis = '$jab' AND pl.idpegdiklat = pd.replid AND pd.iddiklat IN ($idstr)";
 						
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);	
+		$row = mysqli_fetch_row($result);	
 		$cnt = "-";
 		if ($row[0] > 0) {	
 			$cnt = $row[0];	
@@ -1207,39 +1207,39 @@ for($i = 0; $i < $njabf; $i++) {
 			$data[$i][$ndiklat + 3 + $j] = 0;
 		} ?>
     <td align="center" valign="middle"><?=$cnt?></td>
-<?	} ?>
+<?php } ?>
 </tr>
-<?
+<?php
 }
 ?>
 
 <tr height="30">
 	<td align="left"  bgcolor="#99CC00" valign="middle"><strong>SUB JUMLAH</strong></td>
     <td align="center"  bgcolor="#99CC00" valign="middle"><strong><?=$totpeg?></strong></td>
-<?	for ($j = 0; $j < $ndiklat + 2; $j++) { ?>
+<?php for ($j = 0; $j < $ndiklat + 2; $j++) { ?>
 	<td align="center"  bgcolor="#99CC00" valign="middle">-</td>
-<?	} ?>    
-<?	for($i = 0; $i < $ndiklatf; $i++) { 
+<?php } ?>    
+<?php for($i = 0; $i < $ndiklatf; $i++) { 
 		$sum = 0;
 		for($j = 0; $j < $njabf; $j++) 
 			$sum += $data[$j][$ndiklat + 3 + $i]; ?> 
 	<td align="center"  bgcolor="#99CC00" valign="middle"><strong><?=$sum?></strong></td>	            
-<?	} ?> 
+<?php } ?> 
 </tr>
 
 <tr height="50">
 	<td align="left" bgcolor="#FFCC00" valign="middle"><strong>JUMLAH</strong></td>
-<?	for ($i = 0; $i < $ndiklat + 3 + $ndiklatf; $i++) { 
+<?php for ($i = 0; $i < $ndiklat + 3 + $ndiklatf; $i++) { 
 		$sum = 0;
 		for ($j = 0; $j < $neselon + $njabf; $j++) 
 			$sum += $data[$j][$i]; ?>
 	<td align="center"  bgcolor="#FFCC00" valign="middle"><strong><?=$sum?></strong></td>
-<?	} ?>    
+<?php } ?>    
 </tr>
 
 </table>
-<? } ?>
-<? if ($stat==6){ ?>
+<?php } ?>
+<?php if ($stat==6){ ?>
 <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="80%" align="center">
 <tr height="25">
 	<td width="5%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>No</strong></span></td>
@@ -1251,14 +1251,14 @@ for($i = 0; $i < $njabf; $i++) {
     <td width="10%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>Wanita</strong></span></td>
     <td width="10%" align="center" bgcolor="#666666" class="style68"><span class="style2"><strong>%tase</strong></span></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT j.satker, SUM(IF(p.kelamin = 'L', 1, 0)) AS Pria, SUM(IF(p.kelamin = 'P', 1, 0)) AS Wanita
 		  FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
 		  WHERE p.aktif = 1 AND p.pns = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid
 		  GROUP BY j.satker HAVING NOT j.satker IS NULL";	
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$jpeg = $row[1] + $row[2];
 	$tpeg = $tpeg + $jpeg;
 	
@@ -1281,7 +1281,7 @@ while ($row = mysql_fetch_row($result)) {
     <td align="center" valign="top"><?=$row[2]?></td>
     <td align="center" valign="top"><?=$pctw . "%"?></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 
@@ -1302,8 +1302,8 @@ if ($tpeg > 0) {
     <td style="background-color:#CCCCCC" align="center" valign="middle"><strong><?=$pctw . "%"?></strong></td>
 </tr>
 </table>
-<? } ?>
-<? if ($stat==7){ ?>
+<?php } ?>
+<?php if ($stat==7){ ?>
 <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="80%" align="center">
 <tr height="25">
 	<td width="5%" align="center" bgcolor="#666666" class="style68"><strong>No</strong></td>
@@ -1315,7 +1315,7 @@ if ($tpeg > 0) {
     <td width="10%" align="center" bgcolor="#666666" class="style68"><strong>Belum</strong></td>
     <td width="10%" align="center" bgcolor="#666666" class="style68"><strong>%tase</strong></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT j.satker, SUM(IF(p.nikah = 'Nikah', 1, 0)) AS Nikah, SUM(IF(p.nikah = 'Belum Nikah', 1, 0)) AS Belum
 		  FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
@@ -1323,7 +1323,7 @@ $sql = "SELECT j.satker, SUM(IF(p.nikah = 'Nikah', 1, 0)) AS Nikah, SUM(IF(p.nik
 		  AND NOT j.satker IS NULL 
 		  GROUP BY j.satker";	
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)) {
+while ($row = mysqli_fetch_row($result)) {
 	$jpeg = $row[1] + $row[2];
 	
 	$tpeg = $tpeg + $jpeg;
@@ -1346,7 +1346,7 @@ while ($row = mysql_fetch_row($result)) {
     <td align="center" valign="top"><?=$row[2]?></td>
     <td align="center" valign="top"><?=$pctb . "%"?></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 
@@ -1367,7 +1367,7 @@ if ($tpeg > 0) {
     <td style="background-color:#CCCCCC" align="center" valign="middle"><strong><?=$pctb . "%"?></strong></td>
 </tr>
 </table>
-<? } ?>
+<?php } ?>
 </div>
 </body>
 

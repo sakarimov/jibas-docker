@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
 require_once('../inc/common.php');
@@ -41,11 +41,11 @@ $from = $_REQUEST['from'];
 $to = $_REQUEST['to'];
 
 if ($jenisanggota == "siswa")
-  $filter = "AND p.nis = '$idanggota'";
+  $filter = "AND p.nis = '".$idanggota."'";
 elseif ($jenisanggota == "pegawai")
-  $filter = "AND p.nip = '$idanggota'";
+  $filter = "AND p.nip = '".$idanggota."'";
 else
-  $filter = "AND p.idmember = '$idanggota'";
+  $filter = "AND p.idmember = '".$idanggota."'";
 
 ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="5" class="tab">
@@ -55,7 +55,7 @@ else
   <td width='*' align="center" class="header">Pustaka</td>
   <td width='5%' align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT pu.judul, p.tglpinjam, pu.replid, d.kodepustaka
           FROM pinjam p, daftarpustaka d, pustaka pu
          WHERE p.tglpinjam BETWEEN '$from' AND '$to'
@@ -65,7 +65,7 @@ $sql = "SELECT pu.judul, p.tglpinjam, pu.replid, d.kodepustaka
          ORDER BY tglpinjam DESC";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = @mysql_fetch_row($result))
+while ($row = @mysqli_fetch_row($result))
 {
   $cnt += 1;  ?>
   <tr height="20">
@@ -81,7 +81,7 @@ while ($row = @mysql_fetch_row($result))
         </a>
     </td>
   </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

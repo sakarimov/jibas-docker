@@ -9,10 +9,10 @@ class Phonebook
 {
 	public function __construct()
 	{
-		$cmd = (isset($_REQUEST['cmd']))?$_REQUEST['cmd']:'';
+		$cmd = $_REQUEST['cmd'] ?? '';
 		
 		$this->cmd		= $cmd;
-		$this->page		= (isset($_REQUEST['page']))?$_REQUEST['page']:1;
+		$this->page		= $_REQUEST['page'] ?? 1;
 		
 		if ($cmd=='add' || $cmd=='edit')
 		{
@@ -63,10 +63,10 @@ class Phonebook
 		$filter2= ($alpha!='-1')?" AND nama LIKE '$alpha%'":"";
 		$sql   = "SELECT replid,nohp,nama,`status`,keterangan FROM phonebook WHERE 1 $filter1 $filter2";
 		$res   = QueryDb($sql); 
-		$this->num = @mysql_num_rows($res);
+		$this->num = @mysqli_num_rows($res);
 		$res   = QueryDb($sql." LIMIT ".((($this->page)-1)*showList).",".showList);
-		$this->data  = array();
-		while ($row = @mysql_fetch_row($res))
+		$this->data  = [];
+		while ($row = @mysqli_fetch_row($res))
 			array_push($this->data,$row);
 		
 		$this->showData();
@@ -84,10 +84,10 @@ class Phonebook
 		$filter= ($alpha!='-1')?" AND `$field` LIKE '%$keyword%'":"";
 		$sql   = "SELECT replid,nohp,nama,`status`,keterangan FROM phonebook WHERE 1 $filter";
 		$res   = QueryDb($sql); 
-		$this->num = @mysql_num_rows($res);
+		$this->num = @mysqli_num_rows($res);
 		$res   = QueryDb($sql." LIMIT ".($this->page*showList).",".showList);
-		$this->data  = array();
-		while ($row = @mysql_fetch_row($res))
+		$this->data  = [];
+		while ($row = @mysqli_fetch_row($res))
 			array_push($this->data,$row);
 
 		$this->showData();
@@ -102,7 +102,7 @@ class Phonebook
 		if (count($this->data)>0)
 		{
 			$cnt = ($this->page==1)?1:((($this->page)-1)*showList)+1;
-			$arrNama = array('Siswa','Orang Tua','Pegawai','Lainnya','Alumni');
+			$arrNama = ['Siswa', 'Orang Tua', 'Pegawai', 'Lainnya', 'Alumni'];
 			?>
 			<table cellspacing="0" cellpadding="0" border="1" width="100%" class="tab">
 			<tr class="Header">
@@ -168,7 +168,7 @@ class Phonebook
 			
 			$sql = "SELECT COUNT(replid) FROM phonebook WHERE nohp='$hp'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$num = $row[0];
 			if ($num>0)
 				echo "<div align='center' style='border:1px solid #ce0000; background-color:#fbd9d9;padding:4px;font-weight:bold;color:#4b4b4b;margin-bottom:5px'>No HP $hp sudah terdaftar sebelumnya.</div>";	
@@ -190,17 +190,17 @@ class Phonebook
 		<tr>
 			<td>No HP</td>
 			<td>:</td>
-			<td><input type="text" id="nohp" class='InputTxt' style='width:98%' onkeypress="return numbersonly(this, event)" value="<?php echo stripslashes($hp) ?>" /></td>
+			<td><input type="text" id="nohp" class='InputTxt' style='width:98%' onkeypress="return numbersonly(this, event)" value="<?php echo stripslashes((string) $hp) ?>" /></td>
 		</tr>
 		<tr>
 			<td>Nama</td>
 			<td>:</td>
-			<td><input type="text" id="nama" class='InputTxt' style='width:98%' value="<?php echo stripslashes($nama) ?>" /></td>
+			<td><input type="text" id="nama" class='InputTxt' style='width:98%' value="<?php echo stripslashes((string) $nama) ?>" /></td>
 		</tr>
 		<tr>
 			<td>Keterangan</td>
 			<td>:</td>
-			<td><textarea class="AreaTxt" id="ket" rows='3'  style='width:99%'><?php echo stripslashes($ket) ?></textarea></td>
+			<td><textarea class="AreaTxt" id="ket" rows='3'  style='width:99%'><?php echo stripslashes((string) $ket) ?></textarea></td>
 		</tr>
 		<tr>
 			<td colspan='3' align='center'>
@@ -226,7 +226,7 @@ class Phonebook
 			
 			$sql = "SELECT COUNT(replid) FROM phonebook WHERE nohp='$hp' AND replid<>'$id'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$num = $row[0];
 			if ($num>0)
 				echo "<div align='center' style='border:1px solid #ce0000; background-color:#fbd9d9;padding:4px;font-weight:bold;color:#4b4b4b;margin-bottom:5px'>No HP $hp sudah terdaftar sebelumnya.</div>";	
@@ -244,7 +244,7 @@ class Phonebook
 		{
 			$sql = "SELECT nama,nohp,`status`,keterangan FROM phonebook WHERE replid='$id'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$nama = $row[0];
 			$hp = $row[1];
 			$ket = $row[3];
@@ -258,17 +258,17 @@ class Phonebook
 		<tr>
 			<td>No HP</td>
 			<td>:</td>
-			<td><input type="text" id="nohp" class='InputTxt' style='width:98%' onkeypress="return numbersonly(this, event)" value="<?php echo stripslashes($hp) ?>" /></td>
+			<td><input type="text" id="nohp" class='InputTxt' style='width:98%' onkeypress="return numbersonly(this, event)" value="<?php echo stripslashes((string) $hp) ?>" /></td>
 		</tr>
 		<tr>
 			<td>Nama</td>
 			<td>:</td>
-			<td><input type="text" id="nama" class='InputTxt' style='width:98%' value="<?php echo stripslashes($nama) ?>" /></td>
+			<td><input type="text" id="nama" class='InputTxt' style='width:98%' value="<?php echo stripslashes((string) $nama) ?>" /></td>
 		</tr>
 		<tr>
 			<td>Keterangan</td>
 			<td>:</td>
-			<td><textarea class="AreaTxt" id="ket" rows='3'  style='width:99%'><?php echo stripslashes($ket) ?></textarea></td>
+			<td><textarea class="AreaTxt" id="ket" rows='3'  style='width:99%'><?php echo stripslashes((string) $ket) ?></textarea></td>
 		</tr>
 		<tr>
 			<td colspan='3' align='center'>
@@ -290,14 +290,14 @@ class Phonebook
 				  FROM $db_name_sdm.pegawai
 				 WHERE aktif = 1";
 		$res = QueryDb($sql);
-		$data = array();
-		while ($row = @mysql_fetch_row($res))
+		$data = [];
+		while ($row = @mysqli_fetch_row($res))
 		{
 			$temp = $row[1];
-			$temp = str_replace("#", "", $temp);
+			$temp = str_replace("#", "", (string) $temp);
 			
 			if (strlen($temp) >= 7)
-				array_push($data, array($row[0], $row[1], 2, '', $row[2]));
+				array_push($data, [$row[0], $row[1], 2, '', $row[2]]);
 		}
 		
 		$sql = "SELECT nama,
@@ -311,61 +311,60 @@ class Phonebook
 				  FROM $db_name_akad.siswa
 				 WHERE aktif = 1";
 		$res = QueryDb($sql);
-		while ($row = @mysql_fetch_row($res))
+		while ($row = @mysqli_fetch_row($res))
 		{
 			// hpsiswa
 			$temp = $row[1];
-			$temp = str_replace("#", "", $temp);
+			$temp = str_replace("#", "", (string) $temp);
 			if (strlen($temp) >= 7)
 			{
 				if ($row[5] == '1')
-					array_push($data, array($row[0], $temp, 4, '', $row[4]));
+					array_push($data, [$row[0], $temp, 4, '', $row[4]]);
 				else
-					array_push($data, array($row[0], $temp, 0, '', $row[4]));
+					array_push($data, [$row[0], $temp, 0, '', $row[4]]);
 			}
 			
 			// hportu
 			$temp = $row[3];
-			$temp = str_replace("#", "", $temp);
+			$temp = str_replace("#", "", (string) $temp);
 			if (strlen($temp) >= 7)
-				array_push($data, array($row[2], $temp, 1, "Orangtua $row[0]", $row[4]));
+				array_push($data, [$row[2], $temp, 1, "Orangtua $row[0]", $row[4]]);
 			
 			// hp from info1
 			$temp = $row[6];
-			$temp = str_replace("#", "", $temp);
+			$temp = str_replace("#", "", (string) $temp);
 			if (strlen($temp) >= 7)
-				array_push($data, array($row[2], $temp, 1, "Orangtua $row[0]", $row[4]));
+				array_push($data, [$row[2], $temp, 1, "Orangtua $row[0]", $row[4]]);
 			
 			// hp from info2
 			$temp = $row[7];
-			$temp = str_replace("#", "", $temp);
+			$temp = str_replace("#", "", (string) $temp);
 			if (strlen($temp) >= 7)
-				array_push($data, array($row[2], $temp, 1, "Orangtua $row[0]", $row[4]));	
+				array_push($data, [$row[2], $temp, 1, "Orangtua $row[0]", $row[4]]);	
 		}
 
 		foreach($data as $pb)
 		{
 			$sql = "SELECT COUNT(replid)
 					  FROM phonebook
-					 WHERE idreplid ='$pb[4]'
+					 WHERE idreplid ='".$pb[4]."'
 					   AND `status` = '$pb[2]'
 					   AND nohp = '$pb[1]'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			if ($row[0] == 0)
 			{
 				$sql = "INSERT INTO phonebook
-						   SET nama='$pb[0]', nohp='$pb[1]', `status`='$pb[2]',
-							   keterangan='$pb[3]', idreplid='$pb[4]'";
+						   SET nama='".$pb[0]."', nohp='$pb[1]', `status`='".$pb[2]."',keterangan='".$pb[3]."', idreplid='".$pb[4]."'";
 				QueryDb($sql);
 			}
 			else
 			{
 				$sql = "UPDATE phonebook
-						   SET nama='$pb[0]'
-						 WHERE `status`='$pb[2]'
-						   AND idreplid='$pb[4]'
-						   AND nohp='$pb[1]'";
+						   SET nama='".$pb[0]."'
+						 WHERE `status`='".$pb[2]."'
+						   AND idreplid='".$pb[4]."'
+						   AND nohp='".$pb[1]."'";
 				QueryDb($sql);
 			}
 		}

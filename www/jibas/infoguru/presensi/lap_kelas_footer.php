@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -71,7 +71,7 @@ if (isset($_REQUEST['tglakhir']))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Laporan Presensi Siswa Per Kelas</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
@@ -136,7 +136,7 @@ function change_urut(urut,urutan) {
 <!-- TABLE UTAMA -->
 <tr>
 	<td align="left">
-    <? 		
+    <?php 		
 	OpenDb();
 	if ($pelajaran == -1) {		
 		$sql = "SELECT DISTINCT s.nis, s.nama, s.telponsiswa, s.hpsiswa, s.namaayah, s.telponortu, s.hportu, s.aktif FROM siswa s, presensipelajaran p, ppsiswa pp, kelas k WHERE pp.idpp = p.replid AND pp.nis = s.nis AND s.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' ORDER BY $urut $urutan";
@@ -146,7 +146,7 @@ function change_urut(urut,urutan) {
 	}	
 	//echo $sql;
 	$result = QueryDb($sql);			 
-	$jum_hadir = mysql_num_rows($result);
+	$jum_hadir = mysqli_num_rows($result);
 	if ($jum_hadir > 0) { 
 	?>      	
     <table width="100%" border="0" align="center">
@@ -177,48 +177,48 @@ function change_urut(urut,urutan) {
         <td width="7%">HP Ortu</td>
         <td width="5%"></td>
     </tr>
-    <? 
+    <?php 
     $cnt = 0;
-    while ($row = @mysql_fetch_row($result)) {	    
+    while ($row = @mysqli_fetch_row($result)) {	    
      if ($row[7] == 0) { 
 		$pesan = "Status siswa tidak aktif lagi!";
 	?>
 	<tr height="25" style="color:#FF0000">
-	<? } else { 
+	<?php } else { 
 		$pesan = "Lihat!";
 	?>
     <tr height="25">
-    <? } ?>        		          			
+    <?php } ?>        		          			
         <td align="center"><?=++$cnt?></td>
         <td align="center"><?=$row[0]?></td>
         <td><?=$row[1]?></td>
         <td align="center">
-    <?  if ($pelajaran == -1) {		
-            $sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' " ;	
+    <?php  if ($pelajaran == -1) {		
+            $sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' " ;	
         } else {
-            $sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;	
+            $sql1 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir = 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;	
         }
     
             //echo $sql1;			
             $result1 = QueryDb($sql1);
-            $row1 = @mysql_fetch_array($result1);
+            $row1 = @mysqli_fetch_array($result1);
             $hadir = $row1[0];
             echo $row1[0]; 	?></td>
         <td align="center">
-    <? 	if ($pelajaran == -1) {		
-            $sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir'  " ;
+    <?php 	if ($pelajaran == -1) {		
+            $sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir'  " ;
         } else {
-            $sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '$row[0]' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;					
+            $sql2 = "SELECT COUNT(*) FROM ppsiswa pp, presensipelajaran p WHERE pp.nis = '".$row[0]."' AND pp.statushadir <> 0 AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' AND p.idpelajaran = '$pelajaran'" ;					
         }
             $result2 = QueryDb($sql2);
-            $row2 = @mysql_fetch_array($result2);
+            $row2 = @mysqli_fetch_array($result2);
             $absen = $row2[0];
             echo $row2[0]; ?></td>
         <td align="center">
-        <? 	$tot = $hadir + $absen;
+        <?php 	$tot = $hadir + $absen;
             echo $tot;	?></td>
         <td align="center">
-        <? 	if ($tot == 0) 
+        <?php 	if ($tot == 0) 
                 $tot = 1;
             $prs = (( $hadir/$tot)*100); 
             echo round($prs,2).'%'; ?></td>
@@ -229,14 +229,14 @@ function change_urut(urut,urutan) {
         <td align="center"><?=$row[6]?></td> 
         <td align="center"><a href="JavaScript:lihat('<?=$row[0]?>')"><img src="../images/ico/lihat.png" border="0" onmouseover="showhint('<?=$pesan?>', this, event, '80px')"/></a></td>    
     </tr>
-<?		
+<?php 	
     } 
     CloseDb();	?>
     </table>
     <script language='JavaScript'>
         Tables('table', 1, 0);
     </script>
-<? 	} else { ?>
+<?php 	} else { ?>
 
 	 <table width="100%" border="0" align="center">          
 	<tr>
@@ -245,7 +245,7 @@ function change_urut(urut,urutan) {
 		</td>
 	</tr>
 	</table>
-<?	} ?>  
+<?php } ?>  
     </td>
 </tr>
 

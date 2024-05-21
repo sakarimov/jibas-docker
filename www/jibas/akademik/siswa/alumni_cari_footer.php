@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -145,7 +145,7 @@ function change_baris() {
 <input type="hidden" name="departemen" id="departemen" value="<?=$departemen?>">
 <input type="hidden" name="cari" id="cari" value="<?=$cari?>">
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis?>">
-<?
+<?php
 	OpenDb();
 	if ($jenis!="kondisi" && $jenis!="status" && $jenis!="agama" && $jenis!="suku" && $jenis!="darah" && $jenis!="idangkatan" && $jenis!="tgllulus") {
 		$sql_tot = "SELECT s.replid, s.nis, s.nama, s.idkelas, k.kelas, s.tmplahir, s.tgllahir, s.statusmutasi, s.aktif, s.alumni, a.tgllulus from jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t, jbsakad.alumni a WHERE s.$jenis LIKE '%$cari%' AND k.replid=a.klsakhir AND k.idtingkat=t.replid AND a.departemen='$departemen' AND s.nis = a.nis"; 
@@ -158,12 +158,12 @@ function change_baris() {
 		$sql_siswa = "SELECT s.replid, s.nis, s.nama, s.idkelas, k.kelas, s.tmplahir, s.tgllahir, s.statusmutasi, s.aktif, s.alumni, t.tingkat, a.tgllulus from jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t, jbsakad.alumni a WHERE s.$jenis = '$cari' AND k.replid=a.klsakhir AND k.idtingkat=t.replid AND a.departemen='$departemen' AND s.nis = a.nis ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 
 	}
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$result_siswa = QueryDb($sql_siswa);
-	if (mysql_num_rows($result_siswa) > 0) {
+	if (mysqli_num_rows($result_siswa) > 0) {
 	
 ?>
 	<input type="hidden" name="total" id="total" value="<?=$total?>"/>
@@ -187,12 +187,12 @@ function change_baris() {
         <td width="15%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urutan('tgllulus','<?=$urutan?>')">Tahun Lulus <?=change_urut('tgllulus',$urut,$urutan)?></td>
     	<td width="8%">Detail</td>
   	</tr>
-	<?
+	<?php
 		if ($page==0)
 			$cnt_siswa = 1;
 		else 
 			$cnt_siswa = (int)$page*(int)$varbaris+1;
-		while ($row_siswa = @mysql_fetch_array($result_siswa)) {		
+		while ($row_siswa = @mysqli_fetch_array($result_siswa)) {		
 	?>
   	<tr height="25"> 
   		<td align="center"><?=$cnt_siswa?></td>
@@ -205,7 +205,7 @@ function change_baris() {
         <a href="#" onclick="newWindow('../library/detail_siswa.php?replid=<?=$row_siswa['replid']?>','TampilSiswa',790,650,'resizable=1,scrollbars=1,status=0,toolbar=0')" >
         <img src="../images/ico/lihat.png" border="0" onmouseover="showhint('Lihat detail!', this, event, '50px')" /></a></td>
   	</tr>
-  	<?		$cnt_siswa++;
+  	<?php 	$cnt_siswa++;
 		}
 		CloseDb();
 	?>
@@ -216,7 +216,7 @@ function change_baris() {
 	    Tables('table', 1, 0);
     </script>
 
-<?	if ($page==0){ 
+<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -241,19 +241,19 @@ function change_baris() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -267,15 +267,15 @@ function change_baris() {
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
    
-<?	} else { ?>
+<?php } else { ?>
 
 <table width="100%" border="0" align="center" height="300">          
 <tr>
@@ -286,7 +286,7 @@ function change_baris() {
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td>
 </tr>
 <!-- END TABLE CENTER -->    

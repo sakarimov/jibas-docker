@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,16 +78,16 @@ $sql = "SELECT id, nama, kelompok, tanggal
 
     $no = 0;
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $no += 1;
 
         echo "<tr style='height: 22px'>";
         echo "<td align='center'>$no</td>";
-        echo "<td align='left'>$row[0]</td>";
-        echo "<td align='left'>$row[1]</td>";
-        echo "<td align='left'>$row[2]</td>";
-        echo "<td align='left'>$row[3]</td>";
+        echo "<td align='left'>".$row[0]."</td>";
+        echo "<td align='left'>".$row[1]."</td>";
+        echo "<td align='left'>".$row[2]."</td>";
+        echo "<td align='left'>".$row[3]."</td>";
         echo "</tr>";
     }
     ?>

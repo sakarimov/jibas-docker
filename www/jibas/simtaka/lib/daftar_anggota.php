@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/common.php');
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
@@ -63,21 +63,21 @@ if (isset($_REQUEST['urutan']))
 </tr>
 <tr>
 	<td>
-    <?
+    <?php
     
 	OpenDb();
     
     $sql_tot = "SELECT noregistrasi, nama FROM  anggota WHERE aktif = 1 ORDER BY nama";
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	
 	$sql_pegawai = "SELECT noregistrasi, nama FROM  anggota WHERE aktif = 1 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	//$sql = "SELECT p.nip, p.nama, p.bagian FROM jbssdm.pegawai p WHERE p.aktif = 1 $sql_tambahbag GROUP BY p.nip ORDER BY p.nama";
    	
 	$akhir = ceil($jumlah/5)*5;
     $result = QueryDb($sql_pegawai);
-	if (@mysql_num_rows($result)>0){
+	if (@mysqli_num_rows($result)>0){
 
 	?>
     <!--<div id="tab_daftar">-->
@@ -88,13 +88,13 @@ if (isset($_REQUEST['urutan']))
         <td>Nama</td>
         <td width="10%">&nbsp;</td>
     </tr>
-    <?
+    <?php
     if ($page==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 		
-    while($row = mysql_fetch_row($result)) { 
+    while($row = mysqli_fetch_row($result)) { 
 	?>
     <tr height="25" onClick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer">
         <td align="center"><?=++$cnt ?></td>
@@ -104,9 +104,9 @@ if (isset($_REQUEST['urutan']))
         <input type="button" name="pilih" class="cmbfrm2" id="pilih" value="Pilih" onClick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" />
         </td>
     </tr>
-    <? 	} ?>
+    <?php 	} ?>
     </table>
-<?  if ($page==0){ 
+<?php  if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 	}
@@ -131,19 +131,19 @@ if (isset($_REQUEST['urutan']))
     <tr>
        	<td width="30%" align="left"><font color="#000000" class="news_content1">Hal
         <select name="hal" id="hal" onChange="change_hal('daftar')" class="cmbfrm">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      	// Navigasi halaman berikutnya dan sebelumnya
         ?>
         </font></td>
     	<!--td align="center">
     	<input <?=$disback?> type="button" class="cmbfrm2" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>','daftar')" >
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -158,15 +158,15 @@ if (isset($_REQUEST['urutan']))
         <td width="30%" align="right"><span class="news_content1"><font color="#000000">Jml baris per hal
       	</font></span>
       	<select name="varbaris" class="cmbfrm" id="varbaris" onChange="change_baris('daftar')">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
       	</select>
         </td>
     </tr>
     </table>
     
-<? } else { ?>    		
+<?php } else { ?>    		
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
 		<td>
@@ -178,7 +178,7 @@ if (isset($_REQUEST['urutan']))
 		</td>
 	</tr>
 	</table>
-<? } ?>
+<?php } ?>
     </td>    
 </tr>
 <tr>

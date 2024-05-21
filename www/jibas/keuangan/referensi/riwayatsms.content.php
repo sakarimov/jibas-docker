@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -49,14 +49,14 @@ OpenDb();
 
 <body>
 <br><br>
-<?
+<?php
 $sql = "SELECT replid
           FROM jbssms.smsgeninfo
          WHERE tanggal = '$thn-$bln-$tgl'
            AND info LIKE '[$kate.$iddep]%'";
 //echo "$sql<br>";           
 $res = QueryDb($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     echo "<center><i>Belum ada pengiriman SMS Informasi Pembayaran</i></center>";
     
@@ -64,7 +64,7 @@ if (mysql_num_rows($res) == 0)
     exit();
 }
 
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $idsmsgen = $row[0];
 
 ?>
@@ -75,7 +75,7 @@ $idsmsgen = $row[0];
     <td width='12%' class='header' align='center'>HP</td>
     <td width='*' class='header' align='center'>SMS</td>
 </tr>
-<?
+<?php
 $sql = "SELECT DATE_FORMAT(SendingDateTime, '%H:%i:%s'),
                DestinationNumber, Text
           FROM jbssms.outboxhistory
@@ -83,7 +83,7 @@ $sql = "SELECT DATE_FORMAT(SendingDateTime, '%H:%i:%s'),
          ORDER BY SendingDateTime DESC";       
 $res = QueryDb($sql);
 $no = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
 ?>
     <tr height='25'>
@@ -92,7 +92,7 @@ while($row = mysql_fetch_row($res))
         <td align='center' valign='top'><?= $row[1] ?></td>
         <td align='left' valign='top'><?= $row[2] ?></td>
     </tr>
-<?
+<?php
 }
 ?>
 </table>
@@ -101,6 +101,6 @@ while($row = mysql_fetch_row($res))
 </script>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

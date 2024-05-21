@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //include('../cek.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -35,7 +35,7 @@ OpenDb();
 <head>
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
-<script language="JavaScript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
 <link rel="stylesheet" type="text/css" href="../script/ajaxtabs.css" />
 <script type="text/javascript" src="../script/ajaxtabs.js"></script>
 </head>
@@ -44,14 +44,14 @@ OpenDb();
   <tr>
     <td width="9%">Departemen</td>
     <td width="11%"><select name="departemen" id="departemen" onChange="departemen()">
-            <?	$dep = getDepartemen(SI_USER_ACCESS());    
+            <?php $dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
 					if ($departemen == "")
 						$departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
             <?=$value ?>
             </option>
-            <?	} ?>
+            <?php } ?>
           </select></td>
     <td width="80%" rowspan="3"><img src="../images/view.png" width="48" height="48" onClick="cari()" style="cursor:pointer"></td>
   </tr>

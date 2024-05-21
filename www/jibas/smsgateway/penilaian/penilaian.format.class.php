@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class FormatPenilaian{
 	function Main(){
 		$sql = "SELECT * FROM format WHERE tipe=1";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_array($res);
+		$row = @mysqli_fetch_array($res);
 		?>
 		<link href="../style/style.css" rel="stylesheet" type="text/css" />
 		
@@ -70,7 +70,7 @@ class FormatPenilaian{
                     <div class="TabbedPanelsContent" style="padding-top:5px; overflow:inherit">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td class="td">[SISWA]</td>
+                            <td class="td">['SISWA']</td>
                             <td class="td">Nama Siswa</td>
                           </tr>
                           <tr>
@@ -90,7 +90,7 @@ class FormatPenilaian{
                             <td class="td">Bulan Akhir</td>
                           </tr>
                           <tr>
-                            <td class="td">[PENGIRIM]</td>
+                            <td class="td">['PENGIRIM']</td>
                             <td class="td">Pengirim</td>
                           </tr>
                       </table>
@@ -105,15 +105,15 @@ class FormatPenilaian{
         		<b>KETERANGAN FORMAT PESAN LAPORAN PENILAIAN</b><br /><br/>
                 <span class="Ket">
                     jika mengirimkan informasi dengan format di bawah ini: <br />
-                    <b>Informasi penilaian [SISWA] antara tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2]. Pengirim [PENGIRIM]</b><br /><br />
+                    <b>Informasi penilaian ['SISWA'] antara tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2]. Pengirim ['PENGIRIM']</b><br /><br />
                     maka informasi yang diterima oleh siswa: <br />
                     <b>Informasi penilaian Jafar Ashiddiq antara tanggal 1/2 s/d 28/2, UTS FIS 80, PRAK FIS 77. Pengirim Bag.Akademik</b>
                 </span>
           </td>
           </tr>
         </table>
-		<?
-		//Kami informasikan presensi [SISWA] tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2] hadir [HADIR] absen [ABSEN]. [PENGIRIM]
+		<?php
+		//Kami informasikan presensi ['SISWA'] tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2] hadir ['HADIR'] absen ['ABSEN']. ['PENGIRIM']
 	}
 }
 ?>

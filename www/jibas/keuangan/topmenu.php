@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 	
+<?php 	
 require_once('include/common.php');
 require_once('include/sessioninfo.php');
 require_once('include/config.php');
@@ -29,12 +29,12 @@ require_once('include/db_functions.php');
 
 OpenDb();
 $op = "";
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 
 if ($op=="a5t2vb7ys763yhuy7s")
 {
-	$sql="UPDATE jbsuser.hakakses SET theme='$_REQUEST[tema] 'WHERE login='".getIdUser()."' AND modul='KEUANGAN'";
+	$sql="UPDATE jbsuser.hakakses SET theme='".$_REQUEST['tema']."' WHERE login='".getIdUser()."' AND modul='KEUANGAN'";
 	$result=QueryDb($sql);
 	session_name("jbsfina");
 	session_start();
@@ -51,7 +51,7 @@ if ($op=="a5t2vb7ys763yhuy7s")
 	parent.footer.location.reload();
 	parent.bottomright.location.reload();
 </script>
-<?
+<?php
 }
 CloseDb();
 ?>
@@ -165,16 +165,16 @@ function hide_info(){
     	&nbsp;<a href="../akademik/logout.php" class="style1 style9" onClick="return logout()" style="color:#FFFF00;" >Keluar</a>&nbsp;
     </td>
     <td width="706" align="left" background="<?=GetThemeDir() ?>bgmain_03a.jpg">
-	<?  if (isset($_SESSION['namasimaka']))
+	<?php  if (isset($_SESSION['namasimaka']))
 		{ ?>
             <img src="images/ico/home.png" width="20" height="20" border="0" />
             <a href="../akademik/index2.php" title="Akademik" target="_top" class="style9" style="color:#FFFF00;">Akademik</a>&nbsp;&nbsp;
-	<?  } 
+	<?php  } 
 		else 
 		{ ?>
             <a href="#" title="Akademik" target="_self" class="style9" onClick="alert ('Maaf Anda Tidak Berhak mengakses Halaman Akademik');" style="color:#FFFF00;">
             <img src="images/ico/home.png" width="20" height="20" border="0" />Akademik</a>&nbsp;&nbsp;
-	<?  } ?>
+	<?php  } ?>
 		<span class="style9" style="text-decoration:none; cursor:pointer" onClick="hide_info()">
         <img src="images/ico/keuangan.png" width="20" height="20" border="0" />Keuangan</span>&nbsp;&nbsp;&nbsp;&nbsp;
     	<img src="images/A.gif" width="20" height="20" />&nbsp;<span>

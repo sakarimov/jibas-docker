@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,21 +20,21 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
 new Kritik();
 class Kritik{
 	public function __construct(){
-		$this->sms = array();
-		$this->newSms = array();
-		$cmd = (isset($_REQUEST['cmd']))?$_REQUEST['cmd']:'';
-		$this->bulan = (isset($_REQUEST['m']))?$_REQUEST['m']:date('m');
-		$this->tahun = (isset($_REQUEST['y']))?$_REQUEST['y']:date('Y');
-		$this->jenis = (isset($_REQUEST['j']))?$_REQUEST['j']:'pesan';
+		$this->sms = [];
+		$this->newSms = [];
+		$cmd = $_REQUEST['cmd'] ?? '';
+		$this->bulan = $_REQUEST['m'] ?? date('m');
+		$this->tahun = $_REQUEST['y'] ?? date('Y');
+		$this->jenis = $_REQUEST['j'] ?? 'pesan';
 		$this->cmd		= $cmd;
-		$this->page		= (isset($_REQUEST['page']))?$_REQUEST['page']:1;
+		$this->page		= $_REQUEST['page'] ?? 1;
 		if ($cmd==""){
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 			echo '<html xmlns="http://www.w3.org/1999/xhtml">';
@@ -76,13 +76,13 @@ class Kritik{
 	public function showMsgList(){
 		ob_start();
 			global $G_START_YEAR,$LMonth;
-			$arrYear = array();
+			$arrYear = [];
 			for ($y = $G_START_YEAR; $y <= date('Y'); $y++ )
 				array_push($arrYear,$y);
 
-			$arrMonth= array();
+			$arrMonth= [];
 			for ($m = 1; $m <= 12; $m++ )
-				array_push($arrMonth,array($m,$LMonth[($m-1)]));
+				array_push($arrMonth,[$m, $LMonth[($m-1)]]);
 			
 			
 			//$this->tahun = date('Y');
@@ -95,10 +95,10 @@ class Kritik{
 					<select class="Cmb filter" id='month'>
 						<?php
 						foreach ($arrMonth as $m){
-							echo "<option value='$m[0]' ";
+							echo "<option value='".$m[0]."' ";
 							if ($m[0]==$this->bulan)
 								echo "selected";
-							echo ">$m[1]</option>";
+							echo ">".$m[1]."</option>";
 						}
 						?>
 					</select>
@@ -108,7 +108,7 @@ class Kritik{
 							echo "<option value='$y' ";
 							if ($y==$this->tahun)
 								echo "selected";
-							echo ">$y</option>";
+							echo ">".$y."</option>";
 						}
 						?>
 					</select>
@@ -140,21 +140,21 @@ class Kritik{
 			$sql = "SELECT replid,sender,message,DATE_FORMAT(senddate,'%e %b %Y %T') FROM kritiksaran WHERE YEAR(senddate)='$this->tahun' AND MONTH(senddate)='$this->bulan' AND `type`='$this->jenis' ORDER BY replid DESC";
 			//echo $sql;
 			$res = QueryDb($sql);
-			$this->num = @mysql_num_rows($res);
+			$this->num = @mysqli_num_rows($res);
 			if ($this->num>0){
 				$res   = QueryDb($sql." LIMIT ".((($this->page)-1)*showList).",".showList);
-				while ($row = @mysql_fetch_row($res)){
-					$nohp  = str_replace("+62","",$row[1]);	
+				while ($row = @mysqli_fetch_row($res)){
+					$nohp  = str_replace("+62","",(string) $row[1]);	
 					$sqlph = "SELECT nama FROM phonebook WHERE nohp LIKE '%$nohp'";
 					$resph = QueryDb($sqlph);
-					$rowph = @mysql_fetch_row($resph);
+					$rowph = @mysqli_fetch_row($resph);
 					$nama  = $rowph[0];
-					array_push($this->sms,array($row[0],"($row[1]) $nama",$row[2],$row[3],$row[4]));
+					array_push($this->sms,[$row[0], "($row[1]) $nama", $row[2], $row[3], $row[4]]);
 				}
 			}
 			$sql = "SELECT max(replid) FROM kritiksaran";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$_SESSION['maxID'] = $row[0];
 			$this->showList();
 		ob_flush();
@@ -177,8 +177,8 @@ class Kritik{
 				foreach($this->sms as $data){
 					$tmp = $this->getRowTemplate();
 					if ($data[4]=='0')
-						$tmp = str_replace("<tr","<tr class='bold'",$tmp);
-					$tmp = str_replace("_SENDER_",$data[1],$tmp);
+						$tmp = str_replace("<tr","<tr class='bold'",(string) $tmp);
+					$tmp = str_replace("_SENDER_",$data[1],(string) $tmp);
 					$tmp = str_replace("_DATE_",$data[3],$tmp);
 					$tmp = str_replace("_MSG_",$data[2],$tmp);
 					$tmp = str_replace("_ID_",$data[0],$tmp);
@@ -197,7 +197,7 @@ class Kritik{
 		return "<tr height='20' class='Header'>
 			<td width='250'>Pengirim</td>
 					<td width='150'>Tanggal</td>
-                    <td width='*'>".ucfirst(strtolower($this->jenis))."</td>
+                    <td width='*'>".ucfirst(strtolower((string) $this->jenis))."</td>
                     <td width='50'>&nbsp;</td>
 			</tr>";
 
@@ -224,22 +224,22 @@ class Kritik{
 			OpenDb();
 			$sql = "SELECT replid,sender,message,DATE_FORMAT(senddate,'%e %b %Y %T') FROM kritiksaran WHERE replid>'$_SESSION[maxID]' ORDER BY replid DESC";
 			$res = QueryDb($sql);
-			$num = @mysql_num_rows($res);
+			$num = @mysqli_num_rows($res);
 			if ($num>0){
-				while ($row = @mysql_fetch_row($res)){
-					$nohp  = str_replace("+62","",$row[1]);	
+				while ($row = @mysqli_fetch_row($res)){
+					$nohp  = str_replace("+62","",(string) $row[1]);	
 					$sqlph = "SELECT nama FROM phonebook WHERE nohp LIKE '%$nohp'";
 					$resph = QueryDb($sqlph);
-					$rowph = @mysql_fetch_row($resph);
+					$rowph = @mysqli_fetch_row($resph);
 					$nama  = $rowph[0];
-					array_push($this->newSms,array("($row[1]) $nama",$row[3],$row[2],$row[0]));
+					array_push($this->newSms,["($row[1]) $nama", $row[3], $row[2], $row[0]]);
 				}
 			}
 			$sql = "SELECT max(replid) FROM kritiksaran";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$_SESSION['maxID'] = $row[0];
-			echo json_encode(array('num'=>$num,'data'=>$this->newSms));
+			echo json_encode(['num'=>$num, 'data'=>$this->newSms], JSON_THROW_ON_ERROR);
 		ob_flush();
 	}
 
@@ -260,11 +260,11 @@ class Kritik{
 			$res = QueryDb($sql);
 			$sql = "SELECT replid,sender,message,DATE_FORMAT(senddate,'%e %b %Y %T') FROM kritiksaran WHERE replid='$id'";
 			$res = QueryDb($sql);
-			$data = @mysql_fetch_row($res);
-			$nohp  = str_replace("+62","",$data[1]);	
+			$data = @mysqli_fetch_row($res);
+			$nohp  = str_replace("+62","",(string) $data[1]);	
 			$sqlph = "SELECT nama FROM phonebook WHERE nohp LIKE '%$nohp'";
 			$resph = QueryDb($sqlph);
-			$rowph = @mysql_fetch_row($resph);
+			$rowph = @mysqli_fetch_row($resph);
 			$nama  = $rowph[0];
 			?>
 			<div style="font-family:Arial; color:#666666; font-weight:bold">
@@ -310,19 +310,19 @@ class Kritik{
 
 			$sql  = "SELECT last_insert_id(replid) FROM smsgeninfo WHERE tipe='3' ORDER BY replid DESC LIMIT 1";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$idsmsgeninfo = (int)$row[0];
 			$idsmsgeninfo = ($idsmsgeninfo+1);
 
-			$sql = "SELECT SenderNumber FROM inbox WHERE ID = '$id'";
+			$sql = "SELECT SenderNumber FROM inbox WHERE ID = '".$id."'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$sender = $row[0];
 
 			$sql = "INSERT INTO outbox SET InsertIntoDB=now(), SendingDateTime=now(), Text='$text', DestinationNumber='$sender', SenderID='$sender', CreatorID='$sender', idsmsgeninfo=$idsmsgeninfo";
 			$res = QueryDb($sql);
 			$output = ($res)?1:0;
-			echo json_encode(array('status'=>$output));
+			echo json_encode(['status'=>$output], JSON_THROW_ON_ERROR);
 		ob_flush();
 	}
 

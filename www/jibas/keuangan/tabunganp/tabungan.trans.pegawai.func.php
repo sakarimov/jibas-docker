@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,13 @@ function ShowPegawai($bagian)
               FROM jbssdm.pegawai";
 
     if ($bagian != "ALL")
-        $sql .= " WHERE bagian = '$bagian'";
+        $sql .= " WHERE bagian = '".$bagian."'";
 
     $sql .= " ORDER BY nama";
 
     $no = 0;
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
 
     if ($num == 0)
     {
@@ -51,13 +51,13 @@ function ShowPegawai($bagian)
         echo "<td class='header' width='10%'>No</td>";
         echo "<td class='header' width='*'>Nama</td>";
         echo "</tr>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $no += 1;
 
             echo "<tr style='height: 25px;' onclick='pilih(\"$row[0]\")'>";
             echo "<td align='center'>$no</td>";
-            echo "<td align='left'>$row[0]<br><strong>$row[1]</strong></td>";
+            echo "<td align='left'>".$row[0]."<br><strong>".$row[1]."</strong></td>";
             echo "</tr>";
         }
         echo "</table>";

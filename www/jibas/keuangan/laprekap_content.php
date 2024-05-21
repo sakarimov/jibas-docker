@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -87,7 +87,7 @@ function ShowDetail(dept, idtahunbuku, idkategori, idpenerimaan, tanggal1, tangg
 </table>        
 <table cellpadding="5" border="1" style="border-width:1px; border-color:#999; border-collapse:collapse;" cellspacing="0" align="center">
 
-<?
+<?php
 OpenDb();
 
 if ($dept == "ALL")
@@ -95,12 +95,12 @@ if ($dept == "ALL")
 	$sql = "SELECT departemen FROM jbsakad.departemen ORDER BY urutan";
 	$dres = QueryDb($sql);
 	$k = 0;
-	while ($drow = mysql_fetch_row($dres))
+	while ($drow = mysqli_fetch_row($dres))
 		$darray[$k++] = $drow[0];
 }
 else
 {
-	$darray = array( $dept );
+	$darray = [$dept];
 }
 
 
@@ -127,10 +127,10 @@ for($k = 0; $k < count($darray); $k++)
 	$idtahunbuku = FetchSingle($sql);
 	
 	$subtotal = 0;
-	$rarray = array();
+	$rarray = [];
 	$sql = "SELECT replid, nama FROM jbsfina.datapenerimaan WHERE departemen='$dept' AND aktif=1 AND idkategori='$idkategori'";
 	$pres = QueryDb($sql);
-	while($prow = mysql_fetch_row($pres))
+	while($prow = mysqli_fetch_row($pres))
 	{
 		$idp = $prow[0];
 		$pen = $prow[1];
@@ -199,7 +199,7 @@ for($k = 0; $k < count($darray); $k++)
 		}
 		
 		$jres = QueryDb($sql);
-		$jrow = mysql_fetch_row($jres);
+		$jrow = mysqli_fetch_row($jres);
 		$jumlah = 0;
 		if (!is_null($jrow[0]))
 			$jumlah = $jrow[0];
@@ -227,26 +227,26 @@ for($k = 0; $k < count($darray); $k++)
             <font color="#FFFFFF"><strong><em><?=$dept?></em></strong></font>
             </td>
         </tr>
-<?      } ?>
+<?php      } ?>
         <tr>
         	<td width="25" align="center" valign="top" bgcolor="#CCCCCC"><?=$i + 1?></td>
             <td width="350" align="left" valign="top"><?=$pen?></td>
-			<? if ($jumlah == 0) { ?>
+			<?php if ($jumlah == 0) { ?>
 				<td width="120" align="right" valign="top"><?=FormatRupiah($jumlah)?></td>
-			<? } else { ?>
+			<?php } else { ?>
 				<td width="120" align="right" valign="top">
 					<a style='color: blue; font-weight: normal;'
 					   href="JavaScript:ShowDetail('<?=$departemen?>', <?=$idtahunbuku?>, '<?=$idkategori?>', <?=$idpen?>, '<?=$tanggal1?>', '<?=$tanggal2?>', '<?=$petugas?>')">
 					<?=FormatRupiah($jumlah)?>
 					</a>
 				</td>
-			<? } ?>
-<?		if ($i == 0)
+			<?php } ?>
+<?php 	if ($i == 0)
 		{ ?>
         	<td width="120" rowspan="<?=$cnt?>" valign="middle" align="right" bgcolor="#FFECFF"><strong><?=FormatRupiah($subtotal)?></strong></td>
-<?		} ?>        
+<?php 	} ?>        
         </tr>
-<?	 } 
+<?php  } 
 }
 CloseDb();
 ?>

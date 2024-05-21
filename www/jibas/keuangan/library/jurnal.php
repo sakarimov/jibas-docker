@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function SimpanJurnal($idtahunbuku, $tanggal, $transaksi, $nokas, $keterangan, $idpetugas, $petugas, $sumber, &$idjurnal) 
 {
 	//Simpan ke jurnal
@@ -39,7 +39,7 @@ function SimpanJurnal($idtahunbuku, $tanggal, $transaksi, $nokas, $keterangan, $
 		$sql = "SELECT last_insert_id()";
 		$result = QueryDbTrans($sql, $success);
 		if ($success) {
-			$row = @mysql_fetch_row($result);	
+			$row = @mysqli_fetch_row($result);	
 			$idjurnal = $row[0];
 		}	
 	}
@@ -91,11 +91,11 @@ function AmbilKodeRekJurnal($idjurnal, $kateakun, $idpenerimaan)
 				  FROM jbsfina.jurnaldetail jd, jbsfina.rekakun rk
 				 WHERE jd.koderek = rk.kode
 				   AND jd.idjurnal = '$idjurnal'
-				   AND rk.kategori = '$kategori'";
+				   AND rk.kategori = '".$kategori."'";
 	}
 	
 	$res = QueryDb($sql);
-	if (mysql_num_rows($res) == 0)
+	if (mysqli_num_rows($res) == 0)
 	{
 		if ($kateakun == "HARTA")
 			$colname = "rekkas";
@@ -108,12 +108,12 @@ function AmbilKodeRekJurnal($idjurnal, $kateakun, $idpenerimaan)
 			
 		$sql = "SELECT $colname
 				  FROM jbsfina.datapenerimaan
-				 WHERE replid = '$idpenerimaan'";
+				 WHERE replid = '".$idpenerimaan."'";
 		//echo "$sql";		 
 		$res = QueryDb($sql);
-		if (mysql_num_rows($res) > 0)
+		if (mysqli_num_rows($res) > 0)
 		{
-			$row = mysql_fetch_row($res);
+			$row = mysqli_fetch_row($res);
 			return $row[0];
 		}
 		else
@@ -123,7 +123,7 @@ function AmbilKodeRekJurnal($idjurnal, $kateakun, $idpenerimaan)
 	}
 	else
 	{
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		return $row[0];
 	}
 }

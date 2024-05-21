@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function GetTitle()
 {
     global $idpustaka;
     
     $sql = "SELECT judul
               FROM pustaka
-             WHERE replid = '$idpustaka'";
+             WHERE replid = '".$idpustaka."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return $row[0];
 }
@@ -57,9 +57,9 @@ function ShowDelLink($iddp, $kodepustaka, $rowno)
 {
     $sql = "SELECT COUNT(replid)
               FROM jbsperpus.pinjam
-             WHERE kodepustaka = '$kodepustaka'";
+             WHERE kodepustaka = '".$kodepustaka."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $npinjam = $row[0];
     
     if ($npinjam == 0)
@@ -79,7 +79,7 @@ function ShowList()
              ORDER BY dp.kodepustaka";
     $res = QueryDb($sql);
     $cnt = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $iddp = $row['replid'];
         $aktif = $row['aktif'];
@@ -96,11 +96,11 @@ function ShowList()
             $sql = "SELECT DATE_FORMAT(tglpinjam, '%d-%b-%Y') AS tglpinjam, DATE_FORMAT(tglkembali, '%d-%b-%Y') AS tglkembali,
                            idanggota, keterangan, info1, nis, nip, idmember
                       FROM pinjam
-                     WHERE kodepustaka = '$kodepustaka'";
+                     WHERE kodepustaka = '".$kodepustaka."'";
             $res2 = QueryDb($sql);
-            if (mysql_num_rows($res2) > 0)
+            if (mysqli_num_rows($res2) > 0)
             {
-                $row2 = mysql_fetch_array($res2);
+                $row2 = mysqli_fetch_array($res2);
                 $jenisanggota = $row2['info1'];
                 if ($jenisanggota == "siswa")
                 {
@@ -108,7 +108,7 @@ function ShowList()
                     $idanggota = $row2['nis'];
                     $sql = "SELECT nama
                               FROM jbsakad.siswa
-                             WHERE nis = '$idanggota'";
+                             WHERE nis = '".$idanggota."'";
                 }
                 elseif ($jenisanggota == "pegawai")
                 {
@@ -116,7 +116,7 @@ function ShowList()
                     $idanggota = $row2['nip'];
                     $sql = "SELECT nama
                               FROM jbssdm.pegawai
-                             WHERE nip = '$idanggota'";
+                             WHERE nip = '".$idanggota."'";
                 }
                 else
                 {
@@ -124,10 +124,10 @@ function ShowList()
                     $idanggota = $row2['idmember'];
                     $sql = "SELECT nama
                               FROM jbsperpus.anggota
-                             WHERE noregistrasi = '$idanggota'";
+                             WHERE noregistrasi = '".$idanggota."'";
                 }
                 $res3 = QueryDb($sql);
-                $row3 = mysql_fetch_row($res3);
+                $row3 = mysqli_fetch_row($res3);
                 $namaanggota = $row3[0];
                 
                 $keterangan = "($jenisanggota) $idanggota - $namaanggota<br><i>Tgl Pinjam: " . $row2['tglpinjam'] . ", Tgl Kembali: " . $row2['tglkembali'] . "</i>";

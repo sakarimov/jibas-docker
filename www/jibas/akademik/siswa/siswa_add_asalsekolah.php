@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -49,7 +49,7 @@ if (isset($_REQUEST['hal']))
 $op = $_REQUEST['op'];
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql = "DELETE FROM jbsakad.asalsekolah WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbsakad.asalsekolah WHERE replid = '".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	CloseDb();
 	$page=0;
@@ -58,7 +58,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 	<script language="javascript">
 		document.location.href = "siswa_add_asalsekolah.php?page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
 	</script>
-	<?
+	<?php
 }	
 OpenDb();
 ?>
@@ -74,7 +74,7 @@ OpenDb();
 
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 function tambah() {
 	var departemen = document.getElementById('departemen').value;
@@ -180,31 +180,31 @@ function ByeWin() {
     <tr>
     <td width="40%" align="left"><strong>Departemen</strong>
     <select name="departemen" id="departemen" onChange="change_departemen()">
-    <?	
+    <?php 
 	$sql = "SELECT DISTINCT departemen FROM asalsekolah";
 	$result = QueryDb($sql);
-	while ($row = @mysql_fetch_row($result)){
+	while ($row = @mysqli_fetch_row($result)){
        if ($departemen=="")
 		   $departemen=$row[0];
 			
-	   echo "<option value='$row[0]' ".StringIsSelected($row[0], $departemen)."  >$row[0]</option>";
+	   echo "<option value='".$row[0]."' ".StringIsSelected($row[0], $departemen)."  >".$row[0]."</option>";
     }
 	?>
 	</select>
     
     </td>
-    <?
+    <?php
     	OpenDb();
 		$sql_tot = "SELECT * FROM jbsakad.asalsekolah WHERE departemen='$departemen'";
 		$result_tot = QueryDb($sql_tot);
-		$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 						
 		$sql = "SELECT replid,sekolah FROM jbsakad.asalsekolah WHERE departemen='$departemen' ORDER BY sekolah LIMIT ".(int)$page*(int)$varbaris.",$varbaris"; 						
 		$akhir = ceil($jumlah/5)*5;
 	  
 		$result = QueryDb($sql);
-		if (@mysql_num_rows($result) > 0) {
+		if (@mysqli_num_rows($result) > 0) {
 	?>
     
     <td align="right" width="60%">
@@ -227,32 +227,32 @@ function ByeWin() {
         <td width="*" class="header" align="center">&nbsp;</td>
     </tr>
     
-     <?
+     <?php
 		if ($page==0)
 			$cnt = 0;
 		else 
 			$cnt = (int)$page*(int)$varbaris;
 		
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 	?>
     <tr height="25">   	
        	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['sekolah']?></td>
         <td align="center">
-		<?	//if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
+		<?php //if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
             <a href="JavaScript:edit(<?=$row['replid'] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Sekolah!', this, event, '50px')"/></a>&nbsp;
             <a href="JavaScript:hapus(<?=$row['replid'] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Sekolah!', this, event, '50px')" /></a>
-<?		//} ?>
+<?php 	//} ?>
 		</td> 
     </tr>
-<?	} 
+<?php } 
 	CloseDb(); ?>	
     
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
 	</table>
-	<?	if ($page==0){ 
+	<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -277,19 +277,19 @@ function ByeWin() {
     <tr>
        	<td width="35%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -303,14 +303,14 @@ function ByeWin() {
  		</td-->
         <td width="35%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<?	} else { ?>
+<?php } else { ?>
 </td><td>&nbsp;</td>
 </tr>
 
@@ -321,22 +321,22 @@ function ByeWin() {
    	</tr>
 	<tr>
 		<td align="center" valign="middle" height="200">
-    <? //if ($departemen != "") {	?>
+    <?php //if ($departemen != "") {	?>
         <font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? } ?>
+        <?php } ?>
         </b></font>
-    <? //} else { ?>
+    <?php //} else { ?>
 		<!--<font size = "2" color ="red"><b>Belum ada data Departemen.
         <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
         </b></font>-->
-    <? //} ?>
+    <?php //} ?>
         
         </td>
    	</tr>
 </table>
-<? } ?>  
+<?php } ?>  
 <tr height="35">
 	<td colspan="3" align="center">
     	<!--<input class="but" type="button" value="Tutup" onClick="window.close();">-->

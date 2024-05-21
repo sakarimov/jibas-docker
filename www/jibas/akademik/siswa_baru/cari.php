@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -29,16 +29,16 @@ OpenDb();
 $jenis=$_REQUEST['jenis'];
 	if ($jenis == 'darah' || $jenis == 'kondisi' || $jenis == 'status' || $jenis == 'agama' || $jenis == 'suku') {	
 		if ($jenis == 'darah') {
-			$row = array('A','0','B','AB');
+			$row = ['A', '0', 'B', 'AB'];
 			$jum = 4;
 ?>				
 			<select name="cari" id="cari" onchange="change_cari()" style="width:150px;">
-<? 			for ($i=0;$i<$jum;$i++) { 	 ?>
+<?php 			for ($i=0;$i<$jum;$i++) { 	 ?>
         		<option value="<?=$row[$i]?>" <?=StringIsSelected($row[$i], $cari)?> ><?=$row[$i]?></option>
               	
-<? 			} ?>   
+<?php 			} ?>   
         	</select>
-<? 		} else if ($jenis == 'kondisi') {								
+<?php 		} else if ($jenis == 'kondisi') {								
 			$query = "SELECT kondisisiswa FROM jbsakad.kondisisiswa ORDER BY kondisisiswa ";
 			$result = QueryDb($query);			
 		} elseif ($jenis == 'status') {	
@@ -50,15 +50,15 @@ $jenis=$_REQUEST['jenis'];
 		}
 
 ?>		<select name="cari" id="cari" onchange="change_cari()" style="width:150px;">
-<?		while ($row = mysql_fetch_row($result)) {	?>
+<?php 	while ($row = mysqli_fetch_row($result)) {	?>
    			<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $cari)?> ><?=$row[0]?></option>
-<? 		} ?>    
+<?php 		} ?>    
          </select>
 
-<?	}	else { 	 ?>
+<?php }	else { 	 ?>
     	<input type="text" name="cari" id="cari" size="15"  />
         
-<? 	} 
+<?php 	} 
 	
 CloseDb();
 

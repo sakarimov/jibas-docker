@@ -1,4 +1,4 @@
-<?
+<?php
 function GetTitle()
 {
     global $kodepustaka;
@@ -8,11 +8,11 @@ function GetTitle()
     $sql = "SELECT p.judul
               FROM pustaka p, daftarpustaka dp
              WHERE p.replid = dp.pustaka
-               AND dp.kodepustaka = '$kodepustaka'";
+               AND dp.kodepustaka = '".$kodepustaka."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $judul = $row[0];
     }
     
@@ -29,9 +29,9 @@ function GetReturnDate()
              WHERE kodepustaka = '$kodepustaka'
                AND status = 1";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $kembali = $row[0];
     }
     
@@ -39,7 +39,7 @@ function GetReturnDate()
                
 }
 
-function SimpanData()
+function SimpanData(): never
 {
     $kodepustaka = $_REQUEST['kodepustaka'];
     $tglkembali = MySqlDateFormat($_REQUEST['tglkembali']);
@@ -57,7 +57,7 @@ function SimpanData()
         opener.RefreshPage();
         window.close();
     </script>
-    <?
+    <?php
     CloseDb();
     exit();
 }

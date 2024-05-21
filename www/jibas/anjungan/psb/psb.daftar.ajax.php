@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -31,7 +31,7 @@ $op = $_REQUEST['op'];
 if ($op == "getDaftarPsb")
 {
     $idkelompok = $_REQUEST['idkelompok'];
-    $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
+    $page = $_REQUEST['page'] ?? 1;
         
     OpenDb();    
     ShowDaftarPsb($idkelompok, $page);
@@ -39,8 +39,8 @@ if ($op == "getDaftarPsb")
 }
 elseif ($op == "doChangeData")
 {
-    $nocalon = urldecode($_REQUEST['nocalon']);
-    $namacalon = urldecode($_REQUEST['namacalon']);
+    $nocalon = urldecode((string) $_REQUEST['nocalon']);
+    $namacalon = urldecode((string) $_REQUEST['namacalon']);
     $idkelompok = $_REQUEST['idkelompok'];
     $page = $_REQUEST['page'];
     $npage = $_REQUEST['npage'];
@@ -65,8 +65,8 @@ elseif ($op == "setKelompokPsb")
 }
 elseif ($op == "doCheckPin")
 {
-    $nocalon = urldecode($_REQUEST['nocalon']);
-    $namacalon = urldecode($_REQUEST['namacalon']);
+    $nocalon = urldecode((string) $_REQUEST['nocalon']);
+    $namacalon = urldecode((string) $_REQUEST['namacalon']);
     $idkelompok = $_REQUEST['idkelompok'];
     $page = $_REQUEST['page'];
     $npage = $_REQUEST['npage'];

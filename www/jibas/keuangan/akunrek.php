@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/errorhandler.php');
 require_once('include/sessioninfo.php');
@@ -37,7 +37,7 @@ if (getLevel() == 2) { ?>
 	alert('Maaf, anda tidak berhak mengakses halaman ini!');
 	document.location.href = "<?=$sourcefrom ?>";
 </script>
-<? 	exit();
+<?php 	exit();
 } // end if
 
 $kategori = "";
@@ -47,14 +47,14 @@ if (isset($_GET['kategori']))
 $op = $_REQUEST['op'];
 if ($op == "12134892y428442323x423") 
 {
-	$sql = "DELETE FROM rekakun WHERE kode = '$_REQUEST[kode]'";
+	$sql = "DELETE FROM rekakun WHERE kode = '".$_REQUEST['kode']."'";
 	OpenDb();
 	QueryDb($sql);
 	CloseDb();	?>
     <script language="javascript">
-		document.location.href = "akunrek.php?kategori=<?=$_REQUEST[kategori]?>&from=<?=$from?>&sourcefrom=<?=$sourcefrom?>";
+		document.location.href = "akunrek.php?kategori=<?=$_REQUEST['kategori']?>&from=<?=$from?>&sourcefrom=<?=$sourcefrom?>";
     </script>
-    <?
+    <?php
 }
 ?>
 
@@ -135,25 +135,25 @@ function tambah() {
     	<td align="right" width="40%">
         <strong>Kategori&nbsp;</strong>
         <select name="kategori" id="kategori" onChange="change_kategori()" style="width:150px">
-        <?
+        <?php
         $sql = "SELECT * FROM katerekakun ORDER BY urutan";
 		OpenDb();
 		$result = QueryDb($sql);
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysqli_fetch_array($result)) {
 			if ($kategori == "")
 				$kategori = $row['kategori'];
 		?>
         	<option value="<?=$row['kategori']?>" <?=StringIsSelected($kategori, $row['kategori'])?> ><?=$row['kategori']?></option>
-        <?
+        <?php
 		}
 		?>
 		</select>
         </td>
-<? 
+<?php 
 	OpenDb();
 	$sql = "SELECT * FROM rekakun WHERE kategori = '$kategori' ORDER BY kode";
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0){
+	if (@mysqli_num_rows($result) > 0){
 ?>
 	
         
@@ -175,10 +175,10 @@ function tambah() {
         <td class="header">Keterangan</td>      
         <td class="header" width="100">&nbsp;</td>        
 	</tr>
-    <? 
+    <?php 
 	
 	$no = 0;
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 	?>
     <tr height="25">
     	<td align="center"><?=++$no ?></td>
@@ -190,7 +190,7 @@ function tambah() {
         'UbahRekening','450','310','resizable=1,scrollbars=0,status=0,toolbar=0')"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Rekening!',this, event, '75px')"></a>&nbsp;<a href="#" onClick="del('<?=$row['kode']?>')"><img src="images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Rekening!', this, event, '75px')"></a>
         </td>        
     </tr>
-    <? 
+    <?php 
 	}
 	?>
     <!-- END TABLE CONTENT -->
@@ -202,7 +202,7 @@ function tambah() {
 </td></tr>
 <!-- EOF CONTENT -->
 </table>
-<?	} else { ?>
+<?php } else { ?>
 	<td width = "60%"></td>
 </tr>
 </table>
@@ -222,7 +222,7 @@ function tambah() {
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

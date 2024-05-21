@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -48,23 +48,23 @@ OpenDb();
 <table border="0" cellpadding="10" cellspacing="5" width="780" align="left">
 <tr><td align="left" valign="top">
 
-<? getHeader($departemen) ?>
+<?php getHeader($departemen) ?>
 
 <center><font size="4"><strong>DATA PEMBAYARAN SISWA</strong></font><br /> </center><br /><br />
 
-<?
+<?php
 $sql = "SELECT s.nama
 		  FROM siswa s
 		 WHERE s.nis = '$nis' ";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namasiswa = $row[0];
 
 $sql = "SELECT t.tahunbuku
 		  FROM jbsfina.tahunbuku t
-		 WHERE t.replid = '$idtahunbuku'";
+		 WHERE t.replid = '".$idtahunbuku."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tahunbuku = $row[0];		 
 ?>
 <table border="0">
@@ -82,7 +82,7 @@ $tahunbuku = $row[0];
 <br />
 
 <table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="2" width="100%">
-<?
+<?php
 $sql = "SELECT DISTINCT b.replid, b.besar, b.lunas, b.keterangan, d.nama
 		  FROM jbsfina.besarjtt b, jbsfina.penerimaanjtt p, jbsfina.datapenerimaan d
 		 WHERE p.idbesarjtt = b.replid
@@ -91,7 +91,7 @@ $sql = "SELECT DISTINCT b.replid, b.besar, b.lunas, b.keterangan, d.nama
 		   AND b.info2='$idtahunbuku'
 		 ORDER BY nama";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 	$idbesarjtt = $row['replid'];
 	$namapenerimaan = $row['nama']; 
@@ -101,13 +101,13 @@ while ($row = mysql_fetch_array($result))
 	
 	$sql = "SELECT SUM(jumlah), SUM(info1)
 			  FROM jbsfina.penerimaanjtt
-			 WHERE idbesarjtt = '$idbesarjtt'";
+			 WHERE idbesarjtt = '".$idbesarjtt."'";
 	$result2 = QueryDb($sql);
 	$pembayaran = 0;
 	$diskon = 0;
-	if (mysql_num_rows($result2))
+	if (mysqli_num_rows($result2))
 	{
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$pembayaran = $row2[0] + $row2[1];
 		$diskon = $row2[1];
 	};
@@ -120,9 +120,9 @@ while ($row = mysql_fetch_array($result))
 	$result2 = QueryDb($sql);
 	$byrakhir = 0;
 	$tglakhir = "";
-	if (mysql_num_rows($result2))
+	if (mysqli_num_rows($result2))
 	{
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 	};	?>
@@ -152,7 +152,7 @@ while ($row = mysql_fetch_array($result))
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<? 
+<?php 
 } //while iuran wajib
 
 $sql = "SELECT DISTINCT p.idpenerimaan, d.nama
@@ -163,7 +163,7 @@ $sql = "SELECT DISTINCT p.idpenerimaan, d.nama
 		   AND p.nis='$nis'
 		 ORDER BY nama";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 	$idpenerimaan = $row['idpenerimaan'];
 	$namapenerimaan = $row['nama'];
@@ -173,9 +173,9 @@ while ($row = mysql_fetch_array($result))
 			 WHERE idpenerimaan='$idpenerimaan' AND nis='$nis'";
 	$result2 = QueryDb($sql);
 	$pembayaran = 0;
-	if (mysql_num_rows($result2))
+	if (mysqli_num_rows($result2))
 	{
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$pembayaran = $row2[0];
 	};
 
@@ -186,8 +186,8 @@ while ($row = mysql_fetch_array($result))
 	$result2 = QueryDb($sql);
 	$byrakhir = 0;
 	$tglakhir = "";
-	if (mysql_num_rows($result2)) {
-		$row2 = mysql_fetch_row($result2);
+	if (mysqli_num_rows($result2)) {
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 	};	
@@ -208,13 +208,13 @@ while ($row = mysql_fetch_array($result))
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<?
+<?php
 } //while iuran sukarela
 ?>
 
 </table>
 
-<?
+<?php
 CloseDb();
 ?>
 

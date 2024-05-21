@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -35,12 +35,12 @@ $departemen = $_REQUEST['departemen'];
 if (isset($_REQUEST['simpan']))
 {
 	OpenDb();
-	$sql = "SELECT replid FROM datapenerimaan WHERE nama = '$_REQUEST[nama]'";
+	$sql = "SELECT replid FROM datapenerimaan WHERE nama = '".$_REQUEST['nama']."'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan";
 	}
 	else
 	{
@@ -48,10 +48,10 @@ if (isset($_REQUEST['simpan']))
 		$smsinfo = isset($_REQUEST['smsinfo']) ? 1 : 0;
 		$besar = UnformatRupiah($besar);
 		$sql = "INSERT INTO datapenerimaan
-				   SET nama='".CQ($_REQUEST['nama'])."', rekkas='$_REQUEST[norekkas]',
-				       idkategori='$_REQUEST[idkategori]', departemen='$_REQUEST[departemen]',
-					   rekpendapatan='$_REQUEST[norekpendapatan]', rekpiutang='$_REQUEST[norekpiutang]',
-					   info1='$_REQUEST[norekdiskon]',
+				   SET nama='".CQ($_REQUEST['nama'])."', rekkas='".$_REQUEST['norekkas']."',
+				       idkategori='".$_REQUEST['idkategori']."', departemen='".$_REQUEST['departemen']."',
+					   rekpendapatan='".$_REQUEST['norekpendapatan']."', rekpiutang='".$_REQUEST['norekpiutang']."',
+					   info1='".$_REQUEST['norekdiskon']."',
 					   keterangan='".CQ($_REQUEST['keterangan'])."',
 					   aktif=1,
 					   info2='$smsinfo'";
@@ -64,14 +64,14 @@ if (isset($_REQUEST['simpan']))
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 } 
 
 OpenDb();
 $sql = "SELECT kategori FROM kategoripenerimaan WHERE kode='$idkategori'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $kategori = $row[0];
 CloseDb();
 
@@ -83,7 +83,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS KEU [Tambah Jenis Penerimaan]</title>
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript" src="script/tools.js"></script>
 <script language="javascript" src="script/rupiah.js"></script>
@@ -249,11 +249,11 @@ function panggil(elem)
     <td width="28" background="<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-	alert('<?=$MYSQL_ERROR_MSG?>');		
+	alert('<?=$mysqli_ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <!--<script language="javascript">

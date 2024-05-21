@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,7 +31,7 @@ $departemen=$_REQUEST['departemen'];
 $tahun=$_REQUEST['tahun'];
 $replidmutasi=$_REQUEST['replidmutasi'];
 openDb();
-		$query="SELECT s.nis,s.nama,m.tglmutasi,m.keterangan FROM jbsakad.mutasisiswa m,jbsakad.jenismutasi j,jbsakad.angkatan a,jbsakad.siswa s WHERE	a.departemen='$departemen' AND s.idangkatan=a.replid  AND m.nis=s.nis AND s.statusmutasi=m.jenismutasi AND m.jenismutasi=j.replid AND YEAR(m.tglmutasi) = '$tahun' AND j.jenismutasi='$_REQUEST[jenismutasi]'" ;
+		$query="SELECT s.nis,s.nama,m.tglmutasi,m.keterangan FROM jbsakad.mutasisiswa m,jbsakad.jenismutasi j,jbsakad.angkatan a,jbsakad.siswa s WHERE	a.departemen='$departemen' AND s.idangkatan=a.replid  AND m.nis=s.nis AND s.statusmutasi=m.jenismutasi AND m.jenismutasi=j.replid AND YEAR(m.tglmutasi) = '$tahun' AND j.jenismutasi='".$_REQUEST['jenismutasi']."'" ;
 		$result=queryDb($query);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -65,9 +65,9 @@ openDb();
         <td width="100" height="30">Tanggal Mutasi </td>
         <td height="30">Keterangan</td>
       </tr>
-	  <?
+	  <?php
 	  $a=0;
-	  while($fetch=mysql_fetch_row($result)){$a++
+	  while($fetch=mysqli_fetch_row($result)){$a++
 	  ?>
       <tr valign="top">
         <td height="25" valign="middle"><?=$a;?></td>
@@ -76,7 +76,7 @@ openDb();
         <td height="25" valign="middle"><?=TglTextLong($fetch[2]);?></td>
         <td height="25" valign="middle"><?=$fetch[3];?></td>
       </tr>
-	  <?
+	  <?php
 	  }
 	  ?>
     </table></td>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ function ShowSelectDepartemen()
     global $departemen;
     ?>
     <select name="departemen" id="departemen" onChange="refreshPage()" style="width:200px">
-        <?	    $dep = getDepartemen(getAccess());
+        <?php     $dep = getDepartemen(getAccess());
         foreach($dep as $value)
         {
             if ($departemen == "") $departemen = $value;
@@ -34,9 +34,9 @@ function ShowSelectDepartemen()
             <option value="<?= $value ?>" <?= $departemen == $value ? "selected" : "" ?> >
                 <?=$value ?>
             </option>
-        <?		} ?>
+        <?php 	} ?>
     </select>
-    <?
+    <?php
 }
 
 function HapusAutoTrans($idAutoTrans)
@@ -67,7 +67,7 @@ function ShowDaftar($departemen)
              ORDER BY urutan";
     $res = QueryDb($sql);
     $no = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -92,10 +92,10 @@ function ShowDaftar($departemen)
                        AND ad.aktif = 1
                      ORDER BY ad.urutan";
                     $res2 = QueryDb($sql);
-                    while($row2 = mysql_fetch_array($res2))
+                    while($row2 = mysqli_fetch_array($res2))
                     {
                         echo "<tr style='height: 22px'>";
-                        echo "<td align='left' width='250'>$row2[nama]</td>";
+                        echo "<td align='left' width='250'>".$row2['nama']."</td>";
                         echo "<td align='right' width='150'>" . FormatRupiah($row2['besar']) . "</td>";
                         echo "<tr>";
                     } ?>

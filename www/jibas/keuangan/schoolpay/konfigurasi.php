@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -109,7 +109,7 @@ OpenDb();
                 $no = 0;
                 $sql = "SELECT departemen FROM jbsakad.departemen WHERE aktif = 1 ORDER BY urutan";
                 $res = QueryDb($sql);
-                while($row = mysql_fetch_row($res))
+                while($row = mysqli_fetch_row($res))
                 {
                     $no += 1;
                     $dept = $row[0];
@@ -129,7 +129,7 @@ OpenDb();
                                AND pt.jenis = 2";
 
                     $res2 = QueryDb($sql);
-                    if ($row2 = mysql_fetch_array($res2))
+                    if ($row2 = mysqli_fetch_array($res2))
                     {
                         $idPt = $row2["replid"];
                         $namaTab = $row2["nama"];
@@ -146,7 +146,7 @@ OpenDb();
                                AND p.jenis = 2
                              LIMIT 1  ";
                     $res2 = QueryDb($sql);
-                    $isReadOnly = mysql_num_rows($res2) > 0;
+                    $isReadOnly = mysqli_num_rows($res2) > 0;
                     ?>
                     <tr>
                         <td align="center"><?= $no ?></td>
@@ -229,7 +229,7 @@ OpenDb();
                              WHERE pt.jenis = 1";
 
                     $res2 = QueryDb($sql);
-                    if ($row2 = mysql_fetch_array($res2))
+                    if ($row2 = mysqli_fetch_array($res2))
                     {
                         $idPt = $row2["replid"];
                         $dept = $row2["departemen"];
@@ -244,7 +244,7 @@ OpenDb();
                              WHERE jenis = 1
                              LIMIT 1";
                     $res2 = QueryDb($sql);
-                    $isReadOnly = mysql_num_rows($res2) > 0;
+                    $isReadOnly = mysqli_num_rows($res2) > 0;
                     ?>
                     <tr>
                         <td align="center">1</td>

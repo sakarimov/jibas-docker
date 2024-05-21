@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/rupiah.php');
 
 function ShowSelectRekKas($defrekkas)
@@ -31,10 +31,10 @@ function ShowSelectRekKas($defrekkas)
              WHERE kategori = 'HARTA'
              ORDER BY nama";        
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $sel = $row[0] == $defrekkas ? "selected" : "";
-        echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
     }
     echo "</select>";
 }
@@ -45,7 +45,7 @@ function InfoSkrSiswa()
     
     $sql = "SELECT rekkas
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
     $defrekkas = FetchSingle($sql); 
     
     echo "<table border='0' cellpadding='2' cellspacing='0'>\r\n";
@@ -84,7 +84,7 @@ function InfoSkrSiswa()
 			 WHERE j.replid = p.idjurnal
                AND j.idtahunbuku = '$idtahunbuku'
                AND p.idpenerimaan = '$idpayment'
-               AND p.nis = '$noid'";
+               AND p.nis = '".$noid."'";
     $total = FetchSingle($sql);           
     echo "<tr>\r\n";
     echo "<td align='right'>Total:</td>\r\n";
@@ -104,7 +104,7 @@ function InfoSkrSiswa()
                AND p.nis = '$noid'
 			 ORDER BY p.tanggal DESC, p.replid";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
         $no = 0;
         echo "<table border='1' cellpadding='5' cellspacing='1' style='border-color: #222; border-collapse: collapse; border-width: 1px;'>\r\n";
@@ -114,7 +114,7 @@ function InfoSkrSiswa()
         echo "<td width='100' align='right' class='header' valign='top'>Jumlah</td>\r\n";
         echo "<td width='120' align='left' class='header' valign='top'>Keterangan</td>\r\n";
         echo "</tr>\r\n";
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no++;
             
@@ -144,7 +144,7 @@ function InfoSkrCalonSiswa()
 	
     $sql = "SELECT rekkas
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
     $defrekkas = FetchSingle($sql);
     
 	$sql = "SELECT replid
@@ -188,7 +188,7 @@ function InfoSkrCalonSiswa()
 			 WHERE j.replid = p.idjurnal
                AND j.idtahunbuku = '$idtahunbuku'
                AND p.idpenerimaan = '$idpayment'
-               AND p.idcalon = '$idcalon'";
+               AND p.idcalon = '".$idcalon."'";
     $total = FetchSingle($sql);           
     echo "<tr>\r\n";
     echo "<td align='right'>Total:</td>\r\n";
@@ -208,7 +208,7 @@ function InfoSkrCalonSiswa()
                AND p.idcalon = '$idcalon'
 			 ORDER BY p.tanggal DESC, p.replid";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
         $no = 0;
         echo "<table border='1' cellpadding='5' cellspacing='1' style='border-color: #222; border-collapse: collapse; border-width: 1px;'>\r\n";
@@ -218,7 +218,7 @@ function InfoSkrCalonSiswa()
         echo "<td width='100' align='right' class='header' valign='top'>Jumlah</td>\r\n";
         echo "<td width='120' align='left' class='header' valign='top'>Keterangan</td>\r\n";
         echo "</tr>\r\n";
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no++;
             
@@ -248,17 +248,17 @@ function InfoWjbSiswa()
     
     $sql = "SELECT rekkas
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
     $defrekkas = FetchSingle($sql);        
     
     $sql = "SELECT b.replid AS id, b.besar, b.keterangan, b.lunas, b.info1 AS idjurnal, cicilan
               FROM besarjtt b
              WHERE b.nis = '$noid'
                AND b.idpenerimaan = '$idpayment'
-               AND b.info2 = '$idtahunbuku'";
+               AND b.info2 = '".$idtahunbuku."'";
     //echo "$sql<br>";           
     $result = QueryDb($sql);
-    $newdata = (mysql_num_rows($result) == 0);
+    $newdata = (mysqli_num_rows($result) == 0);
     
     $idbesarjtt = 0;
     $lunas = 0;
@@ -271,7 +271,7 @@ function InfoWjbSiswa()
     
     if (!$newdata)
     {
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
 	
         $idbesarjtt = $row['id'];
         $lunas = $row['lunas'];
@@ -282,16 +282,16 @@ function InfoWjbSiswa()
         
         $sql = "SELECT SUM(jumlah) AS jumlah, SUM(info1) AS diskon
 			  	  FROM penerimaanjtt
-				 WHERE idbesarjtt = '$idbesarjtt'";
+				 WHERE idbesarjtt = '".$idbesarjtt."'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $jbayar = $row[0];
         $jdiskon = $row[1];
         $sisa = $tagihan - $jbayar - $jdiskon;
         
         $sql = "SELECT COUNT(replid)
 			  	  FROM penerimaanjtt
-				 WHERE idbesarjtt = '$idbesarjtt'";
+				 WHERE idbesarjtt = '".$idbesarjtt."'";
         $nbayar = FetchSingle($sql);
     }
     
@@ -424,7 +424,7 @@ function InfoWjbCalonSiswa()
     
     $sql = "SELECT rekkas
               FROM jbsfina.datapenerimaan
-             WHERE replid = '$idpayment'";
+             WHERE replid = '".$idpayment."'";
     $defrekkas = FetchSingle($sql); 
 	
 	$sql = "SELECT replid
@@ -436,9 +436,9 @@ function InfoWjbCalonSiswa()
               FROM besarjttcalon b
              WHERE b.idcalon = '$idcalon'
                AND b.idpenerimaan = '$idpayment'
-               AND b.info2 = '$idtahunbuku'";
+               AND b.info2 = '".$idtahunbuku."'";
     $result = QueryDb($sql);
-    $newdata = (mysql_num_rows($result) == 0);
+    $newdata = (mysqli_num_rows($result) == 0);
     
     $idbesarjtt = 0;
     $lunas = 0;
@@ -451,7 +451,7 @@ function InfoWjbCalonSiswa()
     
     if (!$newdata)
     {
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
 	
         $idbesarjtt = $row['id'];
         $lunas = $row['lunas'];
@@ -462,16 +462,16 @@ function InfoWjbCalonSiswa()
         
         $sql = "SELECT SUM(jumlah) AS jumlah, SUM(info1) AS diskon
 			  	  FROM penerimaanjttcalon
-				 WHERE idbesarjttcalon = '$idbesarjtt'";
+				 WHERE idbesarjttcalon = '".$idbesarjtt."'";
         $result = QueryDb($sql);
-        $row = mysql_fetch_row($result);
+        $row = mysqli_fetch_row($result);
         $jbayar = $row[0];
         $jdiskon = $row[1];
         $sisa = $tagihan - $jbayar - $jdiskon;
         
         $sql = "SELECT COUNT(replid)
 			  	  FROM penerimaanjttcalon
-				 WHERE idbesarjttcalon = '$idbesarjtt'";
+				 WHERE idbesarjttcalon = '".$idbesarjtt."'";
         $nbayar = FetchSingle($sql);         
     }
     

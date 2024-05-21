@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -54,7 +54,7 @@ $sql = "SELECT s.replid as replid, nama, telponsiswa as telpon, hpsiswa as hp,
         FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
 		  WHERE s.idkelas = k.replid AND nis = '$nis' AND t.replid = k.idtingkat";
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	// tidak ditemukan data siswa, aplikasi keluar!
 	CloseDb();
@@ -62,7 +62,7 @@ if (mysql_num_rows($result) == 0)
 } 
 else 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$replid = $row['replid'];
 	$nama = $row['nama'];
 	$telpon = $row['telpon'];
@@ -73,7 +73,7 @@ else
 }
 
 // ambil nama penerimaan
-$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $namapenerimaan = FetchSingle($sql);
 
 $input_awal = "onload=\"document.getElementById('besar').focus();\"";
@@ -85,13 +85,13 @@ $idbesarjtt = 0;
 // FIXED: 27 Agustus 2010
 $sql = "SELECT b.replid AS id, b.besar, b.keterangan, b.lunas, b.info1 AS idjurnal
 	       FROM besarjtt b
-		   WHERE b.nis = '$nis' AND b.idpenerimaan = '$idpenerimaan' AND b.info2 = '$idtahunbuku'";
+		   WHERE b.nis = '$nis' AND b.idpenerimaan = '$idpenerimaan' AND b.info2 = '".$idtahunbuku."'";
 $result = QueryDb($sql);
-$bayar = mysql_num_rows($result);
+$bayar = mysqli_num_rows($result);
 $tgl_jurnal = date('d-m-Y');
-if (mysql_num_rows($result) > 0) 
+if (mysqli_num_rows($result) > 0) 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$idbesarjtt = $row['id'];
 	$lunas = $row['lunas'];
 	$besar = $row['besar'];
@@ -298,7 +298,7 @@ function panggil(elem)
             <tr>
 			    <td>Status</td>
                 <td>
-                <? 
+                <?php 
                 if ($lunas == 1)
                     $info = "<font color=blue><strong>Lunas</strong></font>";
 					 elseif ($lunas == 2)
@@ -364,11 +364,11 @@ function panggil(elem)
   	</tr>
     <tr>
         <td align="center" colspan="2"> 
-<? if ($bayar > 0 && $lunas <> 2) 
+<?php if ($bayar > 0 && $lunas <> 2) 
 	{ 
-   	$sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '$idbesarjtt'";
+   	$sql = "SELECT count(*) FROM penerimaanjtt WHERE idbesarjtt = '".$idbesarjtt."'";
       $result = QueryDb($sql);
-      $row = mysql_fetch_row($result);
+      $row = mysqli_fetch_row($result);
       $nbayar = $row[0];
         
       $info = "Pembayaran Pertama";
@@ -386,7 +386,7 @@ function panggil(elem)
 					 ORDER BY p.tanggal ASC";
 
 			$result = QueryDb($sql);
-			if (mysql_num_rows($result) > 1) 
+			if (mysqli_num_rows($result) > 1) 
 				$info = "Pembayaran Cicilan";  ?> 
         <fieldset>
         <legend><font size="2" color="#003300"><strong><?=$info?></strong></font></legend>
@@ -396,10 +396,10 @@ function panggil(elem)
             <td align="right">
             <a href="#" onClick="document.location.reload()"><img src="images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
             <a href="JavaScript:cetak()"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;        
-        	<? if ($lunas == 0) { ?>		
+        	<?php if ($lunas == 0) { ?>		
             <a href="#" onClick="JavaScript:tambah()">
             <img src="images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')">&nbsp;Tambah Cicilan</a>&nbsp;
-         <? } ?>
+         <?php } ?>
             </td>
         </tr>
         </table>        
@@ -415,11 +415,11 @@ function panggil(elem)
             <td class="header" width="12%">Petugas</td>
             <td class="header">&nbsp;</td>
         </tr>
-        <? 
+        <?php 
 		  $cnt = 0;
 		  $total = 0;
 		  $total_diskon = 0;
-		  while ($row = mysql_fetch_array($result)) 
+		  while ($row = mysqli_fetch_array($result)) 
 		  {
 				$total += $row['jumlah'] + $row['diskon'];
 				$total_diskon += $row['diskon'];
@@ -432,17 +432,17 @@ function panggil(elem)
 			   <td align="right"><?=FormatRupiah($row['diskon'])?></td>
                <td align="left"><?=$row['keterangan'] ?></td>
                <td align="center"><?=$row['petugas'] ?></td>
-               <? // Hanya bisa mengedit transaksi di tahunbuku yang aktif
+               <?php // Hanya bisa mengedit transaksi di tahunbuku yang aktif
 						if ($idtahunbuku_aktif == $row['idtahunbuku']) { ?>
                   <td align="center">
                      <a href="#" onclick="cetakkuitansi(<?=$row['id'] ?>)"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Kuitansi Pembayaran!', this, event, '100px')"/></a>&nbsp;
-                     <?  if (getLevel() != 2) { ?>
+                     <?php  if (getLevel() != 2) { ?>
                         <a href="#" onclick="editpembayaran(<?=$row['id'] ?>)"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pembayaran Cicilan!', this, event, '120px')" /></a>
-                     <?	} ?>
+                     <?php } ?>
                   </td>
-               <? } else { echo  "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; } ?>
+               <?php } else { echo  "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>"; } ?>
 	        </tr>
-        <?
+        <?php
         	}
         	$sisa = $besar - $total;?>
         <tr height="35">
@@ -458,7 +458,7 @@ function panggil(elem)
         </script>
         </form>
         </fieldset>
-   <?	} else { ?>
+   <?php } else { ?>
    		<fieldset>
         <legend><font size="2" color="#003300"><strong>Pembayaran Pertama</strong></font></legend>
         <table width="100%" border="0" align="center">          
@@ -471,8 +471,8 @@ function panggil(elem)
         </tr>
         </table>  
 		</fieldset>   		
-   <? 	} ?>     
-<?	} ?>       
+   <?php 	} ?>     
+<?php } ?>       
 		<!-- EOF CONTENT -->
 		</td>
 	</tr>
@@ -481,11 +481,11 @@ function panggil(elem)
 </tr>
 </table>
 
-<? if (strlen($errmsg) > 0) { ?>
+<?php if (strlen((string) $errmsg) > 0) { ?>
 <script language="javascript">
 alert('<?=$errmsg ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 

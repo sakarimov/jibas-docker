@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/compatibility.php");
@@ -39,16 +39,16 @@ $sql = "SELECT *, IF(nip IS NULL, 'S', 'P') AS ownertype,
                DATE_FORMAT(tanggal, '%d-%m-%Y %H:%i') AS tglbuat,
                TIME_TO_SEC(TIMEDIFF(NOW(), tanggal)) AS secdiff
           FROM jbsvcr.video
-         WHERE replid = '$videoid'";
+         WHERE replid = '".$videoid."'";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     CloseDb();
     echo "Tidak ditemukan video!";
     exit();
 }
 
-$row = mysql_fetch_array($res);
+$row = mysqli_fetch_array($res);
 $ownertype = $row['ownertype'];
 $ownerid = $ownertype == "S" ? $row['nis'] : $row['nip'];
 $ownername = GetOwnerName($ownerid, $ownertype);
@@ -58,7 +58,7 @@ if ($nocount != 1)
 {
     $sql = "UPDATE jbsvcr.video
                SET nread = nread + 1, lastread = NOW()
-             WHERE replid = '$videoid'";
+             WHERE replid = '".$videoid."'";
     QueryDb($sql);    
 }
 ?>
@@ -81,7 +81,7 @@ if ($nocount != 1)
     <table border='0' cellpadding='2' cellspacing='0' width='100%'>
     <tr>
         <td align='center' valign='top' width='14%'>
-            <img src='notes.list.gambar.php?r=<?= rand(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='60'><br>
+            <img src='notes.list.gambar.php?r=<?= random_int(1, 99999)?>&ownerid=<?=$ownerid?>&ownertype=<?=$ownertype?>' height='60'><br>
             <strong><?=$ownername?></strong><br>
             <font class='VideoViewAge'>
             <?= SecToAgeDate($row['secdiff'], $row['tglbuat']) ?>
@@ -105,12 +105,12 @@ if ($nocount != 1)
             <input type='hidden' id='vidvw_MaxCommentId' value='<?= GetMaxCommentId($videoid) ?>'>
             <table id='vidvw_CmtList' border='0' cellpadding='2' cellspacing='2' width='60%'>
             <thead>
-        <?
+        <?php
             ShowPrevCommentLink($videoid);
         ?>
             </thead>    
             <tbody>
-        <?
+        <?php
             ShowComment($videoid, 0);
         ?>    
             </tbody>
@@ -119,7 +119,7 @@ if ($nocount != 1)
                 <td style='background-color: #fff' width='3%' align='left'>&nbsp;</td>
                 <td style='background-color: #fff' width='*' align='left' valign='top' colspan='2'>
                     <div id='vidvw_divAddComment'>
-        <?
+        <?php
                     ShowCommentBox($videoid);
         ?>
                     </div>
@@ -134,6 +134,6 @@ if ($nocount != 1)
     
 </td></tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

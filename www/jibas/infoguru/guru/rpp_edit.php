@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -49,11 +49,11 @@ if (isset($_REQUEST['Simpan'])) {
 	$sql = "SELECT * FROM rpp WHERE koderpp = '$kode' AND replid <> '$replid'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Kode pembelajaran $kode sudah digunakan!";	
 	} else {
-		$sql = "UPDATE rpp SET koderpp = '$kode', rpp = '$materi', deskripsi = '$deskripsi' WHERE replid = '$replid'";
+		$sql = "UPDATE rpp SET koderpp = '$kode', rpp = '$materi', deskripsi = '$deskripsi' WHERE replid = '".$replid."'";
 		$result = QueryDb($sql);
 		CloseDb();
 	
@@ -63,14 +63,14 @@ if (isset($_REQUEST['Simpan'])) {
 				//opener.location.href = "rpp_footer.php?semester=<?=$semester?>&tingkat=<?=$tingkat?>&pelajaran=<?=$pelajaran?>";
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 OpenDb();
 $sql = "SELECT r.koderpp, r.rpp, r.deskripsi, r.idsemester, r.idtingkat, r.idpelajaran, s.semester, t.tingkat, p.nama, s.departemen FROM rpp r, semester s, tingkat t, pelajaran p WHERE r.replid = '$replid' AND s.replid = r.idsemester AND t.replid = r.idtingkat AND p.replid = r.idpelajaran";
 
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $kode = $row['koderpp'];
 if (isset($_REQUEST['kode']))
 	$kode = $_REQUEST['kode'];
@@ -98,7 +98,7 @@ $departemen = $row['departemen'];
 <title>JIBAS SIMAKA [Ubah Rencana Program Pengajaran]</title>
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -219,11 +219,11 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -60,7 +60,7 @@ $total = $_REQUEST['total'];
   <font size="4"><strong>DATA KEPEGAWAIAN</strong></font><br />
  </center><br /><br />
 <br />
-<strong>Bagian : <? if ($bagian == "-1") echo "Semua Bagian"; else echo $bagian;?></strong></font>
+<strong>Bagian : <?php if ($bagian == "-1") echo "Semua Bagian"; else echo $bagian;?></strong></font>
 <br /><br />
 	<table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left" bordercolor="#000000">
     <tr height="30">
@@ -71,7 +71,7 @@ $total = $_REQUEST['total'];
         <td width="10%" class="header" align="center">PIN</td>
         <td width="10%" class="header" align="center">Status</td>
    	</tr>
-<? 	
+<?php 	
 	OpenDb();
 	if ($bagian != "-1"){
 		$sql_pegawai="SELECT * FROM jbssdm.pegawai WHERE bagian='$bagian' ORDER BY $urut $urutan";
@@ -88,7 +88,7 @@ $total = $_REQUEST['total'];
 	else
 		$cnt = (int)$page*(int)$varbaris;
 	
-	while ($row_pegawai = mysql_fetch_array($result_pegawai)) { ?>
+	while ($row_pegawai = mysqli_fetch_array($result_pegawai)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row_pegawai['nip'] ?></td>
@@ -97,14 +97,14 @@ $total = $_REQUEST['total'];
         <td align="center"><?=$row_pegawai['pinpegawai']?></td>
         <td align="center">
         
-<?		if ($row_pegawai['aktif'] == 1) { 
+<?php 	if ($row_pegawai['aktif'] == 1) { 
 			echo "Aktif";
 			} else { 	
 			echo "Tidak Aktif";
 		}
 		?>       </td>
         </tr>
-<?	} CloseDb();?>    
+<?php } CloseDb();?>    
     <!-- END TABLE CONTENT -->
    	
     </table>
@@ -120,6 +120,6 @@ $total = $_REQUEST['total'];
 window.print();
 </script>
 </html>
-<?
+<?php
 CloseDb();
 ?>

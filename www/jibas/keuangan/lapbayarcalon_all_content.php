@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -59,7 +59,7 @@ function excel() {
 </head>
 
 <body topmargin="10" leftmargin="10">
-<?
+<?php
 OpenDb();
 
 $sql = "SELECT count(b.replid) 
@@ -74,7 +74,7 @@ $sql = "SELECT count(p.replid)
 			  AND p.idcalon='$replid' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2'"; 
 $niuran = FetchSingle($sql);
 
-$sql = "SELECT s.nama, s.nopendaftaran FROM jbsakad.calonsiswa s WHERE s.replid = '$replid'";
+$sql = "SELECT s.nama, s.nopendaftaran FROM jbsakad.calonsiswa s WHERE s.replid = '".$replid."'";
 $row = FetchSingleRow($sql);
 $namacalon = $row[0];
 $no = $row[1];
@@ -89,7 +89,7 @@ $no = $row[1];
    	</tr>
     <tr>
         <td><font size="3"><strong><?=$no . " - " . $namacalon?></strong></font></td>
-<? if (($nwajib + $niuran) >  0) {	?>
+<?php if (($nwajib + $niuran) >  0) {	?>
         <td align="right" >
         <a href="#" onClick="document.location.reload()"><img src="images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
         <a href="JavaScript:cetak()"><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;
@@ -99,7 +99,7 @@ $no = $row[1];
     </table>
     <br />
    
-<?
+<?php
 $sql = "SELECT DISTINCT b.replid AS id, b.besar, b.lunas, b.keterangan, d.nama 
           FROM besarjttcalon b, penerimaanjttcalon p, datapenerimaan d
 			WHERE p.idbesarjttcalon = b.replid AND b.idpenerimaan = d.replid AND b.idcalon='$replid' AND b.info2='$idtahunbuku' 
@@ -111,14 +111,14 @@ $totaldiskonwjb = 0;
 $totalsisawjb = 0;
 
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$idbesarjtt = $row['id'];
 	$namapenerimaan = $row['nama']; 
 	$besar = $row['besar'];
 	$lunas = $row['lunas'];
 	$keterangan = $row['keterangan'];
 	
-	$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+	$sql = "SELECT SUM(jumlah), SUM(info1) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
 	$row2 = FetchSingleRow($sql);
 	$pembayaran = $row2[0] + $row2[1];
 	$diskon = $row2[1];
@@ -134,9 +134,9 @@ while ($row = mysql_fetch_array($result)) {
 	$byrakhir = 0;
 	$dknakhir = 0;
 	$tglakhir = "";
-	if (mysql_num_rows($result2))
+	if (mysqli_num_rows($result2))
 	{
-		$row2 = mysql_fetch_row($result2);
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 		$dknakhir = $row2[2];
@@ -169,7 +169,7 @@ while ($row = mysql_fetch_array($result)) {
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<? 
+<?php 
 } //while iuran wajib
 
 $totalbayarskr = 0;
@@ -179,7 +179,7 @@ $sql = "SELECT DISTINCT p.idpenerimaan, d.nama
 			WHERE p.idjurnal = j.replid AND j.idtahunbuku='$idtahunbuku'
 			  AND p.idpenerimaan = d.replid AND p.idcalon='$replid' AND p.tanggal BETWEEN '$tanggal1' AND '$tanggal2' ORDER BY nama";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$idpenerimaan = $row['idpenerimaan'];
 	$namapenerimaan = $row['nama'];
 	
@@ -191,8 +191,8 @@ while ($row = mysql_fetch_array($result)) {
 	$result2 = QueryDb($sql);
 	$byrakhir = 0;
 	$tglakhir = "";
-	if (mysql_num_rows($result2)) {
-		$row2 = mysql_fetch_row($result2);
+	if (mysqli_num_rows($result2)) {
+		$row2 = mysqli_fetch_row($result2);
 		$byrakhir = $row2[0];
 		$tglakhir = $row2[1];
 	};	
@@ -213,7 +213,7 @@ while ($row = mysql_fetch_array($result)) {
     <tr height="3">
         <td colspan="4" bgcolor="#E8E8E8">&nbsp;</td>
     </tr>
-<?
+<?php
 } //while iuran sukarela
 ?>
 	</table>
@@ -258,7 +258,7 @@ while ($row = mysql_fetch_array($result)) {
         </td>
     </tr>
     </table>
-<?	} else { ?>
+<?php } else { ?>
         <td></td>
     </tr>
     </table>
@@ -271,11 +271,11 @@ while ($row = mysql_fetch_array($result)) {
         </td>
     </tr>
     </table>  
-<? } ?>    
+<?php } ?>    
 	</tr>
 </td>
 </table>
-<?
+<?php
 
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class FormatPresensi{
 	function Main(){
 		$sql = "SELECT * FROM format WHERE tipe=0";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_array($res);
+		$row = @mysqli_fetch_array($res);
 		?>
 		<link href="../style/style.css" rel="stylesheet" type="text/css" />
 		<table border="0" cellspacing="0" cellpadding="0" align="center">
@@ -69,7 +69,7 @@ class FormatPresensi{
                     <div class="TabbedPanelsContent" style="padding-top:5px; overflow:inherit">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td class="td">[SISWA]</td>
+                            <td class="td">['SISWA']</td>
                             <td class="td">Nama Siswa</td>
                           </tr>
                           <tr>
@@ -89,15 +89,15 @@ class FormatPresensi{
                             <td class="td">Bulan Akhir</td>
                           </tr>
                           <tr>
-                            <td class="td">[PENGIRIM]</td>
+                            <td class="td">['PENGIRIM']</td>
                             <td class="td">Pengirim</td>
                           </tr>
                           <tr>
-                            <td class="td">[HADIR]</td>
+                            <td class="td">['HADIR']</td>
                             <td class="td">Jumlah Data Kehadiran Siswa</td>
                           </tr>
                           <tr>
-                            <td class="td">[ABSEN]</td>
+                            <td class="td">['ABSEN']</td>
                             <td class="td">Jumlah Data Absensi Siswa</td>
                           </tr>
                       </table>
@@ -112,15 +112,15 @@ class FormatPresensi{
         		<b>KETERANGAN FORMAT PESAN LAPORAN PRESENSI</b><br /><br/>
                 <span class="Ket">    
                     jika mengirimkan informasi dengan format di bawah ini: <br />
-                    <b>Informasi presensi [SISWA] antara tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2].<br />
-                    Kehadiran [HADIR]. Absen [ABSEN]. Pengirim [PENGIRIM]</b><br /><br />
+                    <b>Informasi presensi ['SISWA'] antara tanggal [TANGGAL1]/[BULAN1] s/d [TANGGAL2]/[BULAN2].<br />
+                    Kehadiran ['HADIR']. Absen ['ABSEN']. Pengirim ['PENGIRIM']</b><br /><br />
                     maka informasi yang diterima oleh siswa: <br />
                     <b>Informasi presensi Jafar Ashiddiq antara tanggal 1/2 s/d 28/2. Kehadiran 22. Absen 2. Pengirim Bag.Akademik</b>
                 </span>
             </td>
           </tr>
         </table>
-		<?
+		<?php
 	}
 }
 ?>

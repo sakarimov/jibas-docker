@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions.php");
@@ -29,7 +29,7 @@ require_once("../include/compatibility.php");
 
 function Safe($string)
 {
-    $string = str_replace("'", "`", $string);
+    $string = str_replace("'", "`", (string) $string);
     $string = str_replace("\"", "`", $string);
     $string = str_replace("<", "&lt;", $string);
     $string = str_replace(">", "&gt;", $string);
@@ -71,7 +71,7 @@ $alamatsiswa = $_REQUEST['is_alamatsiswa'];
 $kodepos = $_REQUEST['is_kodepos'];
 $jarak = (float)$_REQUEST['is_jarak'];
 $telponsiswa = $_REQUEST['is_telponsiswa'];
-$hpsiswa = trim($_REQUEST['is_hpsiswa']);
+$hpsiswa = trim((string) $_REQUEST['is_hpsiswa']);
 $emailsiswa= $_REQUEST['is_emailsiswa'] ;
 $dep_asal = $_REQUEST['is_dep_asal'];
 $inputsekolah = (int)$_REQUEST['is_inputsekolah']; // 0-> Sekolah Baru, 1-> Sekolah Yg Sudah Ada
@@ -130,7 +130,7 @@ try
     if ($inputsekolah == 1)
     {
         $sql = "INSERT INTO jbsakad.asalsekolah
-                   SET departemen = '$dep_asal', sekolah = '$sekolah'";
+                   SET departemen = '$dep_asal', sekolah = '".$sekolah."'";
         //echo "$sql<br>";
         QueryDbEx($sql);
     }
@@ -149,16 +149,16 @@ try
                     penghasilanibu='$penghasilanibu', alamatortu='$alamatortu', telponortu='$telponortu', hportu='$hportu',
                     info1='$hportu2', info2='$hportu3', emailayah='$emailayah', emailibu='$emailibu', alamatsurat='$alamatsurat',
                     keterangan='$keterangan', hobi='$hobi', nisn='$nisn', nik='$nik', noun='$noun'
-              WHERE nis = '$nis'";
+              WHERE nis = '".$nis."'";
     //echo "$sql<br>";
     QueryDbEx($sql);
 
-    if (strlen($idtambahan) > 0)
+    if (strlen((string) $idtambahan) > 0)
     {
-        if (strpos($idtambahan, ",") === false)
-            $arridtambahan = array($idtambahan);
+        if (!str_contains((string) $idtambahan, ","))
+            $arridtambahan = [$idtambahan];
         else
-            $arridtambahan = explode(",", $idtambahan);
+            $arridtambahan = explode(",", (string) $idtambahan);
 
         for($i = 0; $i < count($arridtambahan); $i++)
         {
@@ -181,11 +181,11 @@ try
 
                 if ($repliddata == 0)
                     $sql = "INSERT INTO jbsakad.tambahandatasiswa
-                               SET nis = '$nis', idtambahan = '$replid', jenis = '$jenis', teks = '$teks'";
+                               SET nis = '$nis', idtambahan = '$replid', jenis = '$jenis', teks = '".$teks."'";
                 else
                     $sql = "UPDATE jbsakad.tambahandatasiswa
                                SET teks = '$teks'
-                             WHERE replid = '$repliddata'";
+                             WHERE replid = '".$repliddata."'";
 
                 QueryDbEx($sql);
             }

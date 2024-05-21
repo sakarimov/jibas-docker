@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/common.php');
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
@@ -68,15 +68,15 @@ OpenDb();
 <tr>
 	<td width="10%" class="news_content1"><strong><font color="#000000">Bagian  </font></strong></td>
     <td><select name="bag" class="cmbfrm" id="bag" style="width:135px" onChange="change_bagian('cari')" onKeyPress="return focusNext('nip', event)">
-    	<option value="-1" <? if ($bagian=="-1") echo "selected"; ?>>(Semua Bagian)</option>
-	<?  $sql_bagian="SELECT bagian FROM  $db_name_sdm.bagianpegawai ORDER BY urutan ASC";
+    	<option value="-1" <?php if ($bagian=="-1") echo "selected"; ?>>(Semua Bagian)</option>
+	<?php  $sql_bagian="SELECT bagian FROM  $db_name_sdm.bagianpegawai ORDER BY urutan ASC";
         $result_bagian=QueryDb($sql_bagian);
-        while ($row_bagian=@mysql_fetch_array($result_bagian)){
+        while ($row_bagian=@mysqli_fetch_array($result_bagian)){
     ?>
       	<option value="<?=$row_bagian['bagian']?>" <?=StringIsSelected($row_bagian['bagian'],$bagian)?>>
       	<?=$row_bagian['bagian']?>
         </option>
-      <?	}  ?>
+      <?php }  ?>
     	</select>
     <!--<input type="text" name="bagian" id="bagian" value="<?=$departemen ?>" size="20" readonly style="background-color:#CCCCCC" /> </strong>&nbsp;&nbsp;-->   </td>
    <td rowspan="2" width="15%" align="center">
@@ -94,7 +94,7 @@ OpenDb();
 	<td colspan="3">
 	<hr />
     <div id = "caritabel">
-<?
+<?php
 if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) { 
 	  	
 	if ($bagian == -1)  {        
@@ -105,54 +105,54 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
 	
 	OpenDb();
 	
-	if ((strlen($nama) > 0) && (strlen($nip) > 0)) {
+	if ((strlen((string) $nama) > 0) && (strlen((string) $nip) > 0)) {
 		$sql_tot = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' AND nip LIKE '%$nip%' $sql_tambahbag ORDER BY nama"; 
 		$sql_pegawai = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' AND nip LIKE '%$nip%' $sql_tambahbag ORDER BY $urut1 $urutan1 LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1";
 		//$sql = "SELECT nip, nama, bagian FROM jbssdm.pegawai WHERE nama LIKE '%$nama%' AND nip LIKE '%$nip%' $sql_tambahbag ORDER BY nama"; 
-	} else if (strlen($nama) > 0) {
+	} else if (strlen((string) $nama) > 0) {
 		$sql_tot = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' $sql_tambahbag ORDER BY nama"; 
 		$sql_pegawai = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nama LIKE '%$nama%' $sql_tambahbag ORDER BY $urut1 $urutan1 LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1";
-	} else if (strlen($nip) > 0) {
+	} else if (strlen((string) $nip) > 0) {
 		$sql_tot = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nip LIKE '%$nip%' $sql_tambahbag ORDER BY nama"; 		
 		$sql_pegawai = "SELECT nip, nama, bagian FROM  $db_name_sdm.pegawai WHERE aktif = 1 AND nip LIKE '%$nip%' $sql_tambahbag ORDER BY $urut1 $urutan1 LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1";
 	} 
 	
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris1);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris1);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	$result = QueryDb($sql_pegawai);
-	if (@mysql_num_rows($result)>0){ ?>
+	if (@mysqli_num_rows($result)>0){ ?>
 
     <table width="100%" class="tab" cellpadding="2" cellspacing="0" id="table1" border="1" align="center" bordercolor="#000000">
     <tr height="30" class="header" align="center">
         <td width="7%">No</td>
         <td width="15%">N I P </td>
         <td>Nama </td>
-        <? if ($sql_tambahbag == "") { ?>
+        <?php if ($sql_tambahbag == "") { ?>
         <td width="25%">Bagian </td>
-        <? } ?>       
+        <?php } ?>       
         <td width="10%">&nbsp;</td>
     </tr>
-<?	if ($page1==0)
+<?php if ($page1==0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page1*(int)$varbaris1;
 		
-	while($row = mysql_fetch_row($result)) { ?>
+	while($row = mysqli_fetch_row($result)) { ?>
     <tr height="25"  onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" style="cursor:pointer"> 
         <td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row[0] ?></td>
         <td><?=$row[1] ?></td>
-        <? if ($sql_tambahbag == "") { ?>	
+        <?php if ($sql_tambahbag == "") { ?>	
         <td align="center"><?=$row[2] ?></td>
-        <? } ?>
+        <?php } ?>
         <td align="center">
         <input type="button" name="pilih" class="cmbfrm2" id="pilih" value="Pilih" onclick="pilih('<?=$row[0]?>', '<?=$row[1]?>')" />        </td>
     </tr>
-<? } CloseDb(); ?>
+<?php } CloseDb(); ?>
  	</table>
-    <?  if ($page1==0){ 
+    <?php  if ($page1==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 	}
@@ -174,19 +174,19 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
     <tr>
        	<td width="30%" align="left"><font color="#000000" class="news_content1">Hal
         <select name="hal1" class="cmbfrm" id="hal1" onChange="change_hal('cari')">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal1,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      	// Navigasi halaman berikutnya dan sebelumnya
         ?>
         </font></td>
     	<!--td align="center">
     	<input <?=$disback?> type="button" class="cmbfrm2" name="back" value=" << " onClick="change_page('<?=(int)$page1-1?>','cari')" >
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page1==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -200,13 +200,13 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
         <td width="30%" align="right"><span class="news_content1"><font color="#000000">Jml baris per hal
       	</font></span><font color="#000000">
       	<select name="varbaris1" class="cmbfrm" id="varbaris1" onChange="change_baris('cari')">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris1,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
       	</select></font></td>
     </tr>
     </table>
-<? } else { ?>    		
+<?php } else { ?>    		
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table1">
 	<tr height="30" align="center">
 		<td>   
@@ -216,7 +216,7 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
 	<br /><br />   		</td>
     </tr>
     </table>
-<? 	}  
+<?php 	}  
 } else { ?>
 
 <table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table1">
@@ -232,7 +232,7 @@ sesuai dengan NIP atau Nama Pegawai berdasarkan <i>keyword</i> yang dimasukkan</
 </table>
 
 
-<? }?>	
+<?php }?>	
     </div>    </td>    
 </tr>
 <tr>

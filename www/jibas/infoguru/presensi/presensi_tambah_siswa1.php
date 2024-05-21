@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -66,7 +66,7 @@ if ($aktif) {
 }
 
 $status = 0;
-$st = array('Hadir', 'Ijin', 'Sakit', 'Alpha', '(tidak ada data)');
+$st = ['Hadir', 'Ijin', 'Sakit', 'Alpha', '(tidak ada data)'];
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -148,7 +148,7 @@ function show(x) {
         	
         </div>
         
-		<? 
+		<?php 
 		for ($j=1;$j<=$total;$j++) { 
 			//	$nis = $nis.$j;
 			//	$nama = $nama.$j;	
@@ -169,16 +169,16 @@ function show(x) {
             </td>
   			<td><input type="text" name="nama<?=$j?>" id="nama<?=$j?>" size="20" readonly style="background-color:#CCCCCC" value = "" /></td>
            	<td><select name="status<?=$cnt?>" > 
-                <? for ($i=0;$i<5;$i++){ ?>
+                <?php for ($i=0;$i<5;$i++){ ?>
            		<option value=<?=$i?> <?=IntIsSelected($i, $status) ?>><?=$st[$i]?></option>
-            	<? } ?>
+            	<?php } ?>
            		</select></td>
            <td align="center">
            <input type="text" name="catatan<?=$cnt?>" id="catatan" size="80" value="<?=$catatan?>" /></td>
            
      	</tr>
         
-        <? } ?>
+<?php } ?>
  		</table>
 		<script language='JavaScript'>
    			Tables('table', 1, 0);

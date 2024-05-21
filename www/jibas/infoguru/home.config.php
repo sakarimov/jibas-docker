@@ -1,4 +1,4 @@
-<?
+<?php
 $HOME_NLIST_PESAN = 4;
 $HOME_NLIST_AGENDA = 4;
 $HOME_NLIST_NOTES = 4;

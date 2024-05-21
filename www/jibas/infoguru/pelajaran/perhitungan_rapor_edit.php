@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -52,15 +52,15 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat
 			WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen 
 			  AND t.replid = '$id_tingkat' AND j.replid = '$id_pelajaran' AND g.nip = '".SI_USER_ID()."'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
 $tingkat = $row[4];
 
-$sql = "SELECT keterangan FROM dasarpenilaian WHERE dasarpenilaian = '$aspek'";
+$sql = "SELECT keterangan FROM dasarpenilaian WHERE dasarpenilaian = '".$aspek."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $aspekket = $row[0];
 
 $ERROR_MSG = "";
@@ -76,16 +76,16 @@ if (isset($_REQUEST['Simpan']))
 		if ($jenis && $cek == 1 && $bobot >= 0) 
 		{
 			if ($id != "") 
-				$sql1 = "UPDATE aturannhb SET bobot='$bobot' WHERE replid = '$id'";				
+				$sql1 = "UPDATE aturannhb SET bobot='$bobot' WHERE replid = '".$id."'";				
 			else 
 				$sql1 = "INSERT INTO aturannhb SET nipguru='$nip_guru',
 						 	idtingkat='$id_tingkat', idpelajaran='$id_pelajaran',
 						 	dasarpenilaian='$aspek', idjenisujian='$jenis', bobot='$bobot'";	
 			
-			QueryDb($sql1,$success);
+			QueryDb($sql1);
 		} 
 		if ($cek == 0)
-			QueryDb("DELETE FROM aturannhb WHERE replid='$id'",$success);
+			QueryDb("DELETE FROM aturannhb WHERE replid='$id'");
 	}
 	
 	if ($result) 
@@ -95,7 +95,7 @@ if (isset($_REQUEST['Simpan']))
 			opener.document.location.href="perhitungan_rapor_content.php?id_pelajaran=<?=$id_pelajaran?>&nip_guru=<?=$nip_guru?>";	
 			window.close();
 		</script>
-<?	
+<?php 
 	}
 }
 ?>
@@ -108,7 +108,7 @@ if (isset($_REQUEST['Simpan']))
 <title>JIBAS INFOGURU [Ubah Aturan Perhitungan Nilai Rapor]</title>
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -210,31 +210,31 @@ function validate()
             <td width="8%" height="30" align="center" class="header">Pengujian</td>			
             <td width="15%" height="30" align="center" class="header">Bobot</td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
 		$sql = "SELECT replid, jenisujian FROM jenisujian WHERE idpelajaran = '$id_pelajaran'"; 
 		
 		$result = QueryDb($sql);
 
-		$num = mysql_num_rows($result);
+		$num = mysqli_num_rows($result);
 		$i = 1;
-		while ($row = @mysql_fetch_row($result)) {
+		while ($row = @mysqli_fetch_row($result)) {
 			
-			$sql1 = "SELECT a.bobot, j.jenisujian, a.replid FROM aturannhb a, jenisujian j WHERE a.idpelajaran = '$id_pelajaran' AND a.nipguru = '".SI_USER_ID()."' AND a.idtingkat = '$id_tingkat' AND a.dasarpenilaian = '$aspek' AND a.idjenisujian = '$row[0]' AND a.idjenisujian = j.replid"; 
+			$sql1 = "SELECT a.bobot, j.jenisujian, a.replid FROM aturannhb a, jenisujian j WHERE a.idpelajaran = '$id_pelajaran' AND a.nipguru = '".SI_USER_ID()."' AND a.idtingkat = '$id_tingkat' AND a.dasarpenilaian = '$aspek' AND a.idjenisujian = '".$row[0]."' AND a.idjenisujian = j.replid"; 
 			$result1 = QueryDb($sql1);
-			$row1 = @mysql_fetch_row($result1);
+			$row1 = @mysqli_fetch_row($result1);
 		
 		?>		
 		<tr>
         	<td height="25" align="center">
            
-        	<? 	if ($row1[1]) { 
+        	<?php 	if ($row1[1]) { 
 				?>
 			<input type="checkbox" name="<?='cek'.$i ?>" id="<?='cek'.$i ?>" value="1" checked>
             <input type="hidden" name="<?='replid'.$i?>" id = "<?='replid'.$i?>" value="<?=$row1[2] ?>">
-			<?  } else { ?>
+			<?php  } else { ?>
 			<input type="checkbox" name="<?='cek'.$i ?>" id="<?='cek'.$i ?>" value="1" > 
-            <? } ?>
+            <?php } ?>
             <input type="hidden" name="jum" id="jum" value="<?=$num ?>" /></td>
 			<td height="25" align="center"><?=$i ?>
 			<input type="hidden" name="<?='ujian'.$i?>" id = "<?='ujian'.$i?>" value="<?=$row[0] ?>"></td>
@@ -242,7 +242,7 @@ function validate()
             <td height="25" align="center">
             <input type="text" name="<?='bobot'.$i ?>" id="<?='bobot'.$i ?>" size="4" maxlength="3" value ="<?=$row1[0]?>" ></td>
 		</tr>
-		<?
+		<?php
 			$i++;	
 		} 
 		CloseDb();
@@ -276,11 +276,11 @@ function validate()
 </form>
 
   <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 
@@ -296,6 +296,6 @@ x++;
 }
 //-->
 </script>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/theme.php');
@@ -44,9 +44,9 @@ OpenDb();
 $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat 
 			 FROM guru g, jbssdm.pegawai p, pelajaran j, tingkat t 
 			WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen 
-			  AND t.replid = '$idtingkat' AND j.replid = '$id' AND g.nip = '$nip'"; 
+			  AND t.replid = '$idtingkat' AND j.replid = '$id' AND g.nip = '".$nip."'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -58,10 +58,10 @@ if (isset($_REQUEST['Simpan']))
 	$sql = "SELECT * FROM guru g, pelajaran j, dasarpenilaian d, tingkat t, aturangrading a 
 				WHERE a.nipguru=g.nip AND a.idpelajaran = j.replid AND a.dasarpenilaian = d.dasarpenilaian 
 				  AND a.idtingkat = t.replid AND a.idpelajaran = '$id' AND a.nipguru = '$nip' 
-				  AND a.idtingkat = '$idtingkat' AND a.dasarpenilaian = '$aspek'"; 
+				  AND a.idtingkat = '$idtingkat' AND a.dasarpenilaian = '".$aspek."'"; 
 	$result = QueryDb($sql);
 
-	if (mysql_num_rows($result) > 0) 
+	if (mysqli_num_rows($result) > 0) 
 	{
 		CloseDb();		
 		$ERROR_MSG = "Aspek $aspek sudah digunakan!";
@@ -72,9 +72,9 @@ if (isset($_REQUEST['Simpan']))
 		{
 			$nmin = $_REQUEST['nmin'.$i];
 			$nmax = $_REQUEST['nmax'.$i];
-			$grade = strtoupper($_REQUEST['grade'.$i]);
+			$grade = strtoupper((string) $_REQUEST['grade'.$i]);
 
-			if (strlen($nmin)>0 && strlen($nmax)>0 && strlen($grade)>0) 
+			if (strlen((string) $nmin)>0 && strlen((string) $nmax)>0 && strlen($grade)>0) 
 			{
 				$sql = "INSERT INTO aturangrading 
 							  SET nipguru='$nip',idtingkat='$idtingkat',idpelajaran='$id',
@@ -90,7 +90,7 @@ if (isset($_REQUEST['Simpan']))
 			opener.document.location.href="aturannilai_content.php?id=<?=$id?>&nip=<?=$nip?>";
 			window.close();
 		</script>
-<?		}
+<?php 	}
 	}
 }
 ?>
@@ -105,7 +105,7 @@ if (isset($_REQUEST['Simpan']))
 <link href="../script/SpryAssets/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -248,7 +248,7 @@ function focusNext(elemName, evt) {
 	<td><strong>Aspek</strong></td>
 	<td>
     	<select name="aspek" id="aspek">
-<?			$sql = "SELECT dasarpenilaian, keterangan 
+<?php 		$sql = "SELECT dasarpenilaian, keterangan 
 						 FROM dasarpenilaian 
 						WHERE aktif = 1 AND dasarpenilaian NOT IN (SELECT dasarpenilaian 
 															  FROM aturangrading g, tingkat t 
@@ -256,19 +256,19 @@ function focusNext(elemName, evt) {
 															  AND g.nipguru = '$nip' GROUP BY g.dasarpenilaian) 
 						ORDER BY keterangan";    
 			$result = QueryDb($sql);	
-			while ($row1 = @mysql_fetch_array($result1)) 
+			while ($row1 = @mysqli_fetch_array($result1)) 
 			{
 				$daspen[]=$row1['dasarpenilaian'];
 			}
 			
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($aspek == "")
 					$aspek = $row['dasarpenilaian'];	?>
 				<option value="<?=$row['dasarpenilaian'] ?>" <?=StringIsSelected($row['dasarpenilaian'], $aspek) ?> >
 				<?= $row['keterangan'] ?>
 				</option>
-<? 		} ?>
+<?php 		} ?>
         </select> 
      </td>
 </tr>
@@ -282,7 +282,7 @@ function focusNext(elemName, evt) {
 		<td class="header" align="center" width="70%" colspan="3">Nilai Min &nbsp;&nbsp;&nbsp; Nilai Maks</td>
      	<td class="header" align="center" width="20%">Grade</td>
 	</tr>
-		<?
+		<?php
 		for ($cnt=1;$cnt<=10;$cnt++) {
 		
 		?>		
@@ -291,9 +291,9 @@ function focusNext(elemName, evt) {
 		<td align="right"><input type="text" name=<?='nmin'.$cnt?> id=<?='nmin'.$cnt?> size="8" onKeyPress="focusNext('nmax<?=$cnt?>',event)"/> </td>
         <td align="center" ><strong> - </strong></td>
 		<td align="left"><input type="text" name=<?='nmax'.$cnt?> id=<?='nmax'.$cnt?> size="8"  onkeypress="focusNext('grade<?=$cnt?>',event)"/> </td>
-		<td align="center"><input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" <? if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" <? } else { ?> onkeypress="focusNext('Simpan',event)" <? } ?>/> </td>
+		<td align="center"><input type="text" name=<?='grade'.$cnt?> id=<?='grade'.$cnt?> size="3" <?php if ($cnt!=10) { ?> onKeyPress="focusNext('nmin<?=(int)$cnt+1?>',event)" <?php } else { ?> onkeypress="focusNext('Simpan',event)" <?php } ?>/> </td>
 	</tr>
-			<?
+			<?php
 			}		
 		?>
 	</table> 
@@ -320,12 +320,12 @@ function focusNext(elemName, evt) {
 
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
-<?
+<?php } ?>
+<?php
 CloseDb();
 ?>
 

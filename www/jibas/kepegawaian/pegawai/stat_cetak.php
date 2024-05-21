@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/common.php");
 require_once("../include/db_functions_2.php");
@@ -65,7 +65,7 @@ switch ($stat)
 
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
-<tr><td align="left" valign="top"><? include("../include/headercetak.php") ?>
+<tr><td align="left" valign="top"><?php include("../include/headercetak.php") ?>
 <center>
     <font size="4"><strong>Statistik Berdasarkan <?=$judul?></strong></font><br />
    </center><br /><br />
@@ -73,7 +73,7 @@ switch ($stat)
 <table width="95%" border="0" cellspacing="5">
   <tr>
     <td><div id="grafikbar" align="center">
-<?	if ($stat == 5)
+<?php if ($stat == 5)
 	{
 		$sql = "SELECT sk.satker, SUM(IF(NOT pl.idpegdiklat IS NULL, 1, 0)) AS Sudah, SUM(IF(pl.idpegdiklat IS NULL, 1, 0)) AS Belum
 				FROM pegawai p, peglastdata pl, pegjab pj, jabatan j, satker sk
@@ -83,14 +83,14 @@ switch ($stat)
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
-			$data[] = array($row[1], $row[2]);
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Sudah", "Belum");
+		$legend_y = ["Sudah", "Belum"];
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pegawai Berdasarkan Diklat</font>"; // title for the diagram
 		
 		$graph = new CAsBarDiagram;
@@ -111,14 +111,14 @@ switch ($stat)
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
-			$data[] = array($row[1], $row[2]);
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Pria", "Wanita");
+		$legend_y = ["Pria", "Wanita"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pegawai Berdasarkan Jenis Kelamin</font>"; // title for the diagram
 		
@@ -141,14 +141,14 @@ switch ($stat)
 		
 		OpenDb();
 		$result = QueryDb($sql);
-		while($row = mysql_fetch_row($result))
+		while($row = mysqli_fetch_row($result))
 		{
-			$data[] = array($row[1], $row[2]);
+			$data[] = [$row[1], $row[2]];
 			$legend_x[] = $row[0];
 		}
 		CloseDb();
 		
-		$legend_y = array("Nikah", "Belum");
+		$legend_y = ["Nikah", "Belum"];
 		
 		$title = "<font face='Arial' size='-1' color='black'>Jumlah Pegawai Berdasarkan Status Pernikahan</font>"; 
 		
@@ -165,7 +165,7 @@ switch ($stat)
 	{
     ?>
     <img src="<?= "statimage.php?type=bar&stat=$stat" ?>" />
-    <?
+    <?php
     }
 	?>
     </div></td>
@@ -177,7 +177,7 @@ switch ($stat)
   </tr>
   <tr>
     <td><div id="table" align="center">
-    <? if ($stat==5){ ?>
+    <?php if ($stat==5){ ?>
 	<table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
 		<tr height="25">
 			<td class="header" align="center" width="5%">No</td>
@@ -185,14 +185,14 @@ switch ($stat)
 			<td class="header" align="center" width="15%">Sudah</td>
 			<td class="header" align="center" width="15%">Belum</td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
 		$sql = "SELECT j.eselon, SUM(IF(NOT pl.idpegdiklat IS NULL, 1, 0)) AS Sudah, SUM(IF(pl.idpegdiklat IS NULL, 1, 0)) AS Belum
 					FROM   pegawai p, peglastdata pl, pegjab pj, jabatan j, jenisjabatan jj
 					WHERE p.aktif = 1 AND pl.nip = p.nip AND pl.idpegjab = pj.replid 
 					AND pj.idjabatan = j.replid AND pj.jenis = jj.jenis AND jj.jabatan = 'S' GROUP BY j.eselon ORDER BY j.eselon";	
 		$result = QueryDb($sql);
-		while ($row = mysql_fetch_row($result)) {
+		while ($row = mysqli_fetch_row($result)) {
 		?>
 		<tr height="20">
 			<td align="center" valign="top"><?=++$cnt?></td>
@@ -208,12 +208,12 @@ switch ($stat)
 				
 			</td>
 		</tr>
-		<?
+		<?php
 		}
 		CloseDb();
 		?>
 		</table>
-	<? } elseif ($stat==6){
+	<?php } elseif ($stat==6){
 	?>
     <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
         <tr height="25">
@@ -222,14 +222,14 @@ switch ($stat)
             <td class="header" align="center" width="15%">L</td>
             <td class="header" align="center" width="15%">P</td>
         </tr>
-        <?
+        <?php
         OpenDb();
         $sql = "SELECT j.satker, SUM(IF(p.kelamin = 'L', 1, 0)) AS Pria, SUM(IF(p.kelamin = 'P', 1, 0)) AS Wanita
                   FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
                   WHERE p.aktif = 1  AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid  AND NOT j.satker IS NULL
                   GROUP BY j.satker";	
         $result = QueryDb($sql);
-        while ($row = mysql_fetch_row($result)) {
+        while ($row = mysqli_fetch_row($result)) {
         ?>
         <tr height="20">
             <td align="center" valign="top"><?=++$cnt?></td>
@@ -237,12 +237,12 @@ switch ($stat)
             <td align="center" valign="top"><?=$row[1]?></td>
             <td align="center" valign="top"><?=$row[2]?></td>
         </tr>
-        <?
+        <?php
         }
         CloseDb();
         ?>
     </table>
-    <?
+    <?php
 	} elseif ($stat==7){
 	?>
     <table id="table" class="tab" border="1" cellpadding="2" cellspacing="0" width="100%">
@@ -252,14 +252,14 @@ switch ($stat)
             <td class="header" align="center" width="15%">Nikah</td>
             <td class="header" align="center" width="15%">Belum</td>
         </tr>
-        <?
+        <?php
         OpenDb();
         $sql = "SELECT j.satker, SUM(IF(p.nikah = 'menikah', 1, 0)) AS Nikah, SUM(IF(p.nikah = 'belum', 1, 0)) AS Belum
                   FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
                   WHERE p.aktif = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid  AND NOT j.satker IS NULL
                   GROUP BY j.satker";	
         $result = QueryDb($sql);
-        while ($row = mysql_fetch_row($result)) {
+        while ($row = mysqli_fetch_row($result)) {
         ?>
         <tr height="20">
             <td align="center" valign="top"><?=++$cnt?></td>
@@ -275,12 +275,12 @@ switch ($stat)
                 </a>
             </td>
         </tr>
-    <?
+    <?php
     }
     CloseDb();
     ?>
     </table>
-    <?
+    <?php
 	} else {
 	
 		if ($stat == 1)
@@ -332,10 +332,10 @@ switch ($stat)
 			<td class="header" align="center" width="60%"><?=$column?></td>
 			<td class="header" align="center" width="25%"><?=$column2?></td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
 		$result = QueryDb($sql);
-		while ($row = mysql_fetch_row($result))
+		while ($row = mysqli_fetch_row($result))
 		{
 		?>
 		<tr height="20">
@@ -343,12 +343,12 @@ switch ($stat)
 			<td align="center" valign="top"><?=$row[0]?></td>
 			<td align="center" valign="top"><?=$row[1]?></td>
 		</tr>
-		<?
+		<?php
 		}
 		CloseDb();
 		?>
 		</table>
-	<? } ?>
+	<?php } ?>
     </div></td>
   </tr>
 </table>

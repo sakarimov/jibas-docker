@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -170,21 +170,21 @@ function show_laporan()
         <td width="15%"><strong>Departemen </strong></font></td>
         <td colspan="4">
         <select name="departemen" id="departemen" onchange="change_dep()" onKeyPress="focusNext('tgl1',event)" style="width:115px"  onfocus="panggil('departemen')">
-        <?	$dep = getDepartemen(getAccess());
+        <?php $dep = getDepartemen(getAccess());
             foreach ($dep as $value) { 
 				if ($departemen == "")
                 	$departemen = $value; ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?>><?=$value ?></option>
-        <?  } ?>     
+        <?php  } ?>     
         </select>
         <strong>Tahun Buku&nbsp;</strong>
         <select name="idtahunbuku" id="idtahunbuku" onchange="change_tahunbuku()" style="width:160px">        
-<? 		if ($departemen != "") 
+<?php 		if ($departemen != "") 
 			{ 
 				 $sql = "SELECT replid, tahunbuku, DAY(tanggalmulai), MONTH(tanggalmulai), YEAR(tanggalmulai), aktif 
 							FROM tahunbuku WHERE departemen='$departemen' ORDER BY replid DESC";
 				 $result = QueryDb($sql);
-				 while ($row = mysql_fetch_row($result))
+				 while ($row = mysqli_fetch_row($result))
 				 {
 					  if ($idtahunbuku == 0)
 							$idtahunbuku = $row[0];
@@ -203,14 +203,14 @@ function show_laporan()
 					  if ($row[5] == 1)
 							$A = "(A)";
 					  
-					  echo  "<option value='$row[0]' $sel>$row[1] $A</option>";
+					  echo  "<option value='".$row[0]."' $sel>$row[1] $A</option>";
 				 }
 			} ?>
 			</select>
         </td>
     </tr>
     <tr>
-<?		if ($tgl1 == 0)	$tgl1 = $tgl2;
+<?php 	if ($tgl1 == 0)	$tgl1 = $tgl2;
 		if ($bln1 == 0) $bln1 = $bln2;
 		if ($thn1 == 0) $thn1 = $thn2;
 					
@@ -220,43 +220,43 @@ function show_laporan()
         <td width="10">
         	<div id="InfoTgl1">    
             <select name="tgl1" id = "tgl1" onchange="change_tanggal()"  >   
-            <? for($i = 1; $i <= $n1; $i++) { ?>
+            <?php for($i = 1; $i <= $n1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
         	</div>
        	</td>
         <td width="160">
             <select name="bln1" id="bln1" onchange="change_bulan()" >
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln1) ?> > <?=$bulan[$i] ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn1" id="thn1" onchange="change_bulan()" >
-            <? for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn1+1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn1) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select> s/d
       	</td>
         <td width="10">
         	<div id="InfoTgl2">
             <select name="tgl2" id="tgl2" onchange="change_tanggal()" >
-            <? for($i = 1; $i <= $n2; $i++) { ?>
+            <?php for($i = 1; $i <= $n2; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $tgl2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             </div>
         </td>
         <td>
             <select name="bln2" id="bln2" onchange="change_bulan()" >
-            <? for($i = 1; $i <= 12; $i++) { ?>
+            <?php for($i = 1; $i <= 12; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $bln2) ?> > <?=$bulan[$i]?></option>
-            <? } ?>
+            <?php } ?>
             </select>
             <select name="thn2" id="thn2" onchange="change_bulan()" >
-            <? for($i = $G_START_YEAR; $i <= $thn2+1; $i++) { ?>
+            <?php for($i = $G_START_YEAR; $i <= $thn2+1; $i++) { ?>
                 <option value="<?=$i ?>" <?=IntIsSelected($i, $thn2) ?> > <?=$i ?></option>
-            <? } ?>
+            <?php } ?>
             </select>
         </td>
     </tr>
@@ -279,7 +279,7 @@ function show_laporan()
 </tr>
 </table>
 </form>
-<?
+<?php
 CloseDb();
 ?>
 </body>

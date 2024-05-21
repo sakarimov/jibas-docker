@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -54,13 +54,13 @@ OpenDb();
 
 if ($op == "dw8dxn8w9ms8zs22")
 {	
-	$sql = "UPDATE jbsakad.kalenderakademik SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE jbsakad.kalenderakademik SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 	$kalender = $_REQUEST['replid'];
 }
 else if ($op == "xm8r389xemx23xb2378e23")
 {
-	$sql = "DELETE FROM jbsakad.kalenderakademik WHERE replid = '$_REQUEST[replid]'";	
+	$sql = "DELETE FROM jbsakad.kalenderakademik WHERE replid = '".$_REQUEST['replid']."'";	
 	QueryDb($sql);		
 	$kalender = $_REQUEST['replid'];
 }
@@ -68,13 +68,13 @@ else if ($op == "c234907nxdhnqhwflqf23f3f33")
 {
 	$sql = "UPDATE jbsakad.kalenderakademik
 				  SET aktif = 0
-				WHERE replid <> '$_REQUEST[replid]'
-				  AND departemen = '$_REQUEST[departemen]'";	
+				WHERE replid <> '".$_REQUEST['replid']."'
+				  AND departemen = '".$_REQUEST['departemen']."'";	
 	QueryDb($sql);
 	
 	$sql = "UPDATE jbsakad.kalenderakademik
 				  SET aktif = 1
-				WHERE replid = '$_REQUEST[replid]'";	
+				WHERE replid = '".$_REQUEST['replid']."'";	
 	QueryDb($sql);
 	
 	$kalender = $_REQUEST['replid'];
@@ -83,14 +83,14 @@ else if ($op == "vmt489tukd9fcmf92kd2309scm2323rc3")
 {
 	$sql = "SELECT COUNT(replid)
 				 FROM jbsakad.kalenderakademik
-				WHERE departemen = '$_REQUEST[departemen]'";
+				WHERE departemen = '".$_REQUEST['departemen']."'";
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$ncal = (int)$row[0];
 	
 	if ($ncal > 1)
 	{
-		$sql = "UPDATE jbsakad.kalenderakademik SET aktif = 0 WHERE replid = '$_REQUEST[replid]'";	
+		$sql = "UPDATE jbsakad.kalenderakademik SET aktif = 0 WHERE replid = '".$_REQUEST['replid']."'";	
 		QueryDb($sql);
 	}
 	
@@ -108,7 +108,7 @@ else if ($op == "vmt489tukd9fcmf92kd2309scm2323rc3")
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 function change_departemen() {
 	var departemen=document.getElementById("departemen").value;
@@ -206,32 +206,32 @@ windowIMA=parent.opener.refresh_change(0,0);
     <tr>
     	<td><strong>Departemen </strong>    	
         <select name="departemen" id="departemen" onChange="change_departemen()" >
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
 		foreach($dep as $value) {
 		if ($departemen == "")
 			$departemen = $value; ?>
           <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
             <?=$value ?> 
             </option>
-              <?	} ?>
+              <?php } ?>
         </select>  		
         </td>  
         <td align="right">
         	
-         <? 
+         <?php 
 		if ($departemen <> "") {	
 			OpenDb();
 			$sql = "SELECT * FROM jbsakad.kalenderakademik i, jbsakad.tahunajaran t WHERE t.departemen ='$departemen' AND i.idtahunajaran = t.replid";
-			//$sql = "SELECT COUNT(t.replid) FROM jbsakad.tahunajaran t WHERE t.departemen = '$departemen' UNION SELECT COUNT(k.replid) FROM jbsakad.kalenderakademik k WHERE k.departemen = '$departemen'";
+			//$sql = "SELECT COUNT(t.replid) FROM jbsakad.tahunajaran t WHERE t.departemen = '$departemen' UNION SELECT COUNT(k.replid) FROM jbsakad.kalenderakademik k WHERE k.departemen = '".$departemen."'";
 			//echo $sql;
 			$result = QueryDb($sql);
-			$row = mysql_fetch_row($result);
+			$row = mysqli_fetch_row($result);
 			$jumlah = $row[0];
 			//echo 'ada row '.$row[0];
 		 ?> 
          	<a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '80px')">&nbsp;Refresh</a>&nbsp;&nbsp;  
 				<a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah Info Jadwal!', this, event, '80px')">&nbsp;Tambah Kalender Akademik</a>
-         <? //} 
+         <?php //} 
 		} 
 		?>   
             
@@ -243,13 +243,13 @@ windowIMA=parent.opener.refresh_change(0,0);
 <tr>
 	<td> 
      
-<?	
+<?php 
 if ($departemen <> "") {	
 	OpenDb();	
 	$sql = "SELECT i.kalender, i.aktif, i.replid, i.terlihat, i.idtahunajaran, t.tglmulai, t.tglakhir FROM jbsakad.kalenderakademik i, jbsakad.tahunajaran t WHERE t.departemen ='$departemen' AND i.idtahunajaran = t.replid ORDER BY $urut $urutan";
 	
 	$result = QueryDb($sql);
-	if (@mysql_num_rows($result) > 0) {
+	if (@mysqli_num_rows($result) > 0) {
 	?>
     <br /> 
 	<table class="tab" id="table" border="1" style="border-collapse:collapse" width="100%" align="left">
@@ -259,9 +259,9 @@ if ($departemen <> "") {
         <td width="*" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('tglmulai','<?=$urutan?>')">Periode <?=change_urut('tglmulai',$urut,$urutan)?></td>                
         <td width="*">&nbsp;</td>
 	</tr>
-    <?
+    <?php
 	$cnt=1;
-	while ($row = @mysql_fetch_array($result)) {				
+	while ($row = @mysqli_fetch_array($result)) {				
 		$replid=$row['replid'];
 	?>
     <tr height="25">
@@ -269,17 +269,17 @@ if ($departemen <> "") {
         <td><?=$row['kalender']?></td>
         <td><?=LongDateFormat($row['tglmulai']).' s/d '.LongDateFormat($row['tglakhir'])?></td>
         <td align="center">
-<?			if ($row['aktif'] == 1) { ?>
+<?php 		if ($row['aktif'] == 1) { ?>
 			<a href="JavaScript:nonaktif(<?=$row['replid']?>)" ><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Set Aktif Kalender Akademik!', this, event, '80px')"></a>
-<?			} else { ?>
+<?php 		} else { ?>
 			<a href="JavaScript:aktif(<?=$row['replid']?>)" ><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Set Non Aktif Kalender Akademik!', this, event, '80px')"></a>
-<?			} ?>
+<?php 		} ?>
         	<a href="#" onClick="newWindow('kalender_edit.php?replid=<?=$row['replid']?>',     'UbahKalender','440','280','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Kalender Akademik!', this, event, '80px')"></a>&nbsp;
         	<a href="JavaScript:hapus(<?=$row['replid']?>)" ><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Kalender Akademik!', this, event, '80px')"></a>        </td>
         
 	</tr> 
      
-    <?
+    <?php
 	$cnt++;	
 	} //while
 	CloseDb();
@@ -291,7 +291,7 @@ if ($departemen <> "") {
   
 	</table>
   
-<?	} else { ?>
+<?php } else { ?>
 	<table width="100%" border="0" align="center">
    	<tr>
     	<td colspan="3"><hr style="border-style:dotted" color="#000000"/> 
@@ -299,23 +299,23 @@ if ($departemen <> "") {
    	</tr>
 	<tr>
 		<td align="center" valign="middle" height="150">
-    	<? if ($jumlah == 0) { ?>
+    	<?php if ($jumlah == 0) { ?>
         	<font size = "2" color ="red"><b>Belum ada data Tahun Ajaran.
         	<br />Silahkan isi terlebih dahulu di menu Tahun Ajaran pada bagian Referensi.
         	</b></font>
         
-        <? } else { ?>
+        <?php } else { ?>
             <font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-            <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+            <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-            <? } ?>
+            <?php } ?>
             </b></font>  
-   		<? } ?>
+   		<?php } ?>
         </td>
    	</tr>
    	</table>
 
-<?	}
+<?php }
 } else { ?>
 
 	<table width="100%" border="0" align="center">
@@ -326,15 +326,15 @@ if ($departemen <> "") {
 	<tr>
 		<td align="center" valign="middle" height="150">
     
-    <? if ($departemen == "") { ?>
+    <?php if ($departemen == "") { ?>
 		<font size = "2" color ="red"><b>Belum ada data Departemen.
         <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
         </b></font>
-    <? } ?>
+    <?php } ?>
         </td>
    	</tr>
    	</table>
-<? } ?> 
+<?php } ?> 
 	</td>
 </tr>
 <tr height="35">

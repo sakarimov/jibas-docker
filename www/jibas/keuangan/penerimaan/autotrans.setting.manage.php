@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -37,7 +37,7 @@ if (getLevel() == 2)
         alert('Maaf, anda tidak berhak mengakses halaman ini!');
         document.location.href = "penerimaan.php";
     </script>
-    <? 	exit();
+    <?php 	exit();
 } // end if
 
 $departemen = $_REQUEST["departemen"];
@@ -55,7 +55,7 @@ if ($idAutoTrans != 0)
               FROM jbsfina.autotrans
              WHERE replid = $idAutoTrans";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $judul = $row[0];
     $urutan = $row[1];
     $keterangan = $row[2];
@@ -150,7 +150,7 @@ if ($idAutoTrans != 0)
              ORDER BY ad.urutan";
     $res = QueryDb($sql);
     $ix = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $imgAktif = $row["aktif"] == 1 ? "../images/ico/aktif.png" : "../images/ico/nonaktif.png";
 
@@ -169,7 +169,7 @@ if ($idAutoTrans != 0)
         $ix += 1;
     }
 
-    $json = json_encode($lsAutoTransData);
+    $json = json_encode($lsAutoTransData, JSON_THROW_ON_ERROR);
     echo "<input type='hidden' id='jsonData' value='$json'>";
 }
 ?>
@@ -189,7 +189,7 @@ if ($idAutoTrans != 0)
 <?php
 if ($idAutoTrans != 0) {
     ?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
         var jsonData = $("#jsonData").val();
         lsPenerimaan = JSON.parse(jsonData);
     </script>

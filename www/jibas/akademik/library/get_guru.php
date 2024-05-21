@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -42,13 +42,13 @@ require_once('../include/db_functions.php');
     		<td class="header" >Nama</td>
     		<td class="header" width="10%">&nbsp;</td>
 		</tr>
-		<?
+		<?php
 		OpenDb();
 		$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p, jbsakad.pelajaran pel, jbsakad.guru g WHERE pel.replid=g.idpelajaran AND g.nip=p.nip ".$sql_tambahan;
 		//$sql = "SELECT p.nip, p.nama FROM jbssdm.pegawai p LEFT JOIN (guru g LEFT JOIN pelajaran l ON l.replid = g.idpelajaran) ON p.nip = g.nip GROUP BY p.nip";
 		$result = QueryDb($sql);
 		$cnt = 0;
-		while($row = mysql_fetch_row($result)) { ?>
+		while($row = mysqli_fetch_row($result)) { ?>
 		<tr>
 			<td align="center"><?=++$cnt ?></td>
     		<td align="center"><?=$row[0] ?></td>
@@ -57,7 +57,7 @@ require_once('../include/db_functions.php');
     		<input type="button" name="pilih" class="but" id="pilih" value="Pilih" onclick="pilih('<?=$row[0]?>', '<?=$row[1]	?>')" />
     	   	</td>
 		</tr>
-		<? 	} ?>
+		<?php 	} ?>
 		<tr height="26">
 			<td colspan="4" align="center" >
         	<input type="button" class="but" name="tutup" id="tutup" value="Tutup" onclick="window.close()" /></td>

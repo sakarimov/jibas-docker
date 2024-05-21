@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -61,14 +61,14 @@ if (isset($_REQUEST['Simpan']))
 	OpenDb();
 	$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 	$res = QueryDb($sql);
-	$num = mysql_num_rows($res);
+	$num = mysqli_num_rows($res);
 	if ($num>0){
-		$dayname = array("", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu");
+		$dayname = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"];
 		
 		$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 		$res = QueryDb($sql);
 		$idinfo_aktif = "";
-		while($row = mysql_fetch_row($res))
+		while($row = mysqli_fetch_row($res))
 		{
 			if (strlen($idinfo_aktif) > 0)
 				$idinfo_aktif .= "','";
@@ -93,10 +93,10 @@ if (isset($_REQUEST['Simpan']))
 					AND ij.replid IN ($idinfo_aktif) AND hari = '$hari'
 					AND ($sqljam)";
 		$result = QueryDb($sql);
-		if (mysql_num_rows($result) > 0)
+		if (mysqli_num_rows($result) > 0)
 		{
 			$ket = "";
-			while ($row = mysql_fetch_array($result))
+			while ($row = mysqli_fetch_array($result))
 			{
 				if (strlen($ket) > 0)
 					$ket .= "\\r\\n";
@@ -124,10 +124,10 @@ if (isset($_REQUEST['Simpan']))
 					   AND ($sqljam)";
 			$result = QueryDb($sql);
 			
-			if (mysql_num_rows($result) > 0)
+			if (mysqli_num_rows($result) > 0)
 			{
 				$ket = "";
-				while ($row = mysql_fetch_array($result))
+				while ($row = mysqli_fetch_array($result))
 				{
 					if (strlen($ket) > 0)
 						$ket .= "\\r\\n";
@@ -140,15 +140,15 @@ if (isset($_REQUEST['Simpan']))
 		
 		if (strlen($ERROR_MSG) == 0)
 		{
-			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam'";
+			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '".$jam."'";
 			$result1 = QueryDb($sql1);
-			$row1 = mysql_fetch_array($result1);
+			$row1 = mysqli_fetch_array($result1);
 			$rep1 = $row1['replid'];
 			$jm1 = $row1['jam1'];
 			
 			$sql2 = "SELECT replid, TIME_FORMAT(jam2, '%H:%i') AS jam2 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam2'";
 			$result2 = QueryDb($sql2);
-			$row2 = mysql_fetch_array($result2);
+			$row2 = mysqli_fetch_array($result2);
 			$rep2 = $row2['replid'];
 			$jm2 = $row2['jam2'];
 			
@@ -166,7 +166,7 @@ if (isset($_REQUEST['Simpan']))
 					opener.parent.footer.refresh();
 					window.close();
 				</script> 
-	<?		}
+	<?php 	}
 		}
 	} else {
 		$ERROR_MSG = "Tidak ada Info jadwal yang aktif, silakan aktifkan salah satu Info Jadwal\\r\\n";
@@ -179,7 +179,7 @@ $sql1 = "SELECT t.replid, t.tahunajaran, t.departemen, k.kelas
 		  WHERE i.replid = '$info' AND t.replid = i.idtahunajaran
 		    AND k.replid = '$kelas' AND k.idtahunajaran = t.replid ";
 $result1 = QueryDb($sql1);
-$row1 = mysql_fetch_array($result1); 
+$row1 = mysqli_fetch_array($result1); 
 $departemen = $row1['departemen'];
 $tahun = $row1['tahunajaran'];
 $tahunajaran = $row1['replid'];
@@ -193,7 +193,7 @@ $kls = $row1['kelas'];
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Tambah Jadwal Kelas]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -333,14 +333,14 @@ function changepel()
 	<td align="left"><strong>Pelajaran</strong></td>
  	<td><div id ="InfoPelajaran">
       	<select name="pelajaran" id="pelajaran" onChange="changepel()" onKeyPress="return focusNext('nip', event)" onFocus="panggil('pelajaran')" >
-<?		$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
+<?php 	$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
 		$result = QueryDb($sql);
 		$npel = 0;
-		while ($row = @mysql_fetch_array($result))
+		while ($row = @mysqli_fetch_array($result))
 		{
 			$npel += 1;	?>
-	    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
-<?		} ?>
+	    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
+<?php 	} ?>
     	</select></div></td>  
 </tr>
 <tr>
@@ -381,11 +381,11 @@ function changepel()
 </tr>
 <tr>
 	<td colspan="2" align="center">
-<?	if ($npel == 0) { ?>
+<?php if ($npel == 0) { ?>
 	[Belum ada data pelajaran]
-<?	} else { ?>
+<?php } else { ?>
 	<input type="submit" name="Simpan" id="Simpan" value="Simpan" class="but" onFocus="panggil('Simpan')"/>&nbsp;
-<?	} ?>
+<?php } ?>
     <input type="button" name="Tutup" id="Tutup" value="Tutup" class="but" onClick="window.close()" />
     </td>
 </tr>
@@ -401,16 +401,16 @@ function changepel()
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

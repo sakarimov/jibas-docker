@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,17 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
-session_name("jbsakad");
-session_start();
+<?php
+if(!session_id()){
+	session_name("jbsakad");
+	session_start();
+}
+
 
 $SI_USER_LANDLORD = 0;
 $SI_USER_MANAGER = 1;
 $SI_USER_STAFF = 2;
-$STAFF_DEPT = $_SESSION['departemen'];
+$STAFF_DEPT = $_SESSION['departemen'] ?? '';
 
 function SI_USER_NAME()
 {
@@ -51,19 +54,19 @@ function SI_USER_LEVEL()
 		{
 	global $SI_USER_LANDLORD;
 	return $SI_USER_LANDLORD;
-	break;
+	
 		}
 		case 1:
 		{
 	global $SI_USER_MANAGER;
 	return $SI_USER_MANAGER;
-	break;
+	
 		}
 		case 2:
 		{
 	global $SI_USER_STAFF;
 	return $SI_USER_STAFF;
-	break;
+	
 		}
 	}
 }

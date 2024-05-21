@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/config.php');
 require_once('../../include/common.php');
 require_once('../../include/db_functions.php');
@@ -40,7 +40,7 @@ if (isset($_REQUEST['tahun']))
 if (($bulan == "") || ($tahun == "")) {
 	$sql = "SELECT MONTH(NOW()), YEAR(NOW())";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$bulan = $row[0];
 	$tahun = $row[1];
 };	
@@ -48,7 +48,7 @@ if (($bulan == "") || ($tahun == "")) {
 $tmp = $tahun."-".$bulan."-1";
 $sql = "SELECT DAYOFWEEK('$tmp')";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $first_weekday_this_month = $row[0];
 
 if ($bulan == 12) {
@@ -73,13 +73,13 @@ if ($bulan == 1) {
 }	
 $sql = "SELECT DAY(LAST_DAY('$tmp'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_last_month = $row[0];
 
 $now = $tahun . "-" . $bulan . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_this_month = $row[0];
 
 $nweek = 0;
@@ -137,8 +137,8 @@ if (($nday > 0) && ($nday < 7)) {
 }
 </style>
 <script language="javascript" src="../../script/ajax.js"></script>
-<script language="JavaScript" src="../../script/tooltips.js"></script>
-<script language="JavaScript" src="../../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../../script/tools.js"></script>
 <script language="javascript">
 function GoToLastMonth() {
 	parent.kanan.location.href = "blankagenda.php";
@@ -196,16 +196,16 @@ function tampil2(tanggal,bulan,tahun) {
 Bulan :
 <input type="button" class="but" onclick="GoToLastMonth()" value="  <  ">
 <select id="bulan" name="bulan" onchange="ChangeCal()">
-<? $namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");
+<?php $namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];
    for ($i = 1; $i <= 12; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $bulan)?>><?=$namabulan[$i - 1]?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <select id="tahun" name="tahun" onchange="ChangeCal()">
-<? $YNOW = date('Y');
+<?php $YNOW = date('Y');
    for ($i = 2005; $i <= $YNOW + 1; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $tahun)?>><?=$i?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <input type="button" class="but" onclick="GoToNextMonth()" value="  >  ">
 </td>
@@ -225,7 +225,7 @@ Bulan :
     <td width="30" align="center" style="background-color:#339900; color:#FFFFFF"><b>Jum'at</b></td>
     <td width="30" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Sabtu</b></td>
 </tr>
-<?
+<?php
 for ($i = 0; $i < count($cal); $i++) { 
 	echo "<tr height='30'>";
 	for ($j = 0; $j < count($cal[$i]); $j++) {
@@ -254,7 +254,7 @@ for ($i = 0; $i < count($cal); $i++) {
 			
 		$sql = "SELECT COUNT(*) FROM jbsvcr.agenda WHERE tanggal='$tanggal' AND idguru='".SI_USER_ID()."'";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$njadwal = $row[0];
 		if ($njadwal>0 && ($bln == $bulan) && ($thn == $tahun)) {
 			echo "<sub><font style='background-color:#fda700'><strong>&nbsp;".$njadwal."&nbsp;</strong></font></sub>";

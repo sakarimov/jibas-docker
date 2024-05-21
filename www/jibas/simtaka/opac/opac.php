@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/common.php');
 require_once('../inc/rupiah.php');
@@ -28,12 +28,12 @@ require_once('../inc/sessioninfo.php');
 require_once('../inc/db_functions.php');
 OpenDb();
 $kriteria = 'all';
-if (isset($_REQUEST[kriteria]))
-	$kriteria = $_REQUEST[kriteria];
-$keyword = $_REQUEST[keyword];
+if (isset($_REQUEST['kriteria']))
+	$kriteria = $_REQUEST['kriteria'];
+$keyword = $_REQUEST['keyword'];
 $op = '';
-if (isset($_REQUEST[op]))
-	$op = $_REQUEST[op];
+if (isset($_REQUEST['op']))
+	$op = $_REQUEST['op'];
 	
 $onload = "";
 if ($kriteria!='all' && $kriteria!='tersedia')
@@ -97,8 +97,8 @@ function ViewDetail(replid){
             </select>
             </td>
           </tr>
-          <? if ($kriteria!='all' && $kriteria!='tersedia'){ ?>
-          <? 
+          <?php if ($kriteria!='all' && $kriteria!='tersedia'){ ?>
+          <?php 
 		  		if ($kriteria=='judul') 
 		  			$title='Judul';
 				if ($kriteria=='keyword')
@@ -116,7 +116,7 @@ function ViewDetail(replid){
             <td align="right"><strong><?=$title?></strong></td>
             <td><input type="text" name="keyword" id="keyword" class="inptxt-small-text" value="<?=$keyword?>" style="width:250px" /></td>
           </tr>
-          <? } ?>
+          <?php } ?>
         </table>
     </td>
     <td width="48%" valign="top"><img src="../img/view.png" onclick="ViewData()" style="cursor:pointer" /></td>
@@ -124,7 +124,7 @@ function ViewDetail(replid){
 </table>
 </div>
 <div id="content">
-<? if ($op!='view') { ?>
+<?php if ($op!='view') { ?>
 <table width="100" border="0" cellspacing="0" cellpadding="0" align="center">
   <tr>
     <td class="welc">Tentukan&nbsp;Kriteria&nbsp;lalu&nbsp;klik&nbsp;ikon&nbsp;</td>
@@ -132,7 +132,7 @@ function ViewDetail(replid){
     <td class="welc">&nbsp;di&nbsp;atas&nbsp;untuk&nbsp;menampilkan&nbsp;data</td>
   </tr>
 </table>
-<? } else { ?>
+<?php } else { ?>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab" id="table">
   <tr>
     <td height="25" align="center" class="header">No</td>
@@ -143,7 +143,7 @@ function ViewDetail(replid){
     <td height="25" align="center" class="header">Tersedia</td>
     <td align="center" class="header">&nbsp;</td>
   </tr>
-<?  
+<?php  
 if ($kriteria=='all')
 	$sql = "SELECT * FROM pustaka ORDER BY judul";
 if ($kriteria=='judul')
@@ -161,33 +161,33 @@ if ($kriteria=='kota')
 if ($kriteria=='tersedia')
 	$sql = "SELECT p.replid as replid,p.judul as judul, p.penerbit as penerbit, p.penulis as penulis FROM pustaka p, daftarpustaka d WHERE p.replid=d.pustaka AND d.status=1 GROUP BY d.pustaka ORDER BY p.judul";	
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 if ($num > 0){
 $cnt=1;
-while ($row = @mysql_fetch_array($result)){
-$sqlPenulis = "SELECT kode,nama FROM penulis WHERE replid = '$row[penulis]'";
+while ($row = @mysqli_fetch_array($result)){
+$sqlPenulis = "SELECT kode,nama FROM penulis WHERE replid = '".$row['penulis']."'";
 $resultPenulis = QueryDb($sqlPenulis);
-$rowPenulis = @mysql_fetch_row($resultPenulis);
+$rowPenulis = @mysqli_fetch_row($resultPenulis);
 $penulis = $rowPenulis[0]."&nbsp;-&nbsp;".$rowPenulis[1];
 
-$sqlPenerbit = "SELECT kode,nama FROM penerbit WHERE replid = '$row[penerbit]'";
+$sqlPenerbit = "SELECT kode,nama FROM penerbit WHERE replid = '".$row['penerbit']."'";
 $resultPenerbit = QueryDb($sqlPenerbit);
-$rowPenerbit = @mysql_fetch_row($resultPenerbit);
+$rowPenerbit = @mysqli_fetch_row($resultPenerbit);
 $penerbit = $rowPenerbit[0]."&nbsp;-&nbsp;".$rowPenerbit[1];
 
-$rtotal = @mysql_num_rows(QueryDb("SELECT * FROM daftarpustaka d WHERE d.pustaka=$row[0]"));
-$rtersedia = @mysql_num_rows(QueryDb("SELECT * FROM daftarpustaka d WHERE d.pustaka=$row[0] AND d.status=1"));
+$rtotal = @mysqli_num_rows(QueryDb("SELECT * FROM daftarpustaka d WHERE d.pustaka=$row[0]"));
+$rtersedia = @mysqli_num_rows(QueryDb("SELECT * FROM daftarpustaka d WHERE d.pustaka=$row[0] AND d.status=1"));
 ?>
   <tr>
     <td height="20" align="center"><div class="tab_content"><?=$cnt?></div></td>
-    <td height="20"><div class="tab_content"><?=$row[judul]?></div></td>
+    <td height="20"><div class="tab_content"><?=$row['judul']?></div></td>
     <td height="20"><div class="tab_content"><?=$penulis?></div></td>
     <td height="20"><div class="tab_content"><?=$penerbit?></div></td>
     <td height="20" align="center"><div class="tab_content"><?=$rtotal?></div></td>
     <td height="20" align="center" ><div class="tab_content"><?=$rtersedia?></div></td>
-    <td align="center" ><div class="tab_content"><a href="javascript:ViewDetail('<?=$row[replid]?>')"><img src="../img/ico/lihat.png" width="16" height="16" border="0" /></a></div></td>
+    <td align="center" ><div class="tab_content"><a href="javascript:ViewDetail('<?=$row['replid']?>')"><img src="../img/ico/lihat.png" width="16" height="16" border="0" /></a></div></td>
   </tr>
-<?
+<?php
 $cnt++;
 }
 } else {
@@ -195,15 +195,15 @@ $cnt++;
   <tr>
     <td height="20" colspan="7" align="center" class="nodata">Tidak ada data</td>
   </tr>
-<? } ?>
+<?php } ?>
 </table>
 <script language='JavaScript'>
 	Tables('table', 1, 0);
 </script>
-<? } ?>
+<?php } ?>
 </div>
 </div>
 
 </body>
 </html>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>

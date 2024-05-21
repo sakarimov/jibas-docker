@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/mainconfig.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -103,13 +103,13 @@ require_once('../include/mainconfig.php');
 </tr>
 <tr>
 	<td align="center">
-<?	include('index.tab.php'); ?>		
+<?php	include('index.tab.php'); ?>		
 	</td>
 </tr>
 </table>
 
 <div id="Partner">
-<?
+<?php
 $_REQUEST = array();
 $_REQUEST['relpath'] = "..";
 include('../partner.php');
@@ -117,7 +117,7 @@ include('../partner.php');
 </div>
 
 <div id="Footer">
-<?
+<?php
 include('../footer.php');
 ?>
 </div>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -44,13 +44,13 @@ do
 			  FROM riwayatdeptsiswa
 			 WHERE nis='$check_nis'";
 	$result = QueryDb($sql);
-	$nrow = mysql_num_rows($result);
+	$nrow = mysqli_num_rows($result);
 	if ($nrow > 0)
 	{
-		$row = mysql_fetch_array($result);
-		$dep[] = array($row['departemen'], $check_nis);
+		$row = mysqli_fetch_array($result);
+		$dep[] = [$row['departemen'], $check_nis];
 		
-		if (strlen($row['nislama']) > 0)
+		if (strlen((string) $row['nislama']) > 0)
 			$check_nis = $row['nislama'];
 		else
 			$nrow = 0;
@@ -66,9 +66,9 @@ $sql_ajaran = "SELECT DISTINCT(t.replid), t.tahunajaran
 				ORDER BY t.replid DESC";
 $result_ajaran = QueryDb($sql_ajaran);
 $k = 0;
-while ($row_ajaran = @mysql_fetch_array($result_ajaran))
+while ($row_ajaran = @mysqli_fetch_array($result_ajaran))
 {
-	$ajaran[$k] = array($row_ajaran['replid'], $row_ajaran['tahunajaran']);
+	$ajaran[$k] = [$row_ajaran['replid'], $row_ajaran['tahunajaran']];
 	$k++;
 }
 
@@ -77,9 +77,9 @@ $sql_kls = "SELECT DISTINCT(r.idkelas), k.kelas, t.tingkat, k.idtahunajaran
 			 WHERE r.nis = '$nis' AND r.idkelas = k.replid AND k.idtingkat = t.replid ";
 $result_kls = QueryDb($sql_kls);
 $j = 0;
-while ($row_kls = @mysql_fetch_array($result_kls))
+while ($row_kls = @mysqli_fetch_array($result_kls))
 {
-	$kls[$j] = array($row_kls['idkelas'], $row_kls['kelas'], $row_kls['tingkat'], $row_kls['idtahunajaran']);
+	$kls[$j] = [$row_kls['idkelas'], $row_kls['kelas'], $row_kls['tingkat'], $row_kls['idtahunajaran']];
 	$j++;
 }
 
@@ -107,23 +107,23 @@ if (isset($_REQUEST['kelas']))
     <tr>
         <td width="*"><strong class="news_content1">Th. Ajaran</strong>
         <select name="departemen" class="cmbfrm" id="departemen" style="width:80px" onChange="ChangePresensiPelajaranOption2('departemen')">
-		<? for ($i=0;$i<sizeof($dep);$i++) { ?>        	
+		<?php for ($i=0;$i<sizeof($dep);$i++) { ?>        	
             <option value="<?=$i ?>" <?=IntIsSelected($i, $departemen) ?> > <?=$dep[$i][0] ?> </option>
-		<? } ?>
+		<?php } ?>
 		</select>
         <select name="tahunajaran" class="cmbfrm" id="tahunajaran" style="width:125px" onChange="ChangePresensiPelajaranOption2('tahunajaran')">
-<? 		for($k=0; $k<sizeof($ajaran); $k++)
+<?php 		for($k=0; $k<sizeof($ajaran); $k++)
 		{
 			if ($tahunajaran == 0)
 				$tahunajaran = $ajaran[$k][0];
 			?>
 			<option value="<?=$ajaran[$k][0] ?>" <?=IntIsSelected($ajaran[$k][0], $tahunajaran) ?> > 
 			<?=$ajaran[$k][1]?> </option>
-		<? } ?>
+		<?php } ?>
     	</select>    
 		&nbsp;&nbsp;<strong class="news_content1">Riwayat Kelas</strong>
         <select name="kelas" class="cmbfrm" id="kelas" style="width:125px" onChange="ChangePresensiPelajaranOption2('kelas')">
-<? 		for ($j=0; $j<sizeof($kls); $j++)
+<?php 		for ($j=0; $j<sizeof($kls); $j++)
 		{
 			if ($kls[$j][3] == $tahunajaran)
 			{
@@ -131,7 +131,7 @@ if (isset($_REQUEST['kelas']))
 					$kelas = $kls[$j][0];
 			?>
 			<option value="<?=$kls[$j][0] ?>" <?=IntIsSelected($kls[$j][0], $kelas) ?> > <?=$kls[$j][2]." - ".$kls[$j][1] ?> </option>
-<? 			}
+<?php 			}
 		} ?>
     	</select>    
 		</td>
@@ -139,10 +139,10 @@ if (isset($_REQUEST['kelas']))
   			<a href="javascript:CetakPresensiPelajaran2()" ><img src="../images/ico/print.png" width="16" height="16" border="0" />&nbsp;Cetak</a>
     	</td>
   	</tr>
-<? if ($kelas<> "" ) { 
+<?php if ($kelas<> "" ) { 
 		$sql = "SELECT tglmulai, tglakhir FROM tahunajaran WHERE replid = $tahunajaran";
 		$result = QueryDb($sql);
-		$row = mysql_fetch_array($result);
+		$row = mysqli_fetch_array($result);
 		$tglawal = $row['tglmulai'];
 		$tglakhir = $row['tglakhir'];
 		
@@ -155,7 +155,7 @@ if (isset($_REQUEST['kelas']))
 				  GROUP BY blnthn
 				  ORDER BY YEAR(tanggal), MONTH(tanggal)";
 		$result1 = QueryDb($sql1);      	
-        $num = mysql_num_rows($result1);
+        $num = mysqli_num_rows($result1);
 		echo "<input type='hidden' name='num' id='num' value=$num>";
 		if ($num > 0) {
 ?>
@@ -164,21 +164,21 @@ if (isset($_REQUEST['kelas']))
             <table border="0" cellpadding="2" cellspacing="2" width="100%" align="center" bgcolor="#FFFFFF">
             <tr>
                 <td align="center">
-            <?		
+            <?php 	
             
             
             $data_title = "<span class=\"nav_title\">STATISTIK PRESENSI PELAJARAN</span>"; // title for the diagram
     
             // sample data array
-            $data = array();
+            $data = [];
     
-            while($row1 = mysql_fetch_row($result1)) {
-                $data[] = array($row1[1],$row1[2],$row1[3],$row1[4],$row1[5]);
+            while($row1 = mysqli_fetch_row($result1)) {
+                $data[] = [$row1[1], $row1[2], $row1[3], $row1[4], $row1[5]];
                 $legend_x[] = $row1[0];			
             }
                     
             //$legend_x = array('Jan','Feb','Maret','April','Mei');
-            $legend_y = array('Hadir','Ijin','Sakit','Alpa', 'Cuti');
+            $legend_y = ['Hadir', 'Ijin', 'Sakit', 'Alpa', 'Cuti'];
     
             $graph = new CAsBarDiagram;
             $graph->bwidth = 10; // set one bar width, pixels
@@ -201,82 +201,82 @@ if (isset($_REQUEST['kelas']))
                 <td width="15%" class="header">Alpa</td>
                 <td width="15%" class="header">Cuti</td>
             </tr>
-			<? 
+			<?php 
             
             $result2 = QueryDb($sql1);
-            while ($row2 = @mysql_fetch_row($result2)) {		
-                 $waktu = explode(" ",$row2[0]);
+            while ($row2 = @mysqli_fetch_row($result2)) {		
+                 $waktu = explode(" ",(string) $row2[0]);
             ?>	
             <tr height="25">        			
                 <td align="center"><?=NamaBulan($row2[6]).' '.$waktu[1]?></td>
                 <td align="center">
-				<? if ($row2[1]!=0) { ?>
+				<?php if ($row2[1]!=0) { ?>
                 	<a href="#" class="gry" onClick="view_detail_pres('<?=$row2[6]."-".$waktu[1]?>','0');">
-				<? } ?>
+				<?php } ?>
 				<?=$row2[1]?>
-				<? if ($row2[1]!=0) { ?>
+				<?php if ($row2[1]!=0) { ?>
                 	</a>
-				<? } ?>
+				<?php } ?>
                 </td>
                 <td align="center">
-				<? if ($row2[2]!=0) { ?>
+				<?php if ($row2[2]!=0) { ?>
                 	<a href="#" onClick="view_detail_pres('<?=$row2[6]."-".$waktu[1]?>','1');">
-				<? } ?>
+				<?php } ?>
 				<?=$row2[2]?>
-				<? if ($row2[2]!=0) { ?>
+				<?php if ($row2[2]!=0) { ?>
                 	</a>
-				<? } ?>
+				<?php } ?>
                 </td>
                 <td align="center">
-				<? if ($row2[3]!=0) { ?>
+				<?php if ($row2[3]!=0) { ?>
                 	<a href="#" onClick="view_detail_pres('<?=$row2[6]."-".$waktu[1]?>','2');">
-				<? } ?>
+				<?php } ?>
 				<?=$row2[3]?>
-				<? if ($row2[3]!=0) { ?>
+				<?php if ($row2[3]!=0) { ?>
                 	</a>
-				<? } ?>
+				<?php } ?>
                 </td>
                 <td align="center">
-				<? if ($row2[4]!=0) { ?>
+				<?php if ($row2[4]!=0) { ?>
                 	<a href="#" onClick="view_detail_pres('<?=$row2[6]."-".$waktu[1]?>','4');">
-				<? } ?>
+				<?php } ?>
 				<?=$row2[4]?>
-				<? if ($row2[4]!=0) { ?>
+				<?php if ($row2[4]!=0) { ?>
                 	</a>
-				<? } ?>
+				<?php } ?>
                 </td>
                 <td align="center">
-				<? if ($row2[5]!=0) { ?>
+				<?php if ($row2[5]!=0) { ?>
                 	<a href="#" onClick="view_detail_pres('<?=$row2[6]."-".$waktu[1]?>','3');">
-				<? } ?>
+				<?php } ?>
 				<?=$row2[5]?>
-				<? if ($row2[5]!=0) { ?>
+				<?php if ($row2[5]!=0) { ?>
                 	</a>
-				<? } ?>
+				<?php } ?>
                 </td>
             </tr>
-			<? } ?>
+			<?php } ?>
             </table>
            	</td>
        	</tr>
         </table>
         </td>
   	</tr>
-<? } else { ?>                 
+<?php } else { ?>                 
 	<tr>
 		<td align="center" valign="middle" height="120" colspan="2">
     	<font size = "2" color ="red"><b><span class="err">Tidak ditemukan adanya data.</span><br />
     	</font>		</td>
 	</tr>
-  	<? } ?>
-<? } else { ?>                 
+  	<?php } ?>
+<?php } else { ?>                 
 	<tr>
 		<td align="center" valign="middle" height="120" colspan="2">
     	<font size = "2" color ="red"><b><span class="err">Tidak ditemukan adanya data.</span><br />
     	</font>
 		</td>
 	</tr>
-<? } ?>
+<?php } ?>
     </table>
      <!-- END OF CONTENT //--->
 	</td>

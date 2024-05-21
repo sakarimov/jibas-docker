@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -37,10 +37,10 @@ $pelajaran = $_REQUEST['pelajaran'];
 $nip = $_REQUEST['nip'];
 
 OpenDb();
-$sql = "SELECT k.kelas, s.semester, a.tahunajaran, t.tingkat, l.nama, p.nama AS guru FROM kelas k, semester s, tahunajaran a, tingkat t, pelajaran l, jbssdm.pegawai p WHERE k.replid = '$kelas' AND s.replid = '$semester' AND a.replid = '$tahunajaran' AND k.idtahunajaran = a.replid AND k.idtingkat = t.replid AND l.replid = '$pelajaran' AND p.nip = '$nip'";
+$sql = "SELECT k.kelas, s.semester, a.tahunajaran, t.tingkat, l.nama, p.nama AS guru FROM kelas k, semester s, tahunajaran a, tingkat t, pelajaran l, jbssdm.pegawai p WHERE k.replid = '$kelas' AND s.replid = '$semester' AND a.replid = '$tahunajaran' AND k.idtahunajaran = a.replid AND k.idtingkat = t.replid AND l.replid = '$pelajaran' AND p.nip = '".$nip."'";
 $result = QueryDb($sql);
 
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $namakelas = $row['kelas'];
 $namasemester = $row['semester'];
 $namatahunajaran = $row['tahunajaran'];
@@ -124,12 +124,12 @@ $namaguru = $row['guru'];
             <td width="55%" height="30" align="center" class="header">Keterangan</td>
         </tr>
         
-        <?
+        <?php
         
         $sql = "SELECT nis, nama FROM siswa WHERE idkelas = '$kelas' AND aktif = 1 AND alumni = 0 ORDER BY nama";
         $result = QueryDb($sql);
         
-        while($row = @mysql_fetch_array($result)){
+        while($row = @mysqli_fetch_array($result)){
         
         ?>
         <tr>
@@ -139,7 +139,7 @@ $namaguru = $row['guru'];
             <td height="25"></td>
             <td height="25"></td>
         </tr>
-        <? } ?>
+        <?php } ?>
     </table>
     </td>
   </tr>
@@ -164,7 +164,7 @@ $namaguru = $row['guru'];
   </tr>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

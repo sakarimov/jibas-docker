@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -98,7 +98,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 	<tr>
         <td>
         <strong>
-<?      echo ($action == "setor") ? "Setoran" : "Penarikan"; ?>
+<?php      echo ($action == "setor") ? "Setoran" : "Penarikan"; ?>
         </strong>
         </td>
         <td colspan="2">
@@ -112,15 +112,15 @@ if (1 == (int)$_REQUEST['issubmit'])
         <td><strong>Rek. Kas</strong></td>
         <td colspan="2">
             <select name="rekkas" id="rekkas" style="width: 220px">
-    <?          $sql = "SELECT kode, nama
+    <?php          $sql = "SELECT kode, nama
                           FROM jbsfina.rekakun
                          WHERE kategori = 'HARTA'
                          ORDER BY nama";        
                 $res = QueryDb($sql);
-                while($row = mysql_fetch_row($res))
+                while($row = mysqli_fetch_row($res))
                 {
                     $sel = $row[0] == $rekkastrans ? "selected" : "";
-                    echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+                    echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
                 } ?>                
             </select>
         </td>
@@ -164,9 +164,9 @@ if (1 == (int)$_REQUEST['issubmit'])
     <td width="28" background="../images/default/bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($errmsg) > 0) { ?>
+<?php if (strlen((string) $errmsg) > 0) { ?>
 <script language="javascript">alert('<?=$errmsg?>');</script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">
@@ -175,6 +175,6 @@ var sprytextfield1 = new Spry.Widget.ValidationTextField("jcicilan");
 var sprytextarea1 = new Spry.Widget.ValidationTextarea("kcicilan");
 var sprytextarea1 = new Spry.Widget.ValidationTextarea("alasan");
 </script>
-<?
+<?php
 CloseDb();    
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -40,7 +40,7 @@ $errmsg = $_REQUEST['errmsg'];
 OpenDb();
 
 // -- ambil nama penerimaan -------------------------------
-$sql = "SELECT nama, rekkas, info2 FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama, rekkas, info2 FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $row = FetchSingleRow($sql);
 $namapenerimaan = $row[0];
 $defrekkas = $row[1];
@@ -64,13 +64,13 @@ if (1 == (int)$_REQUEST['issubmit'])
 	$rekpiutang = "";
 	$sql = "SELECT nama, rekkas, rekpendapatan, rekpiutang FROM datapenerimaan WHERE replid='$idpenerimaan'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		trigger_error("Tidak ditemukan data penerimaan!", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namapenerimaan = $row[0];
 		$rekkas = $row[1];
 		$rekpendapatan = $row[2];
@@ -78,35 +78,35 @@ if (1 == (int)$_REQUEST['issubmit'])
 	}
 	
 	// rek kas from selected value
-	if (isset($_REQUEST['rekkas']) && strlen(trim($_REQUEST['rekkas'])) > 0)
-		$rekkas = trim($_REQUEST['rekkas']);
+	if (isset($_REQUEST['rekkas']) && strlen(trim((string) $_REQUEST['rekkas'])) > 0)
+		$rekkas = trim((string) $_REQUEST['rekkas']);
 	
 	//Ambil nama siswa
 	$namasiswa = "";
 	$sql = "SELECT nama FROM jbsakad.siswa WHERE nis='$nis'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		//CloseDb();
 		trigger_error("Tidak ditemukan data siswa!", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$namasiswa = $row[0];
 	}
 	
 	//Ambil awalan dan cacah tahunbuku untuk bikin nokas;
-	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '$idtahunbuku'";
+	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) 
+	if (mysqli_num_rows($result) == 0) 
 	{
 		//CloseDb();
 		trigger_error("Tidak ditemukan data tahun buku!", E_USER_ERROR);
 	} 
 	else 
 	{
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$awalan = $row[0];
 		$cacah = $row[1];
 	}
@@ -118,7 +118,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 
 	//Simpan ke jurnal
 	$ketsms = "pembayaran $namapenerimaan";
-	$ketjurnal = "Pembayaran $namapenerimaan tanggal $_REQUEST[tbayar] siswa $namasiswa ($nis)";
+	$ketjurnal = "Pembayaran $namapenerimaan tanggal {$_REQUEST['tbayar']} siswa $namasiswa ($nis)";
 	$idjurnal = 0;
 	$success = SimpanJurnal($idtahunbuku, $tbayar, $ketjurnal, $nokas, "", $idpetugas, $petugas, "penerimaaniuran", $idjurnal);
 	
@@ -150,7 +150,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 	{
 		$sql = "SELECT departemen
 				  FROM jbsfina.tahunbuku
-				 WHERE replid = '$idtahunbuku'";
+				 WHERE replid = '".$idtahunbuku."'";
 		$departemen = FetchSingle($sql);
 		
 		CreateSMSPaymentInfo('SISPAY',
@@ -167,26 +167,26 @@ if (1 == (int)$_REQUEST['issubmit'])
 		RollbackTrans();
 	CloseDb();
 ?>	<script language="javascript">
-		document.location.href="pembayaran_iuran.php?r=<?=rand(10000, 99999)?>&idkategori=<?=$idkategori?>&idpenerimaan=<?=$idpenerimaan?>&nis=<?=$nis?>&idtahunbuku=<?=$idtahunbuku?>";
+		document.location.href="pembayaran_iuran.php?r=<?=random_int(10000, 99999)?>&idkategori=<?=$idkategori?>&idpenerimaan=<?=$idpenerimaan?>&nis=<?=$nis?>&idtahunbuku=<?=$idtahunbuku?>";
 	</script>
-<?	exit();
+<?php exit();
 }
 
 //Muncul pertama kali
 $sql = "SELECT s.replid, nama, telponsiswa as telpon, hpsiswa as hp, kelas, alamatsiswa as alamattinggal,
 			   tingkat, s.keterangan
 		  FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t 
-		  WHERE s.idkelas = k.replid AND k.idtingkat = t.replid AND nis = '$nis'";
+		  WHERE s.idkelas = k.replid AND k.idtingkat = t.replid AND nis = '".$nis."'";
 	
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	CloseDb();
 	exit();
 } 
 else 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$replid = $row['replid'];
 	$nama = $row['nama'];
 	$telpon = $row['telpon'];
@@ -197,9 +197,9 @@ else
 	$keterangansiswa = $row['keterangan'];
 }
 	
-$sql = "SELECT nama FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 
 $tanggal = date('d-m-Y');
@@ -347,15 +347,15 @@ function focusNext(elemName, evt) {
                 <td><strong>Rek Kas</strong></td>
                 <td colspan="2">
 					<select name="rekkas" id="rekkas" style="width: 140px">
-<?              		$sql = "SELECT kode, nama
+<?php              		$sql = "SELECT kode, nama
 								  FROM jbsfina.rekakun
 								 WHERE kategori = 'HARTA'
 								 ORDER BY nama";        
 						$res = QueryDb($sql);
-						while($row = mysql_fetch_row($res))
+						while($row = mysqli_fetch_row($res))
 						{
 							$sel = $row[0] == $defrekkas ? "selected" : "";
-							echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+							echo "<option value='".$row[0]."' $sel>".$row[0]. $row[1]."</option>";
 						}  ?>                
 					</select>
                 </td>
@@ -375,7 +375,7 @@ function focusNext(elemName, evt) {
                 <td colspan="3">
 					<textarea id="keterangan" name="keterangan" rows="2" cols="35" onKeyPress="return focusNext('smsinfo', event)" <?=$dis?> style="width:275px; height:50px"><?=$keterangan ?></textarea><br>
                     <br>
-					<input type='checkbox' id='smsinfo' name='smsinfo' <? if ($smsinfo == 1) echo "checked"?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
+					<input type='checkbox' id='smsinfo' name='smsinfo' <?php if ($smsinfo == 1) echo "checked"?> >&nbsp;Notifikasi SMS | Telegram | Jendela Sekolah
                 </td>
             </tr> 
             <tr>
@@ -443,7 +443,7 @@ function focusNext(elemName, evt) {
             
 		</td>
   	</tr>
-<?  
+<?php  
 	$sql = "SELECT p.replid AS id, j.nokas, date_format(p.tanggal, '%d-%b-%Y') as tanggal, p.keterangan, p.jumlah, p.petugas,
 				   jd.koderek AS rekkas, ra.nama AS namakas
 	          FROM penerimaaniuran p, jurnal j, jurnaldetail jd, rekakun ra 
@@ -457,7 +457,7 @@ function focusNext(elemName, evt) {
 			ORDER BY p.tanggal, p.replid";
 	
 	$result = QueryDb($sql);    
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 ?>
     <tr>
         <td align="center" colspan="2">
@@ -482,11 +482,11 @@ function focusNext(elemName, evt) {
                 <td class="header" width="12%">Petugas</td>
                 <td class="header">&nbsp;</td>
             </tr>
-            <? 
+            <?php 
           
             $cnt = 0;
             $total = 0;
-            while ($row = mysql_fetch_array($result))
+            while ($row = mysqli_fetch_array($result))
             {
                 $total += $row['jumlah'];
 
@@ -496,9 +496,9 @@ function focusNext(elemName, evt) {
                           FROM jbsfina.paymenttrans
                          WHERE idpenerimaaniuran = $id";
                 $res2 = QueryDb($sql);
-                $isSchoolPay = mysql_num_rows($res2) > 0;
+                $isSchoolPay = mysqli_num_rows($res2) > 0;
                 $infoSchoolPay = "";
-                if ($row2 = mysql_fetch_row($res2))
+                if ($row2 = mysqli_fetch_row($res2))
                 {
                     $jenisTrans = $row2[0];
                     if ($jenisTrans == 0)
@@ -518,7 +518,7 @@ function focusNext(elemName, evt) {
                               FROM jbsfina.pgtransdata
                              WHERE idpenerimaaniuran = $id";
                     $res2 = QueryDb($sql);
-                    $row2 = mysql_fetch_row($res2);
+                    $row2 = mysqli_fetch_row($res2);
                     if ($row2[0] > 0)
                     {
                         $infoSchoolPay = "<span style='background-color: #43b9c9; color: #ffffff; font-size: 10px;'>&nbsp;OnlinePay&nbsp;</span>";
@@ -534,13 +534,13 @@ function focusNext(elemName, evt) {
                 <td align="center"><?=$row['petugas'] ?></td>
                 <td align="center">
                     <a href="javascript:cetakkuitansi(<?=$row['id'] ?>)" ><img src="images/ico/print.png" border="0" onMouseOver="showhint('Cetak Kuitansi Pembayaran!', this, event, '100px')"/></a>&nbsp;
-                <?  if (getLevel() != 2) { ?>
+                <?php  if (getLevel() != 2) { ?>
                     <a href="javascript:editpembayaran(<?=$row['id'] ?>)"><img src="images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Pembayaran Cicilan!', this, event, '120px')" /></a>
-                <?	} ?>
+                <?php } ?>
                     <br><?= $infoSchoolPay ?>
                 </td>
             </tr>
-            <?
+            <?php
             }
             ?>
             <tr height="35">
@@ -556,7 +556,7 @@ function focusNext(elemName, evt) {
             
 		</td>
     </tr>
-<? } ?>
+<?php } ?>
 	</table>
 <!-- EOF CONTENT -->
 </td></tr>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 	
+<?php 	
 function getHeader($dep){
 	global $full_url;
 	OpenDb();
@@ -28,9 +28,9 @@ function getHeader($dep){
 	$sql = "SELECT replid,nama,alamat1,alamat2,telp1,telp2,telp3,telp4,fax1,fax2,situs,email FROM jbsumum.identitas WHERE departemen='$dep'";
 	//return $sql;exit;
 	$result = QueryDb($sql); 
-	$num = @mysql_num_rows($result);
-	$row = @mysql_fetch_row($result);
-	//$row = @mysql_fetch_array($result);
+	$num = @mysqli_num_rows($result);
+	$row = @mysqli_fetch_row($result);
+	//$row = @mysqli_fetch_array($result);
 	$replid  = $row[0];
 	$nama	 = $row[1];
 	$alamat1 = $row[2];
@@ -46,7 +46,7 @@ function getHeader($dep){
 	$head =	"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
 	$head .="	<tr>";
 	$head .="		<td width=\"20%\" align=\"center\">";
-	$head .="		<img src=\"".$full_url."library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . rand(1, 5000) . "\" />";
+	$head .="		<img src=\"".$full_url."library/gambar.php?replid=".$replid."&table=jbsumum.identitas&" . random_int(1, 5000) . "\" />";
 	$head .="		</td>";
 	$head .="		<td valign=\"top\" align='left'>";
 						if ($num >  0) {	

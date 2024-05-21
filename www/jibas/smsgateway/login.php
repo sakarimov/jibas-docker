@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/config.php');
 
 session_name("JBSSMS");
@@ -202,14 +202,14 @@ $(document).ready(function () {
         </table>
     </div> 
 	<div id="Partner">
-    <?
+    <?php
 		$_REQUEST = array();
 		$_REQUEST['relpath'] = "..";
 		include('../partner.php');
 	?>
     </div>    
     <div id="Footer">
-    <? include('../footer.php'); ?>
+    <?php include('../footer.php'); ?>
     </div>    
     </td>
   </tr>
@@ -220,13 +220,13 @@ $(document).ready(function () {
 </div>
 </body>
 </html>
-<? if($err>0){ ?>
+<?php if($err>0){ ?>
 <script language='javascript'>
-	<? if($err=='1'){ ?>
+	<?php if($err=='1'){ ?>
 	ShowError2('ErrUsername','Username atau password tidak cocok!','username');
-	<? } ?>
-	<? if($err=='2'){ ?>
+	<?php } ?>
+	<?php if($err=='2'){ ?>
 	ShowError2('ErrUsername','Status pengguna sedang tidak aktif!','username');
-	<? } ?>
+	<?php } ?>
 </script>
-<? } ?>
+<?php } ?>

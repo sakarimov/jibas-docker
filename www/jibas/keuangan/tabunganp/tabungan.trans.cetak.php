@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
@@ -42,7 +42,7 @@ OpenDb();
 
 $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 $result = QueryDb($sql);    
-$row = mysql_fetch_row($result);	
+$row = mysqli_fetch_row($result);	
 $departemen = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -67,47 +67,47 @@ $departemen = $row[0];
 <tr>
 	<td width="120"><strong>Departemen</strong></td>
     <td><strong>: 
-<?	$sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
+<?php $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);	
+	$row = mysqli_fetch_row($result);	
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 <tr>
 	<td><strong>Tahun Buku</strong></td>
     <td><strong>:
-<?	$sql = "SELECT tahunbuku FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
+<?php $sql = "SELECT tahunbuku FROM tahunbuku WHERE replid='$idtahunbuku'"; 	
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 <tr>
 	<td><strong>Tabungan</strong></td>
     <td><strong>:
-<?	$sql = "SELECT nama FROM datatabunganp WHERE replid = '$idtabungan'";
+<?php $sql = "SELECT nama FROM datatabunganp WHERE replid = '".$idtabungan."'";
 	$result = QueryDb($sql);    
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	echo  $row[0]; ?>
     </strong></td>
 </tr>
 
 </table>
 
-<?
+<?php
 $sql = "SELECT replid, nama, telpon, handphone as hp, alamat as alamattinggal, bagian 
 		  FROM jbssdm.pegawai pg 
-		 WHERE nip = '$nip'";
+		 WHERE nip = '".$nip."'";
 
 $result = QueryDb($sql);
-if (mysql_num_rows($result) == 0) 
+if (mysqli_num_rows($result) == 0) 
 {
 	CloseDb();
 	exit();
 }
 else 
 {
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$replid = $row['replid'];
 	$nama = $row['nama'];
 	$telpon = $row['telpon'];
@@ -121,10 +121,10 @@ else
 <table width="100%" border="0" height="100%" cellspacing="2" cellpadding="2">
 <tr>
     <td valign="top" width="500">
-<?	ShowInfoPegawai() ?>
+<?php ShowInfoPegawai() ?>
     </td>
     <td valign="top">
-<?	ShowInfoTabungan() ?>        
+<?php ShowInfoTabungan() ?>        
     </td>
 </tr>
 <tr>
@@ -143,7 +143,7 @@ else
 	    <td class="header" width="*">Keterangan</td>
 	    <td class="header" width="12%">Petugas</td>
 	</tr>
-<?
+<?php
 	$limit = ($page + 1) * 10;
 	
 	$sql = "SELECT COUNT(p.replid)
@@ -151,7 +151,7 @@ else
              WHERE p.idjurnal = j.replid
                AND p.nip = '$nip'
                AND j.idtahunbuku = '$idtahunbuku'
-               AND p.idtabungan = '$idtabungan'";
+               AND p.idtabungan = '".$idtabungan."'";
     $nData = FetchSingle($sql);
     
     $sql = "SELECT p.replid AS id, j.nokas, date_format(p.tanggal, '%d-%b-%Y %H:%i:%s') as tanggal,
@@ -168,14 +168,14 @@ else
     {
         echo "<tr height='100'><td colspan='7' align='center' valign='middle'><i>Belum ada data tabungan</i></td></tr>";
     }
-    else if (mysql_num_rows($result) == 0)
+    else if (mysqli_num_rows($result) == 0)
     {
         echo "";
     }
     else
     {
         $cnt = 0;
-        while ($row = mysql_fetch_array($result))
+        while ($row = mysqli_fetch_array($result))
         {
             $kredit = (int) $row['kredit'];
             $bgcolor = $kredit != 0 ? "#E0F3FF" : "#F9F6EA";
@@ -190,7 +190,7 @@ else
                 <td align="left"><?=$row['keterangan'] ?></td>
                 <td align="center"><?=$row['petugas'] ?></td>
             </tr>
-<?	    }
+<?php     }
 	} ?>
 </table>
     </fieldset>
@@ -199,7 +199,7 @@ else
 </tr>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

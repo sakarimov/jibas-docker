@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -49,11 +49,11 @@ if (isset($_REQUEST['keterangan']))
 
 $ERROR_MSG = "";
 if (isset($_REQUEST['Simpan'])) {
-	$sql_cek = "SELECT * FROM kelas WHERE kelas = '$_REQUEST[kelas]' AND idtahunajaran = '$_REQUEST[tahunajaran]' AND idtingkat = '$_REQUEST[tingkat]'";
-	//$sql_cek = "SELECT * FROM kelas WHERE kelas = '$_REQUEST[kelas]'";
+	$sql_cek = "SELECT * FROM kelas WHERE kelas = '".$_REQUEST['kelas']."' AND idtahunajaran = '".$_REQUEST['tahunajaran']."' AND idtingkat = '".$_REQUEST['tingkat']."'";
+	//$sql_cek = "SELECT * FROM kelas WHERE kelas = '".$_REQUEST['kelas']."'";
 	$result_cek = QueryDb($sql_cek);
 	
-	if (@mysql_num_rows($result_cek) > 0) {
+	if (@mysqli_num_rows($result_cek) > 0) {
 		CloseDb();
 		$ERROR_MSG = "Kelas ".$kelas." sudah digunakan!";
 	} else {
@@ -64,18 +64,18 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 
 OpenDb();
-$sql_get_namatahunajaran = "SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid = '$tahunajaran'";
+$sql_get_namatahunajaran = "SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid = '".$tahunajaran."'";
 $result_get_namatahunajaran = QueryDb($sql_get_namatahunajaran);	
-$row_get_namatahunajaran =@mysql_fetch_array($result_get_namatahunajaran);
+$row_get_namatahunajaran =@mysqli_fetch_array($result_get_namatahunajaran);
 
-$sql_get_namatingkat = "SELECT tingkat FROM jbsakad.tingkat WHERE replid = '$tingkat'";
+$sql_get_namatingkat = "SELECT tingkat FROM jbsakad.tingkat WHERE replid = '".$tingkat."'";
 $result_get_namatingkat = QueryDb($sql_get_namatingkat);
-$row_get_namatingkat =@mysql_fetch_array($result_get_namatingkat);
+$row_get_namatingkat =@mysqli_fetch_array($result_get_namatingkat);
 CloseDb();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -89,7 +89,7 @@ CloseDb();
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -220,10 +220,10 @@ function panggil(elem){
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../inc/session.checker.php");
 require_once("../inc/config.php");
 require_once("../inc/db_functions.php");
@@ -28,14 +28,14 @@ require_once("../inc/common.php");//imageresizer.php
 require_once("../inc/imageresizer.php");
 require_once("../inc/fileinfo.php");
 OpenDb();
-$op = $_REQUEST[op];
-$perpustakaan = $_REQUEST[perpustakaan]; 
+$op = $_REQUEST['op'];
+$perpustakaan = $_REQUEST['perpustakaan']; 
 $logo = $_FILES['filegambar'];
 $uploadedfile = $logo['tmp_name'];
 $uploadedfile_name = $logo['name'];
 $OL='';
 $dis='';
-if (strlen($uploadedfile)!=0){
+if (strlen((string) $uploadedfile)!=0){
 	$filename='temp'.GetFileExt($uploadedfile_name);
 	ResizeImage($logo, 100, 80, 70, $filename);
 	$handle = fopen($filename, "r");
@@ -93,7 +93,7 @@ function formSubmit(){
 		var i = 0;
 		var string4split='.';
 
-		z = file.split(string4split);
+		z = file.explode(string4split);
 		ext = z[z.length-1];
 		
 		if (ext!='JPG' && ext!='jpg' && ext!='Jpg' && ext!='JPg' && ext!='JPEG' && ext!='jpeg'){
@@ -124,12 +124,12 @@ function formSubmit(){
 <table width="100%" border="0">
   <tr>
     <td align="center" id="ImageArea" height="150">
-    	<?
+    	<?php
 		if ($op=='Edit'){
 			$sql = "SELECT replid FROM ".$db_name_umum.".identitas WHERE status='1' AND perpustakaan='$perpustakaan'";
 			$result = QueryDb($sql);
-			$row  =@mysql_fetch_array($result);
-			echo "<img src='../lib/gambar.php?replid=".$row[replid]."&table=".$db_name_umum.".identitas&field=foto'><br>Logo Lama";
+			$row  =@mysqli_fetch_array($result);
+			echo "<img src='../lib/gambar.php?replid=".$row['replid']."&table=".$db_name_umum.".identitas&field=foto'><br>Logo Lama";
 		}
 		?>
     </td>
@@ -145,11 +145,11 @@ function formSubmit(){
   </tr>
 </table>
 </form>
-<? if ($OL!=""){ ?>
+<?php if ($OL!=""){ ?>
 <script language="javascript">
 	Load('<?=$fn?>');
 </script>
-<? } ?>
+<?php } ?>
 <iframe name="HiddenFrame" style="display:none"></iframe>
 </body>
 </html>

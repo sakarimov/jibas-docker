@@ -2,7 +2,7 @@
  * $Id: editor_plugin_src.js 853 2008-05-27 08:05:35Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -265,8 +265,8 @@
 			}
 
 			function getCell(grid, row, col) {
-				if (grid[row] && grid[row][col])
-					return grid[row][col];
+				if (grid['row'] && grid['row'][col])
+					return grid['row'][col];
 
 				return null;
 			}

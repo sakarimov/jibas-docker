@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -40,7 +40,7 @@ ReadRequest();
 <title>Untitled Document</title>    
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 </head>
@@ -53,22 +53,22 @@ ReadRequest();
 	<tr>
         <td width="18%"><strong>Departemen </strong></td>
         <td>
-<?      SelectDepartemen(); ?>
+<?php      SelectDepartemen(); ?>
         <strong>Angkatan </strong>
         </td>
         <td>
-<?      SelectAngkatan(); ?>        
+<?php      SelectAngkatan(); ?>        
         </td>
     </tr>
      <tr>
     	<td><strong>Kelas </strong></td>
         <td>
-<?      SelectTingkat(); ?>        
-<?      SelectKelas(); ?>
+<?php      SelectTingkat(); ?>        
+<?php      SelectKelas(); ?>
         <strong>Tabungan </strong>
         </td>
         <td>
-<?      SelectTabungan(); ?>        
+<?php      SelectTabungan(); ?>        
     	</td>
     </tr>
     </table>
@@ -93,7 +93,7 @@ ReadRequest();
    	</td>
 </tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 </body>
 </html>
 <script language="javascript" src="laporan.kelas.header.js"></script>

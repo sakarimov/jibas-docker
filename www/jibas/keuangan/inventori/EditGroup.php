@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,39 +20,39 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 OpenDb();
-$idgroup = $_REQUEST[idgroup];
-$sql = "SELECT * FROM jbsfina.groupbarang WHERE replid='$_REQUEST[idgroup]'";
+$idgroup = $_REQUEST['idgroup'];
+$sql = "SELECT * FROM jbsfina.groupbarang WHERE replid='".$_REQUEST['idgroup']."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$groupname = stripslashes($row[namagroup]);
-if (isset($_REQUEST[groupname]))
-	$groupname = addslashes(trim($_REQUEST[groupname]));
+$row = @mysqli_fetch_array($result);
+$groupname = stripslashes((string) $row['namagroup']);
+if (isset($_REQUEST['groupname']))
+	$groupname = addslashes(trim((string) $_REQUEST['groupname']));
 //$groupname = addslashes(trim($groupname));
-$keterangan = stripslashes($row[keterangan]);
-if (isset($_REQUEST[keterangan]))
-	$keterangan = addslashes(trim($_REQUEST[keterangan]));	
+$keterangan = stripslashes((string) $row['keterangan']);
+if (isset($_REQUEST['keterangan']))
+	$keterangan = addslashes(trim((string) $_REQUEST['keterangan']));	
 
 //$keterangan = addslashes(trim($keterangan));
 if (isset($_REQUEST['Simpan'])){
-	$sql = "SELECT * FROM jbsfina.groupbarang WHERE namagroup='$groupname' AND replid<>'$_REQUEST[idgroup]'";
-	if (@mysql_num_rows(QueryDb($sql))>0){
+	$sql = "SELECT * FROM jbsfina.groupbarang WHERE namagroup='$groupname' AND replid<>'".$_REQUEST['idgroup']."'";
+	if (@mysqli_num_rows(QueryDb($sql))>0){
 		?>
         <script language="javascript">
-			alert ('Group <?=$_REQUEST[groupname]?> sudah digunakan!');
+			alert ('Group <?=$_REQUEST['groupname']?> sudah digunakan!');
         </script>
-        <?
+        <?php
 	} else {
-		QueryDb("UPDATE jbsfina.groupbarang SET namagroup='$groupname', keterangan='$keterangan' WHERE replid='$_REQUEST[idgroup]'");
+		QueryDb("UPDATE jbsfina.groupbarang SET namagroup='$groupname', keterangan='$keterangan' WHERE replid='".$_REQUEST['idgroup']."'");
 		?>
         <script language="javascript">
 			parent.opener.GetFresh();
 			window.close();
         </script>
-        <?
+        <?php
 	}
 }
 ?>
@@ -78,7 +78,7 @@ function validate(){
 <fieldset style="border:#336699 1px solid; background-color:#eaf4ff" >
 <legend style="background-color:#336699; color:#FFFFFF; font-size:12px; font-weight:bold; padding:5px; ">&nbsp;Tambah&nbsp;Group&nbsp;</legend>
 <form action="EditGroup.php" onSubmit="return validate()" method="post">
-<input type="hidden" name="idgroup" id="idgroup" value="<?=$_REQUEST[idgroup]?>" />
+<input type="hidden" name="idgroup" id="idgroup" value="<?=$_REQUEST['idgroup']?>" />
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
   <tr>
     <td>Nama Group</td>
@@ -95,7 +95,7 @@ function validate(){
 </form>
 </fieldset>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

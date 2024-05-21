@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -52,8 +52,8 @@ if (isset($_REQUEST['Simpan'])) {
 	OpenDb();
 	$sql="SELECT replid FROM jbsvcr.gambarlogin ORDER BY replid DESC LIMIT 1";
 	$result=QueryDb($sql);
-	$row=@mysql_fetch_array($result);
-	$lastid=(int)$row[replid];
+	$row=@mysqli_fetch_array($result);
+	$lastid=(int)$row['replid'];
 	CloseDb();
 	/*
 	$foto=$_FILES["file"];
@@ -80,7 +80,7 @@ if (isset($_REQUEST['Simpan'])) {
 	$cnt=(int)$lastid+1;
 	$filename="bg".$cnt.".jpg";
 	//$filename = "x.jpg";
-	list($width,$height)=getimagesize($uploadedfile);
+	[$width, $height]=getimagesize($uploadedfile);
 	if ($width<$height){
 	$newheight=1024;
    	$newwidth=1280;
@@ -106,7 +106,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.get_fresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	
 	CloseDb();
 }
@@ -118,7 +118,7 @@ if (isset($_REQUEST['Simpan'])) {
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS INFOGURU [Tambah Gambar]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -146,19 +146,19 @@ if (isset($_REQUEST['Simpan'])) {
 </table>
 </form>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <!-- Pilih inputan pertama -->
 
-<? if ($cek == 1) { ?>
+<?php if ($cek == 1) { ?>
 <script language="javascript">
 	document.getElementById('urutan').focus();
 </script>
 
-<? } ?>
+<?php } ?>
 </body>
 </html>

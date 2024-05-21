@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
  * @version: 28.0 (Oct 10, 2022)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowSelectDept()
 {
     global $departemen;
@@ -32,7 +32,7 @@ function ShowSelectDept()
     {
         if ($departemen == "")
             $departemen = $value;
-        echo "<option value='$value' " . StringIsSelected($value, $departemen) . ">$value</option>";
+        echo "<option value='$value' " . StringIsSelected($value, $departemen) . ">".$value."</option>";
     }
     echo "</select>";
 }
@@ -46,38 +46,38 @@ function GetSelectPayment($departemen, $kelompok)
                AND kelompok = $kelompok
              ORDER BY urutan";
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
 
     if ($num == 0)
     {
-        $arrJson = array(0, "Belum ada konfigurasi pembayaran!", "");
+        $arrJson = [0, "Belum ada konfigurasi pembayaran!", ""];
     }
     else
     {
-        $arrKet = array();
+        $arrKet = [];
 
         $idFirst = 0;
         $data = "<select id='paymentSelect' onchange='changePayment()' style='width: 350px; font-size: 14px;'>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $arrKet[] = $row[2];
 
             if ($idFirst == 0)
             {
                 $idFirst = $row[0];
-                $data .= "<option value='$row[0]' selected>$row[1]</option>";
+                $data .= "<option value='".$row[0]."' selected>".$row[1]."</option>";
             }
             else
             {
-                $data .= "<option value='$row[0]'>$row[1]</option>";
+                $data .= "<option value='".$row[0]."'>".$row[1]."</option>";
             }
         }
         $data .= "<select>";
 
-        $arrJson = array($idFirst, $data, json_encode($arrKet));
+        $arrJson = [$idFirst, $data, json_encode($arrKet, JSON_THROW_ON_ERROR)];
     }
 
-    echo json_encode($arrJson);
+    echo json_encode($arrJson, JSON_THROW_ON_ERROR);
 }
 
 function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
@@ -86,7 +86,7 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
               FROM jbsfina.autotrans
              WHERE replid = $idAutoTrans";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $smsinfo = $row[0];
 
     $sql = "SELECT ad.idpenerimaan, dp.nama, dp.idkategori, ad.besar, ad.keterangan
@@ -96,11 +96,11 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
                AND ad.aktif = 1
              ORDER BY ad.urutan";
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
 
     if ($num == 0)
     {
-        $arrJson = array(0, "Tidak ditemukan daftar pembayaran!");
+        $arrJson = [0, "Tidak ditemukan daftar pembayaran!"];
     }
     else
     {
@@ -122,7 +122,7 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
         $no = 0;
         $total = 0;
         $validTrans = true;
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $no += 1;
             $bayar = FormatRupiah($row[3]);
@@ -151,7 +151,7 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
                               FROM jbsfina.besarjtt
                              WHERE nis = '$noid'
                                AND idpenerimaan = '$idPayment'
-                               AND info2 = '$idTahunBuku'";
+                               AND info2 = '".$idTahunBuku."'";
                 }
                 else if ($kategori == "CSWJB")
                 {
@@ -160,11 +160,11 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
                              WHERE b.idcalon = cs.replid
                                AND cs.nopendaftaran = '$noid'
                                AND b.idpenerimaan = '$idPayment'
-                               AND b.info2 = '$idTahunBuku'";
+                               AND b.info2 = '".$idTahunBuku."'";
                 }
 
                 $res2 = QueryDb($sql);
-                $num2 = mysql_num_rows($res2);
+                $num2 = mysqli_num_rows($res2);
                 if ($num2 == 0)
                 {
                     $validTrans = false;
@@ -172,7 +172,7 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
                 }
                 else
                 {
-                    $row2 = mysql_fetch_row($res2);
+                    $row2 = mysqli_fetch_row($res2);
                     $idBesarJtt = $row2[0];
                     $besar = $row2[1];
                     $lunas = $row2[2];
@@ -192,7 +192,7 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
                                  WHERE idbesarjttcalon = $idBesarJtt";
                     }
                     $res2 = QueryDb($sql);
-                    $row2 = mysql_fetch_row($res2);
+                    $row2 = mysqli_fetch_row($res2);
                     $jumlah = $row2[0];
 
                     $sisa = $besar - $jumlah;
@@ -225,9 +225,9 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
             $tab .= "<td align='center'>$no</td>";
             $tab .= "<td align='center' valign='middle' style='background-color: #3994c6'>";
             $tab .= "<input type='checkbox' id='chPayment-$no' name='chPayment-$no' $checked $disabled $readonly onchange='chPaymentChange($no); calculatePay();' >";
-            $tab .= "<input type='hidden' id='idPayment-$no' name='idPayment-$no' value='$row[0]'>";
+            $tab .= "<input type='hidden' id='idPayment-$no' name='idPayment-$no' value='".$row[0]."'>";
             $tab .= "<input type='hidden' id='payment-$no' name='payment-$no' value='$payment'>";
-            $tab .= "<input type='hidden' id='kategori-$no' name='kategori-$no' value='$row[2]'>";
+            $tab .= "<input type='hidden' id='kategori-$no' name='kategori-$no' value='".$row[2]."'>";
             $tab .= "<input type='hidden' id='besar-$no' name='besar-$no' value='$besar'>";
             $tab .= "<input type='hidden' id='idbesarjtt-$no' name='idbesarjtt-$no' value='$idBesarJtt'>";
             $tab .= "<input type='hidden' id='jumlah-$no' name='jumlah-$no' value='$jumlah'>";
@@ -286,11 +286,11 @@ function GetPaymentList($idAutoTrans, $kelompok, $noid, $idTahunBuku)
         }
 
         if ($no > 0)
-            $arrJson = array($num, $tab);
+            $arrJson = [$num, $tab];
         else
-            $arrJson = array(0, "Tidak ada daftar pembayaran yang aktif!");
+            $arrJson = [0, "Tidak ada daftar pembayaran yang aktif!"];
     }
-    echo json_encode($arrJson);
+    echo json_encode($arrJson, JSON_THROW_ON_ERROR);
 }
 
 function ShowAccYear()
@@ -302,9 +302,9 @@ function ShowAccYear()
              WHERE aktif = 1
                AND departemen='$departemen'";
     $result = QueryDb($sql);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         echo "<input type='text' name='tahunbuku' id='tahunbuku' size='30' readonly style='background-color:#daefff; font-size:14px;' value='" . $row['tahunbuku'] . "'/>";
         echo "<input type='hidden' name='idtahunbuku' id='idtahunbuku' value='" . $row['id'] . "'/>";
     }

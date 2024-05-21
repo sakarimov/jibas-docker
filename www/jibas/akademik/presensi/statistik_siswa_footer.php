@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -71,7 +71,7 @@ if (isset($_REQUEST['tglakhir']))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Statistik Harian Kehadiran Setiap Siswa</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
@@ -98,14 +98,14 @@ function cetak() {
 <!-- TABLE UTAMA -->
 <tr>
 	<td>
-    <? 		
+    <?php 		
 	OpenDb();
 	//$sql = "SELECT DISTINCT(s.nis), s.nama FROM presensipelajaran p, ppsiswa pp, siswa s WHERE pp.nis = s.nis AND pp.idpp = p.replid AND p.idkelas = $kelas AND p.idsemester = $semester AND p.idpelajaran = $pelajaran AND ((MONTH(tanggal) = '$bln1' AND YEAR(tanggal) = '$th1') OR (MONTH(tanggal) = '$bln2') AND YEAR(tanggal) = '$th2') ORDER BY p.tanggal ";	
 	$sql = "SELECT DISTINCT(s.nis), s.nama FROM presensipelajaran p, ppsiswa pp, siswa s WHERE pp.nis = s.nis AND pp.idpp = p.replid AND p.idkelas = '$kelas' AND p.idsemester = '$semester' AND p.idpelajaran = '$pelajaran' AND p.tanggal BETWEEN '$tglawal' AND '$tglakhir' ORDER BY s.nama, p.tanggal ";	
 	
 	$result = QueryDb($sql);			 
-	$field = mysql_num_fields($result);
-	$jum = mysql_num_rows($result);
+	$field = mysqli_num_fields($result);
+	$jum = mysqli_num_rows($result);
 	
 	if ($jum > 0) { 
 	?> 
@@ -126,9 +126,9 @@ function cetak() {
             <td width="15%" class="header">Nama</td>
             <td width="*" class="header"></td>
 		</tr>
-		<? 
+		<?php 
 		$cnt = 0;
-		while ($row = @mysql_fetch_row($result)) {		
+		while ($row = @mysqli_fetch_row($result)) {		
     		
 		?>	
         <tr height="25">        			
@@ -140,14 +140,14 @@ function cetak() {
             <img src="statistik_batang.php?semester=<?=$semester?>&kelas=<?=$kelas?>&pelajaran=<?=$pelajaran?>&tglakhir=<?=$tglakhir?>&tglawal=<?=$tglawal?>&nis=<?=$row[0]?>" />
             </td>
     	</tr>
- 	<?		
+ 	<?php 	
 		} 
 		CloseDb();	?>
 		</table>
 		<script language='JavaScript'>
    			Tables('table', 1, 0);
 		</script>
-<? 	} else { ?>
+<?php 	} else { ?>
 
 	<table width="100%" border="0" align="center">          
 	<tr>
@@ -156,7 +156,7 @@ function cetak() {
 		</td>
 	</tr>
 	</table>
-<?	} ?>
+<?php } ?>
     </td>
 </tr>
 

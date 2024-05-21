@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ try
                SET idchannel = '$idChannel', judul = '$judul', urutan = '$urutan', prioritas = '$prioritas', 
                    deskripsi = '$deskripsi', objektif = '$objektif', pertanyaan = '$pertanyaan', cover = '$cover', 
                    videoname = '-', ovideoname = '-', videosize = 0, videotype = '-', videoloc = '-', tstamp = NOW(),
-                   idkategori = $kateValue, katakunci = '$kateKunci'";
+                   idkategori = $kateValue, katakunci = '".$kateKunci."'";
     //$d->Log($sql);
     QueryDbEx2($sql);
 
@@ -85,14 +85,14 @@ try
 
     $sql = "SELECT LAST_INSERT_ID()";
     $res = QueryDbEx2($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $idMedia = $row[0];
     //$d->Log($idMedia);
 
     $video = $_FILES["fileVideo"];
     $ovideoname = SafeFileName($video["name"]);
     $videoname = SafeFileName($video["name"]);
-    $videoname = str_pad($idMedia, 7, "0", STR_PAD_LEFT) . "." . $videoname;
+    $videoname = str_pad((string) $idMedia, 7, "0", STR_PAD_LEFT) . "." . $videoname;
     $videotype = $video["type"];
     $videosize = $video["size"];
     $videoloc = $mediaUrl;
@@ -121,7 +121,7 @@ try
 
         $ofilename = SafeFileName($file["name"]);
         $filename = SafeFileName($file["name"]);
-        $filename = str_pad($idMedia, 7, "0", STR_PAD_LEFT) . "." . $filename;
+        $filename = str_pad((string) $idMedia, 7, "0", STR_PAD_LEFT) . "." . $filename;
         $filetype = $file["type"];
         $filesize = $file["size"];
         $fileloc = $mediaUrl;
@@ -131,7 +131,7 @@ try
 
         $sql = "INSERT INTO jbsel.mediafile
                    SET idmedia = '$idMedia', filename = '$filename', ofilename = '$ofilename', filesize = '$filesize',
-                       filetype = '$filetype', fileinfo = '$info', fileloc = '$fileloc'";
+                       filetype = '$filetype', fileinfo = '$info', fileloc = '".$fileloc."'";
         //$d->Log($sql);
         QueryDbEx2($sql);
     }

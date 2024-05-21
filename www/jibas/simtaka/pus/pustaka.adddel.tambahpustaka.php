@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
 require_once('../inc/common.php');
@@ -53,12 +53,12 @@ if (isset($_REQUEST['Simpan'])) Save();
 <img src='../img/book.png' height='24'>&nbsp;
 <font style='font-size: 18px;'>Tambah Pustaka</font>
 <br><br>        
-<?
+<?php
 $sql = "SELECT judul
           FROM jbsperpus.pustaka
-         WHERE replid = '$idpustaka'";
+         WHERE replid = '".$idpustaka."'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $judul = $row[0];
 
 echo "Judul: <strong>$judul</strong><br>";
@@ -71,7 +71,7 @@ echo "Judul: <strong>$judul</strong><br>";
     <td width='*' class='header'>Perpustakaan</td>
     <td width='12%' class='header'>Jumlah</td>
 </tr>
-<?
+<?php
 if ($idperpustakaan == -1)
     $sql = "SELECT replid, nama
               FROM jbsperpus.perpustakaan
@@ -79,10 +79,10 @@ if ($idperpustakaan == -1)
 else
     $sql = "SELECT replid, nama
               FROM jbsperpus.perpustakaan
-             WHERE replid = '$idperpustakaan'";
+             WHERE replid = '".$idperpustakaan."'";
 $res = QueryDb($sql);
 $cnt = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $cnt += 1;
     $replid = $row[0];
@@ -96,7 +96,7 @@ while($row = mysql_fetch_row($res))
             <input type='textbox' size='5' maxlength='5' id='jumlah<?=$cnt?>' name='jumlah<?=$cnt?>'>
         </td>
     </tr>
-<?
+<?php
 }
 ?>
 <input type='hidden' id='npus' name='npus'value='<?=$cnt?>'>
@@ -109,6 +109,6 @@ while($row = mysql_fetch_row($res))
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>

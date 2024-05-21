@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,28 +20,28 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function SimpanData()
 {
-    global $MYSQL_ERROR_MSG;
+    global $mysqli_ERROR_MSG;
     
     OpenDb();
     
 	$sql = "SELECT replid
               FROM datatabungan
-             WHERE nama = '$_REQUEST[nama]'";
+             WHERE nama = '".$_REQUEST['nama']."'";
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0)
+	if (mysqli_num_rows($result) > 0)
 	{
-		$MYSQL_ERROR_MSG = "Nama $_REQUEST[nama] sudah digunakan";
+		$mysqli_ERROR_MSG = "Nama {$_REQUEST['nama']} sudah digunakan";
 	}
 	else
 	{
 		$smsinfo = isset($_REQUEST['smsinfo']) ? 1 : 0;
 		$sql = "INSERT INTO datatabungan
-				   SET nama='".CQ($_REQUEST['nama'])."', rekkas='$_REQUEST[norekkas]',
-				       departemen='$_REQUEST[departemen]', rekutang='$_REQUEST[norekutang]',
+				   SET nama='".CQ($_REQUEST['nama'])."', rekkas='".$_REQUEST['norekkas']."',
+				       departemen='".$_REQUEST['departemen']."', rekutang='".$_REQUEST['norekutang']."',
 					   keterangan='".CQ($_REQUEST['keterangan'])."', aktif=1, info2='$smsinfo'";
 		$result = QueryDb($sql);
 		CloseDb();
@@ -52,7 +52,7 @@ function SimpanData()
 				opener.refreshAll();
 				window.close();
 			</script> 
-<?          exit();          
+<?php          exit();          
         }
         
 	}

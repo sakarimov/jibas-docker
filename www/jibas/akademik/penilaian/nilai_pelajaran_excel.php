@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,7 +50,7 @@ $sql = "SELECT p.nama, p.replid AS pelajaran, a.dasarpenilaian, j.jenisujian, j.
 		 WHERE a.dasarpenilaian = dp.dasarpenilaian AND a.replid='$idaturan' AND p.replid = a.idpelajaran AND a.idjenisujian = j.replid";
 $result = QueryDb($sql);
 
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $namapel = $row['nama'];
 $pelajaran = $row['pelajaran'];
 $aspek = $row['dasarpenilaian'];
@@ -63,7 +63,7 @@ $jenis = $row['replid'];
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Aturan Perhitungan Nilai Rapor[Menu]</title>
+<title>Aturan Perhitungan Nilai Rapor['Menu']</title>
 
 <style type="text/css">
 <!--
@@ -99,11 +99,11 @@ $jenis = $row['replid'];
     	<tr>
             <td><strong>Jenis Pengujian</strong></td>
             <td><strong>: <?=$namajenis?></strong></td>  
-<? 	$sql_cek_ujian = "SELECT u.replid, u.tanggal, u.deskripsi, u.idrpp 
+<?php 	$sql_cek_ujian = "SELECT u.replid, u.tanggal, u.deskripsi, u.idrpp 
 						FROM jbsakad.ujian u 
 					   WHERE u.idaturan='$idaturan' AND u.idkelas='$kelas' AND u.idsemester='$semester' ORDER by u.tanggal ASC";
     $result_cek_ujian = QueryDb($sql_cek_ujian);		
-	$jumlahujian = @mysql_num_rows($result_cek_ujian); ?>            
+	$jumlahujian = @mysqli_num_rows($result_cek_ujian); ?>            
   		</tr>
         </table>
         <br />
@@ -112,27 +112,27 @@ $jenis = $row['replid'];
             <td height="30" bgcolor="#666666" width="5" align='center'><font color="white"><strong>No.</strong></font></td>
     		<td height="30" bgcolor="#666666" align='center'><font color="white"><strong>N I S</strong></font></td>
     		<td height="30" bgcolor="#666666" align='center'><font color="white"><strong>Nama</strong></font></td>
-    <?
+    <?php
        
         $i=1;
-        while ($row_cek_ujian=@mysql_fetch_array($result_cek_ujian)){
-			$sql_get_rpp_name = "SELECT rpp FROM rpp WHERE replid='$row_cek_ujian[idrpp]'";
-			if (!empty($row_cek_ujian[idrpp])) {
+        while ($row_cek_ujian=@mysqli_fetch_array($result_cek_ujian)){
+			$sql_get_rpp_name = "SELECT rpp FROM rpp WHERE replid='".$row_cek_ujian['idrpp']."'";
+			if (!empty($row_cek_ujian['idrpp'])) {
 				$res_get_rpp_name = QueryDb($sql_get_rpp_name);
-				$rpp = @mysql_fetch_array($res_get_rpp_name);
-				$namarpp = $rpp[rpp];
+				$rpp = @mysqli_fetch_array($res_get_rpp_name);
+				$namarpp = $rpp['rpp'];
 			} else {
 				$namarpp = "Tanpa RPP";
 			}
 			$nilaiujian[$i] = 0;
 			$idujian[$i] = $row_cek_ujian['replid'];			
-            $tgl = explode("-",$row_cek_ujian['tanggal']);
+            $tgl = explode("-",(string) $row_cek_ujian['tanggal']);
 			
         ?>
     <td height="30" bgcolor="#666666" align="center" ><font color="white"><strong><?=$namajenis."-".$i?>&nbsp;<br />
      
-	<?=$tgl[2]."/".$tgl[1]."/".substr($tgl[0],2)?></strong></font></td>
-    <?
+	<?=$tgl[2]."/".$tgl[1]."/".substr((string) $tgl[0],2)?></strong></font></td>
+    <?php
 	$i++;
 	}
 	?>
@@ -140,46 +140,46 @@ $jenis = $row['replid'];
     <td height="30" align="center" bgcolor="#666666"><font color="white"><strong>Nilai Akhir <?=$namajenis?></strong>&nbsp;</font>
 	</td>
   </tr>
-  <?
+  <?php
   $sql_siswa="SELECT * FROM jbsakad.siswa WHERE idkelas='$kelas' AND aktif=1 ORDER BY nama ASC";
   $result_siswa=QueryDb($sql_siswa);
   $cnt=1;
-  $jumsiswa = mysql_num_rows($result_siswa);
-  while ($row_siswa=@mysql_fetch_array($result_siswa)){
+  $jumsiswa = mysqli_num_rows($result_siswa);
+  while ($row_siswa=@mysqli_fetch_array($result_siswa)){
   		$nilai = 0;	
   ?>
   <tr>
     <td height="25" align="center" width="5"><?=$cnt?></td>
     <td height="25" align="center"><?=$row_siswa['nis']?></td>
     <td height="25" align="left"><?=$row_siswa['nama']?></td>
-    <? 	for ($j=1;$j<=count($idujian);$j++) { ?>
+    <?php 	for ($j=1;$j<=count($idujian);$j++) { ?>
             <td align="center">							
-			<?	$sql_cek_nilai_ujian="SELECT * FROM jbsakad.nilaiujian WHERE idujian='$idujian[$j]' AND nis='$row_siswa[nis]'";
+			<?php $sql_cek_nilai_ujian="SELECT * FROM jbsakad.nilaiujian WHERE idujian='".$idujian[$j]."' AND nis='".$row_siswa['nis']."'";
                 $result_cek_nilai_ujian=QueryDb($sql_cek_nilai_ujian);
                	
-                    $row_cek_nilai_ujian=@mysql_fetch_array($result_cek_nilai_ujian);
+                    $row_cek_nilai_ujian=@mysqli_fetch_array($result_cek_nilai_ujian);
                 	$nilaiujian[$j] = $nilaiujian[$j]+$row_cek_nilai_ujian['nilaiujian'];					
                 	$nilai = $nilai+$row_cek_nilai_ujian['nilaiujian'];
                 
                  
                     echo $row_cek_nilai_ujian['nilaiujian'];
-					if ($row_cek_nilai_ujian[keterangan]<>"")
+					if ($row_cek_nilai_ujian['keterangan']<>"")
                         echo "<strong><font color='blue'>)*</font></strong>";               
 				
 			?>
             </td>
-		<?  } ?>
+		<?php  } ?>
             <td align="center">
-               <? GetRataSiswa2($pelajaran, $idjenisujian, $kelas, $semester, $idaturan, $row_siswa['nis']); ?>
+               <?php GetRataSiswa2($pelajaran, $idjenisujian, $kelas, $semester, $idaturan, $row_siswa['nis']); ?>
             </td>
     		<td align="center">
-	<?					
-			$sql_get_nau_per_nis="SELECT nilaiAU,replid,keterangan,info1 FROM jbsakad.nau WHERE nis='$row_siswa[nis]' AND idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan'";
+	<?php 				
+			$sql_get_nau_per_nis="SELECT nilaiAU,replid,keterangan,info1 FROM jbsakad.nau WHERE nis='".$row_siswa['nis']."' AND idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan'";
 		
 			//echo $sql_get_nau_per_nis;			
 			$result_get_nau_per_nis=QueryDb($sql_get_nau_per_nis);
-			if (mysql_num_rows($result_get_nau_per_nis) > 0) {
-				$row_get_nau_per_nis=@mysql_fetch_array($result_get_nau_per_nis);
+			if (mysqli_num_rows($result_get_nau_per_nis) > 0) {
+				$row_get_nau_per_nis=@mysqli_fetch_array($result_get_nau_per_nis);
 				
 				echo $row_get_nau_per_nis['nilaiAU'];
 				if ($row_get_nau_per_nis['keterangan']<>"")
@@ -189,27 +189,27 @@ $jenis = $row['replid'];
 			} ?>
             </td>
     	</tr>
-  <?
+  <?php
   		$cnt++;
   		} ?>
         
 		<tr>
         	<td height='25'  bgcolor='#666666' align='center' colspan='3'><font color="white"><strong>Rata-rata Kelas</strong></font></td>
-	<? 	$rata = 0;
+	<?php 	$rata = 0;
         for ($j=1;$j<=count($idujian);$j++) { 
         	$rata = $rata+($nilaiujian[$j]/$jumsiswa);
     ?>
 			<td align="center" bgcolor="#FFFFFF"><?=GetRataKelas($_REQUEST['kelas'],$_REQUEST['semester'],$idujian[$j])?></td>
-	<? 	} ?>
+	<?php 	} ?>
             <td align="center" bgcolor="#FFFFFF"><?=round($rata/count($idujian),2)?></td>
             <td align="center" bgcolor="#FFFFFF">
-   	<?					
+   	<?php 				
 		$sql_get_nau_per_nis="SELECT SUM(nilaiAU)/$jumsiswa FROM jbsakad.nau WHERE idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan'";
 		
 		//echo $sql_get_nau_per_nis;			
 		$result_get_nau_per_nis=QueryDb($sql_get_nau_per_nis);
-		if (mysql_num_rows($result_get_nau_per_nis) > 0) {
-			$row = mysql_fetch_row($result_get_nau_per_nis);     
+		if (mysqli_num_rows($result_get_nau_per_nis) > 0) {
+			$row = mysqli_fetch_row($result_get_nau_per_nis);     
 			echo round($row[0],2);
      	} ?>        
             </td>
@@ -234,32 +234,32 @@ $jenis = $row['replid'];
 					<td width="85%" bgcolor="#666666" height="30"><strong><font color="white"><?=$namajenis?></font></strong></td>
 					<td width="15%" bgcolor="#666666" align="center" height="30"><strong><font color="white">Bobot</font></strong></td>
 				</tr>
-     	<?
+     	<?php
 			$sql_cek_ujian="SELECT * FROM jbsakad.ujian WHERE idkelas='$kelas' AND idsemester='$semester' AND idaturan='$idaturan' ORDER by tanggal ASC";			
 			$result_cek_ujian=QueryDb($sql_cek_ujian);
-			$jumujian = mysql_num_rows($result_cek_ujian);
+			$jumujian = mysqli_num_rows($result_cek_ujian);
 			$ibobot=1;
 			
-			while ($row_cek_ujian=@mysql_fetch_array($result_cek_ujian)){
-				$sql_get_bobotnya="SELECT b.replid, b.bobot FROM jbsakad.bobotnau b WHERE b.idujian='$row_cek_ujian[replid]'";								
+			while ($row_cek_ujian=@mysqli_fetch_array($result_cek_ujian)){
+				$sql_get_bobotnya="SELECT b.replid, b.bobot FROM jbsakad.bobotnau b WHERE b.idujian='".$row_cek_ujian['replid']."'";								
 				$result_get_bobotnya=QueryDb($sql_get_bobotnya);
-				$nilai_bobotnya=@mysql_fetch_array($result_get_bobotnya);
+				$nilai_bobotnya=@mysqli_fetch_array($result_get_bobotnya);
 		?>
-    		<? 	if (mysql_num_rows($result_get_bobotnya) > 0) { ?>
+    		<?php 	if (mysqli_num_rows($result_get_bobotnya) > 0) { ?>
             <tr>
 				<td width="85%" height="25">
             
 				<!--<input <?=$dis?> type="checkbox" name="<?='jenisujian'.$ibobot ?>" id="<?='jenisujian'.$ibobot ?>" value="1" checked  onKeyPress="focusNext('bobot<?=$ibobot?>',event)">				            	
-			<?  //} else { ?>
+			<?php  //} else { ?>
 				<input <?=$dis?> type="checkbox" name="<?='jenisujian'.$ibobot ?>" id="<?='jenisujian'.$ibobot ?>" value="1"  onKeyPress="focusNext('bobot<?=$ibobot?>',event)">--> 
-            <? //} ?>
+            <?php //} ?>
                 <?=$namajenis."-".$ibobot." (".format_tgl($row_cek_ujian['tanggal']).")"; ?>               
                 </td>
                 <td align="center">
                 <?=$nilai_bobotnya['bobot']?>
                 </td>
             </tr>
-			<?
+<?php
 				}
 				$ibobot++;
 			}

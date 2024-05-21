@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -81,27 +81,27 @@ $op = $_REQUEST['op'];
 
 if ($op == "xm8r389xemx23xb2378e23") 
 {
-	$sql="SELECT * FROM calonsiswa WHERE replidsiswa = '$_REQUEST[replid]'";
+	$sql="SELECT * FROM calonsiswa WHERE replidsiswa = '".$_REQUEST['replid']."'";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$idproses = $row['idproses'];
 	$idkelompok = $row['idkelompok'];
 	
 	BeginTrans();
 	$success = 0;
 	
-	$sql = "DELETE FROM siswa WHERE replid = '$_REQUEST[replid]'"; 	
+	$sql = "DELETE FROM siswa WHERE replid = '".$_REQUEST['replid']."'"; 	
 	QueryDbTrans($sql,$success);
 	
-	$sql_calon="UPDATE calonsiswa SET replidsiswa=NULL WHERE replidsiswa = '$_REQUEST[replid]'";
+	$sql_calon="UPDATE calonsiswa SET replidsiswa=NULL WHERE replidsiswa = '".$_REQUEST['replid']."'";
 	if ($success)
 		QueryDbTrans($sql_calon,$success);
 	
-	$sql_dept="DELETE FROM riwayatdeptsiswa WHERE nis='$_REQUEST[nis]'";
+	$sql_dept="DELETE FROM riwayatdeptsiswa WHERE nis='".$_REQUEST['nis']."'";
 	if ($success)
 		QueryDbTrans($sql_dept,$success);
 
-	$sql_kls="DELETE FROM riwayatkelassiswa WHERE nis='$_REQUEST[nis]'";
+	$sql_kls="DELETE FROM riwayatkelassiswa WHERE nis='".$_REQUEST['nis']."'";
 	if ($success)
 		QueryDbTrans($sql_kls,$success);
 	
@@ -120,7 +120,7 @@ if ($op == "xm8r389xemx23xb2378e23")
 				parent.daftar.location.href = "penempatan_daftar.php?proses="+proses+"&departemen=<?=$departemen?>&aktif=1&angkatan=<?=$angkatan?>&tahunajaran=<?=$tahunajaran?>&tingkat=<?=$tingkat?>&kelas=<?=$kelas?>&cari="+cari+"&kelompok=<?=$idkelompok?>";
 			} 	
 		</script>
-<?	} 
+<?php } 
 	else 
 	{
 		RollbackTrans();
@@ -338,23 +338,23 @@ function refresh_isi() {
       	<td align="left" width="24%"><strong>Angkatan</strong></td>
       	<td align="center">
         	<select name="angkatan" id="angkatan" onChange="change_angkatan()" style="width:228px;" onKeyPress="return focusNext('tahunajaran', event)" onFocus="panggil('angkatan')">
-<?			$sql = "SELECT replid,angkatan FROM angkatan where aktif=1 AND departemen = '$departemen' ORDER BY replid DESC";
+<?php 		$sql = "SELECT replid,angkatan FROM angkatan where aktif=1 AND departemen = '$departemen' ORDER BY replid DESC";
 			$result = QueryDb($sql);
-			while($row = mysql_fetch_array($result)) 
+			while($row = mysqli_fetch_array($result)) 
 			{
 				if ($angkatan == "")
 					$angkatan = $row['replid'];	?>
-           	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $angkatan) ?>><?=$row['angkatan']?></option>
-<?			} //while	?>
+           	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $angkatan) ?>><?=$row['angkatan']?></option>
+<?php 		} //while	?>
      		</select></td>
     </tr>
 	<tr>
     	<td align="left"><strong>Th. Ajaran</strong></td>
       	<td align="center">
         	<select name="tahunajaran" id="tahunajaran" onChange="change_angkatan()" style="width:228px;" onKeyPress="return focusNext('tingkat', event)" onFocus="panggil('tahunajaran')">
-<?			$sql = "SELECT replid,tahunajaran,aktif FROM tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
+<?php 		$sql = "SELECT replid,tahunajaran,aktif FROM tahunajaran where departemen='$departemen' ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
@@ -363,8 +363,8 @@ function refresh_isi() {
 					$ada = '(Aktif)';
 				else 
 					$ada = '';	?>
-	    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-<?			}	?>
+	    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+<?php 		}	?>
     		</select>   		
             </td>             
     </tr>
@@ -372,46 +372,46 @@ function refresh_isi() {
     	<td align="left"><strong>Tingkat</strong></td>
         <td align="center">
         	<select name="tingkat" id="tingkat" onChange="change_angkatan()" style="width:228px;" onKeyPress="return focusNext('kelas', event)" onFocus="panggil('tingkat')">
-<?			$sql = "SELECT replid,tingkat FROM tingkat where departemen='$departemen' AND aktif = 1 ORDER BY urutan";
+<?php 		$sql = "SELECT replid,tingkat FROM tingkat where departemen='$departemen' AND aktif = 1 ORDER BY urutan";
 			$result = QueryDb($sql);
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($tingkat == "") 
 					$tingkat = $row['replid'];	?>
-	          <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat)?> ><?=$row['tingkat']?></option>
-<?			} ?>
+	          <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat)?> ><?=$row['tingkat']?></option>
+<?php 		} ?>
         </select></td>
 	</tr>
     <tr>
     	<td align="left"><strong>Kelas</strong></td>
     	<td align="center">  
         	<select name="kelas" id="kelas" onChange="change()" style="width:228px;" onKeyPress="return focusNext('tabel', event)" onFocus="panggil('kelas')">
-<?          $sql = "SELECT replid, kelas, kapasitas FROM kelas where idtingkat='$tingkat' AND idtahunajaran='$tahunajaran' AND aktif = 1 ORDER BY kelas";
+<?php          $sql = "SELECT replid, kelas, kapasitas FROM kelas where idtingkat='$tingkat' AND idtahunajaran='$tahunajaran' AND aktif = 1 ORDER BY kelas";
             $result = QueryDb($sql);
 			$nama_kelas = "";
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{				
 				if ($kelas == "") 
 					$kelas = $row['replid'];
 				
-				$sql1 = "SELECT COUNT(*) FROM siswa WHERE idkelas = '$row[replid]' AND idangkatan = '$angkatan' AND aktif = 1";
+				$sql1 = "SELECT COUNT(*) FROM siswa WHERE idkelas = '".$row['replid']."' AND idangkatan = '$angkatan' AND aktif = 1";
 				$result1 = QueryDb($sql1);
-				$row1 = @mysql_fetch_row($result1); ?>
-	    		<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas)?> ><?=$row['kelas'].', kapasitas: '.$row['kapasitas'].', terisi: '.$row1[0]?></option>
-<?			} ?>
+				$row1 = @mysqli_fetch_row($result1); ?>
+	    		<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas)?> ><?=$row['kelas'].', kapasitas: '.$row['kapasitas'].', terisi: '.$row1[0]?></option>
+<?php 		} ?>
     		</select>        
         
             <div id="infokapasitas">
-<? 			if ($kelas <> "" && $angkatan <> "" && $tahunajaran <> "") 
+<?php 			if ($kelas <> "" && $angkatan <> "" && $tahunajaran <> "") 
 			{	
 				$sql = "SELECT kapasitas FROM kelas WHERE replid = $kelas";
 				$result = QueryDb($sql);
-				$row = mysql_fetch_row($result);
+				$row = mysqli_fetch_row($result);
 				$kapasitas = $row[0];
 				
 				$sql1 = "SELECT COUNT(*) FROM siswa WHERE idkelas = '$kelas' AND idangkatan = '$angkatan' AND aktif = 1";
 				$result1 = QueryDb($sql1);
-				$row1 = mysql_fetch_row($result1);
+				$row1 = mysqli_fetch_row($result1);
 				$isi = $row1[0];
 			}		
 			?>
@@ -429,15 +429,15 @@ function refresh_isi() {
 </tr>
 <tr>
 	<td>
-<?  if ($angkatan <> "" && $tahunajaran <> "" && $tingkat <> "" && $kelas <> "" ) 
+<?php  if ($angkatan <> "" && $tahunajaran <> "" && $tingkat <> "" && $kelas <> "" ) 
 	{
 		$sql_tot = "SELECT s.replid,s.nis,s.nama,s.frompsb,s.nisn
 					FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t 
 					WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkat' 
 					  AND s.idangkatan = '$angkatan' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.aktif=1";
 		$result_tot = QueryDb($sql_tot);
-		$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 		$akhir = ceil($jumlah/5)*5;
 	
 		$sql = "SELECT s.replid,s.nis,s.nama,s.frompsb,s.nisn 
@@ -446,12 +446,12 @@ function refresh_isi() {
 				AND s.idangkatan = '$angkatan' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.aktif=1 
 				ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		$result = QueryDb($sql);
-		$jum = @mysql_num_rows($result);
+		$jum = @mysqli_num_rows($result);
 		
 		$sql5 = "SELECT kelas FROM jbsakad.kelas WHERE replid = '$kelas' ";
 		$result5 = QueryDb($sql5);
-		$row5 = @mysql_fetch_array($result5);
-		$nama_kelas = $row5[kelas];
+		$row5 = @mysqli_fetch_array($result5);
+		$nama_kelas = $row5['kelas'];
 	
 		if ($jum > 0) 
 		{ ?>
@@ -464,12 +464,12 @@ function refresh_isi() {
                 <td width="*" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nama','<?=$urutan?>')">Nama <?=change_urut('nama',$urut,$urutan)?></td>
                 <td width="8%">&nbsp;</td>
             </tr>
-<?	     	if ($page==0)
+<?php      	if ($page==0)
                 $cnt = 0;
             else 
                 $cnt = (int)$page*(int)$varbaris;
             $result = QueryDb($sql);		
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				?>	
             <tr height="25">        			
@@ -478,19 +478,19 @@ function refresh_isi() {
 				<td align="center"><?=$row['nis']?></td>
                 <td><a href="#" onClick="newWindow('../library/detail_siswa.php?replid=<?=$row['replid']?>', 'DetailSiswa','800','650','resizable=1,scrollbars=1,status=0,toolbar=0')"><?=$row['nama']?></a></td>
                 <td align="center">
-                <?	if ($row['frompsb'] == 1) { ?>
+                <?php if ($row['frompsb'] == 1) { ?>
                     <a href="JavaScript:hapus(<?=$row['replid']?>,'<?=$row['nis']?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Batalkan Penempatan!', this, event, '80px')"/></a>
-                <? } ?>
+                <?php } ?>
                 </td>	
             </tr>
-<?			} //while		?>			
+<?php 		} //while		?>			
 			</table>
   			<!-- END TABLE CONTENT -->
    
 			<script language='JavaScript'>
                 Tables('table', 1, 0);
             </script>
-		<?	if ($page==0)
+		<?php if ($page==0)
 			{ 
                 $disback="style='visibility:hidden;'";
                 $disnext="style='visibility:visible;'";
@@ -518,22 +518,22 @@ function refresh_isi() {
     <tr>
        	<td width="50%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
         </td>
         <td width="50%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<?	} else {  ?>
+<?php } else {  ?>
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
@@ -544,31 +544,31 @@ function refresh_isi() {
 	</td>
 	</tr>
 	</table> 
-<?  } 
+<?php  } 
 } else {
 ?>
  	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="200">
-    	<? if ($departemen <> "") {	?>
+    	<?php if ($departemen <> "") {	?>
             <font size = "2" color ="red"><b>Belum ada kelas yang dituju.
             <br />Tambah data kelas pada departemen <?=$departemen?> di menu Kelas pada bagian Referensi. 
             </b></font>
-        <? } else { ?>
+        <?php } else { ?>
             <font size = "2" color ="red"><b>Belum ada data Departemen.
             <br />Silahkan isi terlebih dahulu di menu Departemen pada bagian Referensi.
             </b></font>
-		<? } ?>    
+		<?php } ?>    
 	</td>
 	</tr>
 	</table> 	
-<? } ?>
+<?php } ?>
 </td>
 </tr>
 <!-- END TABLE CENTER -->    
 </table>
 </body>
 </html>
-<? 
+<?php 
 CloseDb();
 ?>

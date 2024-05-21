@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,10 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
+include_once '../../vendor/autoload.php';
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
-include("../library/class/jpgraph.php");
-include("../library/class/jpgraph_bar.php");
-include("../library/class/jpgraph_line.php");
 
 $idproses=(int)$_REQUEST['idproses'];
 $departemen=$_REQUEST['departemen'];
@@ -35,45 +33,45 @@ OpenDb();
 $i = 0;
 
 if ($dasar == 'Golongan Darah') {
-	$row = array('A','0','B','AB','');
-	$judul = array(1=>'A','0','B','AB','Tidak ada data');	
+	$row = ['A', '0', 'B', 'AB', ''];
+	$judul = [1=>'A', '0', 'B', 'AB', 'Tidak ada data'];	
 	$jum = count($row);	
 } elseif ($dasar == 'Jenis Kelamin') {
-	$row = array('l','p');
-	$judul = array(1=>'Laki-laki','Perempuan');
+	$row = ['l', 'p'];
+	$judul = [1=>'Laki-laki', 'Perempuan'];
 	$jum = count($row);
 } elseif ($dasar == 'Kewarganegaraan') {
-	$row = array('WNI','WNA');
-	$judul = array(1=>'WNI','WNA');
+	$row = ['WNI', 'WNA'];
+	$judul = [1=>'WNI', 'WNA'];
 	$jum = count($row);
 } elseif ($dasar == 'Status Aktif') {
-	$row = array(1,0);
-	$judul = array(1 => 'Aktif','Tidak Aktif');
+	$row = [1, 0];
+	$judul = [1 => 'Aktif', 'Tidak Aktif'];
 	$jum = count($row);
 } elseif ($dasar == 'Kondisi Siswa') {	
 	$query = "SELECT $tabel FROM jbsakad.kondisisiswa ORDER BY $tabel ";
 	$result = QueryDb($query);
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 } elseif ($dasar == 'Status Siswa') {	
 	$query = "SELECT $tabel FROM jbsakad.statussiswa ORDER BY $tabel ";
 	$result = QueryDb($query);
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 } elseif ($dasar == 'Pekerjaan Ayah' || $dasar == 'Pekerjaan Ibu') {	
 	$query = "SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan ";
 	$result = QueryDb($query);
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 } elseif ($dasar == 'Pendidikan Ayah' || $dasar == 'Pendidikan Ibu') {	
 	$query = "SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan ";
 	$result = QueryDb($query);
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 } elseif ($dasar == 'Penghasilan Orang Tua') {		
-	$batas = array(0,1000000,2500000,5000000);
-	$judul = array(1 => '< Rp1jt','Rp1jt-Rp2.5jt','Rp2.5jt-Rp5jt','> Rp5jt');
+	$batas = [0, 1_000_000, 2_500_000, 5_000_000];
+	$judul = [1 => '< Rp1jt', 'Rp1jt-Rp2.5jt', 'Rp2.5jt-Rp5jt', '> Rp5jt'];
 	$jum = count($judul);
 } elseif ($dasar == 'Agama' || $dasar == 'Suku') {		
 	$query = "SELECT $tabel FROM jbsumum.$tabel";
 	$result = QueryDb($query);
-	$jum = @mysql_num_rows($result);	
+	$jum = @mysqli_num_rows($result);	
 } else {	
 	$jum = 1;
 }
@@ -91,9 +89,9 @@ for ($i=1;$i<=$jum;$i++) {
 	} elseif ($dasar == 'Status Aktif') {
 		$filter = $row[$i-1];		
 	} elseif ($dasar=='Agama' || $dasar=='Suku' || $dasar=='Status Siswa' || $dasar=='Kondisi Siswa' || $dasar=='Pekerjaan Ayah' || $dasar=='Pekerjaan Ibu' || $dasar=='Pendidikan Ayah' || $dasar=='Pendidikan Ibu') {
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		$judul[$i] = $row[0];		
-		$filter = "1 AND s.$tabel = '$row[0]'";	
+		$filter = "1 AND s.$tabel = '".$row[0]."'";	
 	} elseif ($dasar == 'Tahun Kelahiran') {
 		$field = ", YEAR(tgllahir)";
 		$filter = "1 GROUP BY YEAR(tgllahir)";	
@@ -123,9 +121,9 @@ for ($i=1;$i<=$jum;$i++) {
 	
 	$data[$i] = 0;	
 	$result1 = QueryDb($query1);
-	$num = @mysql_num_rows($result1);
+	$num = @mysqli_num_rows($result1);
 	
-	while ($row1 = @mysql_fetch_row($result1)) {
+	while ($row1 = @mysqli_fetch_row($result1)) {
    		$data[$i] = $row1[0];
 		if ($dasar=="Asal Sekolah" || $dasar=="Kode Pos Siswa" || $dasar=="Tahun Kelahiran" || $dasar=="Usia") { 
 			$data[$j] = $row1[0];
@@ -143,9 +141,9 @@ for ($i=1;$i<=$jum;$i++) {
 		$jud = $jud.'/'.$judul[$i];
 	}
 }
-$jud = array($jud);
+$jud = [$jud];
 
-$color = array(1 =>'green@0.5','red@0.5','yellow@0.5','blue@0.5','orange@0.5','gold@0.5','navy@0.5','darkblue@0.5','darkred@0.5','darkgreen@0.5', 'pink@0.5','black@0.5','gray@0.5');
+$color = [1 =>'green@0.5', 'red@0.5', 'yellow@0.5', 'blue@0.5', 'orange@0.5', 'gold@0.5', 'navy@0.5', 'darkblue@0.5', 'darkred@0.5', 'darkgreen@0.5', 'pink@0.5', 'black@0.5', 'gray@0.5'];
 //$color = array(1 => "#FF9900@0.5","#e6dc29@0.5","#bd290c@0.5","#3560ae@0.5","#0e7b2d@0.5");
 // kuning, merah, biru, hijau, 
 //echo $queryL;
@@ -155,7 +153,7 @@ if ($departemen=="-1") {
 	if ($idproses < 0){
 		$query2 = "SELECT proses FROM jbsakad.prosespenerimaansiswa";
 	} else {
-		$query2 = "SELECT proses FROM jbsakad.prosespenerimaansiswa WHERE replid = '$idproses'";
+		$query2 = "SELECT proses FROM jbsakad.prosespenerimaansiswa WHERE replid = '".$idproses."'";
 	}
 } else {		
 	if ($idproses < 0){
@@ -169,22 +167,23 @@ if ($departemen=="-1") {
 
 
 $result2 = QueryDb($query2);
-$row2 = @mysql_fetch_array($result2);
+$row2 = @mysqli_fetch_array($result2);
 //=====================================================
 
 //if($num == 0) {
  // echo "<table width='100%' height='100%'><tr><td align='center' valign='middle'>
 //        <font size='2' face='verdana'>Grafik Batang tidak dapat ditampilkan<br> karena belum ada data siswa<br> untuk
-//        Departemen <b>$_REQUEST[departemen]</b> dan Penerimaan <b>$row2[proses]</b></font></td></tr></table>";
+//        Departemen <b>".$_REQUEST['departemen']</b> dan Penerimaan <b>$row2['proses']."</b></font></td></tr></table>";
 //}else {
 
 
 //Buat grafik
+mitoteam\jpgraph\MtJpGraph::load(['bar']);
 $graph = new Graph(450,300,"auto");
 $graph->SetScale("textlin");
 
 //seting kanvas
-$lab = array($dasar);
+$lab = [$dasar];
 $graph->SetShadow();
 $graph->img->SetMargin(50,40,50,40);
 $graph->xaxis->SetTickLabels($jud);

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -54,8 +54,8 @@ OpenDb();
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript">
 function change_sel(){
     var departemen = document.filter_penentuan.departemen.value;
     document.location.href="ujian_rpp_siswa_header.php?departemen="+departemen;
@@ -125,74 +125,74 @@ function show(){
         <td width="15%"><strong>Departemen</strong></td>
         <td width="38%">
             <select name="departemen" id="departemen" style="width:175px;" onChange="change_sel();">
-              <?	$dep = getDepartemen(SI_USER_ACCESS());    
+              <?php $dep = getDepartemen(SI_USER_ACCESS());    
 					foreach($dep as $value) {
 						if ($departemen == "")
 							$departemen = $value; ?>
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                   <?=$value ?> 
                 </option>
-              <?	} ?>
+              <?php } ?>
               </select>			
        	</td>
         <td width="15%"><strong>Semester</strong></td>
         <td>
-		<?
+		<?php
         $query_s = "SELECT replid, semester, aktif FROM jbsakad.semester ".
                     "WHERE departemen = '$departemen' AND aktif = '1' ORDER BY semester ASC";
         $result_s = QueryDb($query_s);
-        $row_s = @mysql_fetch_array($result_s);
+        $row_s = @mysqli_fetch_array($result_s);
 					
         ?>
-            <input type="hidden" name="semester" id="semester" value="<?=$row_s[replid]?>">
-            <input type="text" size="34" value="<?=$row_s[semester]?>" readonly class="disabled"></td>
+            <input type="hidden" name="semester" id="semester" value="<?=$row_s['replid']?>">
+            <input type="text" size="34" value="<?=$row_s['semester']?>" readonly class="disabled"></td>
     </tr>
 	<tr>
         <td><strong>Kelas</strong></td>
         <td>
         	<select name="tingkat" id="tingkat" size="1" style="width:60px;" onChange="change_sel2();">
-		<?	$query_t = 	"SELECT replid, tingkat FROM jbsakad.tingkat ".
+		<?php $query_t = 	"SELECT replid, tingkat FROM jbsakad.tingkat ".
                     	"WHERE departemen = '$departemen' AND aktif = '1' ORDER BY urutan ASC ";
         	$result_t = QueryDb($query_t);
 
 			$i = 0;
-			while ($row_t = @mysql_fetch_array($result_t)) {
+			while ($row_t = @mysqli_fetch_array($result_t)) {
 				if($tingkat == "") {
-					$tingkat = $row_t[replid];
+					$tingkat = $row_t['replid'];
 					$sel[$i] = "selected";
 				}
-				elseif($tingkat == $row_t[replid]) {
+				elseif($tingkat == $row_t['replid']) {
 					$sel[$i] = "selected";
 				}else {
 					$sel[$i] = "";
 				}
 				echo "
-					<option value='$row_t[replid]' $sel[$i]>$row_t[tingkat]</option>
+					<option value='".$row_t['replid']."' $sel[$i]>".$row_t['tingkat']."</option>
 				";
 				$i++;
 			}
         ?>
         	</select>
             <select name="kelas" id="kelas" size="1" style="width:108px;" onChange="change_sel3()">
-        <?
+        <?php
             $query_k = "SELECT k.replid, k.kelas FROM jbsakad.kelas k, jbsakad.tahunajaran a WHERE k.idtingkat = '$tingkat' AND k.aktif = 1 AND k.idtahunajaran = a.replid AND a.departemen = '$departemen' AND a.aktif = 1";
 			//echo $query_k;
 						
             $result_k = QueryDb($query_k);
 
             $i = 0;
-            while ($row_k = @mysql_fetch_array($result_k)) {
+            while ($row_k = @mysqli_fetch_array($result_k)) {
                 if($kelas == "") {
-                    $kelas = $row_k[replid];
+                    $kelas = $row_k['replid'];
                     $sel[$i] = "selected";
                 }
-                elseif($kelas == $row_k[replid]) {
+                elseif($kelas == $row_k['replid']) {
 				    $sel[$i] = "selected";
                 }else {
                     $sel[$i] = "";
                 }
                 echo "
-                    <option value='$row_k[replid]' $sel[$i]>$row_k[kelas]</option>
+                    <option value='".$row_k['replid']."' $sel[$i]>".$row_k['kelas']."</option>
                 ";
                 $i++;
             }
@@ -202,22 +202,22 @@ function show(){
         <td><strong>Pelajaran</strong></td>
         <td>
         	<select name="pelajaran" id="pelajaran" size="1" style="width:225px;" onChange="change_sel2();">
-          	<? 	$query_p = "SELECT replid, nama FROM jbsakad.pelajaran ".
+          	<?php 	$query_p = "SELECT replid, nama FROM jbsakad.pelajaran ".
             	        	"WHERE departemen = '$departemen' AND aktif = 1 ORDER BY nama";
        		$result_p = QueryDb($query_p);
 			$i = 0;
-			while ($row_p = @mysql_fetch_array($result_p)) {
+			while ($row_p = @mysqli_fetch_array($result_p)) {
 				if($pelajaran == "") {
-					$pelajaran = $row_p[replid];
+					$pelajaran = $row_p['replid'];
 					$sel[$i] = "selected";
 				}
-				elseif($pelajaran == $row_p[replid]) {
+				elseif($pelajaran == $row_p['replid']) {
 					$sel[$i] = "selected";
 				}else {
 					$sel[$i] = "";
 				}
 				echo "
-					<option value='$row_p[replid]' $sel[$i]>$row_p[nama]</option>
+					<option value='".$row_p['replid']."' $sel[$i]>".$row_p['nama']."</option>
 				";
 				$i++;
 			}

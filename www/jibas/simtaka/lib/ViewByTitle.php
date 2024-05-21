@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
-$id=$_REQUEST[id];
-$state=$_REQUEST[state];
+$id=$_REQUEST['id'];
+$state=$_REQUEST['state'];
 OpenDb();
 	//State:
 	//1.Perpustakaan
@@ -46,7 +46,7 @@ elseif ($state=='5')
 elseif ($state=='6')
 	$sql = "SELECT pu.replid FROM pustaka pu WHERE pu.penulis='$id'";			
 $result = QueryDb($sql);
-$num = @mysql_num_rows($result);
+$num = @mysqli_num_rows($result);
 //echo $sql."<br>";
 //echo $num;
 ?>
@@ -78,18 +78,18 @@ $num = @mysql_num_rows($result);
     </div>
 	<div style="padding-left:5px; padding-top:5px; padding-right:5px; padding-bottom:5px;">
 		<table width="100%" border="0" cellspacing="5" cellpadding="5">
-		<? $i=1; ?>
-		<? while ($row = @mysql_fetch_row($result)){ ?>
-        <?
+		<?php $i=1; ?>
+		<?php while ($row = @mysqli_fetch_row($result)){ ?>
+        <?php
 			$sql2 = "SELECT pu.judul, pn.gelardepan, pn.nama, pn.gelarbelakang, pb.nama, pu.replid FROM pustaka pu, penulis pn, penerbit pb WHERE pu.replid=$row[0] AND pu.penerbit=pb.replid AND pu.penulis=pn.replid";
 			//echo $sql2;
 			$result2 = QueryDb($sql2);
-			$row2 = @mysql_fetch_row($result2);
+			$row2 = @mysqli_fetch_row($result2);
 		?>
-		<? //for ($i=1; $i<=$num; $i++){ ?>
-        <? if ($i==1 || $i%2!=0) { ?>  
+		<?php //for ($i=1; $i<=$num; $i++){ ?>
+        <?php if ($i==1 || $i%2!=0) { ?>  
           <tr>
-        <? } ?>    
+        <?php } ?>    
             <td align="center">
                 <table width="100%" border="0" cellspacing="1" cellpadding="1" id="TD<?=$i?>" onmouseover="hover('<?=$i?>','1')" onmouseout="hover('<?=$i?>','0')" onclick="ViewDetail(<?=$row[0]?>)" style="cursor:pointer">
                   <tr>
@@ -103,7 +103,7 @@ $num = @mysql_num_rows($result);
                         </div>
                     </td>
                     <td>
-                    <span class="news_content1"><?=stripslashes($row2[0])?></span></td>
+                    <span class="news_content1"><?=stripslashes((string) $row2[0])?></span></td>
                   </tr>
                   <tr>
                     <td>
@@ -115,11 +115,11 @@ $num = @mysql_num_rows($result);
                   </tr>
                 </table>
             </td>
-          <? if ($i%2==0) { ?>
+          <?php if ($i%2==0) { ?>
           </tr>
-		  <? } ?>
-          <? $i++; ?>
-		  <? } ?>
+		  <?php } ?>
+          <?php $i++; ?>
+<?php } ?>
         </table>
 	</div>
 </body>

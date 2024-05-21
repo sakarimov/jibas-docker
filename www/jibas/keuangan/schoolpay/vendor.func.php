@@ -11,23 +11,23 @@ function SetVendorAktif()
 
 function createJsonReturn($status, $message)
 {
-    $ret = array($status, $message);
-    return json_encode($ret);
+    $ret = [$status, $message];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 
 function HapusVendor()
 {
     $vendorId = $_REQUEST["vendorid"];
 
-    $sql = "SELECT COUNT(replid) FROM jbsfina.paymenttrans WHERE vendorid = '$vendorId'";
+    $sql = "SELECT COUNT(replid) FROM jbsfina.paymenttrans WHERE vendorid = '".$vendorId."'";
     $nData = FetchSingle($sql);
     if ($nData != 0)
         return createJsonReturn(-1, "Tidak dapat menghapus vendor ini karena sudah digunakan dalam transaksi!");
 
-    $sql = "DELETE FROM jbsfina.vendoruser WHERE vendorid = '$vendorId'";
+    $sql = "DELETE FROM jbsfina.vendoruser WHERE vendorid = '".$vendorId."'";
     QueryDb($sql);
 
-    $sql = "DELETE FROM jbsfina.vendor WHERE vendorid = '$vendorId'";
+    $sql = "DELETE FROM jbsfina.vendor WHERE vendorid = '".$vendorId."'";
     QueryDb($sql);
 
     return createJsonReturn(1, "OK");
@@ -38,7 +38,7 @@ function HapusUserVendor()
     $vendorId = $_REQUEST["vendorid"];
     $userId = $_REQUEST["userid"];
 
-    $sql = "DELETE FROM jbsfina.vendoruser WHERE vendorid = '$vendorId' AND userid = '$userId'";
+    $sql = "DELETE FROM jbsfina.vendoruser WHERE vendorid = '$vendorId' AND userid = '".$userId."'";
     QueryDb($sql);
 }
 
@@ -50,7 +50,7 @@ function ShowDaftarPetugas($vendorId)
                AND vu.vendorid = '$vendorId'
              ORDER BY vu.tingkat, u.nama";
     $res = QueryDb($sql);
-    $num = mysql_num_rows($res);
+    $num = mysqli_num_rows($res);
     if ($num == 0)
     {
         echo "(belum ada data petugas)";
@@ -59,7 +59,7 @@ function ShowDaftarPetugas($vendorId)
 
     $sb = new StringBuilder();
     $sb->AppendLine("<table border='0' cellspacing='0' cellpadding='2'>");
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $userId = $row[0];
         $rowId = $row[3];

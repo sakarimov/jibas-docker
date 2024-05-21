@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('departemen.php');
@@ -35,14 +35,14 @@ OpenDb();
 	<td class="header" >Kelas</td>
 	<td class="header" height="30">&nbsp;</td>
 </tr>
-<?
+<?php
 
 $kelas = $_REQUEST['kelas'];
 $sql = "SELECT s.nis, s.nama, k.kelas FROM jbsakad.siswa s,jbsakad.kelas k WHERE s.aktif=1 AND k.replid=s.idkelas AND s.statusmutasi=0 AND s.idkelas='$kelas'  ORDER BY s.nama"; 
 $result = QueryDb($sql);
 $cnt = 1;
 	
-while($row = mysql_fetch_row($result)) { 
+while($row = mysqli_fetch_row($result)) { 
 if ($cnt%2==0)
 	$bg="bgcolor='#e7e7cf'";
 if ($cnt%2==1)
@@ -55,12 +55,12 @@ if ($cnt%2==1)
 	<td height="25" <?=$bg?> onClick="ambilpilih('<?=$row[0]?>','<?=$row[1]?>')" style="cursor:pointer"><?=$row[2] ?></td>
 	<td height="25" <?=$bg?> onClick="ambilpilih('<?=$row[0]?>','<?=$row[1]?>')" style="cursor:pointer" align="center"><input type="button" value="Pilih" onclick="ambilpilih('<?=$row[0]?>','<?=$row[1]?>')"  class="but"></td>
 </tr>
-<?
+<?php
 $cnt++;
 }
 CloseDb();	
-if (mysql_num_rows($result) == 0) { ?>
+if (mysqli_num_rows($result) == 0) { ?>
 <tr height="26"><td colspan="4" align="center"><em>Tidak ditemukan data</em></td></tr>
-<? } ?>
+<?php } ?>
 
 </table>

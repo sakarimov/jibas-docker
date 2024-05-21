@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -48,7 +48,7 @@ $sql = "SELECT j.departemen, j.nama, p.nip, p.nama, t.tingkat
 			WHERE g.nip=p.nip AND g.idpelajaran = j.replid AND t.departemen = j.departemen 
 			  AND t.replid = '$id_tingkat' AND j.replid = '$id_pelajaran' AND g.nip = '".SI_USER_ID()."'"; 
 $result = QueryDb($sql);
-$row = @mysql_fetch_row($result);
+$row = @mysqli_fetch_row($result);
 $departemen = $row[0];
 $pelajaran = $row[1];
 $guru = $row[2].' - '.$row[3];
@@ -67,7 +67,7 @@ $ERROR_MSG = "";
 <link href="../script/SpryAssets/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -157,7 +157,7 @@ function simpan(evt) {
 		<tr>
 			<td><strong>Aspek</strong></td>
 			<td><select name="aspek" id="aspek">
-<?			$sql = "SELECT dasarpenilaian, keterangan 
+<?php 		$sql = "SELECT dasarpenilaian, keterangan 
 						 FROM dasarpenilaian WHERE dasarpenilaian 
 					  NOT IN (SELECT a.dasarpenilaian 
 								   FROM guru g, pelajaran j, dasarpenilaian d, tingkat t, aturannhb a 
@@ -166,14 +166,14 @@ function simpan(evt) {
 									 AND a.nipguru = '".SI_USER_ID()."' AND a.idtingkat = '$id_tingkat' )
 					  ORDER BY keterangan";    
 			$result = QueryDb($sql);	
-			while ($row = @mysql_fetch_array($result)) 
+			while ($row = @mysqli_fetch_array($result)) 
 			{
 				if ($aspek == "")
 					$aspek = $row['dasarpenilaian'];		?>
           	<option value="<?=$row['dasarpenilaian']?>" <?=StringIsSelected($row['dasarpenilaian'], $aspek) ?> >
 		  	<?=$row['keterangan'] ?>
           	</option>
-          	<?	
+          	<?php 
 		  	} 
 		  	?>
           	</select></td>
@@ -189,12 +189,12 @@ function simpan(evt) {
             	<td class="header" align="center" width="8%" height="30">Pengujian</td>			
             	<td class="header" align="center" width="15%" height="30">Bobot</td>
 			</tr>
-			<?
+			<?php
 			$sql = "SELECT replid, jenisujian FROM jenisujian WHERE idpelajaran = '$id_pelajaran'"; 
 			$result = QueryDb($sql);
-			$num = mysql_num_rows($result);
+			$num = mysqli_num_rows($result);
 			$i = 1;
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			?>		
 			<tr>
         		<td align="center" height="25">
@@ -206,7 +206,7 @@ function simpan(evt) {
 				<td align="center" height="25">
                 <input type="text" name="<?='bobot'.$i ?>" id="<?='bobot'.$i ?>"  size="4" maxlength="3"></td>
 			</tr>
-			<?
+			<?php
 			$i++;	
 			}
 			?>
@@ -237,12 +237,12 @@ function simpan(evt) {
 		</form>
 		 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
-<? CloseDb() ?>
+<?php } ?>
+<?php CloseDb() ?>
 <!-- Pilih inputan pertama -->
 <script language="javascript">
 	document.getElementById('ujian1').focus();

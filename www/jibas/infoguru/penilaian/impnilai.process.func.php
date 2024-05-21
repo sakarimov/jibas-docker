@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,7 @@
  **[N]**/ ?>
 <?php
 
-$inputSet = array(
-    array(3, "C", "departemen", false),
-    array(4, "G", "idkelas", false),
-    array(5, "C", "nip", true),
-    array(7, "C", "kodeujian", true),
-    array(8, "C", "tanggal", true),
-    array(8, "E", "bulan", true),
-    array(8, "G", "tahun", true),
-    array(10, "C", "materi", true),
-    array(11, "C", "keterangan", true),
-);
+$inputSet = [[3, "C", "departemen", false], [4, "G", "idkelas", false], [5, "C", "nip", true], [7, "C", "kodeujian", true], [8, "C", "tanggal", true], [8, "E", "bulan", true], [8, "G", "tahun", true], [10, "C", "materi", true], [11, "C", "keterangan", true]];
 
 function isInputCell($rowNo, $colChr)
 {
@@ -58,21 +48,11 @@ function isInputCell($rowNo, $colChr)
 
 function GetMaxDay($year, $month)
 {
-    switch ($month)
-    {
-        case 1:
-        case 3:
-        case 5:
-        case 7:
-        case 8:
-        case 10:
-        case 12:
-            return 31;
-        case 2:
-            return $year % 4 == 0 ? 29 : 28;
-        default:
-            return 30;
-    }
+    return match ($month) {
+        1, 3, 5, 7, 8, 10, 12 => 31,
+        2 => $year % 4 == 0 ? 29 : 28,
+        default => 30,
+    };
 }
 
 function SelectPelajaran()
@@ -96,7 +76,7 @@ function SelectPelajaran()
     $idpelajaran = 0;
 
     $select = "<select name='pelajaran' id='pelajaran' onchange='changePelajaran()' style='width: 200px; background-color: #f9ffc9;'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $selected = "";
         $idpel = $row[0];
@@ -105,7 +85,7 @@ function SelectPelajaran()
         if ($idpelajaran == 0)
             $idpelajaran = $idpel;
 
-        if (strtolower($selpelajaran) == strtolower($nmpel))
+        if (strtolower((string) $selpelajaran) == strtolower((string) $nmpel))
         {
             $idpelajaran = $idpel;
             $selected = "selected";
@@ -140,14 +120,14 @@ function SelectAspek()
     $idaspek = "";
 
     $select = "<select name='aspek' id='aspek' onchange='changeAspek()' style='width: 200px; background-color: #f9ffc9;'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $selected = "";
         $idasp = $row[0];
         $nmasp = $row[1];
 
         if ($idaspek == "") $idaspek = $idasp;
-        if (strtolower($selaspek) == strtolower($nmasp))
+        if (strtolower((string) $selaspek) == strtolower((string) $nmasp))
         {
             $selected = "selected";
             $idaspek = $idasp;
@@ -171,18 +151,18 @@ function SelectJenisUjian()
                AND a.idpelajaran = '$idpelajaran'
                AND a.dasarpenilaian = '$idaspek'
                AND a.nipguru = '$nip'
-               AND k.replid = '$idkelas'";
+               AND k.replid = '".$idkelas."'";
     $res = QueryDb($sql);
 
     $select = "<select name='idaturan' id='idaturan' style='width: 200px; background-color: #f9ffc9;'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $selected = "";
 
         $idju = $row[0];
         $nmju = $row[1];
 
-        if (strtolower($seljenis) == strtolower($nmju)) $selected = "selected";
+        if (strtolower((string) $seljenis) == strtolower((string) $nmju)) $selected = "selected";
 
         $select .= "<option value='$idju' $selected>$nmju</option>";
     }
@@ -206,7 +186,7 @@ function SelectRpp()
 
     $select = "<select name='idrpp' id='idrpp' style='width: 200px; background-color: #f9ffc9;'>";
     $select .= "<option value='-1' selected>(Tanpa RPP)</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $idrpp = $row[0];
         $nmrpp = $row[1];
@@ -220,7 +200,7 @@ function SelectRpp()
 
 function SafeText($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     $text = str_replace("<", "&lt;", $text);
     $text = str_replace(">", "&gt;", $text);
     return $text;

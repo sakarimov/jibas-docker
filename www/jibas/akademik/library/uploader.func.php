@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowCbBulan()
 {
     echo "<select name='cbBulan' id='cbBulan'>";
@@ -66,7 +66,7 @@ function ShowList()
     
     $no = 1;
     echo "<table width='100%' cellpadding='5'>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         if ($no == 1)
             echo "<tr>";
@@ -78,7 +78,7 @@ function ShowList()
         echo "<img src='$pict' width='200'><br>";
         echo $row['nama'];
         
-        $deskripsi = trim($row['deskripsi']);
+        $deskripsi = trim((string) $row['deskripsi']);
         $deskripsi = strlen($deskripsi) == 0 ? "&nbsp;": $deskripsi;
         echo "<br><font style='color: #666'>";
         echo $deskripsi;

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -52,7 +52,7 @@ if ($departemen<>"-1" && $idproses>0)
 	OpenDb();
 	$sql = "SELECT s.replid FROM jbsakad.calonsiswa s, jbsakad.prosespenerimaansiswa a WHERE s.aktif = 1 $kondisi";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		
 ?>
 
@@ -68,7 +68,7 @@ if ($departemen<>"-1" && $idproses>0)
 </frameset>
 <!--</frameset>-->
 <noframes></noframes>
-<?	} else { ?>
+<?php } else { ?>
 <head>
 <link rel="stylesheet" type="text/css"  href="../style/style.css">
 </head>
@@ -93,4 +93,4 @@ if ($departemen<>"-1" && $idproses>0)
 </tr>
 </table>
 </body>
-<?	} ?>
+<?php } ?>

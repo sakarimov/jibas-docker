@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -91,7 +91,7 @@ if ($iddasar==""){
 	}
 	
 	$result1 = QueryDb($query1);
-	$num = @mysql_num_rows($result1);
+	$num = @mysqli_num_rows($result1);
 	
 } elseif ($iddasar=="12"){
 
@@ -126,7 +126,7 @@ if ($iddasar==""){
 <title>Tampil Statistik</title>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/rupiah.js"></script>
 <script language="javascript">
 function change_urut(urut,urutan) {
@@ -143,10 +143,10 @@ function change_urut(urut,urutan) {
 </head>
 <body topmargin="0" leftmargin="0">
 <div align="right">
-<? 	
-	$str = array("'","+");
-	$str_replace = array("\'","x123x");	
-  	$sql = str_replace($str, $str_replace, $query1); 
+<?php 	
+	$str = ["'", "+"];
+	$str_replace = ["\'", "x123x"];	
+  	$sql = str_replace($str, $str_replace, (string) $query1); 
 	
 ?>
 
@@ -162,12 +162,12 @@ function change_urut(urut,urutan) {
     	<td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('k.kelompok','<?=$urutan?>')">Kel. <?=change_urut('k.kelompok',$urut,$urutan)?></td>
         <td width="8%">&nbsp;</td>
 	</tr> 
-	<?  if (@mysql_num_rows($result1)<1) { ?> 
+	<?php  if (@mysqli_num_rows($result1)<1) { ?> 
 					<td colspan="5" align="center"><strong>Tidak Ada Data</strong></td>
 					 
-  	<? } else{
+  	<?php } else{
 	
-    while ($row1 = @mysql_fetch_row($result1)) { ?>
+    while ($row1 = @mysqli_fetch_row($result1)) { ?>
 	<tr height="25">
   		<td align="center"><?=++$cnt?></td>
      	<td align="center"><?=$row1[0] ?></td>
@@ -176,7 +176,7 @@ function change_urut(urut,urutan) {
     	<td align="center"><?=$row1[5]?><br /><?=$row1[3] ?></td>
         <td ><div align="center"><a href="#" onclick="newWindow('../library/detail_calon.php?replid=<?=$row1[4]?>','DetailCalonSiswa',790,610,'resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="../images/ico/lihat.png" width="16" height="16" border="0" onMouseOver="showhint('Detail Data Calon Siswa!', this, event, '80px')"/></a></div></td>
    </tr>
-  						<? }
+  						<?php }
 					}
 		CloseDb();
   	?>

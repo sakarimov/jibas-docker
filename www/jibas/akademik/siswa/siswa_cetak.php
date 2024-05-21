@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -46,7 +46,7 @@ $total = $_REQUEST['total'];
 OpenDb();
 $sql = "SELECT a.tahunajaran, t.tingkat, k.kelas FROM kelas k, tahunajaran a, tingkat t WHERE k.replid = '$kelas' AND a.replid = '$tahunajaran' AND t.replid = '$tingkat' AND k.idtingkat = t.replid AND k.idtahunajaran = a.replid";
 $result = QueryDb($sql);
-$row =@mysql_fetch_array($result);
+$row =@mysqli_fetch_array($result);
 $namatahun = $row['tahunajaran'];
 $namatingkat = $row['tingkat'];
 $namakelas = $row['kelas'];
@@ -97,7 +97,7 @@ $namakelas = $row['kelas'];
     <td height="30" align="center" class="header" width="10%">Status</td>
     
 </tr>
-<? 
+<?php 
 //$sql = "SELECT nis,nama,asalsekolah,tmplahir,tgllahir,s.aktif,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),s.replid FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = $kelas AND k.idtahunajaran = $tahunajaran AND k.idtingkat = $tingkat AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.alumni=0 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 $sql = "SELECT nis,nama,asalsekolah,tmplahir,tgllahir,s.aktif,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),s.replid,s.nisn FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkat' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.alumni=0 ORDER BY $urut $urutan";
 $result = QueryDb($sql);
@@ -106,7 +106,7 @@ if ($page==0)
 	$cnt = 0;
 else
 	$cnt = (int)$page*(int)$varbaris;
-while ($row = @mysql_fetch_row($result)) {
+while ($row = @mysqli_fetch_row($result)) {
 
 ?>	
 <tr>        			
@@ -117,13 +117,13 @@ while ($row = @mysql_fetch_row($result)) {
 	<td height="25"><?=$row[2]?></td>
 	<td height="25"><?=$row[3].', '.$row[6].'&nbsp;'.NamaBulan($row[7]).'&nbsp;'.$row[8]?></td>
 	<td height="25" align="center">
-	<?	if ($row[5] == 1) 
+	<?php if ($row[5] == 1) 
        		echo 'Aktif'; 
 		else
 			echo 'Tidak Aktif';			
 	?></td>   
 </tr>
-<?	}	?>			
+<?php }	?>			
 </table>
    </td>
   </tr>

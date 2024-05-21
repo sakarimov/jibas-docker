@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -106,7 +106,7 @@ if (isset($_REQUEST['idtahunbuku']))
     <td width="*" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Keperluan</font></strong></td>
     <td width="7%" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Petugas</font></strong></td>
 </tr>
-<?
+<?php
 OpenDb();
 if ($kriteria == 1)
 	$sqlwhere = " AND p.namapemohon LIKE '%$keyword%'";
@@ -131,25 +131,25 @@ OpenDb();
 $result = QueryDb($sql);
 $cnt = 0;
 $totalbiaya = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$bg1="#ffffff";
 	if ($cnt==0 || $cnt%2==0)
 		$bg1="#fcffd3";
 	if ($row['jenispemohon'] == 1) {
 		$idpemohon = $row['nip'];
-		$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '$idpemohon'";
+		$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip = '".$idpemohon."'";
 		$jenisinfo = "pegawai";
 	} else if ($row['jenispemohon'] == 2) {
 		$idpemohon = $row['nis'];
-		$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '$idpemohon'";
+		$sql = "SELECT nama FROM jbsakad.siswa WHERE nis = '".$idpemohon."'";
 		$jenisinfo = "siswa";
 	} else {
 		$idpemohon = "";
-		$sql = "SELECT nama FROM pemohonlain WHERE replid = '$row[pemohonlain]'";
+		$sql = "SELECT nama FROM pemohonlain WHERE replid = '".$row['pemohonlain']."'";
 		$jenisinfo = "pemohon lain";
 	}
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	$namapemohon = $row2[0];
 	
 	$totalbiaya += $row['jumlah'];
@@ -188,7 +188,7 @@ while ($row = mysql_fetch_array($result)) {
       <?=$row['petugas'] ?>
     </font></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

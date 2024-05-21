@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -127,7 +127,7 @@ function change_baris()
 </head>
 
 <body topmargin="0" leftmargin="0">
-<?
+<?php
 OpenDb();
 
 $sql = "SELECT replid FROM tahunbuku WHERE departemen='$departemen' AND aktif=1";
@@ -145,20 +145,20 @@ else
 									  AND p.idcalon = s.replid AND s.idkelompok = '$kelompok' AND p.idpenerimaan = '$idpenerimaan' GROUP BY s.replid) as X)";
 
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $max_n_bayar = $row[0];
 $table_width = 520 + $max_n_bayar * 100;
 
 //Dapatkan namapenerimaan
 $sql = "SELECT d.nama, d.departemen FROM datapenerimaan d WHERE d.replid='$idpenerimaan'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 $departemen = $row[1];
 
 $sql = "SELECT kelompok FROM jbsakad.kelompokcalonsiswa WHERE replid='$kelompok'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namakelompok = $row[0];
 ?>
 
@@ -166,7 +166,7 @@ $namakelompok = $row[0];
 <!-- TABLE CENTER -->
 <tr>
 	<td>
-<? if ($max_n_bayar > 0) { ?>
+<?php if ($max_n_bayar > 0) { ?>
     <table width="100%" border="0" align="center">
     <tr>
     	<td>
@@ -183,13 +183,13 @@ $namakelompok = $row[0];
         <td class="header" width="90" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nopendaftaran','<?=$urutan?>')">No. Reg <?=change_urut('nopendaftaran',$urut,$urutan)?></td>
         <td class="header" width="160" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nama','<?=$urutan?>')">Nama <?=change_urut('nama',$urut,$urutan)?></td>
         <td class="header" width="75" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('kelompok','<?=$urutan?>')">Kel <?=change_urut('kelompok',$urut,$urutan)?></td>
-    <?	for($i = 0; $i < $max_n_bayar; $i++) { ?>
+    <?php for($i = 0; $i < $max_n_bayar; $i++) { ?>
         <td class="header" width="125">Bayaran-<?=$i + 1 ?></td>
-    <?  } ?>
+    <?php  } ?>
         <td class="header" width="125">Total Pembayaran</td>
         <!--<td class="header" width="200">Keterangan</td>-->
     </tr>
-<?
+<?php
 
 if ($kelompok == -1) 
 {
@@ -219,16 +219,16 @@ else
 }
 
 $result_tot = QueryDb($sql_tot);
-$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-$jumlah = mysql_num_rows($result_tot);
+$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+$jumlah = mysqli_num_rows($result_tot);
 $akhir = ceil($jumlah/5)*5;
-while ($x = @mysql_fetch_row($result_tot)){
+while ($x = @mysqli_fetch_row($result_tot)){
 	$sql5	= "SELECT jumlah 
 	             FROM penerimaaniurancalon p, jurnal j 
              	WHERE p.idjurnal = j.replid AND j.idtahunbuku = '$idtahunbuku' 
-				  AND idcalon = $x[0] AND idpenerimaan = '$idpenerimaan'";
+				  AND idcalon = $x[0] AND idpenerimaan = '".$idpenerimaan."'";
 	$result5 = QueryDb($sql5);
-	while ($row5 = mysql_fetch_array($result5)) {
+	while ($row5 = mysqli_fetch_array($result5)) {
 	$TotalPembayaran += $row5[0];
 	}
 }
@@ -238,7 +238,7 @@ if ($page==0)
 else 
 	$cnt = (int)$page*(int)$varbaris;
 $totalall = 0;
-while ($row = mysql_fetch_array($result)) { 
+while ($row = mysqli_fetch_array($result)) { 
 	$replid = $row['replid'];
 ?>
 	
@@ -247,16 +247,16 @@ while ($row = mysql_fetch_array($result)) {
         <td align="center"><?=$row['nopendaftaran'] ?></td>
         <td align="left"><?=$row['nama'] ?></td>
         <td align="center"><?=$row['kelompok'] ?></td>
-<?		$sql = "SELECT date_format(p.tanggal, '%d-%b-%y') as tanggal, jumlah 
+<?php 	$sql = "SELECT date_format(p.tanggal, '%d-%b-%y') as tanggal, jumlah 
                   FROM penerimaaniurancalon p, jurnal j
 				 WHERE p.idjurnal = j.replid AND j.idtahunbuku = '$idtahunbuku' 
-				   AND idcalon = '$replid' AND idpenerimaan = '$idpenerimaan'";
+				   AND idcalon = '$replid' AND idpenerimaan = '".$idpenerimaan."'";
 		$result2 = QueryDb($sql);
-		$nbayar = mysql_num_rows($result2);
+		$nbayar = mysqli_num_rows($result2);
 		$nblank = $max_n_bayar - $nbayar;
 		
 		$totalbayar = 0;
-		while ($row2 = mysql_fetch_array($result2)) {
+		while ($row2 = mysqli_fetch_array($result2)) {
 			$totalbayar += $row2['jumlah']; ?>
             <td>
                 <table border="1" width="100%" style="border-collapse:collapse" cellpadding="0" cellspacing="0" bordercolor="#000000">
@@ -264,7 +264,7 @@ while ($row = mysql_fetch_array($result)) {
                 <tr height="20"><td align="center"><?=$row2['tanggal'] ?></td></tr>
                 </table>
             </td>
-<?		} //end for 
+<?php 	} //end for 
 		$totalall += $totalbayar;
 
 		for ($i = 0; $i < $nblank; $i++) { ?>        
@@ -274,27 +274,27 @@ while ($row = mysql_fetch_array($result)) {
                 <tr height="20"><td align="center">&nbsp;</td></tr>
                 </table>
             </td>
-<?		} //end for ?>        
+<?php 	} //end for ?>        
 		<td align="right"><?=FormatRupiah($totalbayar) ?></td>
         <!--<td align="right"><?=$row['keterangan'] ?></td>-->
     </tr>
-<? } //end for ?>
+<?php } //end for ?>
 	<input type="hidden" name="tes" id="tes" value="<?=$total?>"/>
-	<? if ($total-1 == $page) { ?>
+	<?php if ($total-1 == $page) { ?>
 	<tr height="30">
     	<td bgcolor="#999900" align="center" colspan="<?=4 + $max_n_bayar ?>"><font color="#FFFFFF"><strong>T O T A L</strong></font></td>
         <td bgcolor="#999900" align="right"><font color="#FFFFFF"><strong><?=FormatRupiah($TotalPembayaran) ?></strong></font></td>
         <!--<td bgcolor="#999900">&nbsp;</td>-->
     </tr>
-	<? } ?>
+	<?php } ?>
 	</table>
-	<?
+	<?php
     CloseDb();
     ?>
     <script language='JavaScript'>
         Tables('table', 1, 0);
     </script>
-     <?	if ($page==0){ 
+     <?php if ($page==0){ 
 		$disback="style='display:none;'";
 		$disnext="style=''";
 		}
@@ -320,17 +320,17 @@ while ($row = mysql_fetch_array($result)) {
        	<td width="30%" align="left" colspan="2">Halaman
 		<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 		<input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
-		<?
+		<?php
 		//for($a=0;$a<$total;$a++){
 		//	if ($page==$a){
 		//		echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -344,25 +344,25 @@ while ($row = mysql_fetch_array($result)) {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="250">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-        <br />Tambah data pembayaran pada departemen <?=$departemen?> <? if ($namakelompok) echo  ", kelompok ".$namakelompok ?> dan kategori <?=$namapenerimaan?> di menu Penerimaan Pembayaran pada bagian Penerimaan.
+        <br />Tambah data pembayaran pada departemen <?=$departemen?> <?php if ($namakelompok) echo  ", kelompok ".$namakelompok ?> dan kategori <?=$namapenerimaan?> di menu Penerimaan Pembayaran pada bagian Penerimaan.
         </b></font>
 	</td>
 </tr>
 </table>  
 
-<? } ?>
+<?php } ?>
     </td>
 </tr>
 </table>    

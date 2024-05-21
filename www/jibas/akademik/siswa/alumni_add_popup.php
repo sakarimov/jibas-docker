@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //include('../cek.php');
 require_once("../include/theme.php");
 require_once('../include/errorhandler.php');
@@ -34,33 +34,33 @@ OpenDb();
 $flag=0;
 if(isset($_REQUEST["simpan"])){
 	$tanggal=$_REQUEST["tanggal"];
-	$info = split("-", $tanggal);
+	$info = explode("-", (string) $tanggal);
 	$tgl = $info[2] . "-" . $info[1] . "-" . $info[0];
 	OpenDb();
 	BeginTrans();
 	$success=0;
-	$sql="SELECT s.nis as nis, s.idkelas as idkelas, t.departemen as departemen, t.replid as tingkat FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t WHERE s.nis='$_REQUEST[nis]' AND k.replid=s.idkelas AND k.idtingkat=t.replid";
+	$sql="SELECT s.nis as nis, s.idkelas as idkelas, t.departemen as departemen, t.replid as tingkat FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tingkat t WHERE s.nis='".$_REQUEST['nis']."' AND k.replid=s.idkelas AND k.idtingkat=t.replid";
 	
 	$result=QueryDbTrans($sql, $success);
-	$row=@mysql_fetch_array($result);
+	$row=@mysqli_fetch_array($result);
 	if ($success){
-		$sql="INSERT INTO jbsakad.alumni SET nis='$row[nis]',klsakhir='$row[idkelas]',tktakhir='$row[tingkat]',tgllulus='$tgl',keterangan='".CQ($_REQUEST['keterangan'])."'";
+		$sql="INSERT INTO jbsakad.alumni SET nis='".$row['nis']."',klsakhir='".$row['idkelas']."',tktakhir='".$row['tingkat']."',tgllulus='$tgl',keterangan='".CQ($_REQUEST['keterangan'])."'";
 		//echo $sql;
 		//exit;
 		QueryDbTrans($sql, $success);
 		}
 	if ($success){
-		$sql="UPDATE jbsakad.riwayatkelassiswa SET aktif=0 WHERE nis='$_REQUEST[nis]' AND aktif=1";
+		$sql="UPDATE jbsakad.riwayatkelassiswa SET aktif=0 WHERE nis='".$_REQUEST['nis']."' AND aktif=1";
 		QueryDbTrans($sql, $success);
 		//echo $sql;
 		//exit;
 		}
 	if ($success){
-		$sql="UPDATE jbsakad.riwayatdeptsiswa SET aktif=0 WHERE nis='$_REQUEST[nis]' AND aktif=1";
+		$sql="UPDATE jbsakad.riwayatdeptsiswa SET aktif=0 WHERE nis='".$_REQUEST['nis']."' AND aktif=1";
 		QueryDbTrans($sql, $success);
 		}
 	if ($success){
-		$sql="UPDATE jbsakad.siswa SET aktif=0, alumni=1 WHERE nis='$_REQUEST[nis]'";
+		$sql="UPDATE jbsakad.siswa SET aktif=0, alumni=1 WHERE nis='".$_REQUEST['nis']."'";
 		QueryDbTrans($sql, $success);
 		}
 	if ($success){
@@ -71,7 +71,7 @@ if(isset($_REQUEST["simpan"])){
 			parent.opener.refresh();
 			window.close();
 	 	</script>
-        <? 
+        <?php 
 	} else {
 		RollbackTrans();
 	}
@@ -86,12 +86,12 @@ if(isset($_REQUEST["simpan"])){
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <link rel="stylesheet" type="text/css" href="../style/calendar-win2k-1.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script type="text/javascript" src="../script/calendar.js"></script>
 <script type="text/javascript" src="../script/lang/calendar-en.js"></script>
 <script type="text/javascript" src="../script/calendar-setup.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
     function cek_form() {
         var nip,nama,tanggal,keterangan;
 
@@ -172,7 +172,7 @@ if(isset($_REQUEST["simpan"])){
         </tr>
         <tr>
             <td>NIS</td><td>
-            <input type="text" size="40" name="nis" readonly="readonly"  value="<?=$_GET[nis] ?>" class="disabled" onClick="carisiswa()">&nbsp
+            <input type="text" size="40" name="nis" readonly="readonly"  value="<?=$_GET['nis'] ?>" class="disabled" onClick="carisiswa()">&nbsp
             <a href="#null" onClick="carisiswa()"><img src="../images/ico/cari.png" border="0" onMouseOver="showhint('Cari siswa',
             this, event, '100px')"></a>
             <img src="../images/ico/hapus.png" border="0" onClick="clear_nis();" onMouseOver="showhint('Kosongkan NIS dan Nama',
@@ -181,7 +181,7 @@ if(isset($_REQUEST["simpan"])){
         </tr>
         <tr>
             <td>Nama</td><td>
-            <input type="text" size="50" name="nama" readonly="readonly" value="<?=$_GET[nama]?>" class="disabled" onClick="carisiswa()">
+            <input type="text" size="50" name="nama" readonly="readonly" value="<?=$_GET['nama']?>" class="disabled" onClick="carisiswa()">
             </td>
         </tr>
         <tr>
@@ -217,7 +217,7 @@ if(isset($_REQUEST["simpan"])){
 </table>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>
 <script type="text/javascript">

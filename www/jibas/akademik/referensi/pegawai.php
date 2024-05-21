@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -51,10 +51,10 @@ if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 
 if ($op == "dw8dxn8w9ms8zs22") {
-	$sql = "UPDATE jbssdm.pegawai SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql = "UPDATE jbssdm.pegawai SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	QueryDb($sql);
 } else if ($op == "xm8r389xemx23xb2378e23") {
-	$sql = "DELETE FROM jbssdm.pegawai WHERE replid = '$_REQUEST[replid]'";
+	$sql = "DELETE FROM jbssdm.pegawai WHERE replid = '".$_REQUEST['replid']."'";
 	$result = QueryDb($sql);
 	$page=0;
 	$hal=0;
@@ -62,7 +62,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
 
 if ($op == "fdgfde342ft45tgwer34rfwef") {
 	$pin = random(5);
-	$sql = "UPDATE jbssdm.pegawai SET `$_REQUEST[field]` = '$pin' WHERE nip = '$_REQUEST[nip]'";
+	$sql = "UPDATE jbssdm.pegawai SET `{$_REQUEST['field']}` = '$pin' WHERE nip = '".$_REQUEST['nip']."'";
 	QueryDb($sql);
 }
 
@@ -226,39 +226,39 @@ function exel()
       	<td width="38%" align="right">
       	<strong>Bagian&nbsp;</strong>
       	<select name="bagian" id="bagian" onchange="change_bagian()" >
-        <option value="-1" <?=StringIsSelected($row_bag[bagian], $bagian)?>>Semua Bagian </option>
-	<?
+        <option value="-1" <?=StringIsSelected($row_bag['bagian'], $bagian)?>>Semua Bagian </option>
+	<?php
         $sql_bag = "SELECT bagian FROM jbssdm.bagianpegawai ORDER BY urutan";    
 		$result_bag = QueryDB($sql_bag);
-		while ($row_bag = @mysql_fetch_array($result_bag)){
+		while ($row_bag = @mysqli_fetch_array($result_bag)){
 	?>
-        <option value="<?=$row_bag[bagian]?>" <?=StringIsSelected($row_bag[bagian], $bagian)?>>
-        <?=$row_bag[bagian]?>
+        <option value="<?=$row_bag['bagian']?>" <?=StringIsSelected($row_bag['bagian'], $bagian)?>>
+        <?=$row_bag['bagian']?>
         </option>
-    <?
+    <?php
 		}
 	?>
     	</select></td>  
-	<?
+	<?php
 		if ($bagian != "-1"){
 			$sql_tot = "SELECT * FROM jbssdm.pegawai WHERE bagian='$bagian' ORDER BY replid";
 			$result_tot = QueryDb($sql_tot);
-			$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-			$jumlah = mysql_num_rows($result_tot);
+			$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+			$jumlah = mysqli_num_rows($result_tot);
 						
 			$sql_pegawai="SELECT * FROM jbssdm.pegawai WHERE bagian='$bagian' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		} else {
 			$sql_tot = "SELECT * FROM jbssdm.pegawai ORDER BY replid";
 			$result_tot = QueryDb($sql_tot);
-			$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-			$jumlah = mysql_num_rows($result_tot);
+			$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+			$jumlah = mysqli_num_rows($result_tot);
 			
 			$sql_pegawai="SELECT * FROM jbssdm.pegawai ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		}
 		
 		$akhir = ceil($jumlah/5)*5;
 		$result_pegawai=QueryDb($sql_pegawai);
-		if (@mysql_num_rows($result_pegawai) > 0){ ?>
+		if (@mysqli_num_rows($result_pegawai) > 0){ ?>
 		<input type="hidden" name="total" id="total" value="<?=$total?>"/>
     	<td width="60%" align="right">
         	<a href="#" onClick="refresh()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
@@ -266,9 +266,9 @@ function exel()
 		    <a href="#" onClick="JavaScript:exel()"><img src="../images/ico/excel.png" border="0" onMouseOver="showhint('Excel!', this, event, '80px')"/>&nbsp;Excel</a>&nbsp;&nbsp;
             <a href="JavaScript:cetak('<?=$urut?>','<?=$urutan?>')"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')" />&nbsp;Cetak</a>&nbsp;&nbsp;
      
-     	<?	if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+     	<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         	<a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Pegawai</a>
-        <?	} ?>        </td>
+        <?php } ?>        </td>
     </tr>
     </table>
     <br />
@@ -282,46 +282,46 @@ function exel()
         <td width="65" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></td>
         <td width="115">&nbsp;</td>
     </tr>
-	<? 	
+	<?php 	
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
 	
-	while ($row_pegawai = mysql_fetch_array($result_pegawai)) { ?>
+	while ($row_pegawai = mysqli_fetch_array($result_pegawai)) { ?>
     <tr height="25">
     	<td width="20" align="center"><?=$cnt ?></td>
         <td align="center"><?=$row_pegawai['nip'] ?></td>
         <td><?=$row_pegawai['nama'] . " " . $row['nama'] ?></td>
         <td><?=$row_pegawai['tmplahir'] ?>, <?=format_tgl($row_pegawai['tgllahir']) ?></td>
         <td width="103" align="center"><?=$row_pegawai['pinpegawai'] ?>&nbsp;
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <a href="JavaScript:gantipin('pinpegawai','<?=$row_pegawai['nip']?>')" ><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Ganti PIN!', this, event, '70px')"/></a>
-        <? } ?>        </td>    
+        <?php } ?>        </td>    
         <td align="center">
         
-<?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+<?php 	if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
 			if ($row_pegawai['aktif'] == 1) { ?> 
             	<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
-<?			} else { ?>                
+<?php 		} else { ?>                
 				<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
-<?			}
+<?php 		}
 		} else { 
 			if ($row_pegawai['aktif'] == 1) { ?>
 				<a href="JavaScript:setaktif(<?=$row_pegawai['replid'] ?>, <?=$row_pegawai['aktif'] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/></a>
-<?			} else { ?>
+<?php 		} else { ?>
 				<a href="JavaScript:setaktif(<?=$row_pegawai['replid'] ?>, <?=$row_pegawai['aktif'] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/></a>
-<?			} //end if
+<?php 		} //end if
 		} //end if ?>        </td>
         <td align="center"><a href="JavaScript:lihat(<?=$row_pegawai['replid'] ?>)"><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Detail Data Pegawai!', this, event, '50x')"/></a>&nbsp;
         
-<?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
+<?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
 			<a href="JavaScript:cetak_detail(<?=$row_pegawai['replid'] ?>)" onMouseOver="showhint('Cetak Detail Data Pegawai!', this, event, '100px')"><img src="../images/ico/print.png" border="0" /></a>&nbsp; 
             <a href="JavaScript:edit(<?=$row_pegawai['replid'] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Data Pegawai!', this, event, '80px')" /></a>&nbsp;
             <a href="JavaScript:hapus(<?=$row_pegawai['replid'] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Data Pegawai!', this, event, '80px')"/></a>
-<?		} ?>        </td>
+<?php 	} ?>        </td>
     </tr>
-<?	$cnt++; } 
+<?php $cnt++; } 
 CloseDb(); ?>	
     
     <!-- END TABLE CONTENT -->
@@ -330,7 +330,7 @@ CloseDb(); ?>
 	    Tables('table', 1, 0);
     </script>
 
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -355,19 +355,19 @@ CloseDb(); ?>
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -381,9 +381,9 @@ CloseDb(); ?>
  		</td-->
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=10; $m <= 100; $m=$m+10) { ?>
+        <?php 	for ($m=10; $m <= 100; $m=$m+10) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -392,7 +392,7 @@ CloseDb(); ?>
 <!-- END TABLE CENTER -->    
 </table>
 	
-<?	} else { ?>
+<?php } else { ?>
 <td width = "60%"></td>
 </tr>
 </table>
@@ -406,14 +406,14 @@ CloseDb(); ?>
 <tr>
 	<td align="center" valign="middle" height="200">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-        <? if (SI_USER_LEVEL() != $SI_USER_STAFF ) { ?>
+        <?php if (SI_USER_LEVEL() != $SI_USER_STAFF ) { ?>
         <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? } ?>
+        <?php } ?>
         </b></font>
 	</td>
 </tr>
 </table>  
-<? } ?> 
+<?php } ?> 
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>   

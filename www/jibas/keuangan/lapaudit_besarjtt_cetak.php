@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -49,8 +49,8 @@ $calon = "";
 if (isset($_REQUEST['calon']))
 	$calon = $_REQUEST['calon'];
 	
-$tgl1 = explode(' ',$tanggal1);
-$tgl2 = explode(' ',$tanggal2);
+$tgl1 = explode(' ',(string) $tanggal1);
+$tgl2 = explode(' ',(string) $tanggal2);
 
 if ($calon == "calon") 
 	$judul = "Calon ";
@@ -60,7 +60,7 @@ if ($calon == "calon")
 <head>
 <link rel="stylesheet" type="text/css" href="style/style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>JIBAS KEU [Laporan Audit Perubahan Besar Iuran Wajib <?=judul?>Siswa]</title>
+<title>JIBAS KEU [Laporan Audit Perubahan Besar Iuran Wajib <?=\JUDUL?>Siswa]</title>
 <script language="javascript" src="script/tables.js"></script>
 <script language="javascript" src="script/tools.js"></script>
 </head>
@@ -71,7 +71,7 @@ if ($calon == "calon")
 
 <?=getHeader($departemen)?>
 
-<center><font size="4"><strong>LAPORAN AUDIT PERUBAHAN BESAR IURAN WAJIB <?=strtoupper($judul)?>SISWA</strong></font><br /> </center><br /><br />
+<center><font size="4"><strong>LAPORAN AUDIT PERUBAHAN BESAR IURAN WAJIB <?=strtoupper((string) $judul)?>SISWA</strong></font><br /> </center><br /><br />
 
 <table border="0">
 <tr>
@@ -93,7 +93,7 @@ if ($calon == "calon")
     <td class="header" width="*">Keterangan</td>
     <td class="header" width="15%">Petugas</td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT DISTINCT ai.petugas as petugasubah, j.transaksi, date_format(ai.tanggal, '%d-%b-%Y %H:%i:%s') as tanggalubah, 
 	                ab.replid AS id, ab.idaudit, ab.statusdata, j.nokas, date_format(j.tanggal, '%d-%b-%Y') AS tanggal, 
@@ -105,7 +105,7 @@ $sql = "SELECT DISTINCT ai.petugas as petugasubah, j.transaksi, date_format(ai.t
 $result = QueryDb($sql);
 $cnt = 0;
 $no = 0;
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$statusdata = "Data Lama";
 	$bgcolor = "#FFFFFF";
 	if ($row['statusdata'] == 1) {
@@ -123,7 +123,7 @@ while ($row = mysql_fetch_array($result)) {
          &nbsp;&nbsp;<strong>Alasan : </strong><?=$row['alasan'];?>
         <br /><strong>Transaksi :</strong> <?=$row['transaksi'] ?></td>
     </tr>
-<?  } ?>
+<?php  } ?>
 
 	<tr bgcolor="<?=$bgcolor?>">
 		<td><?=$statusdata ?></td>
@@ -132,7 +132,7 @@ while ($row = mysql_fetch_array($result)) {
 	    <td><?=$row['keterangan'] ?></td>
 	    <td align="center"><?=$row['petugas']; ?></td>
 	</tr>
-<?
+<?php
 	$cnt++;
 }
 CloseDb();

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ function LoadValue()
 
     $sql = "SELECT * FROM jbsfina.paymenttabungan WHERE replid = $idPt";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $dept = $row['departemen'];
         $idTabungan = $row['idtabungan'];
@@ -45,7 +45,7 @@ function LoadValue()
              WHERE jenis = 1
              LIMIT 1";
     $res = QueryDb($sql);
-    $isReadOnly = mysql_num_rows($res) > 0;
+    $isReadOnly = mysqli_num_rows($res) > 0;
 }
 
 function ShowSelectDepartemen($selDept)
@@ -59,14 +59,14 @@ function ShowSelectDepartemen($selDept)
     $readOnly = $isReadOnly ? "disabled" : "";
 
     echo "<select id='departemen' name='departemen' style='width: 250px;' onchange='changeDept()' $readOnly>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($selDept == "") $selDept = $row[0];
         $sel = $selDept == $row[0] ? "selected" : "";
 
         if ($sel == "selected") $dept = $selDept;
 
-        echo "<option value='$row[0]' $sel>$row[0]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[0]."</option>";
     }
     echo "</select>";
 }
@@ -83,10 +83,10 @@ function ShowSelectTabunganPegawai()
     $readOnly = $isReadOnly ? "disabled" : "";
 
     echo "<select id='tabungan' name='tabungan' style='width: 250px;' $readOnly>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $sel = $idTabungan == $row[0] ? "selected" : "";
-        echo "<option value='$row[0]' $sel>$row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -101,10 +101,10 @@ function ShowSelectRekVendor($kategori, $nama, $defValue)
     $readOnly = $isReadOnly ? "disabled" : "";
 
     echo "<select id='$nama' name='$nama' style='width: 250px' $readOnly>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $sel = $row[0] == $defValue ? "selected" : "";
-        echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
     }
     echo "</select>";
 }
@@ -122,7 +122,7 @@ function SimpanKonfigurasiPegawai()
     {
         $sql = "INSERT INTO jbsfina.paymenttabungan
                    SET departemen = '$dept', jenis = 1, idtabunganp = $idTabungan,
-                       rekkasvendor = '$rekKasVendor', rekutangvendor = '$rekUtangVendor', maxtransvendor = '$maxTrans'";
+                       rekkasvendor = '$rekKasVendor', rekutangvendor = '$rekUtangVendor', maxtransvendor = '".$maxTrans."'";
     }
     else
     {

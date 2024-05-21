@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -32,7 +32,7 @@ $nip = $_REQUEST['nip'];
 
 $sql = "SELECT * FROM jbssdm.pegawai WHERE nip='$nip'";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $namapeg = $row['nama'];
 $gelarawal = $row['gelarawal'];
 $gelarakhir = $row['gelarakhir'];
@@ -73,7 +73,7 @@ $keterangan = $row['keterangan'];
 
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
-<tr><td align="left" valign="top"><? require_once("../include/headercetak.php") ?>
+<tr><td align="left" valign="top"><?php require_once("../include/headercetak.php") ?>
   <center><font size="4"><strong>DATA PRIBADI</strong></font><br /> </center><br /><br />
 <br />
 <table border="0" cellpadding="5" cellspacing="0" width="95%">
@@ -121,7 +121,7 @@ $keterangan = $row['keterangan'];
     </tr>
 <tr>
 	<td align="right" valign="top"><strong>Jenis Kelamin :</strong></td>
-    <td width="*" colspan="2" align="left" valign="top"><? if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></td>
+    <td width="*" colspan="2" align="left" valign="top"><?php if ($jk == "L") echo "Pria"; else echo "Wanita"; ?></td>
 </tr>
 <tr>
 	<td align="right" valign="top">Alamat :</td>
@@ -164,12 +164,12 @@ $keterangan = $row['keterangan'];
                AND ds.nip = '$nip'
              ORDER BY td.urutan   ";
     $res = QueryDb($sql);
-    $ntambahandata = mysql_num_rows($res);
+    $ntambahandata = mysqli_num_rows($res);
 
     if ($ntambahandata > 0)
     {
         $first = true;
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $no += 1;
             $replid = $row['replid'];
@@ -199,7 +199,7 @@ $keterangan = $row['keterangan'];
                     <?=$data?>
                 </td>
             </tr>
-        <?  }
+        <?php  }
     }
     ?>
 </table>

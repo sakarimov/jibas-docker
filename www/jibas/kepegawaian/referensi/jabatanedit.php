@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -36,20 +36,20 @@ if (isset($_REQUEST['btSimpan']))
 {
 	$eselon = $_REQUEST['cbEselon'];
 	$jabatan = $_REQUEST['txJabatan'];
-	$singkatan = strtoupper($_REQUEST['txSingkatan']);
+	$singkatan = strtoupper((string) $_REQUEST['txSingkatan']);
 	$satker = $_REQUEST['cbSatKer'];
 	if ($eselon != "Eselon I")
 		$sql = "UPDATE jabatan SET jabatan='$jabatan', singkatan='$singkatan', satker='$satker', eselon='$eselon' WHERE replid = $id";
 	else
 		$sql = "UPDATE jabatan SET jabatan='$jabatan', singkatan='$singkatan', satker=NULL, eselon='$eselon' WHERE replid = $id";
 	QueryDb($sql);
-	CloseDb($sql);
+	CloseDb();
 	?>
 	<script language="javascript">
 		opener.RefreshPage(<?=$id?>);
 		window.close();
     </script>    
-    <?
+    <?php
 	exit();
 }
 ?>
@@ -75,12 +75,12 @@ function CheckEselon() {
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff">
 
-<?
+<?php
 OpenDb();
 
 $sql = "SELECT singkatan, jabatan, satker, eselon FROM jabatan WHERE replid=$id";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $sing = $row[0];
 $jab  = $row[1];
 $sat  = $row[2];
@@ -104,27 +104,27 @@ $eselon = $row[3];
 	<td align="right">Eselon :</td>
     <td align="left">
     <select name="cbEselon" id="cbEselon" onKeyPress="return focusNext('txSingkatan', event)" onChange="CheckEselon()">
-<?	$sql = "SELECT eselon FROM eselon ORDER BY urutan";
+<?php $sql = "SELECT eselon FROM eselon ORDER BY urutan";
 	$result = QueryDb($sql);
-	while ($row = mysql_fetch_row($result)) { ?>    
+	while ($row = mysqli_fetch_row($result)) { ?>    
     	<option value="<?=$row[0]?>" <?=StringIsSelected($row[0], $eselon)?> ><?=$row[0]?></option>
-<?	} ?>    
+<?php } ?>    
     </select>&nbsp;
     </td>
 </tr>
 <tr>
 	<td align="right">Satuan Kerja :</td>
     <td align="left">
-<? 	$disabled = "";
+<?php 	$disabled = "";
 	if ($eselon == "Eselon I")
 		$disabled = "disabled"; ?>    
     <select name="cbSatKer" id="cbSatKer" <?=$disabled?>>
-<? 		 $sql = "SELECT satker, nama FROM satker";
+<?php 		 $sql = "SELECT satker, nama FROM satker";
 		 $result = QueryDb($sql);
-		 while ($row = mysql_fetch_row($result)) { ?>
+		 while ($row = mysqli_fetch_row($result)) { ?>
          	<option value="<?=$row[0]?>" <?=StringIsSelected($sat, $row[0])?> ><?=$row[1]?></option>
 
-<?		 } ?>        
+<?php 	 } ?>        
     </select>
     </td>
 </tr>
@@ -136,7 +136,7 @@ $eselon = $row[3];
 </tr>
 </table>
 </form>
-<?
+<?php
 CloseDb();
 ?>
 </body>

@@ -23,7 +23,7 @@
  * to be working in Firefox 3 and Safari 3.2, but in reality is is flaky in those browsers.  As
  * HTML 5 gets wider support, the AutoSave plugin will use it automatically. In Windows Vista/7,
  * localStorage is stored in the following folder:
- * C:\Users\[username]\AppData\Local\Microsoft\Internet Explorer\DOMStore\[tempFolder]
+ * C:\Users\['username']\AppData\Local\Microsoft\Internet Explorer\DOMStore\[tempFolder]
  * 
  * 2. sessionStorage - A new feature of HTML 5, sessionStorage works similarly to localStorage,
  * except it is designed to expire after a certain amount of time.  Because the specification

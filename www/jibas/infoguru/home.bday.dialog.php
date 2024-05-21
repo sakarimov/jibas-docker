@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("include/sessionchecker.php");
 require_once("include/sessioninfo.php");
 require_once("include/config.php");
@@ -26,11 +26,11 @@ else
 }
 
 $res = QueryDb($sql);
-$row = @mysql_fetch_array($res);
+$row = @mysqli_fetch_array($res);
 
 if ($row['isnull'] == 0)
 {
-    $pict = base64_encode($row['foto']);
+    $pict = base64_encode((string) $row['foto']);
 }
 else
 {
@@ -48,12 +48,12 @@ else
 <table width="350"  border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td align='center' valign='top'>
-<?      echo "<img src='data:image/jpeg;base64,$pict' height='120'>";             ?><br><br>
+<?php      echo "<img src='data:image/jpeg;base64,$pict' height='120'>";             ?><br><br>
 <font style='font-weight: bold; font-size: 16px'><?=$row['nama']?></font><br>
 <font style='font-weight: bold; font-size: 12px'><?=$row['info']?></font>        
     </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>

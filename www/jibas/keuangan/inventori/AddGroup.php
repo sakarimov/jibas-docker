@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,26 +20,26 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 OpenDb();
 if (isset($_REQUEST['Simpan'])){
-	$sql = "SELECT * FROM jbsfina.groupbarang WHERE namagroup='".addslashes(trim($_REQUEST[groupname]))."'";
-	if (@mysql_num_rows(QueryDb($sql))>0){
+	$sql = "SELECT * FROM jbsfina.groupbarang WHERE namagroup='".addslashes(trim((string) $_REQUEST['groupname']))."'";
+	if (@mysqli_num_rows(QueryDb($sql))>0){
 		?>
         <script language="javascript">
-			alert ('Group <?=$_REQUEST[groupname]?> sudah digunakan!');
+			alert ('Group <?=$_REQUEST['groupname']?> sudah digunakan!');
         </script>
-        <?
+        <?php
 	} else {
-		QueryDb("INSERT INTO jbsfina.groupbarang SET namagroup='".addslashes(trim($_REQUEST[groupname]))."', keterangan='".addslashes(trim($_REQUEST[keterangan]))."'");
+		QueryDb("INSERT INTO jbsfina.groupbarang SET namagroup='".addslashes(trim((string) $_REQUEST['groupname']))."', keterangan='".addslashes(trim((string) $_REQUEST['keterangan']))."'");
 		?>
         <script language="javascript">
 			parent.opener.GetFresh();
 			window.close();
         </script>
-        <?
+        <?php
 	}
 }
 ?>
@@ -68,11 +68,11 @@ function validate(){
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
   <tr>
     <td>Nama Group</td>
-    <td><input name="groupname" id="groupname" type="text" maxlength="45" style="width:100%" value="<?=stripslashes(trim($_REQUEST[groupname]))?>" /></td>
+    <td><input name="groupname" id="groupname" type="text" maxlength="45" style="width:100%" value="<?=stripslashes(trim((string) $_REQUEST['groupname']))?>" /></td>
   </tr>
   <tr>
     <td>Keterangan</td>
-    <td><textarea name="keterangan" id="keterangan" style="width:100%" rows="5"><?=stripslashes(trim($_REQUEST[keterangan]))?></textarea></td>
+    <td><textarea name="keterangan" id="keterangan" style="width:100%" rows="5"><?=stripslashes(trim((string) $_REQUEST['keterangan']))?></textarea></td>
   </tr>
   <tr>
     <td colspan="2" align="center"><input class="but" type="submit" name="Simpan" value="Simpan" />&nbsp;&nbsp;<input type="button" value="Batal" onClick="window.close()" class="but" /></td>
@@ -81,7 +81,7 @@ function validate(){
 </form>
 </fieldset>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>

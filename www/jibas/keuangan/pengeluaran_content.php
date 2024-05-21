@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -74,13 +74,13 @@ if (1 == (int)$_REQUEST['issubmit'])
 	$rekdebet = $_REQUEST['rekdebet'];
 	
 	//Ambil awalan dan cacah tahunbuku untuk bikin nokas;
-	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '$idtahunbuku'";
+	$sql = "SELECT awalan, cacah FROM tahunbuku WHERE replid = '".$idtahunbuku."'";
 	$result = QueryDb($sql);
-	if (mysql_num_rows($result) == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		CloseDb();
 		trigger_error("Tidak ditemukan data tahun buku!", E_USER_ERROR);
 	} else {
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$awalan = $row[0];
 		$cacah = $row[1];
 	}
@@ -120,7 +120,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 		$result = QueryDbTrans($sql, $success);
 		if ($success) 
 		{
-			$row = mysql_fetch_row($result);
+			$row = mysqli_fetch_row($result);
 			$idtransaksi = $row[0];
 		}
 	}
@@ -144,7 +144,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 
 $sql = "SELECT nama FROM datapengeluaran WHERE replid = $idpengeluaran";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapengeluaran = $row[0];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -315,9 +315,9 @@ function panggil(elem){
 			<tr>
                 <td width="20%" align="left"><strong>Tahun Buku</strong></td>
                 <td colspan="2" align="left">
-		<?  	$sql = "SELECT replid, tahunbuku FROM tahunbuku WHERE aktif = 1 AND departemen = '$departemen'";
+		<?php  	$sql = "SELECT replid, tahunbuku FROM tahunbuku WHERE aktif = 1 AND departemen = '".$departemen."'";
                 $result = QueryDb($sql);
-                $row = mysql_fetch_row($result);
+                $row = mysqli_fetch_row($result);
         ?>
              
                 <input type="text" name="tahunbuku" id="tahunbuku" size="35" readonly style="background-color:#CCCC99" value="<?=$row[1] ?>">
@@ -332,10 +332,10 @@ function panggil(elem){
             	<input type="hidden" name="idpengeluaran" id="idpengeluaran" value="<?=$idpengeluaran ?>" />
             	</td>
             </tr>
-            <?
-            $sql = "SELECT rekdebet, rekkredit FROM datapengeluaran WHERE replid = '$idpengeluaran'";
+            <?php
+            $sql = "SELECT rekdebet, rekkredit FROM datapengeluaran WHERE replid = '".$idpengeluaran."'";
             $result = QueryDb($sql);
-            $row = mysql_fetch_row($result);
+            $row = mysqli_fetch_row($result);
             $rekdebet = $row[0];
             $rekkredit = $row[1];
             ?>
@@ -343,11 +343,11 @@ function panggil(elem){
                 <td align="left"><strong>Rek. Kredit </strong></td>
                 <td colspan="2" align="left">
                 <select name="rekkredit" id="rekkredit" style="width:225px" onKeyPress="return focusNext('rekdebet', event)" onfocus="panggil('rekkredit')">
-            <?	$sql = "SELECT kode, nama FROM rekakun WHERE kategori IN (SELECT kategori FROM rekakun ra, datapengeluaran dp WHERE ra.kode = dp.rekkredit AND dp.replid = '$idpengeluaran') ORDER BY kode";
+            <?php $sql = "SELECT kode, nama FROM rekakun WHERE kategori IN (SELECT kategori FROM rekakun ra, datapengeluaran dp WHERE ra.kode = dp.rekkredit AND dp.replid = '$idpengeluaran') ORDER BY kode";
                 $result = QueryDb($sql);
-                while ($row = mysql_fetch_row($result)) { ?>    
+                while ($row = mysqli_fetch_row($result)) { ?>    
                     <option value="<?=$row[0] ?>" <?=StringIsSelected($row[0], $rekkredit)?> > <?=$row[0] . " " . $row[1] ?></option>
-            <?	} ?>    
+            <?php } ?>    
                 </select>
                 </td>
             </tr>
@@ -355,11 +355,11 @@ function panggil(elem){
                 <td align="left"><strong>Rek. Debet</strong></td>
                 <td colspan="2" align="left">
                 <select name="rekdebet" id="rekdebet" style="width:225px" onKeyPress="return focusNext('penerima', event)" onfocus="panggil('rekdebet')"> 
-            <?	$sql = "SELECT kode, nama FROM rekakun WHERE kategori IN (SELECT kategori FROM rekakun ra, datapengeluaran dp WHERE ra.kode = dp.rekdebet AND dp.replid = '$idpengeluaran') ORDER BY kode";
+            <?php $sql = "SELECT kode, nama FROM rekakun WHERE kategori IN (SELECT kategori FROM rekakun ra, datapengeluaran dp WHERE ra.kode = dp.rekdebet AND dp.replid = '$idpengeluaran') ORDER BY kode";
                 $result = QueryDb($sql);
-                while ($row = mysql_fetch_row($result)) { ?>    
+                while ($row = mysqli_fetch_row($result)) { ?>    
                     <option value="<?=$row[0] ?>" <?=StringIsSelected($row[0], $rekdebet)?> > <?=$row[0] . " " . $row[1] ?></option>
-            <?	} ?>    
+            <?php } ?>    
                 </select>
                 </td>
             </tr>

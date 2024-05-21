@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 <?php
 function ShowTagihanReport($showMenu)
 {
-    $lsDept = array();
+    $lsDept = [];
     $nDept = 0;
 
     $sql = "SELECT departemen
@@ -31,7 +31,7 @@ function ShowTagihanReport($showMenu)
              WHERE aktif = 1
              ORDER BY urutan";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $lsDept[] = $row[0];
     }
@@ -42,21 +42,21 @@ function ShowTagihanReport($showMenu)
               FROM jbsfina.paymenttabungan
              WHERE jenis = 1";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $deptPeg = $row[0];
 
-    $lsVendor = array();
+    $lsVendor = [];
     $sql = "SELECT vendorid, nama
               FROM jbsfina.vendor
              WHERE aktif = 1 
              ORDER BY nama";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $lsVendor[] = array($row[0], $row[1]);
+        $lsVendor[] = [$row[0], $row[1]];
     }
 
-    $lsSubTotal = array();
+    $lsSubTotal = [];
     for($i = 0; $i < $nDept; $i++)
     {
         $lsSubTotal[] = 0; // Siswa
@@ -119,7 +119,7 @@ function ShowTagihanReport($showMenu)
             $res = QueryDb($sql);
 
             $sum = 0;
-            if ($row = mysql_fetch_row($res))
+            if ($row = mysqli_fetch_row($res))
                 $sum = $row[0];
             $rp = FormatRupiah($sum);
             $vendorTotal += $sum;
@@ -128,7 +128,7 @@ function ShowTagihanReport($showMenu)
             if ($sum == 0)
                 $sb->AppendLine("<td align='right'>$rp</td>");
             else
-                $sb->AppendLine("<td align='right'><a href='#' style='color: #0000ff;' onclick=\"showDetail('$dept','$vendorId', 2)\">$rp</a></td>");
+                $sb->AppendLine("<td align='right'><a href='#' style='color: #0000ff;' onclick=\"showDetail('$dept','$vendorId', 2)\"".$rp."</a></td>");
         }
 
         $sql = "SELECT IFNULL(SUM(p.jumlah), 0)
@@ -140,7 +140,7 @@ function ShowTagihanReport($showMenu)
         $res = QueryDb($sql);
 
         $sum = 0;
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             $sum = $row[0];
         $rp = FormatRupiah($sum);
         $vendorTotal += $sum;
@@ -149,7 +149,7 @@ function ShowTagihanReport($showMenu)
         if ($sum == 0)
             $sb->AppendLine("<td align='right'>$rp</td>");
         else
-            $sb->AppendLine("<td align='right'><a href='#' style='color: #0000ff;' onclick=\"showDetail('$deptPeg','$vendorId', 1)\">$rp</a></td>");
+            $sb->AppendLine("<td align='right'><a href='#' style='color: #0000ff;' onclick=\"showDetail('$deptPeg','$vendorId', 1)\"".$rp."</a></td>");
 
         $rp = FormatRupiah($vendorTotal);
         $sb->AppendLine("<td align='right' valign='middle' rowspan='2'><strong>$rp</strong></td>");
@@ -176,7 +176,7 @@ function ShowTagihanReport($showMenu)
             $res = QueryDb($sql);
 
             $tglRefund = "(belum pernah)";
-            if ($row = mysql_fetch_row($res))
+            if ($row = mysqli_fetch_row($res))
                 $tglRefund = $row[0];
 
             $sb->AppendLine("<td align='right'><i>$tglRefund</i></td>");
@@ -194,7 +194,7 @@ function ShowTagihanReport($showMenu)
         $res = QueryDb($sql);
 
         $tglRefund = "(belum pernah)";
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             $tglRefund = $row[0];
 
         $sb->AppendLine("<td align='right'><i>$tglRefund</i></td>");

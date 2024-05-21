@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/theme.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -32,29 +32,29 @@ require_once('../cek.php');
 $cek = 0;
 if (isset($_POST['simpan'])) {
 	OpenDb();
-	$sql_cek = "SELECT * FROM jbsakad.statussiswa where status='$_REQUEST[status]' AND replid <> '$_REQUEST[orig_status]'";
+	$sql_cek = "SELECT * FROM jbsakad.statussiswa where status='".$_REQUEST['status']."' AND replid <> '".$_REQUEST['orig_status']."'";
 	$hasil=QueryDb($sql_cek);
 	
-	$sql1 = "SELECT * FROM jbsakad.statussiswa WHERE urutan = '$_REQUEST[urutan]' AND replid <> '$_REQUEST[orig_status]'";
+	$sql1 = "SELECT * FROM jbsakad.statussiswa WHERE urutan = '".$_REQUEST['urutan']."' AND replid <> '".$_REQUEST['orig_status']."'";
 	$result1 = QueryDb($sql1);
 	
-	if (mysql_num_rows($hasil) > 0){
+	if (mysqli_num_rows($hasil) > 0){
 		CloseDb();
-		$ERROR_MSG = "Status $_REQUEST[status] sudah digunakan!";
-	} else if (mysql_num_rows($result1) > 0) {		
+		$ERROR_MSG = "Status {$_REQUEST['status']} sudah digunakan!";
+	} else if (mysqli_num_rows($result1) > 0) {		
 		CloseDb();
-		$ERROR_MSG = "Urutan $_REQUEST[urutan] sudah digunakan!";
+		$ERROR_MSG = "Urutan {$_REQUEST['urutan']} sudah digunakan!";
 		$cek = 1;		
 	} else {
-		$sql = "UPDATE jbsakad.statussiswa SET status='".CQ($_POST['status'])."',urutan='$_POST[urutan]' WHERE replid = '$_REQUEST[orig_status]'";
+		$sql = "UPDATE jbsakad.statussiswa SET status='".CQ($_POST['status'])."',urutan='".$_POST['urutan']."' WHERE replid = '".$_REQUEST['orig_status']."'";
 		$result = QueryDb($sql);
 	
 		if ($result) { ?>
 		<script language="javascript">
-            opener.refresh('<?=$_REQUEST[status]?>');
+            opener.refresh('<?=$_REQUEST['status']?>');
             window.close();
         </script>
-<?		}	
+<?php 	}	
 	}
 }
 CloseDb();
@@ -88,7 +88,7 @@ if (isset($_POST['orig_urutan']))
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <title>JIBAS SIMAKA [Ubah Nama Status]</title>
 <script language="javascript">
 function cek() {
@@ -196,10 +196,10 @@ function panggil(elem){
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

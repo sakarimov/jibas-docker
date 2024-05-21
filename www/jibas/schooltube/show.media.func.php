@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ function ShowLikeCount($idMedia)
               FROM jbsel.media
              WHERE id = $idMedia";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         echo $row[0];
     }
@@ -77,7 +77,7 @@ function ShowViewCount($idMedia)
               FROM jbsel.media
              WHERE id = $idMedia";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         echo $row[0];
     }
@@ -101,7 +101,7 @@ function ShowLikeButton($idMedia)
     $sql = "SELECT COUNT(id)
               FROM jbsel.medialike
              WHERE idmedia = $idMedia
-               AND $userCol = '$userId'";
+               AND $userCol = '".$userId."'";
     $nLike = FetchSingle($sql);
 
     if ($nLike == 0)
@@ -121,7 +121,7 @@ function ShowMediaInfo()
                       FROM jbscbe.kategori
                      WHERE id = $idKategori";
         $res2 = QueryDb($sql);
-        if ($row2 = mysql_fetch_row($res2))
+        if ($row2 = mysqli_fetch_row($res2))
             $kateValue = $row2[0];
     }
 
@@ -151,7 +151,7 @@ function ShowMediaFiles($idMedia)
     $res2 = QueryDb($sql);
 
     $tab = "<table border='1' cellspacing='0' cellpadding='5' width='99%' style='border-width: 1px; border-collapse: collapse;'>";
-    while($row2 = mysql_fetch_array($res2))
+    while($row2 = mysqli_fetch_array($res2))
     {
         $loc = UrlCombine($FILESHARE_ADDR, $row2["fileloc"]);
         $loc = UrlCombine($loc, $row2["filename"]);
@@ -179,7 +179,7 @@ function ShowCountNotes($idMedia)
     $sql = "SELECT COUNT(id)
               FROM jbsel.medianotes
              WHERE idmedia = $idMedia
-               AND $userCol = '$userId'";
+               AND $userCol = '".$userId."'";
     return FetchSingle($sql);
 
 }
@@ -198,7 +198,7 @@ function SetMediaLike($like, $idMedia)
     else
         $sql = "DELETE FROM jbsel.medialike 
                  WHERE idmedia = $idMedia
-                   AND $userCol = '$userId'";
+                   AND $userCol = '".$userId."'";
     QueryDb($sql);
 
     $nLike = 0;
@@ -206,7 +206,7 @@ function SetMediaLike($like, $idMedia)
               FROM jbsel.medialike
              WHERE idmedia = $idMedia";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $nLike = $row[0];
 
     $sql = "UPDATE jbsel.media
@@ -247,7 +247,7 @@ function SaveNotes($idMedia, $notes)
         return;
 
     $notes = SafeInputText($notes);
-    $notes = str_replace("\n", "<br>", $notes);
+    $notes = str_replace("\n", "<br>", (string) $notes);
     $userCol = $_SESSION["UserCol"];
     $userId = $_SESSION["UserId"];
 
@@ -270,11 +270,11 @@ function ShowMediaNotesList($idMedia)
                AND idmedia = $idMedia
              ORDER BY timestamp DESC";
     $res = QueryDb($sql);
-    $nNotes = mysql_num_rows($res);
+    $nNotes = mysqli_num_rows($res);
 
     echo "<input type='hidden' id='nNotes' value='$nNotes'>";
     echo "<table border='0' cellpadding='2' cellspacing='0' width='700'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         $idNotes = $row[0];
 

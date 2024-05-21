@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once("../include/common.php") 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,7 +46,7 @@ function ShowBlank() {
 </head>
 
 <body>
-<?
+<?php
 $M = date('n');
 $Y = date('Y');
 ?>
@@ -55,15 +55,15 @@ $Y = date('Y');
 	<td width="60%" align="left">
     	Bulan: 
         <select name="bln1" id="bln1" onchange="JavaScript:ShowBlank()">
-<?		for($i = 1; $i <= 12; $i++) { ?>        
+<?php 	for($i = 1; $i <= 12; $i++) { ?>        
 			<option value="<?=$i?>" <?=IntIsSelected($i, $M)?>><?=NamaBulan($i)?></option>
-<?		} ?>
+<?php 	} ?>
         </select>
         <input type="text" name="thn1" id="thn1" maxlength="4" size="4" value="<?=$Y?>" onchange="JavaScript:ShowBlank()" /> s/d 
         <select name="bln2" id="bln2" onchange="JavaScript:ShowBlank()">
-<?		for($i = 1; $i <= 12; $i++) { ?>        
+<?php 	for($i = 1; $i <= 12; $i++) { ?>        
 			<option value="<?=$i?>" <?=IntIsSelected($i, $M)?>><?=NamaBulan($i)?></option>
-<?		} ?>
+<?php 	} ?>
         </select>
         <input type="text" name="thn2" id="thn2" maxlength="4" size="4" value="<?=$Y?>"  onchange="JavaScript:ShowBlank()"/> &nbsp;&nbsp;
         <input type="button" name="Lihat" value="Lihat" class="but" onclick="JavaScript:Lihat()" />

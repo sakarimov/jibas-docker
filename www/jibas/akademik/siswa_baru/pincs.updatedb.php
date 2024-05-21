@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 $sql = "SELECT COUNT(*)
           FROM information_schema.COLUMNS
          WHERE TABLE_SCHEMA = 'jbsakad'
            AND TABLE_NAME = 'calonsiswa'
            AND COLUMN_NAME = 'pinsiswa'";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $ndata = $row[0];
 
 if ($ndata == 0)
@@ -38,11 +38,11 @@ if ($ndata == 0)
    
    $sql = "SELECT replid FROM jbsakad.calonsiswa";
    $res = QueryDb($sql);
-   while($row = mysql_fetch_row($res))
+   while($row = mysqli_fetch_row($res))
    {
       $replid = $row[0];
       $pincs = random(5);
-      $sql = "UPDATE jbsakad.calonsiswa SET pinsiswa = '$pincs' WHERE replid = '$replid'";
+      $sql = "UPDATE jbsakad.calonsiswa SET pinsiswa = '$pincs' WHERE replid = '".$replid."'";
       QueryDb($sql);
    }
 }

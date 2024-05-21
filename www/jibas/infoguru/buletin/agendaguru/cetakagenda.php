@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/sessioninfo.php');
 require_once('../../include/config.php');
@@ -36,7 +36,7 @@ $tahun = "";
 if (isset($_REQUEST['tahun']))
 	$tahun = $_REQUEST['tahun'];
 	
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");	
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
@@ -52,7 +52,7 @@ $namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agu
 <BODY>
 <table border="0" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
-  	<? getHeader('yayasan') ?>
+  	<?php getHeader('yayasan') ?>
 <center>
   <font size="4"><strong>DAFTAR AGENDA GURU</strong></font><br />
  </center><br /><br />
@@ -65,7 +65,7 @@ Guru : <?=SI_USER_NAME()?><br><br>
 	<td width='14%' align='center' class="header">Tanggal</td>
     <td width='*' class="header">Agenda</td>
   </tr>
-<?
+<?php
   OpenDb();
   
   $sql = "SELECT tanggal
@@ -75,19 +75,19 @@ Guru : <?=SI_USER_NAME()?><br><br>
 			 AND MONTH(tanggal) = '$bulan'
 		   GROUP BY tanggal";
   $result = QueryDb($sql);
-  if (@mysql_num_rows($result)>0)
+  if (@mysqli_num_rows($result)>0)
   {
 	$cnt = 0;  
-	while ($row=@mysql_fetch_array($result))
+	while ($row=@mysqli_fetch_array($result))
 	{ ?>
 	  <tr>
-<? 		$sql1 = "SELECT *
+<?php 		$sql1 = "SELECT *
 			       FROM jbsvcr.agenda
 				  WHERE idguru = '".SI_USER_ID()."'
-				    AND tanggal = '$row[tanggal]'";
+				    AND tanggal = '".$row['tanggal']."'";
 		$result1=QueryDb($sql1);
 		$i = 0;
-		while ($row1=@mysql_fetch_array($result1))
+		while ($row1=@mysqli_fetch_array($result1))
 		{
 		  $judul[$i] = $row1['judul'];
 		  $komentar[$i] = $row1['komentar'];	
@@ -95,20 +95,20 @@ Guru : <?=SI_USER_NAME()?><br><br>
 		} ?>
 		<td align='center'><?=LongDateFormat($row['tanggal'])?></td>
 		<td height="25" align="left">
-<? 	  	for ($x=0;$x<=$i-1;$x++)
+<?php 	  	for ($x=0;$x<=$i-1;$x++)
 		{	?>
 			<strong><?=$judul[$x]?></strong><br>
 			<?=$komentar[$x]?>
 			<hr style='border-color: #666; border-style: dashed;' width='50%' align='left'>
-<?	  	}	?>
+<?php   	}	?>
 		</td>
   </tr>
-  <? 
+  <?php 
   } } else { ?>
   <tr>
     <th height="25" scope="row" colspan="2" align="center">Tidak ada Agenda untuk bulan <?=$namabulan[$bulan-1]?></th>
   </tr>
-  <? 
+  <?php 
   }
   CloseDb(); ?>
 </table>

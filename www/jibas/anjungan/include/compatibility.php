@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 3.0 (January 09, 2013)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 if (!function_exists('http_response_code'))
 {
     function http_response_code($code = NULL)
@@ -69,11 +69,11 @@ if (!function_exists('http_response_code'))
                 case 504: $text = 'Gateway Time-out'; break;
                 case 505: $text = 'HTTP Version not supported'; break;
                 default:
-                    exit('Unknown http status code "' . htmlentities($code) . '"');
+                    exit('Unknown http status code "' . htmlentities((string) $code) . '"');
                 break;
             }
 
-            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            $protocol = ($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.0');
 
             header($protocol . ' ' . $code . ' ' . $text);
 
@@ -83,7 +83,7 @@ if (!function_exists('http_response_code'))
         else
         {
 
-            $code = (isset($GLOBALS['http_response_code']) ? $GLOBALS['http_response_code'] : 200);
+            $code = ($GLOBALS['http_response_code'] ?? 200);
 
         }
 

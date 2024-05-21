@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
@@ -46,17 +46,17 @@ if ($_REQUEST['action'] == 'Add')
 	$sql = "SELECT * FROM guru g, pelajaran j, dasarpenilaian d, tingkat t, aturannhb a 
 			WHERE a.nipguru=g.nip AND a.idpelajaran = j.replid AND a.dasarpenilaian = d.dasarpenilaian 
 			AND a.idtingkat = t.replid AND a.idpelajaran = '$id_pelajaran' AND a.nipguru = '$nip_guru' 
-			AND a.idtingkat = '$id_tingkat' AND a.dasarpenilaian = '$aspek'"; 
+			AND a.idtingkat = '$id_tingkat' AND a.dasarpenilaian = '".$aspek."'"; 
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) 
+	if (mysqli_num_rows($result) > 0) 
 	{
 		CloseDb(); ?>
 		<script language="javascript">
 			alert ('Aspek <?=$aspek?> sudah digunakan!');
 			window.self.history.back();
 		</script>
-<?		exit;
+<?php 	exit;
 	} 
 }
 
@@ -80,7 +80,7 @@ for ($i = 1; $i <= $jum; $i++)
 		if ($jenis && $cek == 1 && $bobot >= 0) 
 		{
 			if ($id != "" && $id<>0) 
-				$sql1 = "UPDATE aturannhb SET bobot='$bobot', aktif=1, info1=NULL WHERE replid = '$id'";				
+				$sql1 = "UPDATE aturannhb SET bobot='$bobot', aktif=1, info1=NULL WHERE replid = '".$id."'";				
 			else 
 				$sql1 = "INSERT INTO aturannhb SET nipguru='$nip_guru',
 						 idtingkat='$id_tingkat', idpelajaran='$id_pelajaran',
@@ -99,7 +99,7 @@ if ($success)
 		opener.document.location.href="perhitungan_rapor_content.php?id_pelajaran=<?=$id_pelajaran?>&nip_guru=<?=$nip_guru?>";
 		window.close();
 	</script>
-<? 
+<?php 
 } 
 else 
 { 
@@ -109,6 +109,6 @@ else
         alert ('Data gagal disimpan !');
         window.close();
     </script>
-<?
+<?php
 }
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? 
+<?php 
 require_once("../include/theme.php"); 
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
@@ -154,7 +154,7 @@ function focusNext(elemName, evt) {
     <tr>
     	<td><strong>Aspek Penilaian</strong></td>
     	<td><select name="aspek" id="aspek" onChange="change_aspek()" style="width:150px" onKeyPress="return focusNext('aturan', event)">
-			<? 
+			<?php 
 			$sql_daspen="SELECT DISTINCT a.dasarpenilaian, dp.keterangan
 						   FROM jbsakad.aturannhb a, dasarpenilaian dp 
 						  WHERE a.dasarpenilaian = dp.dasarpenilaian AND a.idtingkat = $tingkat 
@@ -162,23 +162,23 @@ function focusNext(elemName, evt) {
 							AND a.nipguru = '$nip' 
 					   ORDER BY	keterangan";
 			$result_daspen = QueryDb($sql_daspen);
-			$num_daspen = @mysql_num_rows($result_daspen);
-			while ($row_daspen=@mysql_fetch_array($result_daspen))
+			$num_daspen = @mysqli_num_rows($result_daspen);
+			while ($row_daspen=@mysqli_fetch_array($result_daspen))
 			{
 				if ($aspek=="")
 					$aspek=$row_daspen['dasarpenilaian']; ?>	
 				<option value="<?=$row_daspen['dasarpenilaian']?>" <?=StringIsSelected($row_daspen['dasarpenilaian'], $aspek) ?>><?=$row_daspen['keterangan']?></option>
-		<? } ?>
+		<?php } ?>
   		    </select>
   		</td>
   	</tr>
-<?	if ($num_daspen>0)
+<?php if ($num_daspen>0)
 	{	?>
   	<tr>
     	<td><strong>Jenis Pengujian</strong></td>
     	<td>
         	<select name="aturan" id="aturan" style="width:150px" onKeyPress="return focusNext('cetak', event)" onChange="change_aturan()">
-			<?
+			<?php
 			$sql_jenispengujian = 
 				"SELECT a.replid, j.jenisujian 
 				   FROM jbsakad.aturannhb a, jbsakad.jenisujian j 
@@ -186,24 +186,24 @@ function focusNext(elemName, evt) {
 				    AND a.dasarpenilaian='$aspek' AND nipguru='$nip' AND j.replid = a.idjenisujian
  		       ORDER BY jenisujian";
 			$result_jenispengujian=QueryDb($sql_jenispengujian);
-			$num_jenispengujian=@mysql_num_rows($result_jenispengujian);
-			while ($row_jenispengujian=@mysql_fetch_array($result_jenispengujian))
+			$num_jenispengujian=@mysqli_num_rows($result_jenispengujian);
+			while ($row_jenispengujian=@mysqli_fetch_array($result_jenispengujian))
 			{
 				if ($aturan=="")
 					$aturan=$row_jenispengujian['replid'];	?>
-    		    <option value="<?=urlencode($row_jenispengujian['replid'])?>" <?=IntIsSelected($row_jenispengujian['replid'], $aturan) ?>><?=$row_jenispengujian['jenisujian']?>
+    		    <option value="<?=urlencode((string) $row_jenispengujian['replid'])?>" <?=IntIsSelected($row_jenispengujian['replid'], $aturan) ?>><?=$row_jenispengujian['jenisujian']?>
    		        </option>
-		<?  } ?>
+		<?php  } ?>
   		    </select>
  		</td>
 	</tr>
-	<? 	if ($num_jenispengujian!=0)
+	<?php 	if ($num_jenispengujian!=0)
         { 
             $sql = "SELECT * FROM ujian 
                     WHERE idkelas = $kelas AND idaturan = $aturan AND idsemester = $semester";
             $result = QueryDb($sql);
                 
-            if (mysql_num_rows($result) > 0) 
+            if (mysqli_num_rows($result) > 0) 
             {	
                 $but = "<input class=\"but\" type=\"button\" name=\"cetak\" id=\"cetak\" value=\"Cetak\" onClick=\"validate();\"  />";
             } else {
@@ -218,18 +218,18 @@ function focusNext(elemName, evt) {
 	else 
 	{ 
 		$ERROR_MSG = "Belum ada aspek penilaian yang tersimpan!"; ?>
-<? 	} ?>
+<?php 	} ?>
   <tr><td colspan="2" align="center">
   <?=$but?>&nbsp;&nbsp;<input class="but" type="button" name="tutup" value="Tutup" onClick="window.close()" />
   </td></tr>
-<? if (strlen($ERROR_MSG) > 0) 
+<?php if (strlen($ERROR_MSG) > 0) 
 	{ ?>
     <tr>
 	<td colspan="2" align="center">
     	<span class="style2"><?=$ERROR_MSG?></span>    
     </td>
 	</tr>
-<?  } ?>
+<?php  } ?>
 
 </table>
 	</form>
@@ -249,6 +249,6 @@ function focusNext(elemName, evt) {
 var spryselect1 = new Spry.Widget.ValidationSelect("aspek");
 var spryselect2 = new Spry.Widget.ValidationSelect("jenis");
 </script>
-<?
+<?php
 CloseDb();
 ?>

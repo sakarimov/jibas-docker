@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("notes.list.config.php");
 require_once("notes.input.config.php");
 
@@ -50,7 +50,7 @@ CreateNotesInputConfigJavaScript();
 <script type="text/javascript" src="mading.common.func.js"></script>
 <div id='not_container' style="position: relative; width: 100%;">
     <div id="not_list_content" style="position: absolute; width: 100%; background-color: #fff; visibility: visible;">
-<?      require_once("notes.list.php"); ?>                                
+<?php      require_once("notes.list.php"); ?>                                
     </div>
     <div id="not_view_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;"></div>
     <div id="not_edit_content" style="position: absolute; width: 100%; background-color: #fff; visibility: hidden;"></div>

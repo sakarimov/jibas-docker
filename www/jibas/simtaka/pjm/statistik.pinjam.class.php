@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CStat{
 	function OnStart(){
-		$op=$_REQUEST[op];
+		$op=$_REQUEST['op'];
 		if ($op=="del"){
-			$sql = "DELETE FROM format WHERE replid=$_REQUEST[id]";
+			$sql = "DELETE FROM format WHERE replid= '".$_REQUEST['id']."'";
 			QueryDb($sql);
 		}
 	}
@@ -34,7 +34,7 @@ class CStat{
 		<script language='JavaScript'>
 			Tables('table', 1, 0);
 		</script>
-		<?
+		<?php
     }
     function Content(){
 		?>
@@ -73,7 +73,7 @@ class CStat{
 				<table width="100%" border="0" cellspacing="7" cellpadding="7">
 				  <tr>
 					<td width="30%" align="center" valign="top">
-					<?
+					<?php
 					if ($kriteria == 1) 
 					{
 						$bartitle = "Banyaknya Pegawai berdasarkan Bagian";
@@ -185,11 +185,11 @@ class CStat{
 						<td height="25" align="center" class="header"><?=$ytitle?></td>
 						<td height="25" align="center" class="header">&nbsp;</td>
 					  </tr>
-					  <?
+					  <?php
 					  OpenDb();
 					  $result = QueryDb($sql);
 					  $cnt=1;
-					  while ($row = @mysql_fetch_row($result)){
+					  while ($row = @mysqli_fetch_row($result)){
 					  ?>
 					  <tr>
 						<td width="15" height="20" align="center"><?=$cnt?></td>
@@ -197,7 +197,7 @@ class CStat{
 						<td height="20" align="center"><?=$row[1]?> orang</td>
 						<td height="20" align="center"><a href="javascript:viewdetail('<?=$kriteria?>','<?=$row[2]?>')"><img src="../img/lihat.png" border="0" /></a></td>
 					  </tr>
-					  <?
+					  <?php
 					  $cnt++;
 					  }
 					  ?>
@@ -210,31 +210,31 @@ class CStat{
 		  </tr>
 		</table>
 
-        <?
+<?php
 	}
 	function GetMemberName(){
 		$idanggota = $this->idanggota;
 		//return ($idanggota);
 		$sql1 = "SELECT nama FROM ".get_db_name('akad').".siswa WHERE nis='$idanggota'";
 		$result1 = QueryDb($sql1);
-		if (@mysql_num_rows($result1)>0){
-			$row1 = @mysql_fetch_array($result1);
-			return $row1[nama];
+		if (@mysqli_num_rows($result1)>0){
+			$row1 = @mysqli_fetch_array($result1);
+			return $row1['nama'];
 			//return $sql1;
 		} else {
 			$sql2 = "SELECT nama FROM ".get_db_name('sdm').".pegawai WHERE nip='$idanggota'";
 			$result2 = QueryDb($sql2);
-			if (@mysql_num_rows($result2)>0){
-				$row2 = @mysql_fetch_array($result2);
-				return $row2[nama];
+			if (@mysqli_num_rows($result2)>0){
+				$row2 = @mysqli_fetch_array($result2);
+				return $row2['nama'];
 				//return $sql2;
 			} else {
 				$sql3 = "SELECT nama FROM anggota WHERE noregistrasi='$idanggota'";
 				$result3 = QueryDb($sql3);
-				if (@mysql_num_rows($result3)>0){
-					$row3 = @mysql_fetch_array($result3);
+				if (@mysqli_num_rows($result3)>0){
+					$row3 = @mysqli_fetch_array($result3);
 					//return $sql3;
-					return $row3[nama];
+					return $row3['nama'];
 				} else {
 					return "Tanpa Nama";
 				}

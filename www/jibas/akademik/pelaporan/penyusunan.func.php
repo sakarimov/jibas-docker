@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowCbTingkat($departemen)
 {
     $sql = "SELECT replid, tingkat
@@ -32,9 +32,9 @@ function ShowCbTingkat($departemen)
     
     echo "<select class='inputbox' name='tingkat' id='tingkat' onchange='changeCbTingkat()'>";
     echo "<option value='0' selected>(Semua Tingkat)</option>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -60,9 +60,9 @@ function ShowCbKelas($idtingkat)
     
         echo "<select class='inputbox' name='kelas' id='kelas'>";
         echo "<option value='0' selected>(Semua Kelas)</option>";
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            echo "<option value='$row[0]'>$row[1]</option>";
+            echo "<option value='".$row[0]."'>".$row[1]."</option>";
         }
         echo "</select>";
     }
@@ -79,12 +79,12 @@ function ShowCbPengantar($departemen)
     
     $idpengantar = 0;
     echo "<select class='inputbox' name='pengantar' id='pengantar' style='width: 440px' onchange='changeCbPengantar()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($idpengantar == 0)
             $idpengantar = $row[0];
             
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
     
@@ -97,7 +97,7 @@ function ShowPengantar($idpengantar)
               FROM jbsumum.pengantarsurat
              WHERE replid = $idpengantar";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     echo $row[0];
 }
@@ -113,12 +113,12 @@ function ShowCbLampiran($departemen)
     
     $idlampiran = 0;
     echo "<select class='inputbox' name='lampiran' id='lampiran' disabled='disabled' style='width: 440px; background-color: #DDD' onchange='changeCbLampiran()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($idlampiran == 0)
             $idlampiran = $row[0];
             
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
     
@@ -131,7 +131,7 @@ function ShowLampiran($idlampiran)
               FROM jbsumum.lampiransurat
              WHERE replid = $idlampiran";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     echo $row[0];
 }
@@ -199,7 +199,7 @@ function ShowCbDateRange($basename, $enabled)
                    MONTH(NOW()),
                    DAY(NOW())";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     $cbYear = $basename . "Yr30";
     $cbMonth = $basename . "Mn30";

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -77,10 +77,10 @@ if (isset($_REQUEST['idtahunbuku']))
 <tr>
 	<td width="90"><font size="2" face="Arial"><strong>Tahun Buku </strong></font></td>
     <td><font size="2" face="Arial"><strong>: 
-      <?  OpenDb();
+      <?php  OpenDb();
 		$sql = "SELECT tahunbuku FROM tahunbuku WHERE replid = $idtahunbuku";
 	   	$result = QueryDb($sql);
-	   	$row = mysql_fetch_row($result);
+	   	$row = mysqli_fetch_row($result);
 	   	echo  $row[0];
     ?>
 	</strong></font></td>
@@ -104,7 +104,7 @@ if (isset($_REQUEST['idtahunbuku']))
     <td width="15%" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Debet</font></strong></td>
     <td width="15%" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Kredit</font></strong></td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT nokas, date_format(tanggal, '%d-%b-%Y') AS tanggal, petugas, transaksi, keterangan, debet, kredit 
           FROM transaksilog 
@@ -114,7 +114,7 @@ $result = QueryDb($sql);
 $cnt = 0;
 $totaldebet = 0;
 $totalkredit = 0;
-while($row = mysql_fetch_array($result)) {
+while($row = mysqli_fetch_array($result)) {
 	$bg1="#ffffff";
 	if ($cnt==0 || $cnt%2==0)
 		$bg1="#fcffd3";
@@ -135,11 +135,11 @@ while($row = mysql_fetch_array($result)) {
     </font></td>
     <td align="left" valign="top"><font size="2" face="Arial">
       <?=$row['transaksi'] ?>
-      <? if ($row['keterangan'] <> "") { ?>
+      <?php if ($row['keterangan'] <> "") { ?>
       <br />
       <strong>Keterangan: </strong>
       <?=$row['keterangan'] ?>
-      <? } ?>    
+      <?php } ?>    
     </font></td>
     <td align="right" valign="top"><font size="2" face="Arial">
       <?=$row['debet'] ?>
@@ -148,7 +148,7 @@ while($row = mysql_fetch_array($result)) {
       <?=$row['kredit'] ?>
     </font></td>
 </tr>
-<?
+<?php
 }
 CloseDb();
 ?>

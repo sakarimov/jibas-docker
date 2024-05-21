@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -35,10 +35,10 @@ if (isset($_REQUEST['id']))
 		
 if ($id <> "") {	
 	OpenDb();
-	$sql = "SELECT DAY(tanggal1) AS tgl1, MONTH(tanggal1) AS bln, YEAR(tanggal1) AS th, DAY(tanggal2) AS tgl2, hariaktif FROM presensiharian WHERE replid = '$id'";
+	$sql = "SELECT DAY(tanggal1) AS tgl1, MONTH(tanggal1) AS bln, YEAR(tanggal1) AS th, DAY(tanggal2) AS tgl2, hariaktif FROM presensiharian WHERE replid = '".$id."'";
 	$result = QueryDb($sql);
 	CloseDb();
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$tgl1 = $row['tgl1'];
 	$tgl2 = $row['tgl2'];
 	$bln = $row['bln'];
@@ -69,11 +69,11 @@ if (isset($_REQUEST['hariaktif']))
 	$hariaktif = $_REQUEST['hariaktif'];
 	
 OpenDb();
-$sql = "SELECT t.tahunajaran, t.tglmulai, t.tglakhir, k.kelas FROM tahunajaran t, kelas k WHERE k.idtahunajaran = t.replid AND k.replid = '$kelas'"; 
+$sql = "SELECT t.tahunajaran, t.tglmulai, t.tglakhir, k.kelas FROM tahunajaran t, kelas k WHERE k.idtahunajaran = t.replid AND k.replid = '".$kelas."'"; 
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
-$awal = explode('-',$row[1]);
-$akhir = explode('-',$row[2]);
+$row = mysqli_fetch_row($result);
+$awal = explode('-',(string) $row[1]);
+$akhir = explode('-',(string) $row[2]);
 $tanggal1 = $awal[2];
 $tanggal2 = $akhir[2];
 $bulan1 = (int)$awal[1];
@@ -124,24 +124,24 @@ $op = $_REQUEST['op'];
 if ($op == "xm8r389xemx23xb2378e23") {
 	$replid=(int)$_REQUEST['replid'];
 	OpenDb();
-	$sql = "DELETE FROM phsiswa WHERE idpresensi = '$replid'";
+	$sql = "DELETE FROM phsiswa WHERE idpresensi = '".$replid."'";
 	QueryDb($sql);
-	$sql = "DELETE FROM presensiharian WHERE replid = '$replid'";
+	$sql = "DELETE FROM presensiharian WHERE replid = '".$replid."'";
 	QueryDb($sql);
 	
 	
-	if(mysql_affected_rows() > 0) {
+	if(mysqli_affected_rows($conn) > 0) {
 	?>
-    <script language="JavaScript">
+    <script language = "javascript" type = "text/javascript">
         
 		parent.menu.location.href = "input_presensi_menu.php?semester=<?=$semester?>&kelas=<?=$kelas?>&th=<?=$th?>&bln=<?=$bln?>";	
 		parent.isi.location.href = "blank_presensi.php?tipe='isi'";
 	</script>
-<?	} else { ?>
-    <script language="JavaScript">
+<?php } else { ?>
+    <script language = "javascript" type = "text/javascript">
         alert('Data presensi harian gagal dihapus, periksalah apakah data sudah terpakai');	
 	</script>
-<?	CloseDb();
+<?php CloseDb();
 	}
 }
 
@@ -152,8 +152,8 @@ function jumhari($tgl1, $tgl2) {
 	$sql = "SELECT DATEDIFF('$tgl2', '$tgl1')+1";
 	$result = QueryDb($sql);
 	
-	$row = mysql_fetch_row($result);
-	$GLOBALS[hari] = $row[0];
+	$row = mysqli_fetch_row($result);
+	$GLOBALS['hari'] = $row[0];
 	$waktu = $row[0];
 	//echo "<input type='hidden' name='hari' id='hari' value=$waktu />";
 	return true;
@@ -181,7 +181,7 @@ OpenDb();
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationTextarea.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
@@ -467,13 +467,13 @@ function focusNext(elemName, evt) {
 
 
 
-<?
+<?php
 	OpenDb();
 	$sql = "SELECT s.nis, s.nama, s.idkelas, k.kelas, s.aktif FROM siswa s, kelas k WHERE s.idkelas = '$kelas' AND s.aktif = 1 AND s.alumni=0 AND k.replid = s.idkelas $filter ORDER BY nama";
 	
 	$result = QueryDb($sql);		
 	$cnt = 1;
-	$jum = @mysql_num_rows($result);
+	$jum = @mysqli_num_rows($result);
 
 	if ($jum > 0) {
 ?>
@@ -483,36 +483,36 @@ function focusNext(elemName, evt) {
 <tr>
 	<td width="*"><strong>Tanggal</strong>
        	<select name="tgl1" id = "tgl1Info" onChange="change_tgl1();" onKeyPress="focusNext('tgl2Info',event)">
-		<? 	for($i=1;$i<=$n;$i++){   ?>      
+		<?php 	for($i=1;$i<=$n;$i++){   ?>      
 		    <option value="<?=$i?>" <?=IntIsSelected($tgl1, $i)?>><?=$i?></option>
-		<?	} ?>
+		<?php } ?>
 		</select>
         <?=NamaBulan($bln).' '.$th?>
        s/d
         <select name="tgl2" id = "tgl2Info" onChange="change_tgl1()" onKeyPress="focusNext('hariaktif',event)">
 		
-		<? 	for($i=1;$i<=$n;$i++){   ?>      
+		<?php 	for($i=1;$i<=$n;$i++){   ?>      
 		    <option value="<?=$i?>" <?=IntIsSelected($tgl2, $i)?>><?=$i?></option>
-		<?	} ?>
+		<?php } ?>
 		</select>
         <?=NamaBulan($bln).' '.$th?>
         
    	</td>
     <td align="right" width="25%">   
     	<a href="#" onClick="document.location.reload()"><img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-    <?
+    <?php
 		if ($id <> ""){
 	?>
     	<a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp;
-	<?	} ?>	      
+	<?php } ?>	      
     </td>
 </tr>
 <tr>
 	<td colspan="2"><strong>Jumlah hari aktif belajar </strong>
         <select name="hariaktif" id = "hariaktif" onKeyPress="focusNext('defhadir',event)">
-		<? 	for($i=1;$i<=$jumhariaktif;$i++){   ?>      
+		<?php 	for($i=1;$i<=$jumhariaktif;$i++){   ?>      
 		    <option value="<?=$i?>" <?=IntIsSelected($hariaktif, $i)?>><?=$i?></option>
-		<?	} ?>
+		<?php } ?>
 		</select>
     </td>
 </tr>
@@ -549,9 +549,9 @@ function focusNext(elemName, evt) {
                       
         </tr>
         
-		<? 
+		<?php 
 		$aktif = 1;
-		while ($row = @mysql_fetch_array($result)) {		
+		while ($row = @mysqli_fetch_array($result)) {		
 			$hadir = 0;
 			$ijin = 0;
 			$sakit = 0;
@@ -570,10 +570,10 @@ function focusNext(elemName, evt) {
 			} 	
 			
 			if ($id <> "") {						
-				$sql1 = "SELECT * FROM phsiswa WHERE idpresensi = '$id' AND nis='$row[nis]'";
+				$sql1 = "SELECT * FROM phsiswa WHERE idpresensi = '$id' AND nis='".$row['nis']."'";
 				$result1 = QueryDb($sql1);
-				$row1 = mysql_fetch_array($result1);
-				if (mysql_num_rows($result1) > 0) {
+				$row1 = mysqli_fetch_array($result1);
+				if (mysqli_num_rows($result1) > 0) {
 					$hadir = $row1['hadir'];
 					$ijin = $row1['ijin'];
 					$sakit = $row1['sakit'];
@@ -594,31 +594,31 @@ function focusNext(elemName, evt) {
 		?>	
         <tr height="25"> 
         	     			
-		<? if ($row['idkelas'] <> $kelas) { ?>
-        	<td align="center" onMouseOver="showhint('Kelas tetap di <?=$row[kelas]?>', this, event, '80px')">
+		<?php if ($row['idkelas'] <> $kelas) { ?>
+        	<td align="center" onMouseOver="showhint('Kelas tetap di <?=$row['kelas']?>', this, event, '80px')">
             <font color="#FF0000"><?=$cnt?></font></td>  
-            <td align="center" onMouseOver="showhint('Kelas tetap di <?=$row[kelas]?>', this, event, '80px')">
+            <td align="center" onMouseOver="showhint('Kelas tetap di <?=$row['kelas']?>', this, event, '80px')">
             <font color="#FF0000"><?=$row['nis']?></font></td>
-            <td onMouseOver="showhint('Kelas tetap di <?=$row[kelas]?>', this, event, '80px')">
+            <td onMouseOver="showhint('Kelas tetap di <?=$row['kelas']?>', this, event, '80px')">
             <font color="#FF0000"><?=$row['nama']?></font></td>			
-		<? } else if ($row['aktif'] == 0) { ?>			
+		<?php } else if ($row['aktif'] == 0) { ?>			
             <td align="center" onMouseOver="showhint('Status siswa tidak aktif lagi!', this, event, '80px')">
             <font color="#FF0000"><?=$cnt?></font></td>
             <td align="center" onMouseOver="showhint('Status siswa tidak aktif lagi!', this, event, '80px')">
             <font color="#FF0000"><?=$row['nis']?></font></td>
             <td onMouseOver="showhint('Status siswa tidak aktif lagi!', this, event, '80px')">
             <font color="#FF0000"><?=$row['nama']?></font></td>
-		<? } else {	?>
+		<?php } else {	?>
             <td align="center"><?=$cnt?></td>
             <td align="center"><?=$row['nis']?></td>
             <td><?=$row['nama']?></td>
-       	<? } ?>
+       	<?php } ?>
            	
            	<td align="center">
             <input type="hidden" name="nis<?=$cnt?>" value="<?=$row['nis']?>">
             <input type="hidden" name="aktif<?=$cnt?>" id="aktif<?=$cnt?>" value="<?=$aktif?>">
             <input type="text" name="hadir<?=$cnt?>" id="hadir<?=$cnt?>" size="1" maxlength="2" value="<?=$hadir?>" onKeyPress="focusNext('ijin<?=$cnt?>',event) "/>
-           <?	//echo $hari;?>
+           <?php //echo $hari;?>
             </td>
            	<td align="center">
             <input type="text" name="ijin<?=$cnt?>" id="ijin<?=$cnt?>" size="1" maxlength="2" value="<?=$ijin?>" onKeyPress="focusNext('sakit<?=$cnt?>',event)"/></td>
@@ -630,10 +630,10 @@ function focusNext(elemName, evt) {
             <input type="text" name="cuti<?=$cnt?>" id="cuti<?=$cnt?>" size="1" maxlength="2" value="<?=$cuti?>" onKeyPress="focusNext('ket<?=$cnt?>',event)"/></td>
           	
             <td align="center">
-           <textarea name="ket<?=$cnt?>" id="ket<?=$cnt?>" rows="1" cols="18" <? if ($cnt == $jum) { ?> onKeyPress="focusNext('simpan',event)" <? } else { ?> onKeyPress="focusNext('hadir<?=$cnt+1 ?>',event)" <? } ?> ><?=$ket?></textarea>
+           <textarea name="ket<?=$cnt?>" id="ket<?=$cnt?>" rows="1" cols="18" <?php if ($cnt == $jum) { ?> onKeyPress="focusNext('simpan',event)" <?php } else { ?> onKeyPress="focusNext('hadir<?=$cnt+1 ?>',event)" <?php } ?> ><?=$ket?></textarea>
             </td>
     	</tr>
- 	<?	$cnt++;
+ 	<?php $cnt++;
 		} 
 		CloseDb();	?>
       	</table>
@@ -650,14 +650,14 @@ function focusNext(elemName, evt) {
 	</tr>
     <tr>    
     	<td align="right" colspan="2">
-       	<input type="button" name="simpan" id="simpan" value="Simpan" class="but" style="width:100px; " onClick="return validate();<? ///jumhari($tanggal1, $tanggal2);?>"/>
-        <?
+       	<input type="button" name="simpan" id="simpan" value="Simpan" class="but" style="width:100px; " onClick="return validate();<?php ///jumhari($tanggal1, $tanggal2);?>"/>
+        <?php
 			if($id <> ""){
 				$action = "Update";
 		?>
 			<input type="button" value="Hapus Data" class="but" onClick="hapus(<?=$id ?>)" style="width:100px;">
 			<!--<input type="button" value="(+) Tambah Siswa" class="but" onClick="tambah(<?=$id ?>)">-->
-			<?
+			<?php
 			}else{
 				$action = "Simpan"; 
 				
@@ -669,7 +669,7 @@ function focusNext(elemName, evt) {
     
 <!-- END TABLE CENTER -->    
 </table>
-<?	} else {  ?>
+<?php } else {  ?>
 	<table width="100%" border="0" align="center">          
 	<tr>
 		<td align="center" valign="middle" height="300">
@@ -678,7 +678,7 @@ function focusNext(elemName, evt) {
 	</td>
 	</tr>
 	</table> 
-<?  } ?> 
+<?php  } ?> 
 </form>
 
 </body>

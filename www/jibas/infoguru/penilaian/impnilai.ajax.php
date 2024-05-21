@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ if ($op == "getselectaspek")
     $select = SelectAspek();
     CloseDb();
 
-    $result = array('idaspek' => $idaspek, 'select' => urlencode($select));
-    echo json_encode($result);
+    $result = ['idaspek' => $idaspek, 'select' => urlencode((string) $select)];
+    echo json_encode($result, JSON_THROW_ON_ERROR);
     http_response_code(200);
 }
 else if ($op == "getselectjenisujian")
@@ -57,7 +57,7 @@ else if ($op == "getselectjenisujian")
     $select = SelectJenisUjian();
     CloseDb();
 
-    echo urlencode($select);
+    echo urlencode((string) $select);
     http_response_code(200);
 }
 else if ($op == "getselectrpp")
@@ -70,7 +70,7 @@ else if ($op == "getselectrpp")
     $select = SelectRpp();
     CloseDb();
 
-    echo urlencode($select);
+    echo urlencode((string) $select);
     http_response_code(200);
 }
 ?>

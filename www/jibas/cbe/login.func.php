@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
  * @version: 24.0 (April 01, 2021)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ function sendLogin($login, $password)
     if ((int) $info->Status < 0)
         return new GenericReturn((int) $info->Status, $info->Data, ""); // Login gagal
 
-    $data = json_decode($result->Data);
+    $data = json_decode((string) $result->Data, null, 512, JSON_THROW_ON_ERROR);
     processLogin($data->Session, $data->Data);
 
     return new GenericReturn(1, "Login Success", "");
@@ -112,9 +112,9 @@ function processLogin($jsonSession, $jsonData)
               FROM jbsumum.identitas
              WHERE departemen = '$session->UserDept'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $_SESSION["Departemen"] = $row[0];
     }
     else
@@ -123,9 +123,9 @@ function processLogin($jsonSession, $jsonData)
                   FROM jbsumum.identitas
                  WHERE departemen = 'yayasan'";
         $res = QueryDb($sql);
-        if (mysql_num_rows($res) > 0)
+        if (mysqli_num_rows($res) > 0)
         {
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $_SESSION["Departemen"] = $row[0];
         }
         else
@@ -145,7 +145,7 @@ function processLogin($jsonSession, $jsonData)
              WHERE TABLE_SCHEMA = 'jbscbe'
                AND TABLE_NAME = 'timadmin'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $ndata = (int) $row[0];
     if ($ndata > 0)
     {
@@ -153,7 +153,7 @@ function processLogin($jsonSession, $jsonData)
                   FROM jbscbe.timadmin
                  WHERE userid = '$session->UserId'";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $ndata = (int)$row[0];
 
         $_SESSION["TimAdmin"] = $ndata > 0;
@@ -165,13 +165,13 @@ function processLogin($jsonSession, $jsonData)
 
     CloseDb();
 
-    $jsonData = str_replace("\r\n", "<br>", $jsonData);
+    $jsonData = str_replace("\r\n", "<br>", (string) $jsonData);
     saveUserInfo($session->UserId, $session->SessionId, $jsonData);
 }
 
 function safeText($text)
 {
-    $text = str_replace("'", "`", $text);
+    $text = str_replace("'", "`", (string) $text);
     //$text = str_replace("<", "&lt;", $text);
     //$text = str_replace(">", "&gt;", $text);
 
@@ -180,7 +180,7 @@ function safeText($text)
 
 function saveUserInfo($userid, $sessionid, $jsonData)
 {
-    $login = json_decode($jsonData);
+    $login = json_decode((string) $jsonData, null, 512, JSON_THROW_ON_ERROR);
 
     $userpict = $login->UserPict;
     $welcome = safeText($login->Welcome);
@@ -188,12 +188,12 @@ function saveUserInfo($userid, $sessionid, $jsonData)
     OpenDb();
 
     $sql = "DELETE FROM jbscbe.webuserinfo
-             WHERE userid = '$userid'";
+             WHERE userid = '".$userid."'";
     QueryDb($sql);
 
     $sql = "INSERT INTO jbscbe.webuserinfo 
                SET userid = '$userid', sessionid = '$sessionid', 
-                   logintime = NOW(), userpict = '$userpict', welcome = '$welcome'";
+                   logintime = NOW(), userpict = '$userpict', welcome = '".$welcome."'";
     QueryDb($sql);
 
     CloseDb();
@@ -211,7 +211,7 @@ function testDbConnection()
 {
     global $db_host, $db_user, $db_pass, $db_name, $mysqlconnection;
 
-    $mysqlconnection = @mysql_connect($db_host, $db_user, $db_pass);
+    $mysqlconnection = @mysqli_connect($db_host, $db_user, $db_pass);
     if (!$mysqlconnection)
         $result = new GenericReturn(-99, "Tidak dapat terhubung dengan server database JIBAS di $db_host", "");
     else

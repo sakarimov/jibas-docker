@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -59,10 +59,10 @@ if (isset($_REQUEST['urutan']))
 
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql="SELECT m.nis, s.idkelas, m.tglmutasi, k.idtahunajaran, k.idtingkat FROM mutasisiswa m, siswa s, kelas k WHERE m.replid='$_REQUEST[replid]' AND s.nis = m.nis AND s.idkelas = k.replid";
+	$sql="SELECT m.nis, s.idkelas, m.tglmutasi, k.idtahunajaran, k.idtingkat FROM mutasisiswa m, siswa s, kelas k WHERE m.replid='".$_REQUEST['replid']."' AND s.nis = m.nis AND s.idkelas = k.replid";
 	
 	$result=QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$nis = $row['nis'];
 	$tglmutasi = $row['tglmutasi'];
 	$idkelas = $row['idkelas'];
@@ -86,12 +86,12 @@ if ($op == "xm8r389xemx23xb2378e23") {
 	}
 	
 	if ($success){
-		$sql1="DELETE FROM jbsakad.alumni WHERE nis='$nis' AND departemen = '$departemen' AND klsakhir='$idkelas' AND tgllulus = '$tglmutasi'";
+		$sql1="DELETE FROM jbsakad.alumni WHERE nis='$nis' AND departemen = '$departemen' AND klsakhir='$idkelas' AND tgllulus = '".$tglmutasi."'";
 		$result1=QueryDbTrans($sql1, $success);
 	}
 	
 	if ($success){
-		$sql1="DELETE FROM jbsakad.mutasisiswa WHERE replid='$_REQUEST[replid]'";
+		$sql1="DELETE FROM jbsakad.mutasisiswa WHERE replid='".$_REQUEST['replid']."'";
 		$result1=QueryDbTrans($sql1, $success);
 	}
 	
@@ -113,7 +113,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 				parent.mutasi_siswa_pilih.location.href="mutasi_siswa_daftar.php?idkelas="+kelas+"&pilihan=2&jenis=combo&departemen=<?=$departemen?>&idtahunajaran=<?=$tahunajaran?>&idtingkat="+tingkat;
 			}
 	 	</script>
-        <?
+        <?php
 		
 	} else {
 		RollbackTrans();
@@ -206,19 +206,19 @@ function refresh_isi() {
 <!-- TABLE CENTER -->
 <tr>
   	<td>
-<?
+<?php
 	OpenDb();    
 	$sql_tot = "SELECT s.replid, s.nis, s.nama, k.kelas, m.tglmutasi, j.jenismutasi, m.keterangan, m.replid, t.tingkat FROM mutasisiswa m, kelas k, tingkat t, siswa s, jenismutasi j WHERE m.departemen='$departemen' AND k.idtingkat=t.replid AND k.replid=s.idkelas AND k.idtahunajaran = '$tahunajaran' AND j.replid = m.jenismutasi AND s.nis = m.nis ";
 	
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql_siswa = "SELECT s.replid AS replidsiswa, s.nis, s.nama, k.kelas, m.tglmutasi, j.jenismutasi, m.keterangan, m.replid, t.tingkat FROM mutasisiswa m, kelas k, tingkat t, siswa s, jenismutasi j WHERE m.departemen='$departemen' AND k.idtingkat=t.replid AND k.replid=s.idkelas AND k.idtahunajaran = '$tahunajaran' AND j.replid = m.jenismutasi AND s.nis = m.nis ORDER BY $urut $urutan, kelas ASC LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		
 	$result_siswa = QueryDb($sql_siswa);
-	$jum = @mysql_num_rows($result_siswa);
+	$jum = @mysqli_num_rows($result_siswa);
 		
 	if ($jum > 0) { ?> 
     <table width="100%" border="1" cellspacing="0" class="tab" id="table" bordercolor="#000000">
@@ -232,13 +232,13 @@ function refresh_isi() {
         <!--<td width="*" class="header" align="center">Keterangan</td>-->
         <td width="5%">&nbsp;</td>
     </tr>
-<? 	
+<?php 	
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row_siswa=@mysql_fetch_array($result_siswa)){
+	while ($row_siswa=@mysqli_fetch_array($result_siswa)){
 ?>
     <tr height="25">
     	<td align="center"><?=$cnt ?></td>
@@ -250,7 +250,7 @@ function refresh_isi() {
         <td align="center"><a href="JavaScript:hapus('<?=$row_siswa['nis'] ?>', <?=$row_siswa['replid']?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Batalkan mutasi!', this, event, '100px')"/></a>
 		</td>
    	</tr>
-	<?	$cnt++; 
+	<?php $cnt++; 
 	} 
 	CloseDb();
 	?>
@@ -259,7 +259,7 @@ function refresh_isi() {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
- <?	if ($page==0){ 
+ <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -284,19 +284,19 @@ function refresh_isi() {
     <tr>
        	<td width="50%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<!--td align="center">
     <input <?=$disback?> type="button" class="but" name="back" value="<<" onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -310,14 +310,14 @@ function refresh_isi() {
  		</td-->
         <td width="50%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>	
-	<?							
+<?php 						
 		} else {
 	?>
 	<table width="100%" border="0" align="center">          
@@ -331,7 +331,7 @@ function refresh_isi() {
 		</td>
 	</tr>
 	</table>
-<?	
+<?php 
 } ?>
 	</td>
 </tr>

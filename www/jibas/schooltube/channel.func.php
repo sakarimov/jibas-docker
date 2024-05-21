@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ function ShowFollowButton($idChannel)
     $sql = "SELECT COUNT(id)
               FROM jbsel.channelfollow
              WHERE idchannel = $idChannel
-               AND $userCol = '$userId'";
+               AND $userCol = '".$userId."'";
     $nData = FetchSingle($sql);
 
     if ($nData != 0)
@@ -84,7 +84,7 @@ function GetFollowerCount($idChannel)
               FROM jbsel.channel
              WHERE id = $idChannel";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         return $row[0];
 
     return 0;
@@ -105,7 +105,7 @@ function ShowModulChannel($idChannel)
 
     echo "<table cellpadding='5' cellspacing='0'>";
     echo "<tr>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $idModul = $row[0];
 
@@ -117,7 +117,7 @@ function ShowModulChannel($idChannel)
             echo "<td align='left' valign='top' width='300px'>";
         }
 
-        echo "<a style='font-weight: bold; cursor: pointer; font-family: Verdana' onclick='cn_showModul($idModul)'>$no. $row[judul]</a><br><br>";
+        echo "<a style='font-weight: bold; cursor: pointer; font-family: Verdana' onclick='cn_showModul($idModul)'>".$no. $row['judul']."</a><br><br>";
 
         if ($nRow == $nRowPerCol)
         {
@@ -164,7 +164,7 @@ function GetVideoList($idChannel, $urutan)
 
     $idList = "";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($idList != "") $idList .= ",";
         $idList .= $row[0];
@@ -177,7 +177,7 @@ function ShowMedia($idMediaList, $page)
 {
     global $G_ROW_PER_PAGE;
 
-    if (strlen(trim($idMediaList)) == 0)
+    if (strlen(trim((string) $idMediaList)) == 0)
     {
         echo "<br><br><i>Belum ada video</i>";
         return;
@@ -186,7 +186,7 @@ function ShowMedia($idMediaList, $page)
     $startIndex = ($page - 1) * $G_ROW_PER_PAGE;
     $stopIndex = ($page * $G_ROW_PER_PAGE) - 1;
 
-    $idArr = explode(",", $idMediaList);
+    $idArr = explode(",", (string) $idMediaList);
     if ($startIndex > count($idArr))
     {
         echo "";
@@ -223,7 +223,7 @@ function ShowSearchMediaCount($idMedia)
               FROM jbsel.media
              WHERE id = $idMedia";
     $res = QueryDbEx($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $nlike = $row["nlike"];
         $nview = $row["nview"];
@@ -241,7 +241,7 @@ function ShowMediaVideo($idMedia)
               FROM jbsel.media
              WHERE id = $idMedia";
     $res = QueryDbEx($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $idMedia = $row["id"];
         ?>
@@ -260,7 +260,7 @@ function ShowMediaInfo($idMedia)
              WHERE m.id = $idMedia";
 
     $res = QueryDbEx($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $idKategori = $row['idkategori'];
         $kateValue = "(tidak ada kategori)";
@@ -271,7 +271,7 @@ function ShowMediaInfo($idMedia)
                       FROM jbscbe.kategori
                      WHERE id = $idKategori";
             $res2 = QueryDb($sql);
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
                 $kateValue = $row2[0];
         }
 

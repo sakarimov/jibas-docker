@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/config.php');
 require_once('../include/getheader.php');
@@ -28,7 +28,7 @@ require_once('../include/db_functions.php');
 require_once('../include/common.php');
 
 $nis = $_SESSION["infosiswa.nis"];
-$bulan_pjg = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+$bulan_pjg = [1=>'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
 OpenDb();
 $sql_thn = "SELECT ph.tanggal1,ph.tanggal2,phsiswa.keterangan
@@ -39,14 +39,14 @@ $res_thn = QueryDb($sql_thn);
 
 $s = "SELECT DATE(now())";
 $re = QueryDb($s);
-$r = @mysql_fetch_row($re);
-$d = explode("-", $r[0]);
+$r = @mysqli_fetch_row($re);
+$d = explode("-", (string) $r[0]);
 $now = $d[2]."-".$d[1]."-".$d[0];
 if ($d[1]==1)
     $y=12;
 else
 	$y=$d[1]-1;
-if (strlen($y)==1)
+if (strlen((string) $y)==1)
 	$y="0".$y;
 $ytd = $d[2]."-".$y."-".$d[0];
 CloseDb();

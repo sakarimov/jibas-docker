@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 2.6.0 (January 14, 2012)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -39,26 +39,26 @@ if (isset($_REQUEST['idkategori']))
 	$idkategori = $_REQUEST['idkategori'];	
 OpenDb();
 $res=QueryDb("SELECT kategori FROM jbsvcr.catatankategori WHERE replid='$idkategori'");
-$row=@mysql_fetch_array($res);
-$namakat=$row[kategori];
+$row=@mysqli_fetch_array($res);
+$namakat=$row['kategori'];
 CloseDb();	
 OpenDb();
 $res=QueryDb("SELECT tahunajaran FROM jbsakad.tahunajaran WHERE replid='$tahunajaran'");
-$row=@mysql_fetch_array($res);
-$namathnajrn=$row[tahunajaran];
+$row=@mysqli_fetch_array($res);
+$namathnajrn=$row['tahunajaran'];
 CloseDb();
 $op = "";
 if (isset($_REQUEST['op']))
 	$op = $_REQUEST['op'];
 if ($op=="kwe9823h98hd29h98hd9h"){
 	OpenDb();
-	$sql="DELETE FROM jbsvcr.catatansiswa WHERE replid='$_REQUEST[replid]'";
+	$sql="DELETE FROM jbsvcr.catatansiswa WHERE replid='".$_REQUEST['replid']."'";
 	QueryDb($sql);
 	?>
 	<script language="javascript" type="text/javascript">
 		parent.catatansiswamenu.willshow('<?=$idkategori?>');
 	</script>
-	<?
+	<?php
 	CloseDb();
 }
 ?>
@@ -106,7 +106,7 @@ Tahun Ajaran:<?=$namathnajrn?>
     <td height="30" width="*" class="header">Catatan</td>
     <td height="30" width="5%" class="header">&nbsp;</td>
   </tr>
-  <?
+  <?php
   OpenDb();
   $sql="SELECT c.replid as replid,c.judul as judul, c.catatan as catatan, c.nip as nip, p.nama as nama, c.tanggal as tanggal ".
   	   "FROM jbsvcr.catatansiswa c, jbssdm.pegawai p, jbsakad.kelas k ".
@@ -114,32 +114,32 @@ Tahun Ajaran:<?=$namathnajrn?>
   //echo $sql;
   //exit;
   $result=QueryDb($sql);
-  $num=@mysql_num_rows($result);
+  $num=@mysqli_num_rows($result);
   if ($num>0){
   	$cnt=1;
-	while ($row=@mysql_fetch_array($result)){
+	while ($row=@mysqli_fetch_array($result)){
   ?>
   <tr>
     <td height="25" valign="top" align="center"><?=$cnt?></td>
-    <td height="25" valign="top"><i><?=ShortDateFormat($row[tanggal])?></i><br />
-        <strong><?=$row[nama]?><br><?=$row[nip]?><strong>
+    <td height="25" valign="top"><i><?=ShortDateFormat($row['tanggal'])?></i><br />
+        <strong><?=$row['nama']?><br><?=$row['nip']?><strong>
     </td>
-    <td height="25" valign="top"><strong><?=$row[judul]?></strong><br />
-    <?=$row[catatan]?></td>
+    <td height="25" valign="top"><strong><?=$row['judul']?></strong><br />
+    <?=$row['catatan']?></td>
     <td height="25" valign="top">
-	<?
-    if ($row[nip]==SI_USER_ID()){
+	<?php
+    if ($row['nip']==SI_USER_ID()){
 	?>
     <table width="100%" border="0" cellspacing="2" cellpadding="0">
       <tr>
-        <td><img onClick="ubah('<?=$row[replid]?>')" src="../images/ico/ubah.png" style="cursor:pointer" /></td>
-        <td><img onClick="hapus('<?=$row[replid]?>')" src="../images/ico/hapus.png" style="cursor:pointer" /></td>
+        <td><img onClick="ubah('<?=$row['replid']?>')" src="../images/ico/ubah.png" style="cursor:pointer" /></td>
+        <td><img onClick="hapus('<?=$row['replid']?>')" src="../images/ico/hapus.png" style="cursor:pointer" /></td>
       </tr>
     </table>
-    <? } ?>
+    <?php } ?>
     </td>
   </tr>
-  <? $cnt++;
+  <?php $cnt++;
   	}
   } else { ?>
   <tr>
@@ -147,7 +147,7 @@ Tahun Ajaran:<?=$namathnajrn?>
       <?=$nis?>
     </em></div></td>
   </tr>
-  <? } ?>
+  <?php } ?>
 </table>
 
 </body>

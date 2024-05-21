@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessionchecker.php');
 require_once("../include/config.php");
@@ -81,7 +81,7 @@ OpenDb();
     <td width="200" align="center" class="header">Keterangan</td>
     <td width="140" align="center" class="header">&nbsp;</td>
 </tr>
-<?
+<?php
 $sql = "SELECT pg.nip, pg.nama, 
                p.jammasuk, p.jampulang,
                p.keterangan, IF(p.replid IS NULL, -1, p.replid),
@@ -94,17 +94,17 @@ $sql = "SELECT pg.nip, pg.nama,
 //echo $sql;         
 $res = QueryDb($sql);
 $n = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
     $n++;
     
     echo "<tr>\r\n";
-    echo "<input type='hidden' id='replid$n' name='replid$n' value='$row[5]'>\r\n";
-    echo "<input type='hidden' id='tglpresensi$n' name='tglpresensi$n' value='$row[7]'>\r\n";
+    echo "<input type='hidden' id='replid$n' name='replid$n' value='".$row[5]."'>\r\n";
+    echo "<input type='hidden' id='tglpresensi$n' name='tglpresensi$n' value='".$row[7]."'>\r\n";
     echo "<td align='center'>$n</td>\r\n";
-    echo "<td align='center'>$row[6]</td>\r\n";
-    echo "<td align='left'>$row[0] <input type='hidden' name='nip$n' id='nip$n' value='$row[0]'></td>\r\n";
-    echo "<td align='left'>$row[1]</td>\r\n";
+    echo "<td align='center'>".$row[6]."</td>\r\n";
+    echo "<td align='left'>$row[0] <input type='hidden' name='nip$n' id='nip$n' value='".$row[0]."'></td>\r\n";
+    echo "<td align='left'>".$row[1]."</td>\r\n";
     
     $h = "";
     $m = "";
@@ -121,7 +121,7 @@ while($row = mysql_fetch_row($res))
     echo "<input type='text' maxlength='2' size='2' name='menitpulang$n' id='menitpulang$n' value='$m'>\r\n";
     echo "</td>\r\n";
     
-    echo "<td align='left'><input type='text' name='ket$n' id='ket$n' value='$row[4]' size='27' maxlength='255'></td>\r\n";
+    echo "<td align='left'><input type='text' name='ket$n' id='ket$n' value='".$row[4]."' size='27' maxlength='255'></td>\r\n";
     echo "<td align='center'>\r\n";
     
     echo "<input type='button' value='simpan' onclick='SaveEdit($n)'>\r\n";
@@ -134,17 +134,17 @@ while($row = mysql_fetch_row($res))
 ?>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 </html>
 
-<?
+<?php
 function GetHourMinute($strtime, &$hour, &$minute)
 {
-    if (strpos($strtime, ":") !== FALSE)
+    if (str_contains((string) $strtime, ":"))
     {
-        $temp = split(":", $strtime);
+        $temp = explode(":", (string) $strtime);
         $hour = $temp[0];
         $minute = $temp[1];
         

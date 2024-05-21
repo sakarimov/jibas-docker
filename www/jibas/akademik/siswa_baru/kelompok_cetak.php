@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,9 +36,9 @@ $page = $_REQUEST['page'];
 $total = $_REQUEST['total'];
 
 OpenDb();
-$sql = "SELECT proses FROM prosespenerimaansiswa WHERE replid = '$proses'";
+$sql = "SELECT proses FROM prosespenerimaansiswa WHERE replid = '".$proses."'";
 $result=QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 CloseDb();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -79,7 +79,7 @@ CloseDb();
         <td width="8%" class="header" align="center">Terisi</td>
         <td width="*" class="header" align="center">Keterangan</td>
     </tr>
-<? 	
+<?php 	
 	OpenDb();
     $sql = "SELECT replid,kelompok,kapasitas,keterangan FROM kelompokcalonsiswa WHERE idproses='$proses' ORDER BY $urut $urutan ";//LIMIT ".(int)$page*(int)$varbaris.",$varbaris";  
 	$result = QueryDB($sql);
@@ -87,21 +87,21 @@ CloseDb();
 		$cnt = 0;
 	//else
 		//$cnt = (int)$page*(int)$varbaris;
-	while ($row = @mysql_fetch_array($result)) { ?>
+	while ($row = @mysqli_fetch_array($result)) { ?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt ?></td>
         <td><?=$row['kelompok'] ?></td>        
         <td align="center"><?=$row['kapasitas'] ?></td>
         <td align="center">
-		<?	OpenDb();
-			$sql1 = "SELECT COUNT(*) FROM calonsiswa WHERE idkelompok='$row[replid]' AND aktif = 1";    
+		<?php OpenDb();
+			$sql1 = "SELECT COUNT(*) FROM calonsiswa WHERE idkelompok='".$row['replid']."' AND aktif = 1";    
 			$result1 = QueryDb($sql1);
-			$row1 = @mysql_fetch_row($result1);
+			$row1 = @mysqli_fetch_row($result1);
 			echo $row1[0];
 		?>        </td>        
         <td><?=$row['keterangan']?></td>
    	</tr>
-<?	}
+<?php }
 	CloseDb(); ?>
     <!-- END TABLE CONTENT -->
     </table>

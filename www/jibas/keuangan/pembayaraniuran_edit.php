@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -51,7 +51,7 @@ $sql = "SELECT p.nis, s.nama, p.idjurnal, p.jumlah, date_format(p.tanggal, '%d-%
 		  FROM penerimaaniuran p, jbsakad.siswa s, datapenerimaan pn 
 		 WHERE p.replid = '$idpembayaran' AND p.nis = s.nis AND p.idpenerimaan = pn.replid";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nis = $row['nis'];
 $nama = $row['nama'];
 $idjurnal = $row['idjurnal'];
@@ -140,7 +140,7 @@ if (1 == (int)$_REQUEST['issubmit'])
 		          FROM jbsfina.paymenttrans
 		         WHERE idpenerimaaniuran = $idpembayaran";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
         {
             $paymentExist = $row[0] > 0;
         }
@@ -158,9 +158,9 @@ if (1 == (int)$_REQUEST['issubmit'])
                      INNER JOIN jbsfina.tabungan t ON p.idjurnaltabcust = t.idjurnal
                      INNER JOIN jbsfina.datatabungan dt ON t.idtabungan = dt.replid
                      WHERE p.idpenerimaaniuran = $idpembayaran";
-            $res = QueryDb($sql, $success);
+            $res = QueryDb($sql);
 
-            $row = mysql_fetch_array($res);
+            $row = mysqli_fetch_array($res);
             $idDataTabungan = $row["iddatatabungan"];
             $idJurnalTabungan = $row["idjurnaltabcust"];
             $idTabungan = $row["idtabungan"];
@@ -174,16 +174,16 @@ if (1 == (int)$_REQUEST['issubmit'])
             $sql = "SELECT SUM(kredit) - SUM(debet)
                       FROM jbsfina.tabungan
                      WHERE nis = '$nis'
-                       AND idtabungan = '$idDataTabungan'";
+                       AND idtabungan = '".$idDataTabungan."'";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $jSaldo = $row[0];
 
             $sql = "SELECT debet
                       FROM jbsfina.tabungan
                      WHERE replid = $idTabungan";
             $res = QueryDb($sql);
-            $row = mysql_fetch_row($res);
+            $row = mysqli_fetch_row($res);
             $debetAwal = (int)$row[0];
         }
 
@@ -252,7 +252,7 @@ if (1 == (int)$_REQUEST['issubmit'])
                     $sql = "UPDATE jbsfina.jurnaldetail
                                SET debet = '0', kredit = '$jcicilan'
                              WHERE idjurnal = '$idJurnalTabungan'
-                               AND koderek = '$rekKasTab'";
+                               AND koderek = '".$rekKasTab."'";
                     QueryDbTrans($sql, $success);
                 }
 
@@ -261,7 +261,7 @@ if (1 == (int)$_REQUEST['issubmit'])
                     $sql = "UPDATE jbsfina.jurnaldetail
                                SET debet = '$jcicilan', kredit = '0'
                              WHERE idjurnal = '$idJurnalTabungan'
-                               AND koderek = '$rekUtangTab'";
+                               AND koderek = '".$rekUtangTab."'";
                     QueryDbTrans($sql, $success);
                 }
 
@@ -413,16 +413,16 @@ function focusNext(elemName, evt)
         <td><strong>Rek. Kas</strong></td>
         <td colspan="2">
 			<select name="rekkas" id="rekkas" style="width: 200px">
-<?				OpenDb();
+<?php 			OpenDb();
 				$sql = "SELECT kode, nama
                           FROM jbsfina.rekakun
                          WHERE kategori = 'HARTA'
                          ORDER BY nama";        
                 $res = QueryDb($sql);
-                while($row = mysql_fetch_row($res))
+                while($row = mysqli_fetch_row($res))
                 {
                     $sel = $row[0] == $defrekkas ? "selected" : "";
-                    echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+                    echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
                 } ?>                
             </select>
 		</td>
@@ -465,17 +465,17 @@ function focusNext(elemName, evt)
 </tr>
 </table>
 
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen((string) $mysqli_ERROR_MSG) > 0) { ?>
 	<center>
-    <font color="red"><strong><?=$MYSQL_ERROR_MSG?></strong></font>
+    <font color="red"><strong><?=$mysqli_ERROR_MSG?></strong></font>
     </center>
-<? } ?>
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php } ?>
+<?php if (strlen((string) $ERROR_MSG) > 0) { ?>
 	<center>
     <font color="red"><strong><?=$ERROR_MSG?></strong></font>
     </center>
     <script language="javascript">alert('<?=$ERROR_MSG?>');</script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>
@@ -485,6 +485,6 @@ var sprytextfield1 = new Spry.Widget.ValidationTextField("jcicilan");
 var sprytextarea1 = new Spry.Widget.ValidationTextarea("kcicilan");
 var sprytextarea1 = new Spry.Widget.ValidationTextarea("alasan");
 </script>
-<?
+<?php
 CloseDb();
 ?>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,15 +38,15 @@ if (isset($_REQUEST['Simpan'])) {
 	//echo 'sql '.$sql;
 	$result = QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
-		$ERROR_MSG = "Singkatan $_REQUEST[kode] sudah digunakan!";
+		$ERROR_MSG = "Singkatan {$_REQUEST['kode']} sudah digunakan!";
 	} else {
 		$sql = "UPDATE pelajaran 
                    SET kode='".CQ($_REQUEST['kode'])."',
                        nama='".CQ($_REQUEST['nama'])."',
-                       sifat='$_REQUEST[sifat]',
-                       idkelompok='$_REQUEST[kelompok]',
+                       sifat='".$_REQUEST['sifat']."',
+                       idkelompok='".$_REQUEST['kelompok']."',
                        keterangan='".CQ($_REQUEST['keterangan'])."' 
                  WHERE replid='$replid'";
 		$result = QueryDb($sql);
@@ -57,7 +57,7 @@ if (isset($_REQUEST['Simpan'])) {
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 		exit();
 	}
 }
@@ -66,7 +66,7 @@ OpenDb();
 
 $sql = "SELECT kode,nama,sifat,keterangan,departemen,idkelompok FROM pelajaran WHERE replid='$replid'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 
 $kode = $row[0];
 if (isset($_REQUEST['kode']))
@@ -100,7 +100,7 @@ CloseDb();
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Pelajaran]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -174,23 +174,23 @@ function panggil(elem){
 <tr>
 	<td><strong>Sifat</strong></td>
     <td>
-	<? if ($sifat == 1) {  ?> 	
+	<?php if ($sifat == 1) {  ?> 	
     	<input type="radio" name="sifat" value=1 checked />&nbsp;Wajib&nbsp;
     	<input type="radio" name="sifat" value=0 />&nbsp;Tambahan&nbsp;
-    <? } else { ?>
+    <?php } else { ?>
 		<input type="radio" name="sifat" value=1 />&nbsp;Wajib&nbsp;
     	<input type="radio" name="sifat" value=0 checked />&nbsp;Tambahan&nbsp;
-    <? } ?>
+    <?php } ?>
     </td>
 </tr>
 <tr>
     <td><strong>Kelompok</strong></td>
     <td>
         <select name="kelompok" id="kelompok">
-<?      OpenDb();
+<?php      OpenDb();
         $sql = "SELECT replid, kelompok FROM kelompokpelajaran ORDER BY urutan";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $idkel = $row[0];
             $kelompok = $row[1];
@@ -228,11 +228,11 @@ function panggil(elem){
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -43,8 +43,8 @@ $bln = $_REQUEST['bln'];
 $thn = $_REQUEST['thn'];	
 
 if (isset($_REQUEST['tanggal'])) {
-	$bln = (int)substr($_REQUEST['tanggal'],3,2);
-	$thn = (int)substr($_REQUEST['tanggal'],6,4);	
+	$bln = (int)substr((string) $_REQUEST['tanggal'],3,2);
+	$thn = (int)substr((string) $_REQUEST['tanggal'],6,4);	
 }
 
 OpenDb();
@@ -155,21 +155,21 @@ function focusNext(elemName, evt) {
     <td width="14%"><strong>Departemen </strong></td>
     <td> 
     <select name="departemen" id="departemen" onChange="change_dep()" style="width:240px;" onKeyPress="return focusNext('tingkat', event)">
-    <?	$dep = getDepartemen(SI_USER_ACCESS());    
+    <?php $dep = getDepartemen(SI_USER_ACCESS());    
         foreach($dep as $value) {
         if ($departemen == "")
             $departemen = $value; ?>
     <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-<?	} ?>
+<?php } ?>
     </select>        </td>
     <td><strong>Tahun Ajaran</strong></td>
     <td>
-    <?  OpenDb();
+    <?php  OpenDb();
         $sql = "SELECT replid,tahunajaran, YEAR(tglmulai) AS tahun1, YEAR(tglakhir) AS tahun2 FROM tahunajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY replid DESC";
 		
         $result = QueryDb($sql);
         CloseDb();
-        $row = @mysql_fetch_array($result);	
+        $row = @mysqli_fetch_array($result);	
         $tahunajaran = $row['replid'];
 		$tahun1 = $row['tahun1'];
 		$tahun2 = $row['tahun2'];
@@ -184,29 +184,29 @@ function focusNext(elemName, evt) {
     <td><strong>Tingkat </strong></td>
     <td>
     <select name="tingkat" id="tingkat" onchange="change_tingkat()" style="width:240px;" onKeyPress="return focusNext('kelas', event)">
-      <?	OpenDb();
+      <?php OpenDb();
         $sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
         $result = QueryDb($sql);
         CloseDb();
 
-        while($row = mysql_fetch_array($result)) {
+        while($row = mysqli_fetch_array($result)) {
         if ($tingkat == "")
             $tingkat = $row['replid'];				
         ?>
-      <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
+      <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>>
         <?=$row['tingkat']?>
         </option>
-      <?
+      <?php
         } //while
         ?>
     </select></td>
    <td><strong>Semester </strong></td>
     <td>
-     <?	OpenDb();
+     <?php OpenDb();
         $sql = "SELECT replid,semester FROM semester where departemen='$departemen' AND aktif = 1 ORDER BY replid DESC";
         $result = QueryDb($sql);
         CloseDb();
-        $row = @mysql_fetch_array($result);	
+        $row = @mysqli_fetch_array($result);	
 		$semester = $row['replid'];		
     ?>
         <input type="text" name="sem" id="sem" class="disabled" style="width:120px" readonly value="<?=$row['semester']?>" />
@@ -216,36 +216,36 @@ function focusNext(elemName, evt) {
 	<td><strong>Kelas</strong></td>
     <td>
        	<select name="kelas" id="kelas" onChange="change()" style="width:240px;" onKeyPress="return focusNext('pelajaran', event)">
-		<?	OpenDb();
+		<?php OpenDb();
 			$sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
 			$result = QueryDb($sql);
 			CloseDb();
 		
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($kelas =="") 
 				$kelas = $row['replid'];	
 		?>
-    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
              
-    	<?
+    	<?php
 			} //while
 		?>
     	</select></td>
     <td><strong>Bulan</strong></td>
 	<td>
     	<select name="bln" id ="bln" onchange="change()" onKeyPress="return focusNext('thn', event)" style="width:60px">
-      	<? for ($i=1;$i<=12;$i++) { ?>
+      	<?php for ($i=1;$i<=12;$i++) { ?>
       		<option value="<?=$i?>" <?=IntIsSelected($bln, $i)?>><?=$bulan[$i]?></option>
-      	<? } ?>
+      	<?php } ?>
     	</select>
 		<select name="thn" id = "thn" onchange="change()" onKeyPress="focusNext('lihat',event)" style="width:60px">
-        <?  for ($i = $tahun1; $i <= $tahun2; $i++) { 
+        <?php  for ($i = $tahun1; $i <= $tahun2; $i++) { 
 			if ($thn =="") 
 				$thn = $i;	
 			?>
-		<?  //for($i=$th1-10;$i<=$th1;$i++){ ?>
+		<?php  //for($i=$th1-10;$i<=$th1;$i++){ ?>
           	<option value="<?=$i?>" <?=IntIsSelected($thn, $i)?>><?=$i?></option>	   
-       	<?	} ?>	
+<?php } ?>	
        	</select> 
  	</td> 
 </tr>
@@ -253,24 +253,24 @@ function focusNext(elemName, evt) {
 	<td><strong>Pelajaran</strong></td>
     <td><select name="pelajaran" id="pelajaran" onChange="change()" style="width:240px;" onKeyPress="return focusNext('bln', event)">
     	<option value="-1">(Semua pelajaran)</option>
-      <?
+      <?php
 			OpenDb();
 			$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result)) {
+			while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];	
 		?>
-       	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> >
+       	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> >
         <?=$row['nama']?>
         </option>
-      <?
+      <?php
 			}
     		?>
     </select>
     
-    <? 	$pel = "";
+    <?php 	$pel = "";
 		if ($pelajaran <> -1) 
 			$pel = "AND p.replid = $pelajaran";
 	?>
@@ -288,13 +288,13 @@ function focusNext(elemName, evt) {
 <!-- TABLE UTAMA -->
 <tr>
 	<td align="center">
-<? 	
+<?php 	
 if ($kelas <> "" && $semester <> "" && $tingkat <> "") { 
 	OpenDb();
 	$sql = "SELECT DAY(pp.tanggal), MONTH(pp.tanggal), pp.jam, p.nama, g.nama, pp.materi, pp.replid FROM presensipelajaran pp, pelajaran p, jbssdm.pegawai g WHERE pp.idkelas = '$kelas' AND pp.idsemester = '$semester' '$pel' AND MONTH(pp.tanggal) = '$bln' AND YEAR(pp.tanggal) = '$thn' AND pp.idpelajaran = p.replid AND pp.gurupelajaran = g.nip ORDER BY pp.tanggal, pp.jam ";
 		
 	$result = QueryDb($sql);			 
-	$jum = mysql_num_rows($result);
+	$jum = mysqli_num_rows($result);
 	if ($jum > 0) {
 	?>
    		<br />
@@ -308,9 +308,9 @@ if ($kelas <> "" && $semester <> "" && $tingkat <> "") {
             <td class="header" align="center" width="*">Materi</td>
             <td class="header" align="center" width="8%"></td>
 		</tr>
-		<? 
+		<?php 
 		$cnt = 1;
-		while ($row = @mysql_fetch_row($result)) {					
+		while ($row = @mysqli_fetch_row($result)) {					
 		?>	
         <tr height="25">        			
 			<td align="center"><?=$cnt?></td>
@@ -321,7 +321,7 @@ if ($kelas <> "" && $semester <> "" && $tingkat <> "") {
             <td><?=$row[5] ?></td>            
             <td align="center"><input type="button" name="pilih" class="but" id="pilih" value="Pilih" onClick="pilih('<?=$row[6]?>')" /></td>
     	</tr>
- 	<?		$cnt++;
+ 	<?php 	$cnt++;
 		} 
 		CloseDb();	?>
     		
@@ -330,7 +330,7 @@ if ($kelas <> "" && $semester <> "" && $tingkat <> "") {
    			Tables('table', 1, 0);
 		</script>
 
-<? } else { ?>
+<?php } else { ?>
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
 		<td>   
@@ -342,7 +342,7 @@ if ($kelas <> "" && $semester <> "" && $tingkat <> "") {
    		</td>
     </tr>
     </table>
-<? }
+<?php }
 } else {?>
     <table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table">
 	<tr height="30" align="center">
@@ -355,7 +355,7 @@ if ($kelas <> "" && $semester <> "" && $tingkat <> "") {
    		</td>
     </tr>
     </table>
-<? } ?>
+<?php } ?>
 </td></tr>
 <tr>
 	<td align="center">

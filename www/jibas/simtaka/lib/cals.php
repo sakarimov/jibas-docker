@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/common.php');
 require_once('../inc/db_functions.php');
@@ -42,20 +42,20 @@ if (isset($_REQUEST['tahun']))
 if (($bulan == "") || ($tahun == "")) {
 	$sql = "SELECT MONTH(NOW()), YEAR(NOW()), DAY(NOW())";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$bulan = $row[0];
 	$tahun = $row[1];
 };
 $sql = "SELECT MONTH(NOW()), YEAR(NOW()), DAY(NOW())";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $tanggalskr = $row[2];
 $bulanskr = $row[0];
 $tahunskr = $row[1];
 $tmp = $tahun."-".$bulan."-1";
 $sql = "SELECT DAYOFWEEK('$tmp')";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $first_weekday_this_month = $row[0];
 
 if ($bulan == 12) {
@@ -80,13 +80,13 @@ if ($bulan == 1) {
 }	
 $sql = "SELECT DAY(LAST_DAY('$tmp'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_last_month = $row[0];
 
 $now = $tahun . "-" . $bulan . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_this_month = $row[0];
 
 $nweek = 0;
@@ -185,17 +185,17 @@ function ambil(tgl,elementid) {
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr><td width="70%" align="center"><input type="button" class="cmbfrm2" onclick="GoToLastMonth()" value="  <  ">
 <select name="bulan" class="cmbfrm" id="bulan" onchange="ChangeCal()">
-<? $namabulan = array("Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des");
-   $namabulanpjg = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
+<?php $namabulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+   $namabulanpjg = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
    for ($i = 1; $i <= 12; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $bulan)?>><?=$namabulanpjg[$i - 1]?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <select name="tahun" class="cmbfrm" id="tahun" onchange="ChangeCal()">
-<? $YNOW = date('Y');
+<?php $YNOW = date('Y');
    for ($i = 1900; $i <= $YNOW + 1; $i++) { ?>
 	<option value="<?=$i?>" <?=IntIsSelected($i, $tahun)?>><?=$i?></option>
-<? } ?>
+<?php } ?>
 </select>    
 <input type="button" class="cmbfrm2" onclick="GoToNextMonth()" value="  >  ">
 </td>
@@ -211,7 +211,7 @@ function ambil(tgl,elementid) {
     <td width="30" align="center" style="background-color:#339900; color:#FFFFFF"><b>Jum'at</b></td>
     <td width="30" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Sabtu</b></td>
 </tr>
-<?
+<?php
 for ($i = 0; $i < count($cal); $i++) { 
 	echo "<tr height='15'>";
 	for ($j = 0; $j < count($cal[$i]); $j++) {

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -160,7 +160,7 @@ $sql = "SELECT k.komentar, k.replid, k.predikat
 		   AND i.idsemester = '$semester' 
 		   AND i.idkelas='$kelas'";
 $res = QueryDb($sql);
-if ($row = mysql_fetch_row($res))
+if ($row = mysqli_fetch_row($res))
 {
     $komentar = $row[0];
     $idkomennap = $row[1];
@@ -174,7 +174,7 @@ $sql = "SELECT nilaimin
 		   AND idsemester = $semester
 		   AND idkelas = $kelas";
 $res = QueryDb($sql);
-$row = mysql_fetch_row($res);
+$row = mysqli_fetch_row($res);
 $nilaimin = $row[0];
 
 $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
@@ -188,9 +188,9 @@ $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
 		   AND d.aktif = 1";
 $res = QueryDb($sql);
 $i = 0;
-while($row = mysql_fetch_row($res))
+while($row = mysqli_fetch_row($res))
 {
-    $aspekarr[$i++] = array($row[0], $row[1]);
+    $aspekarr[$i++] = [$row[0], $row[1]];
 }
 
 $naspek = count($aspekarr);
@@ -206,10 +206,11 @@ echo "<input type='hidden' id='kelas' name='kelas' value='$kelas'>";
 echo "<input type='hidden' id='nis' name='nis' value='$nis'>";
 echo "<input type='hidden' id='idpelajaran' name='idpelajaran' value='$pelajaran'>";
 echo "<input type='hidden' id='idtingkat' name='idtingkat' value='$tingkat'>";
-for($i = 0; $i < count($aspekarr); $i++)
+$counter = count($aspekarr);
+for($i = 0; $i < $counter; $i++)
 {
     $kdaspek = $aspekarr[$i][0];
-    $nmaspek = strtoupper($aspekarr[$i][1]);
+    $nmaspek = strtoupper((string) $aspekarr[$i][1]);
 
     $sql = "SELECT n.nilaiangka, n.nilaihuruf, n.replid, n.komentar
 			  FROM infonap i, nap n, aturannhb a 
@@ -219,16 +220,16 @@ for($i = 0; $i < count($aspekarr); $i++)
 			   AND i.idpelajaran = '$pelajaran' 
 			   AND i.idsemester = '$semester' 
 			   AND i.idkelas = '$kelas'	   
-			   AND a.dasarpenilaian = '$kdaspek'";
+			   AND a.dasarpenilaian = '".$kdaspek."'";
     $res = QueryDb($sql);
     $nilaiExist = false;
     $na = "";
     $nh = "";
     $idnap = 0;
     $nkomentar = "";
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $na = $row[0];
         $nh = $row[1];
         $idnap = $row[2];
@@ -253,7 +254,7 @@ for($i = 0; $i < count($aspekarr); $i++)
     echo "<td width='400' rowspan='3' valign='top'>";
     echo "<strong>Pilih Komentar dari Template: </strong><br>";
     echo "<table border='0'><tr><td>";
-    ShowListKomentar($pelajaran, $tingkat, $kdaspek, $i);
+    ShowListKomentar($pelajaran, $tingkat, $kdaspek);
     echo "</td><td>";
     echo "<input type='button' class='but' value='pilih' onclick='pilihKomentar($i)'>&nbsp;&nbsp;";
     echo "<a onclick='editKomentar($i)'><img src='../images/ico/ubah.png'></a>&nbsp;";
@@ -279,6 +280,6 @@ echo "</form>";
 ?>
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

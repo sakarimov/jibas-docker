@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("include/sessionchecker.php");
 require_once("include/sessioninfo.php");
 require_once("include/db_functions.php");
@@ -131,7 +131,7 @@ function ganti()
 </div>
 <form name="top">
 <input type="hidden" value="<?=$theme?>" id="theme" name="theme">
-<input type="hidden" id="login" value="<?=trim(SI_USER_NAME())?>">
+<input type="hidden" id="login" value="<?=trim((string) SI_USER_NAME())?>">
 </form>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
@@ -141,15 +141,15 @@ function ganti()
 	<td height="15" colspan="2" background="<?=GetThemeDir()?>InfoGuru_02.png">
 		<span style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">
 	    <a href="javascript:buletin();" style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">Buletin</a>&nbsp;
-<?		if (SI_USER_GROUP() == "Akademik" || SI_USER_GROUP() == "Admin") { ?>
+<?php 	if (SI_USER_GROUP() == "Akademik" || SI_USER_GROUP() == "Admin") { ?>
             &nbsp;|&nbsp;
             <a href="javascript:akademik();" style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">Akademik</a>&nbsp;
-<? 		} ?>
-<? 		if (SI_USER_LEVEL() != 0) { ?>
+<?php 		} ?>
+<?php 		if (SI_USER_LEVEL() != 0) { ?>
             &nbsp;|&nbsp;
 			<a href="javascript:kepegawaian();" style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">Kepegawaian</a>&nbsp;|&nbsp;
             <a href="javascript:elearning();" style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">School Tube</a>
-<?		} ?>
+<?php 	} ?>
         &nbsp;|&nbsp;
 	    <a href="javascript:pengaturan();" style="font-family:Verdana; color:#FFFFFF; font-size:10px; font-weight:bold; text-decoration:none">Pengaturan</a>&nbsp;
         &nbsp;|&nbsp;

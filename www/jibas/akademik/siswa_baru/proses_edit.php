@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,18 +36,18 @@ $cek = 0;
 $ERROR_MSG = "";
 if (isset($_REQUEST['simpan'])){
 	OpenDb();
-	$sql1="SELECT proses from jbsakad.prosespenerimaansiswa where proses='".CQ($_REQUEST['proses'])."' AND departemen='$_REQUEST[departemen]' AND replid <>'$replid'";
+	$sql1="SELECT proses from jbsakad.prosespenerimaansiswa where proses='".CQ($_REQUEST['proses'])."' AND departemen='".$_REQUEST['departemen']."' AND replid <>'$replid'";
 	$hasil1=QueryDb($sql1);
 	
-	$sql2="SELECT proses from jbsakad.prosespenerimaansiswa where kodeawalan='".CQ($_REQUEST['kode'])."' AND departemen='$_REQUEST[departemen]' AND replid <>'$replid'";
+	$sql2="SELECT proses from jbsakad.prosespenerimaansiswa where kodeawalan='".CQ($_REQUEST['kode'])."' AND departemen='".$_REQUEST['departemen']."' AND replid <>'$replid'";
 	$hasil2 = QueryDb($sql2);
 	
-	if (mysql_fetch_array($hasil1) > 0){
+	if (mysqli_fetch_array($hasil1) > 0){
 		CloseDb();		
-		$ERROR_MSG = "Nama proses $_REQUEST[proses] sudah digunakan!";
-	} else if (mysql_fetch_array($hasil2) > 0){
+		$ERROR_MSG = "Nama proses {$_REQUEST['proses']} sudah digunakan!";
+	} else if (mysqli_fetch_array($hasil2) > 0){
 		CloseDb();		
-		$ERROR_MSG = "Kode awalan $_REQUEST[kode] sudah digunakan!";
+		$ERROR_MSG = "Kode awalan {$_REQUEST['kode']} sudah digunakan!";
 		$cek = 1;
 	} else{	
 		$sql_update = "UPDATE jbsakad.prosespenerimaansiswa SET proses='".CQ($_REQUEST['proses'])."', kodeawalan='".CQ($_REQUEST['kode'])."', keterangan='".CQ($_REQUEST['keterangan'])."' WHERE replid='$replid'";
@@ -58,7 +58,7 @@ if (isset($_REQUEST['simpan'])){
 				opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	} 
 }
 
@@ -72,7 +72,7 @@ switch ($cek) {
 OpenDb();
 $sql_tampil = "SELECT * FROM jbsakad.prosespenerimaansiswa WHERE replid='$replid' ORDER BY proses";
 $result_tampil = QueryDb($sql_tampil);
-$row_tampil = mysql_fetch_array($result_tampil);
+$row_tampil = mysqli_fetch_array($result_tampil);
 $proses = $row_tampil['proses'];
 $kode = $row_tampil['kodeawalan'];
 $keterangan = $row_tampil['keterangan'];
@@ -94,7 +94,7 @@ if (isset($_REQUEST['keterangan']))
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Proses Penerimaan Siswa Baru]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -201,11 +201,11 @@ function panggil(elem){
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

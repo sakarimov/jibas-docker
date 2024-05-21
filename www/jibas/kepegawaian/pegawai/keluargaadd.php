@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -36,13 +36,13 @@ $tgllahir = $_REQUEST['txTglLahir'];
 $hp = CQ($_REQUEST['txHp']);
 $email = CQ($_REQUEST['txEmail']);
 $alm = CQ($_REQUEST['ckAlm']);
-$isalm = strtolower($alm) == "on" ? "checked" : ""; 
+$isalm = strtolower((string) $alm) == "on" ? "checked" : ""; 
 $keterangan = CQ($_REQUEST['txKeterangan']);
 
 if (isset($_REQUEST['btSubmit']))
 {
 	OpenDb();
-	$alm = strtolower($alm) == "on" ? "1" : "0"; 
+	$alm = strtolower((string) $alm) == "on" ? "1" : "0"; 
 	$sql = "INSERT INTO pegkeluarga
                SET nip='$nip', nama='$nama', alm='$alm', hubungan='$hubungan',
                    tgllahir='$tgllahir', hp='$hp', email='$email', keterangan='$keterangan'";
@@ -52,7 +52,7 @@ if (isset($_REQUEST['btSubmit']))
 		opener.Refresh();
 		window.close();
 	</script>
-<?	exit();
+<?php exit();
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -94,7 +94,7 @@ function focusNext(elemName, evt)
 </tr>
 <tr>
 	<td width="100%" align="center">
-    
+
     <table border="0" cellpadding="0" cellspacing="5" width="100%">
     <tr>
     	<td width="25%" align="right"><strong>Nama</strong> : </td>
@@ -141,7 +141,7 @@ function focusNext(elemName, evt)
         </td> 
     </tr>
     </table>
-    
+
     </td>
 </tr>
 </table>

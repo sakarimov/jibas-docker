@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -65,7 +65,7 @@ function newWindow(mypage,myname,w,h,features) {
         <td>Keterangan </td>
         <td>Jumlah siswa </td>
       </tr>
- <?
+ <?php
 
 for($a=$tahunawal;$a<=$tahunakhir;$a++){
 	 	$query="SELECT COUNT(*) As Jum,j.jenismutasi As jenismutasi, j.replid as replidmutasi FROM jbsakad.mutasisiswa m,jbsakad.jenismutasi j,jbsakad.angkatan a,jbsakad.siswa s WHERE	a.departemen='$departemen' AND s.idangkatan=a.replid  AND m.nis=s.nis AND s.statusmutasi=m.jenismutasi AND m.jenismutasi=j.replid AND YEAR(m.tglmutasi) = '$a' GROUP BY jenismutasi";
@@ -73,19 +73,19 @@ for($a=$tahunawal;$a<=$tahunakhir;$a++){
 
  	$start=0;
 	
-	while($fetch=mysql_fetch_array($result)){ $start++;	
+	while($fetch=mysqli_fetch_array($result)){ $start++;	
 		if($start==1){	
 	?>	  
       <tr valign="middle">
-        <td width="100" rowspan="<?=mysql_num_rows($result);?>" align="center" bgcolor="#FFFFFF"><?=$a;?></td>
-        <?
+        <td width="100" rowspan="<?=mysqli_num_rows($result);?>" align="center" bgcolor="#FFFFFF"><?=$a;?></td>
+        <?php
 				     }
 	?>
         <td><?=$fetch[1]; ?></td>
         <td><a href="#" onClick="newWindow('detail_statistik_mutasi_siswa.php?replidmutasi=<?=$fetch[3];?>&jenismutasi=<?=$fetch[1];?>&departemen=<?=$departemen?>&tahun=<?=$a?>','A','686','368','scrollbars=1')"><?=$fetch[0]; ?> orang</a></td>
 	    </tr>
 	  
-      <?
+      <?php
 }}
 		
 ?>

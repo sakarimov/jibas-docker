@@ -4,9 +4,9 @@
  * Jaringan Informasi Bersama Antar Sekolah
  *
  * @version: 23.0 (November 12, 2020)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,12 +54,12 @@ function ShowCbTingkat($departemen)
     $res = QueryDb($sql);
 
     echo "<select id='tingkat' name='tingkat' style='width: 150px' onchange='changeTingkat()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($selIdTingkat == "") $selIdTingkat = $row[0];
         $sel = $selIdTingkat == $row[0] ? "selected" : "";
 
-        echo "<option value='$row[0]' $sel>$row[1]</option>";
+        echo "<option value='".$row[0]."' $sel>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -73,7 +73,7 @@ function ShowCbKelas($departemen, $idTingkat)
              WHERE departemen = '$departemen'
                AND aktif = 1";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
         $idTahunAjaran = $row[0];
 
     $sql = "SELECT replid, kelas
@@ -83,9 +83,9 @@ function ShowCbKelas($departemen, $idTingkat)
              ORDER BY kelas";
     $res = QueryDb($sql);
     echo "<select id='kelas' name='kelas' style='width: 250px' onchange='clearReport()'>";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>";
     }
     echo "</select>";
 }
@@ -101,19 +101,19 @@ function ShowDaftarBatasan($showMenu)
                AND s.aktif = 1
              ORDER BY s.nama";
 
-    $lsUser = array();
+    $lsUser = [];
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $lsUser[] = array($row[0], $row[1]);
+        $lsUser[] = [$row[0], $row[1]];
     }
 
     $defaultMaxValue = 0;
     $sql = "SELECT maxtransvendor
               FROM jbsfina.paymenttabungan
-             WHERE departemen = '$departemen'";
+             WHERE departemen = '".$departemen."'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $defaultMaxValue = $row[0];
     }
@@ -139,9 +139,9 @@ function ShowDaftarBatasan($showMenu)
 
         $sql = "SELECT maxtrans
                   FROM jbsfina.paymentmaxtrans
-                 WHERE nis = '$nis'";
+                 WHERE nis = '".$nis."'";
         $res = QueryDb($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
         {
             $selMaxType = 1;
             $maxValue =$row[0];
@@ -188,24 +188,24 @@ function SaveMaxValue($sel, $val, $nis)
 {
     if ($sel == 0)
     {
-        $sql = "DELETE FROM jbsfina.paymentmaxtrans WHERE nis = '$nis'";
+        $sql = "DELETE FROM jbsfina.paymentmaxtrans WHERE nis = '".$nis."'";
         QueryDb($sql);
     }
     else
     {
-        $sql = "SELECT COUNT(replid) FROM jbsfina.paymentmaxtrans WHERE nis = '$nis'";
+        $sql = "SELECT COUNT(replid) FROM jbsfina.paymentmaxtrans WHERE nis = '".$nis."'";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $nData = $row[0];
 
         if ($nData != 0)
         {
-            $sql = "UPDATE jbsfina.paymentmaxtrans SET maxtrans = '$val' WHERE nis = '$nis'";
+            $sql = "UPDATE jbsfina.paymentmaxtrans SET maxtrans = '$val' WHERE nis = '".$nis."'";
             QueryDb($sql);
         }
         else
         {
-            $sql = "INSERT INTO jbsfina.paymentmaxtrans SET maxtrans = $val, nis = '$nis'";
+            $sql = "INSERT INTO jbsfina.paymentmaxtrans SET maxtrans = $val, nis = '".$nis."'";
             QueryDb($sql);
         }
     }

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  **[N]**/ ?>
 <fieldset>
     <legend><strong>Presensi Harian</strong></legend>
-<?  $sql_harian = "SELECT SUM(ph.hadir) as hadir, SUM(ph.ijin) as ijin, SUM(ph.sakit) as sakit, SUM(ph.cuti) as cuti, SUM(ph.alpa) as alpa, SUM(ph.hadir+ph.sakit+ph.ijin+ph.alpa+ph.cuti) as tot ".
+<?php  $sql_harian = "SELECT SUM(ph.hadir) as hadir, SUM(ph.ijin) as ijin, SUM(ph.sakit) as sakit, SUM(ph.cuti) as cuti, SUM(ph.alpa) as alpa, SUM(ph.hadir+ph.sakit+ph.ijin+ph.alpa+ph.cuti) as tot ".
                     "FROM presensiharian p, phsiswa ph, siswa s ".
                    "WHERE ph.idpresensi = p.replid ".
                      "AND ph.nis = s.nis ".
@@ -54,9 +54,9 @@
     <td width="6" background="../style/formbg2agreen.gif"><div align="center" class="style1">%</div></td>
 </tr>
         <!-- Ambil pelajaran per departemen-->
-<?
+<?php
 $result_harian=QueryDb($sql_harian);
-$row_harian=@mysql_fetch_array($result_harian);
+$row_harian=@mysqli_fetch_array($result_harian);
 $hadir=$row_harian['hadir'];
 $sakit=$row_harian['sakit'];
 $ijin=$row_harian['ijin'];

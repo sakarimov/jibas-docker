@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -50,7 +50,7 @@ if (isset($_REQUEST['Simpan']))
 {
 	$komentar = $_REQUEST['komentar'];
 	$predikat = $_REQUEST['predikat'];
-	$sql_update = "UPDATE jbsakad.komennap SET komentar='$komentar', predikat='$predikat' WHERE replid='$_REQUEST[replid]'";
+	$sql_update = "UPDATE jbsakad.komennap SET komentar='$komentar', predikat='$predikat' WHERE replid='".$_REQUEST['replid']."'";
 	$result_update = QueryDb($sql_update);
 	if ($result_update)
 	{	?>
@@ -58,7 +58,7 @@ if (isset($_REQUEST['Simpan']))
 			//alert ('Berhasil menyimpan komentar');
 			document.location.href="komentar_content.php?departemen=<?=$departemen?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&tahunajaran=<?=$tahunajaran?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&nis=<?=$nis?>";
 		</script>
-<?	}
+<?php }
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -89,14 +89,14 @@ if (isset($_REQUEST['Simpan']))
 </HEAD>
 
 <BODY>
-<?
+<?php
 $sql = "SELECT k.komentar, k.replid, k.predikat
 		    FROM jbsakad.komennap k, jbsakad.infonap i 
 		   WHERE k.nis='$nis' AND i.replid=k.idinfo AND i.idpelajaran='$pelajaran' 
 		     AND i.idsemester='$semester' AND i.idkelas='$kelas'";
 $result_get_comment = QueryDb($sql);
-$row_get_comment = @mysql_fetch_row($result_get_comment);
-$ada_get_comment = @mysql_num_rows($result_get_comment);
+$row_get_comment = @mysqli_fetch_row($result_get_comment);
+$ada_get_comment = @mysqli_num_rows($result_get_comment);
 ?>
 <form name="frm_komentar" id="frm_komentar" action="komentar_content.php" method="POST">
 <table width="100%" border="0" height="100%">
@@ -124,10 +124,10 @@ $ada_get_comment = @mysql_num_rows($result_get_comment);
 			<td><strong>Nama</strong></td>
 			<td><strong>:</strong></td>
 			<td><strong>
-			  <?
+			  <?php
 			$sql_get_nama="SELECT nama FROM jbsakad.siswa WHERE nis='$nis'";
 			$result_get_nama=QueryDb($sql_get_nama);
-			$row_get_nama=@mysql_fetch_array($result_get_nama);
+			$row_get_nama=@mysqli_fetch_array($result_get_nama);
 			echo $row_get_nama['nama'];
 			?>
 			</strong></td>
@@ -152,7 +152,7 @@ $ada_get_comment = @mysql_num_rows($result_get_comment);
   </tr>
   <tr>
 	  <td align="left"  valign="top">
-<?	$sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
+<?php $sql = "SELECT DISTINCT a.dasarpenilaian, d.keterangan
 		  	  FROM infonap i, nap n, aturannhb a, dasarpenilaian d
 			 WHERE i.replid = n.idinfo AND n.nis = '$nis' 
 			   AND i.idpelajaran = '$pelajaran' 
@@ -162,22 +162,22 @@ $ada_get_comment = @mysql_num_rows($result_get_comment);
 			   AND a.dasarpenilaian = d.dasarpenilaian";
 	$res = QueryDb($sql);
 	$i = 0;
-	while($row = mysql_fetch_row($res))
+	while($row = mysqli_fetch_row($res))
 	{
-		$aspek[$i++] = array($row[0], $row[1]);
+		$aspek[$i++] = [$row[0], $row[1]];
 	} ?>
     <strong>Informasi Nilai Rapor Siswa:</strong>
 	<table border="1" class="tab" id="table" bordercolor="#000000">  
 	<tr align="center" height="25">
-<?	for($i = 0; $i < count($aspek); $i++)
+<?php for($i = 0; $i < count($aspek); $i++)
 		echo "<td class='header' colspan=2 align='center' width='180'>" . $aspek[$i][1] . "</td>"; ?>
     </tr>
     <tr align="center" height="25">
-<?	for($i = 0; $i < count($aspek); $i++)
+<?php for($i = 0; $i < count($aspek); $i++)
 		echo "<td class='header' align='center' width='80'>Angka</td><td class='header' align='center' width='80'>Huruf</td>"; ?>
     </tr>
     <tr align="center" height="25">
-<?	for($i = 0; $i < count($aspek); $i++)
+<?php for($i = 0; $i < count($aspek); $i++)
 	{
 		$na = "";
 		$nh = "";
@@ -192,11 +192,11 @@ $ada_get_comment = @mysql_num_rows($result_get_comment);
 				   AND i.idsemester = '$semester' 
 				   AND i.idkelas = '$kelas'
 				   AND n.idaturan = a.replid 	   
-				   AND a.dasarpenilaian = '$asp'";
+				   AND a.dasarpenilaian = '".$asp."'";
 		$res = QueryDb($sql);
-		if (mysql_num_rows($res) > 0)
+		if (mysqli_num_rows($res) > 0)
 		{
-			$row = mysql_fetch_row($res);
+			$row = mysqli_fetch_row($res);
 			$na = $row[0];
 			$nh = $row[1];
 		}
@@ -210,6 +210,6 @@ $ada_get_comment = @mysql_num_rows($result_get_comment);
 </form>
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

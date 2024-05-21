@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -32,7 +32,7 @@ require_once('../include/errorhandler.php');
 
 OpenDb();
 
-$dept = isset($_REQUEST["dept"]) ? $_REQUEST["dept"] : "";
+$dept = $_REQUEST["dept"] ?? "";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -101,12 +101,12 @@ $dept = isset($_REQUEST["dept"]) ? $_REQUEST["dept"] : "";
 <?php
                     $sql = "SELECT departemen FROM jbsakad.departemen WHERE aktif = 1 ORDER BY urutan";
                     $res = QueryDb($sql);
-                    while($row = mysql_fetch_row($res))
+                    while($row = mysqli_fetch_row($res))
                     {
                         if ($dept == "") $dept = $row[0];
                         $sel = ($dept == $row[0]) ? "selected" : "";
 
-                        echo "<option value='$row[0]' $sel>$row[0]</option>";
+                        echo "<option value='".$row[0]."' $sel>".$row[0]."</option>";
                     }
 ?>
                     </select>&nbsp;&nbsp;
@@ -129,7 +129,7 @@ $dept = isset($_REQUEST["dept"]) ? $_REQUEST["dept"] : "";
 
                     $sql = "SELECT replid, info FROM jbsfina.infobayar WHERE departemen = '$dept' AND bagian = 'bayar'";
                     $res = QueryDb($sql);
-                    if ($row = mysql_fetch_row($res))
+                    if ($row = mysqli_fetch_row($res))
                     {
                         $id = $row[0];
                         $info = $row[1];
@@ -158,7 +158,7 @@ $dept = isset($_REQUEST["dept"]) ? $_REQUEST["dept"] : "";
 
                     $sql = "SELECT replid, info FROM jbsfina.infobayar WHERE departemen = '$dept' AND bagian = 'batal'";
                     $res = QueryDb($sql);
-                    if ($row = mysql_fetch_row($res))
+                    if ($row = mysqli_fetch_row($res))
                     {
                         $id = $row[0];
                         $info = $row[1];
@@ -187,7 +187,7 @@ $dept = isset($_REQUEST["dept"]) ? $_REQUEST["dept"] : "";
 
                     $sql = "SELECT replid, info FROM jbsfina.infobayar WHERE departemen = '$dept' AND bagian = 'kembali'";
                     $res = QueryDb($sql);
-                    if ($row = mysql_fetch_row($res))
+                    if ($row = mysqli_fetch_row($res))
                     {
                         $id = $row[0];
                         $info = $row[1];

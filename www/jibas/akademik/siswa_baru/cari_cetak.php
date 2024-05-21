@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,7 +31,7 @@ $jenis=$_REQUEST['jenis'];
 $departemen=$_REQUEST['departemen'];
 $cari=$_REQUEST['cari'];
 
-$tipe = array("nopendaftaran" => "No. Pendaftaran", "nisn" => "NISN", "nama" => "Nama","panggilan" => "Nama Panggilan", "agama" =>"Agama", "suku" => "Suku", "status" => "Status", "kondisi"=>"Kondisi Siswa", "darah"=>"Golongan Darah", "alamatsiswa" => "Alamat Siswa", "asalsekolah" => "Asal Sekolah", "namaayah" => "Nama Ayah", "namaibu" => "Nama Ibu", "alamatortu" => "Alamat Orang Tua", "keterangan" => "Keterangan");
+$tipe = ["nopendaftaran" => "No. Pendaftaran", "nisn" => "NISN", "nama" => "Nama", "panggilan" => "Nama Panggilan", "agama" =>"Agama", "suku" => "Suku", "status" => "Status", "kondisi"=>"Kondisi Siswa", "darah"=>"Golongan Darah", "alamatsiswa" => "Alamat Siswa", "asalsekolah" => "Asal Sekolah", "namaayah" => "Nama Ayah", "namaibu" => "Nama Ibu", "alamatortu" => "Alamat Orang Tua", "keterangan" => "Keterangan"];
 
 $urut = $_REQUEST['urut'];
 $urutan = $_REQUEST['urutan'];
@@ -76,7 +76,7 @@ $total = $_REQUEST['total'];
 		<td width="*" class="header" align="center">Nama Calon Siswa</td>
         
     </tr>
-<? 	OpenDb();
+<?php 	OpenDb();
 	if ($jenis != "kondisi" && $jenis != "status" && $jenis != "agama" && $jenis != "suku" && $jenis != "darah"){
 		//$sql = "SELECT c.replid,c.nopendaftaran,c.nama,p.departemen,k.kelompok FROM calonsiswa c,kelompokcalonsiswa k, prosespenerimaansiswa p WHERE c.$jenis like '%$cari%' AND c.aktif = 1 AND p.departemen='$departemen' AND c.idkelompok = k.replid AND c.idproses = p.replid AND p.replid = k.idproses ORDER BY $urut $urutan, nama ASC LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		$sql = "SELECT c.replid,c.nopendaftaran,c.nama,p.departemen,k.kelompok,c.nisn FROM calonsiswa c,kelompokcalonsiswa k, prosespenerimaansiswa p WHERE c.$jenis like '%$cari%' AND c.aktif = 1 AND p.departemen='$departemen' AND c.idkelompok = k.replid AND c.idproses = p.replid AND p.replid = k.idproses ORDER BY $urut $urutan, nama ASC";
@@ -90,7 +90,7 @@ $total = $_REQUEST['total'];
 	else
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($result)) { 
+	while ($row = mysqli_fetch_array($result)) { 
 		?>
     <tr height="25">    	
     	<td align="center"><?=++$cnt ?></td>
@@ -99,7 +99,7 @@ $total = $_REQUEST['total'];
 		<td align="center"><?=$row['nisn'] ?></td>
         <td><?=$row['nama']?></td>   
     </tr>
-<?	} 
+<?php } 
 	CloseDb() ?>	
     </table>
 <!--<tr>

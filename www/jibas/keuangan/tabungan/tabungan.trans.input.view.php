@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowInfoSiswa()
 {
     global $nis, $replid, $nama, $namatingkat, $namakelas, $hp, $telpon, $alamattinggal, $keterangansiswa; ?>
@@ -77,11 +77,11 @@ function ShowInfoSiswa()
 
 </table>            
 </fieldset>
-<?    
+<?php    
 }
 ?>
 
-<?
+<?php
 function ShowSetoranInput()
 {
     global $idtabungan, $nis, $idtahunbuku, $namatabungan, $jsetor, $tgl_jurnal, $keterangansetor, $defrekkas;
@@ -114,15 +114,15 @@ function ShowSetoranInput()
     <td><strong>Rek. Kas</strong></td>
     <td colspan="2">
         <select name="rekkassetor" id="rekkassetor" style="width: 220px">
-<?          $sql = "SELECT kode, nama
+<?php          $sql = "SELECT kode, nama
                       FROM jbsfina.rekakun
                      WHERE kategori = 'HARTA'
                      ORDER BY nama";        
             $res = QueryDb($sql);
-            while($row = mysql_fetch_row($res))
+            while($row = mysqli_fetch_row($res))
             {
                 $sel = $row[0] == $defrekkas ? "selected" : "";
-                echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+                echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
             } ?>                
         </select>
     </td>
@@ -150,11 +150,11 @@ function ShowSetoranInput()
 </table>
 </form>
 </fieldset>
-<?    
+<?php    
 }
 ?>
 
-<?
+<?php
 function ShowTarikanInput()
 {
     global $idtabungan, $Nis, $idtahunbuku, $namatabungan, $jsetor, $tgl_jurnal, $keterangansetor, $defrekkas;
@@ -187,15 +187,15 @@ function ShowTarikanInput()
     <td><strong>Rek. Kas</strong></td>
     <td colspan="2">
         <select name="rekkastarik" id="rekkastarik" style="width: 220px">
-<?          $sql = "SELECT kode, nama
+<?php          $sql = "SELECT kode, nama
                       FROM jbsfina.rekakun
                      WHERE kategori = 'HARTA'
                      ORDER BY nama";        
             $res = QueryDb($sql);
-            while($row = mysql_fetch_row($res))
+            while($row = mysqli_fetch_row($res))
             {
                 $sel = $row[0] == $defrekkas ? "selected" : "";
-                echo "<option value='$row[0]' $sel>$row[0] $row[1]</option>";
+                echo "<option value='".$row[0]."' $sel>{$row[0]} {$row[1]}</option>";
             } ?>                
         </select>
     </td>
@@ -221,11 +221,11 @@ function ShowTarikanInput()
 </table>
 </form>
 </fieldset>
-<?    
+<?php    
 }
 ?>
 
-<?
+<?php
 function ShowTransaksi($page)
 {
 ?>
@@ -253,18 +253,18 @@ function ShowTransaksi($page)
     <td class="header" width="12%">Petugas</td>
     <td class="header">&nbsp;</td>
 </tr>
-<?  ShowTransaksiList($page); ?>
+<?php  ShowTransaksiList($page); ?>
 </table>
 </div>
 <br>
 <a onclick="nextTabunganList()">selanjutnya</a>
 <br>
 </fieldset>
-<?    
+<?php    
 }
 ?>
 
-<?
+<?php
 function ShowTransaksiList($page)
 {
     global $nis, $idtabungan, $idtahunbuku;
@@ -277,7 +277,7 @@ function ShowTransaksiList($page)
              WHERE p.idjurnal = j.replid
                AND p.nis = '$nis'
                AND j.idtahunbuku = '$idtahunbuku'
-               AND p.idtabungan = '$idtabungan'";
+               AND p.idtabungan = '".$idtabungan."'";
     $nData = FetchSingle($sql);
     
     $sql = "SELECT p.replid AS id, j.nokas, date_format(p.tanggal, '%d-%b-%Y %H:%i:%s') as tanggal,
@@ -294,7 +294,7 @@ function ShowTransaksiList($page)
     {
         echo "<tr height='100'><td colspan='7' align='center' valign='middle'><i>Belum ada data tabungan</i></td></tr>";
     }
-    else if (mysql_num_rows($result) == 0)
+    else if (mysqli_num_rows($result) == 0)
     {
         echo "";
     }
@@ -302,7 +302,7 @@ function ShowTransaksiList($page)
     {
         
         $cnt = $startIndex;
-        while ($row = mysql_fetch_array($result))
+        while ($row = mysqli_fetch_array($result))
         {
             $kredit = (int) $row['kredit'];
             $bgcolor = $kredit != 0 ? "#E0F3FF" : "#F9F6EA";
@@ -317,9 +317,9 @@ function ShowTransaksiList($page)
                      WHERE idtabungan = $idTabungan";
             $res2 = QueryDb($sql);
 
-            $isSchoolPay = mysql_num_rows($res2) > 0;
+            $isSchoolPay = mysqli_num_rows($res2) > 0;
             $infoSchoolPay = "";
-            if ($row2 = mysql_fetch_row($res2))
+            if ($row2 = mysqli_fetch_row($res2))
             {
                 $jenisTrans = $row2[0];
                 if ($jenisTrans == 0)
@@ -338,7 +338,7 @@ function ShowTransaksiList($page)
                           FROM jbsfina.pgtransdata
                          WHERE idtabungan = $idDataTabungan";
                 $res2 = QueryDb($sql);
-                $row2 = mysql_fetch_row($res2);
+                $row2 = mysqli_fetch_row($res2);
                 if ($row2[0] > 0)
                 {
                     $infoSchoolPay = "<span style='background-color: #43b9c9; color: #ffffff; font-size: 10px;'>&nbsp;OnlinePay&nbsp;</span>";
@@ -355,19 +355,19 @@ function ShowTransaksiList($page)
                 <td align="center">
                     <a href="#" onclick="cetakkuitansi(<?=$row['id'] ?>)"><img src="../images/ico/print.png" border="0"
                        onMouseOver="showhint('Cetak Kuitansi Tabungan!', this, event, '100px')"/></a>&nbsp;
-                <?  if (!$isSchoolPay && getLevel() != 2) { ?>
+                <?php  if (!$isSchoolPay && getLevel() != 2) { ?>
                     <a href="#" onclick="editpembayaran(<?=$row['id'] ?>)"><img src="../images/ico/ubah.png" border="0"
                        onMouseOver="showhint('Ubah Transaksi Tabungan!', this, event, '120px')" /></a>
-                <?	} ?>
+                <?php } ?>
                     <br><?=$infoSchoolPay?>
                 </td>
             </tr>
-<?	    }
+<?php     }
     }
 }
 ?>
 
-<?
+<?php
 function ShowInfoTabungan()
 {
     global $nis, $idtabungan, $idtahunbuku;
@@ -375,9 +375,9 @@ function ShowInfoTabungan()
     $sql = "SELECT SUM(debet), SUM(kredit)
               FROM tabungan
              WHERE nis = '$nis'
-               AND idtabungan = '$idtabungan'";
+               AND idtabungan = '".$idtabungan."'";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $jsetor = $row[1];
     $jtarik = $row[0];
     $jsaldo = $jsetor - $jtarik;
@@ -390,7 +390,7 @@ function ShowInfoTabungan()
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);             
+    $row = mysqli_fetch_row($res);             
     $tglsetorakhir = $row[0];
     $setorakhir = $row[1];
     
@@ -402,7 +402,7 @@ function ShowInfoTabungan()
              ORDER BY replid DESC
              LIMIT 1";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);             
+    $row = mysqli_fetch_row($res);             
     $tgltarikakhir = $row[0];
     $tarikakhir = $row[1];
     ?>
@@ -438,6 +438,6 @@ function ShowInfoTabungan()
 </table>    
     
 </fieldset>	
-<?    
+<?php    
 }
 ?>

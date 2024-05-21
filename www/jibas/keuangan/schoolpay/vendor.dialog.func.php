@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ function LoadValue()
 
     $sql = "SELECT * FROM jbsfina.vendor WHERE replid = $vendorReplid";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_array($res))
+    if ($row = mysqli_fetch_array($res))
     {
         $vendorId = $row["vendorid"];
         $vendorName = $row["nama"];
@@ -57,7 +57,7 @@ function SimpanVendor()
     {
         $sql = "SELECT COUNT(replid)
                   FROM jbsfina.vendor 
-                 WHERE vendorid = '$vendorId'";
+                 WHERE vendorid = '".$vendorId."'";
         $nData = FetchSingle($sql);
         if ($nData > 0)
             return createJsonReturn(-1, "Vendor Id $vendorId sudah digunakan. Pilih vendor id yang lain");
@@ -91,8 +91,8 @@ function SimpanVendor()
 
 function createJsonReturn($status, $message)
 {
-    $ret = array($status, $message);
-    return json_encode($ret);
+    $ret = [$status, $message];
+    return json_encode($ret, JSON_THROW_ON_ERROR);
 }
 
 ?>

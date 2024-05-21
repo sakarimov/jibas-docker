@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -36,7 +36,7 @@ $id = $_REQUEST['id'];
 $sql = "SELECT p.replid AS id, j.nokas, p.sumber, j.transaksi, date_format(p.tanggal, '%d-%b-%Y') AS tanggal,
 			   p.keterangan, p.jumlah, p.petugas, j.idtahunbuku
 		  FROM penerimaanlain p, jurnal j
-		 WHERE j.replid = p.idjurnal AND p.replid = '$id'";
+		 WHERE j.replid = p.idjurnal AND p.replid = '".$id."'";
 $row = FetchSingleArray($sql);
 $nokas = $row['nokas'];
 $transaksi = $row['transaksi'];
@@ -48,15 +48,15 @@ $idtahunbuku = $row['idtahunbuku'];
 
 $sql = "SELECT departemen FROM tahunbuku WHERE replid='$idtahunbuku'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
-$departemen=$row[departemen];
+$row = @mysqli_fetch_array($result);
+$departemen=$row['departemen'];
 
 $sql = "SELECT replid, nama, alamat1 FROM jbsumum.identitas WHERE departemen='$departemen'";
 $result = QueryDb($sql); 
-$row = @mysql_fetch_array($result);
-$idHeader = $row[replid];
-$namaHeader = $row[nama];
-$alamatHeader = $row[alamat1];
+$row = @mysqli_fetch_array($result);
+$idHeader = $row['replid'];
+$namaHeader = $row['nama'];
+$alamatHeader = $row['ALAMAT1'];
 
 CloseDb();
 ?>
@@ -71,11 +71,11 @@ CloseDb();
 <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
 
 <table border="0" cellpadding="0" cellspacing="0" width="340" align="center">
-<? for($i = 0; $i < 2; $i++) { ?>
+<?php for($i = 0; $i < 2; $i++) { ?>
 <tr>
 <td colspan="2" align="center" valign="top">
 	<table border="0" cellpadding="0" cellspacing="3" width="330" align="center">
-    <? if ($i == 0) { ?>		
+    <?php if ($i == 0) { ?>		
 	<tr>
 		<td align="center" width='15%'>
 			<img src='<?= $full_url."library/gambar.php?replid=$idHeader&table=jbsumum.identitas" ?>' height='30' />
@@ -85,12 +85,12 @@ CloseDb();
 			<font style='font-size:10px'><?=$alamatHeader?></font>
 		</td>
 	</tr>
-	<? } else { ?>
+	<?php } else { ?>
 	<tr height="1">
 		<td align="center" width='15%'>&nbsp;</td>
 		<td align="left">&nbsp;</td>
 	</tr>
-	<? } ?>	
+	<?php } ?>	
     <tr>
 		<td align="left" colspan='2'>
 			
@@ -132,13 +132,13 @@ CloseDb();
             
             </td>
             <td align="center">
-            <? if ($i == 0) { ?>	
+            <?php if ($i == 0) { ?>	
 				Yang menerima<br /><br /><br /><br />
 				( <?=getUserName() ?> )
-			<? } else { ?>
+			<?php } else { ?>
 				Yang menyerahkan<br /><br /><br /><br />
 				( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
-			<? } ?>
+			<?php } ?>
             </td>
         </tr>
         </table>
@@ -147,13 +147,13 @@ CloseDb();
 </td></tr>
 <tr>
 	<td align='right'>
-<? if ($i == 0) { ?>
+<?php if ($i == 0) { ?>
 	<hr width="350" style="border-style:dashed; line-height:1px; color:#666;" />
-<?	} ?>	
+<?php } ?>	
 	</td>
 </tr>
 
-<? } //for ?>
+<?php } //for ?>
 </table>
 </body>
 <script language="javascript">

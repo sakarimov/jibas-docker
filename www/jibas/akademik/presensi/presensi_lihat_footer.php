@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -61,13 +61,13 @@ else
 <!-- TABLE UTAMA -->
 <tr>
 <td align="left">
-    <? 	
+    <?php 	
 	if ($kelas <> "") { 
 		OpenDb();
 		$sql = "SELECT DAY(pp.tanggal), MONTH(pp.tanggal), pp.jam, p.nama, g.nama, pp.materi, pp.replid FROM presensipelajaran pp, pelajaran p, jbssdm.pegawai g WHERE pp.idkelas = '$kelas' AND pp.idsemester = '$semester' $pel AND MONTH(pp.tanggal) = '$bln' AND YEAR(pp.tanggal) = '$thn' AND pp.idpelajaran = p.replid AND pp.gurupelajaran = g.nip ORDER BY pp.tanggal, pp.jam ";
 		
 		$result = QueryDb($sql);			 
-		$jum = mysql_num_rows($result);
+		$jum = mysqli_num_rows($result);
 		if ($jum > 0) {
 	?>
    		
@@ -82,9 +82,9 @@ else
             <td class="header" align="center" width="32%">Materi</td>
             <td class="header" align="center" width="8%"></td>
 		</tr>
-		<? 
+		<?php 
 		$cnt = 1;
-		while ($row = @mysql_fetch_row($result)) {					
+		while ($row = @mysqli_fetch_row($result)) {					
 		?>	
         <tr>        			
 			<td align="center"><?=$cnt?></td>
@@ -95,7 +95,7 @@ else
             <td><textarea name="materi_lanjut" id="materi_lanjut" rows="2" cols="30%"><?=$row[5] ?></textarea></td>            
             <td align="center"><input type="button" name="pilih" class="but" id="pilih" value="Pilih" onClick="parent.pilih('<?=$row[6]?>')" /></td>
     	</tr>
- 	<?		$cnt++;
+ 	<?php 	$cnt++;
 		} 
 		CloseDb();	?>
     		
@@ -104,7 +104,7 @@ else
    			Tables('table', 1, 0);
 		</script>
 
-	<? 	} else { 
+	<?php 	} else { 
 			echo "<strong><font color='red'>Tidak ditemukan adanya data</strong>";
 		}
 	} else { 

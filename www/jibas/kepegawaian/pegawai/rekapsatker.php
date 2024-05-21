@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ function CetakWord() {
     <td class="header" align="center" width="15%">Jumlah<br>Pegawai</td>
     <td class="header" align="center" width="20%">Persentase</td>
 </tr>
-<?
+<?php
 OpenDb();
 $sql = "SELECT j.satker, COUNT(p.nip) FROM pegawai p, peglastdata pl, pegjab pj, jabatan j
      	  WHERE p.aktif = 1 AND p.nip = pl.nip AND pl.idpegjab = pj.replid AND pj.idjabatan = j.replid AND NOT j.satker IS NULL
@@ -71,7 +71,7 @@ $sql = "SELECT j.satker, COUNT(p.nip) FROM pegawai p, peglastdata pl, pegjab pj,
 $result = QueryDb($sql);
 $cnt = 0;
 $total = 0;
-while ($row = mysql_fetch_row($result)) 
+while ($row = mysqli_fetch_row($result)) 
 {
 	$cnt++;
 	$data[$cnt-1][0] = $row[0];
@@ -93,7 +93,7 @@ for($i = 0; $i < $cnt; $i++)
     <td align="center" valign="top"><?=$data[$i][1]?></td>
     <td align="center" valign="top"><?=$pct?>%</td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="30">

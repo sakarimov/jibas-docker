@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
-$UserLetterIdList = array();
+<?php
+$UserLetterIdList = [];
 $UserGroupList = "";
 
 function GetUserGroup()
@@ -34,7 +34,7 @@ function GetUserGroup()
                AND aktif = 1";
     
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($UserGroupList != "")
             $UserGroupList .= ",";
@@ -47,11 +47,7 @@ function GetFromInDst()
     global $UserGroupList, $UserLetterIdList;
     global $nip, $departemen, $jenis, $kategori, $bulan1, $tahun1, $bulan2, $tahun2;
     
-    $tableList = array(
-        array("jbsletter.suratindstuser", "iduser", "'" . $nip. "'"),
-        array("jbsletter.suratindstgroup", "idkelompok", $UserGroupList),
-        array("jbsletter.suratindstcc", "iduser", "'" . $nip. "'")
-    );
+    $tableList = [["jbsletter.suratindstuser", "iduser", "'" . $nip. "'"], ["jbsletter.suratindstgroup", "idkelompok", $UserGroupList], ["jbsletter.suratindstcc", "iduser", "'" . $nip. "'"]];
     
     for($i = 0; $i < count($tableList); $i++)
     {
@@ -59,7 +55,7 @@ function GetFromInDst()
         $colName = $tableList[$i][1];
         $colValue = $tableList[$i][2];
         
-        if (0 == strlen($colValue))
+        if (0 == strlen((string) $colValue))
             continue;
         
         $sql = "SELECT DISTINCT s.replid
@@ -72,15 +68,15 @@ function GetFromInDst()
                         (MONTH(s.tanggal) <= $bulan2 AND YEAR(s.tanggal) <= $tahun2))";
         
         if ($jenis != "ALL")
-            $sql .= " AND s.jenis = '$jenis'";
+            $sql .= " AND s.jenis = '".$jenis."'";
         
         if ($kategori != 0)
-            $sql .= " AND s.idkategori = '$kategori'";
+            $sql .= " AND s.idkategori = '".$kategori."'";
         
         //echo "$sql<br>";
         
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $found = false;
             for($j = 0; !$found && $j < count($UserLetterIdList); $j++)
@@ -101,10 +97,7 @@ function GetFromSuratOutDst()
     global $UserGroupList, $UserLetterIdList;
     global $nip, $departemen, $jenis, $kategori, $bulan1, $tahun1, $bulan2, $tahun2;
     
-    $tableList = array(
-        array("jbsletter.suratoutdst", "iduser", "'" . $nip. "'"),
-        array("jbsletter.suratoutdst", "idkelompok", $UserGroupList)
-    );
+    $tableList = [["jbsletter.suratoutdst", "iduser", "'" . $nip. "'"], ["jbsletter.suratoutdst", "idkelompok", $UserGroupList]];
     
     for($i = 0; $i < count($tableList); $i++)
     {
@@ -112,7 +105,7 @@ function GetFromSuratOutDst()
         $colName = $tableList[$i][1];
         $colValue = $tableList[$i][2];
         
-        if (0 == strlen($colValue))
+        if (0 == strlen((string) $colValue))
             continue;
         
         $sql = "SELECT DISTINCT s.replid
@@ -124,13 +117,13 @@ function GetFromSuratOutDst()
                    AND ((MONTH(s.tanggal) >= $bulan1 AND YEAR(s.tanggal) >= $tahun1) AND 
                         (MONTH(s.tanggal) <= $bulan2 AND YEAR(s.tanggal) <= $tahun2))";
         if ($jenis != "ALL")
-            $sql .= " AND s.jenis = '$jenis'";
+            $sql .= " AND s.jenis = '".$jenis."'";
         
         if ($kategori != 0)
-            $sql .= " AND s.idkategori = '$kategori'";
+            $sql .= " AND s.idkategori = '".$kategori."'";
             
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $found = false;
             for($j = 0; !$found && $j < count($UserLetterIdList); $j++)
@@ -151,11 +144,7 @@ function GetFromSuratOutSrc()
     global $UserGroupList, $UserLetterIdList;
     global $nip, $departemen, $jenis, $kategori, $bulan1, $tahun1, $bulan2, $tahun2;
     
-    $tableList = array(
-        array("jbsletter.suratoutsrcuser", "iduser", "'" . $nip. "'"),
-        array("jbsletter.suratoutsrcgroup", "idkelompok", $UserGroupList),
-        array("jbsletter.suratoutsrccc", "iduser", "'" . $nip. "'")
-    );
+    $tableList = [["jbsletter.suratoutsrcuser", "iduser", "'" . $nip. "'"], ["jbsletter.suratoutsrcgroup", "idkelompok", $UserGroupList], ["jbsletter.suratoutsrccc", "iduser", "'" . $nip. "'"]];
     
     for($i = 0; $i < count($tableList); $i++)
     {
@@ -163,7 +152,7 @@ function GetFromSuratOutSrc()
         $colName = $tableList[$i][1];
         $colValue = $tableList[$i][2];
         
-        if (0 == strlen($colValue))
+        if (0 == strlen((string) $colValue))
             continue;
         
         $sql = "SELECT DISTINCT s.replid
@@ -176,13 +165,13 @@ function GetFromSuratOutSrc()
                         (MONTH(s.tanggal) <= $bulan2 AND YEAR(s.tanggal) <= $tahun2))";
                         
         if ($jenis != "ALL")
-            $sql .= " AND s.jenis = '$jenis'";
+            $sql .= " AND s.jenis = '".$jenis."'";
         
         if ($kategori != 0)
-            $sql .= " AND s.idkategori = '$kategori'";
+            $sql .= " AND s.idkategori = '".$kategori."'";
             
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $found = false;
             for($j = 0; !$found && $j < count($UserLetterIdList); $j++)
@@ -209,7 +198,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                  WHERE src.idsumber = si.replid
                    AND src.idsurat = $idsurat";
         $res = QueryDb($sql);
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $sumber = $row[0];    
     }
     else
@@ -228,7 +217,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                 ) AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($sumber != "")
                 $sumber .= ", ";
@@ -241,7 +230,7 @@ function GetSumberSurat($idsurat, $jenissurat)
                    AND idsurat = $idsurat
                  ORDER BY k.kelompok";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($sumber != "")
                 $sumber .= ", ";
@@ -272,7 +261,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                 ) AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -285,7 +274,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                    AND dst.idsurat = $idsurat
                  ORDER BY k.kelompok";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -319,7 +308,7 @@ function GetTujuanSurat($idsurat, $jenissurat)
                 AS X
                 ORDER BY nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             if ($tujuan != "")
                 $tujuan .= ", ";
@@ -351,7 +340,7 @@ function GetTembusanSurat($idsurat, $jenissurat)
     
     $tembusan = "";
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
         if ($tembusan != "")
             $tembusan .= ", ";
@@ -367,7 +356,7 @@ function GetNBerkas($idsurat)
               FROM jbsletter.berkassurat
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return $row[0];
 }
@@ -378,7 +367,7 @@ function GetNComment($idsurat)
               FROM jbsletter.comment
              WHERE idsurat = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return $row[0];
 }
@@ -390,7 +379,7 @@ function GetLastActive($idsurat)
               FROM jbsletter.surat
              WHERE replid = $idsurat";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     
     return SecToAgeDate($row[0], $row[2]);
 }
@@ -423,7 +412,7 @@ function ShowListSurat()
     
     if (0 == count($UserLetterIdList))
     {
-        echo "<tr height='45' style='background-color: $fff'>";
+        echo "<tr height='45' style='background-color: #FFF'>";
         echo "<td align='center' colspan='9' style='border-color: #bbb; border-width: 1px;' valign='middle'><em>Belum ada data surat</em></td>";
         echo "</tr>";
         
@@ -466,9 +455,9 @@ function ShowListSurat()
     }
     $res = QueryDb($sql);
     
-    if (0 == mysql_num_rows($res))
+    if (0 == mysqli_num_rows($res))
     {
-        echo "<tr height='45' style='background-color: $fff'>";
+        echo "<tr height='45' style='background-color: #FFF'>";
         echo "<td align='center' colspan='9' style='border-color: #bbb; border-width: 1px;' valign='middle'><em>Tidak ditemukan data surat</em></td>";
         echo "</tr>";
         
@@ -476,7 +465,7 @@ function ShowListSurat()
     }
     
     $no = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
         
@@ -515,8 +504,8 @@ function ShowListSurat()
         
         echo "<tr style='background-color : $bgcolor' >";
         echo "<td align='center' style='border-color: #bbb; border-width: 1px;' valign='top'>$no</td>";
-        echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><font style='color: maroon;'><em>$row[tanggalsurat]</em></font><br>$row[nomor]<br>$jenis</td>";
-        echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><strong>$row[perihal]</strong><br>Kategori: $row[kategori]<br>Sifat: $sifat</td>";
+        echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><font style='color: maroon;'><em>".$row['tanggalsurat']."</em></font><br>".$row['nomor']."<br>$jenis</td>";
+        echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'><strong>".$row['perihal']."</strong><br>Kategori: ".$row['kategori']."<br>Sifat: $sifat</td>";
         echo "<td align='center' style='font-size: 16px; border-color: #bbb; border-width: 1px;' valign='top'>$nberkas</td>";
         echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'>$sumber</td>";
         echo "<td align='left' style='border-color: #bbb; border-width: 1px;' valign='top'>$tujuan</td>";

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
 require_once('../include/common.php');
@@ -60,7 +60,7 @@ if ($op=='SavePresensi'){
 		}
 		$res = QueryDb($sql);
 		$NIS = "";
-		while ($row = @mysql_fetch_row($res)){
+		while ($row = @mysqli_fetch_row($res)){
 			if ($NIS == "")
 				$NIS = $row[0];
 			else
@@ -69,8 +69,8 @@ if ($op=='SavePresensi'){
 	}
 	
 	$smsgeninfo = "";
-	$x = split(' ',$SendDate);
-	$dt = split('-',$x[0]);
+	$x = explode(' ',(string) $SendDate);
+	$dt = explode('-',$x[0]);
 	$smsgeninfo .= $dt[2].'-'.$SMonth[$dt[1]-1].'-'.$dt[0]."<br>";
 	if ($Type=='0'){
 		$smsgeninfo .= "NIS : ".$NIS;
@@ -81,7 +81,7 @@ if ($op=='SavePresensi'){
 		} else {
 			$sql = "SELECT kelas FROM $db_name_akad.kelas WHERE replid='$Kls'";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$smsgeninfo .= $row[0];
 		}
 	}
@@ -93,11 +93,11 @@ if ($op=='SavePresensi'){
 	$smsgeninfo .= ", Pengirim : ".$Sender;
 	
 	$idsmsgeninfo = GetLastId('replid','smsgeninfo');	
-	$sql = "INSERT INTO smsgeninfo SET replid='$idsmsgeninfo',tanggal='$x[0]',tipe='0',info='$smsgeninfo',pengirim='$Sender'";
+	$sql = "INSERT INTO smsgeninfo SET replid='$idsmsgeninfo',tanggal='".$x[0]."',tipe='0',info='$smsgeninfo',pengirim='$Sender'";
 	$res = QueryDb($sql);
 	
 	$NIS2 = "";
-	$ALLNIS	= split(',',$NIS);
+	$ALLNIS	= explode(',',(string) $NIS);
 	for ($i=0;$i<count($ALLNIS);$i++)
 	{
 		if ($NIS2 == "")
@@ -106,13 +106,13 @@ if ($op=='SavePresensi'){
 			$NIS2 = $NIS2.",'".trim($ALLNIS[$i])."'";
 	}
 	$Dt1  = $Date1;
-	$x	= split('-',$Date1);
+	$x	= explode('-',(string) $Date1);
 	$Tgl1 = (int)$x[2];
 	$Bln1 = (int)$x[1];
 	$Thn1 = (int)$x[0];
 	
 	$Dt2  = $Date2;
-	$x	= split('-',$Date2);
+	$x	= explode('-',(string) $Date2);
 	$Tgl2 = (int)$x[2];
 	$Bln2 = (int)$x[1];
 	$Thn2 = (int)$x[0];
@@ -123,7 +123,7 @@ if ($op=='SavePresensi'){
 				  FROM format
 				 WHERE tipe = 0";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_row($res);
+		$row = @mysqli_fetch_row($res);
 		$format = $row[0];
 
 		$sql =	"SELECT SUM(hadir) AS H, SUM(ijin) AS I, SUM(sakit) AS S, SUM(cuti) AS C, SUM(alpa) AS A,
@@ -136,7 +136,7 @@ if ($op=='SavePresensi'){
 					AND p.nis IN ($NIS2)
 				  GROUP BY p.nis";
 		$res = QueryDb($sql);	
-		while ($row = @mysql_fetch_array($res))
+		while ($row = @mysqli_fetch_array($res))
 		{
 			//Configuring SMS Text Message
 
@@ -153,7 +153,7 @@ if ($op=='SavePresensi'){
 			if (0 != (int)$row['A'])
 				$textAbsen .= " alpa: " . $row['A'];	
 			
-			$newformat = str_replace('[SISWA]','harian '.$row['nama'],$format);
+			$newformat = str_replace('[SISWA]','harian '.$row['nama'],(string) $format);
 			$newformat = str_replace('[TANGGAL1]',$Tgl1,$newformat);
 			$newformat = str_replace('[BULAN1]',$Bln1,$newformat);
 			$newformat = str_replace('[TANGGAL2]',$Tgl2,$newformat);
@@ -171,18 +171,18 @@ if ($op=='SavePresensi'){
 			//Finding Phone Number
 			$query	= "SELECT nis, hpsiswa, namaayah, hportu, info1, info2
 						 FROM $db_name_akad.siswa
-						WHERE nis = '$row[nis]'";
+						WHERE nis = '".$row['nis']."'";
 			$result = QueryDb($query);
-			$data	= @mysql_fetch_row($result);
+			$data	= @mysqli_fetch_row($result);
 			
 			if ($KeOrtu == 1)
 			{
 				for($i = 3; $i <= 5; $i++)
 				{
-					$hportu = trim($data[$i]);
+					$hportu = trim((string) $data[$i]);
 					if (strlen($hportu) < 7)
 						continue;
-					if (substr($hportu, 0, 1) == "#")
+					if (str_starts_with($hportu, "#"))
 						continue;
 					
 					$nohp = $hportu;
@@ -206,8 +206,8 @@ if ($op=='SavePresensi'){
 			
 			if ($KeSiswa == 1)
 			{
-				$hpsiswa = trim($data[1]);
-				if (strlen($hpsiswa) >= 7 && substr($hpsiswa, 0, 1) != "#")
+				$hpsiswa = trim((string) $data[1]);
+				if (strlen($hpsiswa) >= 7 && !str_starts_with($hpsiswa, "#"))
 				{	
 					$nohp = $hpsiswa;
 					$nohp = str_replace(" 62","0",$nohp);
@@ -233,7 +233,7 @@ if ($op=='SavePresensi'){
 	{
 		$sql = "SELECT format FROM format WHERE tipe=0";
 		$res = QueryDb($sql);
-		$row = @mysql_fetch_row($res);
+		$row = @mysqli_fetch_row($res);
 		$format = $row[0];
 		
 		$sql = "SELECT pp.idpp,	pp.nis
@@ -243,7 +243,7 @@ if ($op=='SavePresensi'){
 				 GROUP BY pp.nis, pp.statushadir, p.replid";
 		$res = QueryDb($sql);
 		$IDPP = "";
-		while ($row = @mysql_fetch_row($res))
+		while ($row = @mysqli_fetch_row($res))
 		{
 			if ($IDPP == "")
 				$IDPP = $row[0];
@@ -255,9 +255,9 @@ if ($op=='SavePresensi'){
 		{
 			$sql = "SELECT count(statushadir)  
 					  FROM $db_name_akad.ppsiswa 
-					 WHERE nis='$ALLNIS[$i]' AND idpp IN ($IDPP) AND statushadir=0";
+					 WHERE nis='".$ALLNIS[$i]."' AND idpp IN ($IDPP) AND statushadir=0";
 			$res = QueryDb($sql);
-			$row = @mysql_fetch_row($res);
+			$row = @mysqli_fetch_row($res);
 			$NumHadir = $row[0];
 				
 			$sql = "SELECT statushadir, COUNT(replid)  
@@ -269,7 +269,7 @@ if ($op=='SavePresensi'){
 			$res = QueryDb($sql);
 			$NumAbsen = 0;
 			$TextAbsen = "";
-			while($row = @mysql_fetch_row($res))
+			while($row = @mysqli_fetch_row($res))
 			{
 				$NumAbsen += $row[1];
 				
@@ -284,7 +284,7 @@ if ($op=='SavePresensi'){
 			}
 			
 			
-			$newformat = str_replace('[TANGGAL1]',$Tgl1,$format);
+			$newformat = str_replace('[TANGGAL1]',$Tgl1,(string) $format);
 			$newformat = str_replace('[BULAN1]',$Bln1,$newformat);
 			$newformat = str_replace('[TANGGAL2]',$Tgl2,$newformat);
 			$newformat = str_replace('[BULAN2]',$Bln2,$newformat);
@@ -300,9 +300,9 @@ if ($op=='SavePresensi'){
 			//Finding Phone Number
 			$query	= "SELECT nis, hpsiswa, namaayah, nama, hportu, info1, info2
 						 FROM $db_name_akad.siswa
-						WHERE nis='$ALLNIS[$i]'";
+						WHERE nis='".$ALLNIS[$i]."'";
 			$result = QueryDb($query);
-			$data	= @mysql_fetch_row($result);
+			$data	= @mysqli_fetch_row($result);
 			
 			$newformat = str_replace('[SISWA]', 'pelajaran ' . $data[3], $newformat);
 			$TextMsg = CQ($newformat);
@@ -311,10 +311,10 @@ if ($op=='SavePresensi'){
 			{
 				for($j = 4; $j <= 6; $j++)
 				{
-					$hportu = trim($data[$j]);
+					$hportu = trim((string) $data[$j]);
 					if (strlen($hportu) < 7)
 						continue;
-					if (substr($hportu, 0, 1) == "#")
+					if (str_starts_with($hportu, "#"))
 						continue;
 					
 					$nohp = $hportu;
@@ -337,8 +337,8 @@ if ($op=='SavePresensi'){
 			
 			if ($KeSiswa == 1)
 			{
-				$hpsiswa = trim($data[1]);
-				if (strlen($hpsiswa) >= 7 && substr($hpsiswa, 0, 1) != "#")
+				$hpsiswa = trim((string) $data[1]);
+				if (strlen($hpsiswa) >= 7 && !str_starts_with($hpsiswa, "#"))
 				{	
 					$nohp = $hpsiswa;
 					$nohp = str_replace(" 62","0",$nohp);

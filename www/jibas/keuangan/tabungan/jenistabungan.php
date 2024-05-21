@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -40,10 +40,10 @@ ReadPageParam();
 	
 $op = $_REQUEST['op'];
 if ($op == "12134892y428442323x423")
-	DelTabungan($_REQUEST[id]);
+	DelTabungan($_REQUEST['id']);
 
 if ($op == "d28xen32hxbd32dn239dx")
-	SetAktif($_REQUEST[id], $_REQUEST[newaktif]); ?>
+	SetAktif($_REQUEST['id'], $_REQUEST['newaktif']); ?>
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -92,15 +92,15 @@ if ($op == "d28xen32hxbd32dn239dx")
 		<td width="15%">&nbsp;</td>
         <td width="12%"><strong>Departemen&nbsp;</strong></td>
         <td width="20%">
-<?      ShowSelectDepartemen() ?>
+<?php      ShowSelectDepartemen() ?>
 		</td> 
-<? 
+<?php 
 		$sql = "SELECT COUNT(replid)
 			  	  FROM datatabungan
 				 WHERE departemen = '$departemen'
 				 ORDER BY replid";         
 		$res = QueryDb($sql);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		$jumlah = $row[0];
 		$total = ceil((int)$jumlah/(int)$varbaris);
 	
@@ -112,7 +112,7 @@ if ($op == "d28xen32hxbd32dn239dx")
 		$akhir = ceil($jumlah/5) * 5;
 		$request = QueryDb($sql);
 	
-	if (@mysql_num_rows($request) > 0)
+	if (@mysqli_num_rows($request) > 0)
 	{
 ?>          
         <input type="hidden" name="total" id="total" value="<?=$total?>"/>
@@ -134,38 +134,38 @@ if ($op == "d28xen32hxbd32dn239dx")
 		<td class="header" width="120">Notif SMS | TGRAM | JS</td>
         <td class="header" width="100">&nbsp;</td>
 	</tr>
-<?	
+<?php 
 	if ($page == 0)
 		$cnt = 0;
 	else 
 		$cnt = (int)$page*(int)$varbaris;
 		
-	while ($row = mysql_fetch_array($request)) { ?>
+	while ($row = mysqli_fetch_array($request)) { ?>
     <tr height="25">
     	<td align="center"><?=++$cnt?></td>
         <td><?=$row['nama'] ?></td>        
         <td>
-<?		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekkas]'";
+<?php 	$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekkas']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekkas = $row2[0];
 	
-		$sql = "SELECT nama FROM rekakun WHERE kode = '$row[rekutang]'";
+		$sql = "SELECT nama FROM rekakun WHERE kode = '".$row['rekutang']."'";
 		$result = QueryDb($sql);
-		$row2 = mysql_fetch_row($result);
+		$row2 = mysqli_fetch_row($result);
 		$namarekutang = $row2[0]; ?>
-		<strong>Kas:</strong> <?=$row[rekkas] . " " . $namarekkas ?><br />
-		<strong>Utang:</strong> <?=$row[rekutang] . " " . $namarekutang ?><br />
+		<strong>Kas:</strong> <?=$row['rekkas'] . " " . $namarekkas ?><br />
+		<strong>Utang:</strong> <?=$row['rekutang'] . " " . $namarekutang ?><br />
         </td>
         <td><?=$row['keterangan'] ?></td>
 		<td align="center">
-		<?	if ($row['info2'] == 1)
+		<?php if ($row['info2'] == 1)
 				echo "<img src='../images/ico/checka.png' title='kirim'>";
 			else
 				echo "&nbsp;"; ?>
 		</td>
         <td align="center">
-<?      
+<?php      
 		$img = "aktif.png"; 
 		$pesan = "Status Aktif!";
 		if ($row['aktif'] == 0) {
@@ -178,7 +178,7 @@ if ($op == "d28xen32hxbd32dn239dx")
         	<a href="#" onClick="hapus(<?=$row['replid'] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Tabungan!', this, event, '80px')"/></a>   	
         </td>
     </tr>
-<?	} CloseDb();?>
+<?php } CloseDb();?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
@@ -193,17 +193,17 @@ if ($op == "d28xen32hxbd32dn239dx")
        	<td width="30%" align="left">Halaman
 		<input type="hidden" id="page" name="page" value="<?=$page?>">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
         </td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
@@ -211,7 +211,7 @@ if ($op == "d28xen32hxbd32dn239dx")
 <!-- EOF CONTENT -->
 </td></tr>
 </table>
-<?	} else { ?>
+<?php } else { ?>
 	<td width = "50%"></td>
 </tr>
 </table>
@@ -231,7 +231,7 @@ if ($op == "d28xen32hxbd32dn239dx")
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table> 

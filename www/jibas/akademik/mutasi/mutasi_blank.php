@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,21 +30,21 @@
 </head>
 <body>
 <table width="100%" border="0" height="100%">
-<? if (isset($_REQUEST["from_left"])){?>
+<?php if (isset($_REQUEST["from_left"])){?>
 <tr>
   <td height="34" align="right" valign="top"><font size="4" face="Verdana, Arial, Helvetica, sans-serif" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="4" face="Verdana, Arial, Helvetica, sans-serif" color="Gray">Mutasi Siswa</font><br />
       <a href="../mutasi.php" target="content"> <font size="1" color="#000000"><b>Mutasi</b></font></a>&nbsp>&nbsp<font size="1" color="#000000"><b>Mutasi Siswa</b></font></td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
     <td align="center" valign="middle" background="../images/ico/b_daftarmutasi.png"
     style="background-repeat:no-repeat;">
         <font size="2" color="#757575"><b>
-        <? if (isset($_REQUEST["from_left"])){?>
+        <?php if (isset($_REQUEST["from_left"])){?>
         Pilih Siswa yang akan dimutasi di panel kiri 
-        <? } else { ?>
+        <?php } else { ?>
         Pilih Departemen dan Tahun Mutasi sesuai dengan Daftar Mutasi Siswa yang akan ditampilkan
-		<? } ?>
+		<?php } ?>
         </b></font> </td>
 </tr>
 

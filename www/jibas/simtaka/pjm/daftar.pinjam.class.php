@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,33 +20,33 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CDaftar
 {
 	function OnStart()
 	{
-		$op=$_REQUEST[op];
+		$op=$_REQUEST['op'];
 				
 		$this->kriteria='all';
-		if (isset($_REQUEST[kriteria]))
-			$this->kriteria=$_REQUEST[kriteria];
+		if (isset($_REQUEST['kriteria']))
+			$this->kriteria=$_REQUEST['kriteria'];
 			
 		if ($this->kriteria=='nip')
 			$this->statuspeminjam=0;
 		elseif ($this->kriteria=='nis')
 			$this->statuspeminjam=1;
 			
-		$this->noanggota = $_REQUEST[noanggota];
-		$this->nama = $_REQUEST[nama];
+		$this->noanggota = $_REQUEST['noanggota'];
+		$this->nama = $_REQUEST['nama'];
 		$sqlDate="SELECT DAY(now()),MONTH(now()),YEAR(now())";
 		$resultDate = QueryDb($sqlDate);
-		$rDate = @mysql_fetch_row($resultDate);
+		$rDate = @mysqli_fetch_row($resultDate);
 		$this->tglAwal = $rDate[0]."-".$rDate[1]."-".$rDate[2];
 		$this->tglAkhir = $rDate[0]."-".$rDate[1]."-".$rDate[2];
-		if (isset($_REQUEST[tglAwal]))
-			$this->tglAwal = $_REQUEST[tglAwal];
-		if (isset($_REQUEST[tglAkhir]))
-			$this->tglAkhir = $_REQUEST[tglAkhir];		
+		if (isset($_REQUEST['tglAwal']))
+			$this->tglAwal = $_REQUEST['tglAwal'];
+		if (isset($_REQUEST['tglAkhir']))
+			$this->tglAkhir = $_REQUEST['tglAkhir'];		
 	}
 	
 	function OnFinish()
@@ -55,14 +55,14 @@ class CDaftar
 		<script language='JavaScript'>
 			Tables('table', 1, 0);
 		</script>
-		<?
+		<?php
     }
 	
     function Content()
 	{
 		$sql = "SELECT DATE_FORMAT(now(),'%Y-%m-%d')";
 		$result = QueryDb($sql);
-		$row = @mysql_fetch_row($result);
+		$row = @mysqli_fetch_row($result);
 		$now = $row[0];
 		
 		if ($this->kriteria == 'all')
@@ -91,7 +91,7 @@ class CDaftar
 					 ORDER BY tglpinjam DESC";	
 		//echo $sql;
 		$result = QueryDb($sql);
-		$num = @mysql_num_rows($result);
+		$num = @mysqli_num_rows($result);
 		?>
 		<div class="filter">
         <table width="100%" border="0" cellpadding="2" cellspacing="2">
@@ -107,7 +107,7 @@ class CDaftar
 				</select>
             </td>
         </tr>
-<? 		if ($this->kriteria!='all')
+<?php 		if ($this->kriteria!='all')
 		{
 			if ($this->kriteria=='tglpinjam' ||$this->kriteria=='tglkembali' )
 			{ ?>
@@ -135,12 +135,12 @@ class CDaftar
 						</table>
 					</td>
 				</tr>
-<? 			}
+<?php 			}
 			
 			if ($this->kriteria=='nis' || $this->kriteria=='nip' )
 			{ ?>
 				<tr id="nis">
-					<td align="right"><?=strtoupper($this->kriteria)?></td>
+					<td align="right"><?=strtoupper((string) $this->kriteria)?></td>
 					<td>
 						<input type="hidden" id="statuspeminjam" value="<?=$this->statuspeminjam?>" />
 						<input type="text" class="inptxt-small-text" name="noanggota" id="noanggota"
@@ -152,7 +152,7 @@ class CDaftar
 		                <a href="javascript:cari()"><img src="../img/ico/cari.png" width="16" height="16" border="0" /> 
 					</td>
 				</tr>
-<? 			}
+<?php 			}
 		} ?>
         </table>
         </div>
@@ -173,18 +173,18 @@ class CDaftar
 			<td width='5%' align="center" class="header">Pengem<br>balian</td>
             <td width='5%' align="center" class="header">Perpan<br>jangan</td>
         </tr>
-<?	  	if ($num > 0)
+<?php   	if ($num > 0)
 		{
 			$cnt = 0;
-			while ($row = @mysql_fetch_array($result))
+			while ($row = @mysqli_fetch_array($result))
 			{
 				$sql = "SELECT judul
 						  FROM pustaka p, daftarpustaka d
 						 WHERE d.pustaka=p.replid
-						   AND d.kodepustaka='$row[kodepustaka]'";
+						   AND d.kodepustaka='{$row['kodepustaka']}'";
 				//echo $sql;
 				$res = QueryDb($sql);
-				$r = @mysql_fetch_row($res);
+				$r = @mysqli_fetch_row($res);
 				$judul = $r[0];
 				
 				$this->jenisanggota = $row['info1'];
@@ -201,18 +201,18 @@ class CDaftar
 				$weight = '';
 				$alt = 'OK';
 				$img = '<img src="../img/ico/Valid.png" width="16" height="16" title='.$alt.' />';
-				if ($row[tglkembali]<=$now)
+				if ($row['tglkembali']<=$now)
 				{
-					if ($row[tglkembali]==$now)
+					if ($row['tglkembali']==$now)
 					{
 						$alt = 'Hari&nbsp;ini&nbsp;batas&nbsp;pengembalian&nbsp;terakhir';
 						$color='#cb6e01';
 						$weight='font-weight:bold';
 						$telat='';
 					}
-					elseif ($row[tglkembali]<$now)
+					elseif ($row['tglkembali']<$now)
 					{
-						$diff = @mysql_fetch_row(QueryDb("SELECT DATEDIFF('".$now."','".$row[tglkembali]."')"));
+						$diff = @mysqli_fetch_row(QueryDb("SELECT DATEDIFF('".$now."','".$row['tglkembali']."')"));
 						$alt = 'Terlambat&nbsp;'.$diff[0].'&nbsp;hari';
 						$color='red';
 						$weight='font-weight:bold';
@@ -225,24 +225,24 @@ class CDaftar
 				?>
 				<tr style="color:<?=$color?>; <?=$weight?>">
 					<td align='center'><?=$cnt?></td>
-					<td align="center"><?=LongDateFormat($row[tglpinjam])?></td>
-					<td align="center"><?=LongDateFormat($row[tglkembali])?></td>
-					<td align="left"><?=$row[idanggota]?><br><?=$this->GetMemberName();?></td>
-					<td align="left"><?=$row[kodepustaka] . "<br>$judul" ?></td>
-					<td align="left"><?=$row[keterangan]?></td>
+					<td align="center"><?=LongDateFormat($row['tglpinjam'])?></td>
+					<td align="center"><?=LongDateFormat($row['tglkembali'])?></td>
+					<td align="left"><?=$row['idanggota']?><br><?=$this->GetMemberName();?></td>
+					<td align="left"><?= $row['kodepustaka'] . "<br>$judul" ?></td>
+					<td align="left"><?= $row['keterangan']?></td>
 					<td align="center"><?=$telat?></td>
 					<td align="center">
-						<a title="Kembalikan Sekarang" href="javascript:kembalikan('<?=$row[kodepustaka]?>');">
+						<a title="Kembalikan Sekarang" href="javascript:kembalikan('<?= $row['kodepustaka'] ?>');">
 						<img src="../img/ico/refresh.png" width="16" height="16" border="0" />
 						</a>
 					</td>
 					<td align="center">
-						<a title="Perpanjangan" href="javascript:perpanjang('<?=$row[kodepustaka]?>');">
+						<a title="Perpanjangan" href="javascript:perpanjang('<?= $row['kodepustaka'] ?>');">
 						<img src="../img/ico/tambah.png" width="16" height="16" border="0" />
 						</a>
 					</td>
 				</tr>
-<?
+<?php
 			} // while
 		}
 		else
@@ -250,7 +250,7 @@ class CDaftar
 			<tr>
 				<td height="25" colspan="9" align="center" class="nodata">Tidak ada data</td>
 			</tr>
-<?		}  ?>	
+<?php 	}  ?>	
         </table>
         <br />
 		
@@ -258,7 +258,7 @@ class CDaftar
         	<font size="+1" style="background-color:#cb6e01">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>&nbsp;Tanggal pengembalian terakhir hari ini.<br /><br />
 			<font size="+1" style="background-color:#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>&nbsp;Belum dikembalikan (terlambat)<br />
         </div>
-        <?
+        <?php
 	}
 	
 	function GetMemberName()
@@ -282,7 +282,7 @@ class CDaftar
 					 WHERE noregistrasi = '$this->idanggota'";
 		}
 		$res = QueryDb($sql);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		$namaanggota = $row[0];
 		
 		return $namaanggota;

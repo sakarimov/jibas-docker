@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
@@ -28,7 +28,7 @@ require_once("../include/common.php");
 require_once('../include/theme.php');
 require_once("../include/sessioninfo.php");
 
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];
 OpenDb();
 
 $tglskrg = date("d");
@@ -47,7 +47,7 @@ if (($bulan == "") || ($tahun == ""))
 {
 	$sql = "SELECT MONTH(NOW()), YEAR(NOW())";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$bulan = $row[0];
 	$tahun = $row[1];
 };	
@@ -55,7 +55,7 @@ if (($bulan == "") || ($tahun == ""))
 $tmp = $tahun."-".$bulan."-1";
 $sql = "SELECT DAYOFWEEK('$tmp')";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $first_weekday_this_month = $row[0];
 
 if ($bulan == 12) 
@@ -85,13 +85,13 @@ else
 }	
 $sql = "SELECT DAY(LAST_DAY('$tmp'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_last_month = $row[0];
 
 $now = $tahun . "-" . $bulan . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_this_month = $row[0];
 
 $nweek = 0;
@@ -164,7 +164,7 @@ if (($nday > 0) && ($nday < 7))
 <body style="background-color:#F3F3F3" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
-  <? include("../include/headercetak.php") ?>
+  <?php include("../include/headercetak.php") ?>
   <div align="center">
   <br />
   <span class="style2">Agenda untuk Bulan 
@@ -181,7 +181,7 @@ if (($nday > 0) && ($nday < 7))
     <td width="70" class="greenheader" align="center" style="background-color:#339900; color:#FFFFFF"><b>Jum'at</b></td>
     <td width="70" class="header" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Sabtu</b></td>
 </tr>
-<?
+<?php
 for ($i = 0; $i < count($cal); $i++) 
 {
 	echo "<tr height='40'>";
@@ -197,7 +197,7 @@ for ($i = 0; $i < count($cal); $i++)
 		$sql = "SELECT COUNT(*) FROM jadwal WHERE tanggal='$tanggal'";
 		//echo $sql;
 		$result = QueryDb($sql);
-		$row = mysql_fetch_row($result);
+		$row = mysqli_fetch_row($result);
 		$njadwal = $row[0];
 		
 		if ($j == 0)
@@ -232,17 +232,17 @@ CloseDb();
 ?>
 </table><br />
 <table width="490" border="0" cellspacing="0" align="center">
-<?
+<?php
 $bln2=$bulan;
 $thn2=$tahun;
 OpenDb();
 $sql="SELECT agenda,nama FROM jenisagenda ORDER BY urutan";
 $result = QueryDb($sql);
-while ($row = mysql_fetch_row($result)){
-	$sql1 = "SELECT COUNT(*) FROM jadwal WHERE MONTH(tanggal)='".$bln2."' AND YEAR(tanggal)='$thn2' AND jenis='$row[0]'";
+while ($row = mysqli_fetch_row($result)){
+	$sql1 = "SELECT COUNT(*) FROM jadwal WHERE MONTH(tanggal)='".$bln2."' AND YEAR(tanggal)='$thn2' AND jenis='".$row[0]."'";
 	//echo $sql1;
 	$result1 = QueryDb($sql1);
-	$row1 = mysql_fetch_row($result1);
+	$row1 = mysqli_fetch_row($result1);
 	if ($row1[0]>0)
 		$jumlah = $row1[0]." Orang";
 	else 

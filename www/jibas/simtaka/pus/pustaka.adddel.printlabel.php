@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,15 +20,14 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
-//require_once('../inc/sessioninfo.php');
+<?php
+include_once '../../vendor/autoload.php';
 require_once('../inc/common.php');
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
-include_once('../lib/barcode/html/include/function.php');
 
 define('IN_CB', true);
-registerImageKey('code', 'BCGcode39');
+// registerImageKey('code', 'BCGcode39');
 
 OpenDb();
 
@@ -38,17 +37,17 @@ $idperpustakaan = (int)$_REQUEST['idperpustakaan'];
 
 $sql = "SELECT judul
           FROM pustaka
-         WHERE replid = '$idpustaka'";
+         WHERE replid = '".$idpustaka."'";
 $result = QueryDb($sql);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $judul = $row['judul'];
 
 if ($idperpustakaan != -1)
 {
-	$sql = "SELECT nama FROM perpustakaan WHERE replid = '$idperpustakaan'";
+	$sql = "SELECT nama FROM perpustakaan WHERE replid = '".$idperpustakaan."'";
 	$result = QueryDb($sql);
-	$row = @mysql_fetch_array($result);
-	$nama = $row[nama];
+	$row = @mysqli_fetch_array($result);
+	$nama = $row['nama'];
 }
 else
 {
@@ -59,7 +58,8 @@ $sql = "SELECT kodepustaka, info1
           FROM daftarpustaka
          WHERE replid IN ($iddplist)";
 $result = QueryDb($sql);
-$jum = @mysql_num_rows($result);
+$jum = @mysqli_num_rows($result);
+$generator = new Picqer\Barcode\BarcodeGeneratorPNG();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -86,9 +86,9 @@ $jum = @mysql_num_rows($result);
             </table>
             </div><br />
 			
-<? 			$i = 1;
+<?php 			$i = 1;
 			$cellcnt = 1;
-			while($row = @mysql_fetch_row($result))
+			while($row = @mysqli_fetch_row($result))
 			{
 				if ($cellcnt == 1 || $cellcnt % 9 == 1)
 					echo "<table border='0' width='99%' cellspacing='0' cellpadding='5'>";
@@ -96,7 +96,7 @@ $jum = @mysql_num_rows($result);
                 if ($i == 1 || $i % 3 == 1)
                     echo "<tr>";
 						
-				$kode = split('/',$row[0]);
+				$kode = explode('/',(string) $row[0]);
 				$barcode = $row[1];	?>
 				
                 <td width="33%" align="center">
@@ -117,7 +117,7 @@ $jum = @mysql_num_rows($result);
 					<tr style='border-width: 1px; border-style: dashed; border-collapse: collapse'>
 						<td align='center'>
 							<font style='font-size: 12px;'><?= $row[0] ?></font><br>
-								<img width='160' src="../lib/barcode/html/image.php?code=BCGcode39&filetype=JPEG&dpi=96&thickness=30&scale=2&rotation=0&font_family=Arial.ttf&font_size=8&text=<?= $barcode ?>">
+								<img width='160' src="data:image/png;base64,<?php echo base64_encode($generator->getBarcode($barcode, $generator::TYPE_CODE_39)) ?>">								
 							<br><br>								
 						</td>
 					</tr>		
@@ -125,7 +125,7 @@ $jum = @mysql_num_rows($result);
 					
 				</td>
 				
-<?              if ($i % 3 == 0)
+<?php              if ($i % 3 == 0)
                     echo "</tr>";
 				
 				if ($cellcnt % 9 == 0)

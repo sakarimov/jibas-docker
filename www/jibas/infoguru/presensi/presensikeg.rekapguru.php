@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -31,8 +31,8 @@ require_once('../library/datearith.php');
 require_once('../sessionchecker.php');
 require_once('presensikeg.rekapguru.func.php');
 
-$bulan = isset($_REQUEST['bulan']) ? $_REQUEST['bulan'] : date('n');
-$tahun = isset($_REQUEST['tahun']) ? $_REQUEST['tahun'] : date('Y');
+$bulan = $_REQUEST['bulan'] ?? date('n');
+$tahun = $_REQUEST['tahun'] ?? date('Y');
 
 $nip = SI_USER_ID();    
 
@@ -70,21 +70,21 @@ OpenDb();
 <tr>
     <td width='100' align='right'>Bulan:</td>
     <td align='left'>
-<?      ShowCbBulan($bulan) ?>
-<?      ShowCbTahun($tahun) ?>        
+<?php      ShowCbBulan($bulan) ?>
+<?php      ShowCbTahun($tahun) ?>        
     </td>
 </tr>
 </table>    
 
 
 <br>
-<?
+<?php
 $showbutton = true;
 require_once("presensikeg.rekapguru.report.php");
 ?>
 </body>
 </html>
-<?
+<?php
 CloseDb();
 ?>
 <script language='JavaScript'>

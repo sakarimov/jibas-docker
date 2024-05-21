@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -62,7 +62,7 @@ OpenDb();
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
@@ -191,23 +191,23 @@ function openwin(kelas)
             <td align="left" width="50%"><strong>Departemen</strong></td>
             <td width="*"> 
             <select name="departemen" id="departemen" onChange="change_dep()" style="width:250px;" onKeyPress="return focusNext('tingkat', event)">
-        <?	$dep = getDepartemen(SI_USER_ACCESS());    
+        <?php $dep = getDepartemen(SI_USER_ACCESS());    
             foreach($dep as $value) {
                 if ($departemen == "")
                     $departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > <?=$value ?> </option>
-        <?	} ?>
+        <?php } ?>
             </select>    </td>
         </tr>
        <tr>
             <td align="left"><strong>Tahun Ajaran</strong></td>
             <td>
-                <?
+                <?php
                 OpenDb();
                 $sql = "SELECT replid,tahunajaran FROM tahunajaran where departemen='$departemen' AND aktif = 1";
                 $result = QueryDb($sql);
 				CloseDb();
-				$row = mysql_fetch_array($result);
+				$row = mysqli_fetch_array($result);
 				$tahun = $row['tahunajaran'];
 				$tahunajaran = $row['replid'];
 				?>
@@ -218,12 +218,12 @@ function openwin(kelas)
         <tr>
             <td align="left"><strong>Semester</strong></td>
             <td>            
-                <?
+                <?php
                 OpenDb();
                 $sql = "SELECT replid,semester FROM semester where departemen='$departemen' AND aktif = 1";
                 $result = QueryDb($sql);
                 CloseDb();
-               	$row = @mysql_fetch_array($result);
+               	$row = @mysqli_fetch_array($result);
                 
                 ?>
                 <input type="text" name="sem" size="38" value="<?=$row['semester'] ?>" readonly class="disabled"/>
@@ -233,17 +233,17 @@ function openwin(kelas)
             <td><strong>Tingkat</strong></td>
             <td>
                 <select name="tingkat" id="tingkat" onChange="change()" style="width:250px;" onKeyPress="return focusNext('kelas', event)">
-                <?	OpenDb();
+                <?php OpenDb();
                 $sql = "SELECT replid,tingkat FROM tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY urutan";	
                 $result = QueryDb($sql);
                 CloseDb();
         
-                while($row = mysql_fetch_array($result)) {
+                while($row = mysqli_fetch_array($result)) {
                 if ($tingkat == "")
                     $tingkat = $row['replid'];				
                 ?>
-                <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>><?=$row['tingkat']?></option>
-                <?
+                <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tingkat) ?>><?=$row['tingkat']?></option>
+                <?php
                 } //while
                 ?>
                 </select>            </td>   
@@ -252,19 +252,19 @@ function openwin(kelas)
             <td><strong>Kelas</strong></td>
             <td>
                 <select name="kelas" id="kelas" onChange="change_kelas()" style="width:250px;" onKeyPress="return focusNext('pelajaran', event)">
-                <?	OpenDb();
+                <?php OpenDb();
                 $sql = "SELECT replid,kelas FROM kelas WHERE aktif=1 AND idtahunajaran = '$tahunajaran' AND idtingkat = '$tingkat' ORDER BY kelas";	
                 $result = QueryDb($sql);
                 CloseDb();
         
-                while($row = mysql_fetch_array($result)) {
+                while($row = mysqli_fetch_array($result)) {
                 if ($kelas == "")
                     $kelas = $row['replid'];
                 $kls = $row['kelas'];			 
                 ?>
-                <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
+                <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $kelas) ?>><?=$row['kelas']?></option>
                  
-                <?
+                <?php
                 } //while
                 ?>
                 </select>            </td>
@@ -272,45 +272,45 @@ function openwin(kelas)
         <tr>
             <td align="left"><strong>Pelajaran</strong></td>
             <td><select name="pelajaran" id="pelajaran" onChange="change()" style="width:250px;" onkeypress="return focusNext('cetak', event)">
-              <?
+              <?php
                 OpenDb();
                 $sql = "SELECT p.replid,p.nama FROM pelajaran p, guru g WHERE p.departemen = '$departemen' AND g.idpelajaran=p.replid AND g.nip='".SI_USER_ID()."' AND p.aktif=1 ORDER BY p.nama";
                 $result = QueryDb($sql);
                 CloseDb();
-                while ($row = @mysql_fetch_array($result)) {
+                while ($row = @mysqli_fetch_array($result)) {
                 if ($pelajaran == "") 				
                     $pelajaran = $row['replid'];			
                 ?>
-              <option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> >
+              <option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> >
                 <?=$row['nama']?>
                 </option>
-              <?
+              <?php
                 }
                 ?>
             </select></td>
        	</tr>          
     	<tr>
 			<td colspan="2"><div align="center"><br />
-            <?
+            <?php
             if ($kelas!=""){
 			OpenDb();
 			$sql = "SELECT nis, nama FROM siswa WHERE idkelas = '$kelas' ORDER BY nama";
 			
 			$result = QueryDb($sql);
 			
-			if (mysql_num_rows($result) > 0) {
+			if (mysqli_num_rows($result) > 0) {
 				if ($result) { ?>
 					<input type="button" onclick="openwin('<?=$kelas?>')" name="Cetak" id="cetak" value="Cetak" class="but" style="width:80px;"/>
-			<?	}
+			<?php }
 			} else {
 				CloseDb();
 				?>
 				<span class="style1">Belum ada data siswa yang terdaftar pada kelas ini!</span>				
-			<? } 
+			<?php } 
 			} else {
 			?>
             <span class="style1">Belum ada data siswa yang terdaftar pada kelas ini!</span>
-            <?
+            <?php
 			}
 			?>	
 		  </div></td>
@@ -329,11 +329,11 @@ function openwin(kelas)
 </td></tr>
 <!-- END TABLE BACKGROUND IMAGE -->
 </table>    
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,17 +20,15 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
+include_once '../../vendor/autoload.php';
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
-include("../library/class/jpgraph.php");
-include("../library/class/jpgraph_bar.php");
-include("../library/class/jpgraph_line.php");
 
 OpenDb();
-$sql = "SELECT hadir, ijin, sakit, cuti, alpa FROM phsiswa WHERE replid = '$_REQUEST[replid]' ";
+$sql = "SELECT hadir, ijin, sakit, cuti, alpa FROM phsiswa WHERE replid = '".$_REQUEST['replid']."' ";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $total = 0;
 for ($i=0;$i<5;$i++) {
 	$total = $total + (int)$row[$i-1];
@@ -43,12 +41,13 @@ for ($i=0;$i<5;$i++) {
 		$data[] = ($row[$i]/$total)*100;
 }
 
-$judul = array('Hadir', 'Ijin', 'Sakit', 'Cuti', 'Alpa');
+$judul = ['Hadir', 'Ijin', 'Sakit', 'Cuti', 'Alpa'];
 
-$color = array('green@0.5','red@0.5','yellow@0.5','blue@0.5','orange@0.5','gold@0.5','navy@0.5','darkblue@0.5','darkred@0.5','darkgreen@0.5', 'pink@0.5','black@0.5','gray@0.5');
+$color = ['green@0.5', 'red@0.5', 'yellow@0.5', 'blue@0.5', 'orange@0.5', 'gold@0.5', 'navy@0.5', 'darkblue@0.5', 'darkred@0.5', 'darkgreen@0.5', 'pink@0.5', 'black@0.5', 'gray@0.5'];
 
 
 //Buat grafik
+mitoteam\jpgraph\MtJpGraph::load(['bar']);
 $graph = new Graph(500,280,"auto");
 $graph->SetScale("textlin");
 

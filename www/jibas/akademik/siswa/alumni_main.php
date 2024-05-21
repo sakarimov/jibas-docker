@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<? $departemen = $_REQUEST['departemen']; ?>
+<?php $departemen = $_REQUEST['departemen']; ?>
 <frameset rows="85,*" border="1" framespacing="yes" frameborder="yes">
 		<frame src="alumni_header.php?departemen=<?=$departemen?>" name="alumni_header" scrolling="No" noresize="noresize" id="alumni_header" title="alumni_header" style="border:1; border-bottom-color:#000000; border-bottom-style:solid" />
 		<frame src="blank_alumni_all.php" name="alumni_footer" scrolling="auto" noresize="noresize" id="alumni_footer" title="alumni_footer"/>

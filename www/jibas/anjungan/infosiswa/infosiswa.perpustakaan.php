@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -35,7 +35,7 @@ if (isset($_REQUEST['tahun']))
 ?>
 
 <form name='panelperpus'>
-<?  
+<?php  
 OpenDb();
 
 $sql = "SELECT DISTINCT YEAR(p.tglpinjam)
@@ -43,7 +43,7 @@ $sql = "SELECT DISTINCT YEAR(p.tglpinjam)
 		 WHERE p.idanggota = '$nis'
 		 ORDER BY YEAR(p.tglpinjam) DESC";
 $result = QueryDb($sql);
-$ntahun = mysql_num_rows($result);
+$ntahun = mysqli_num_rows($result);
 
 if ($ntahun == 0)
 {
@@ -53,11 +53,11 @@ if ($ntahun == 0)
 }
 
 echo "Tahun: <select name='tahun' class='cmbfrm' id='tahun' style='width:150px' onChange=\"ChangePerpusOption('tahun')\">";
-while($row = mysql_fetch_row($result))
+while($row = mysqli_fetch_row($result))
 {
   if ($tahun == 0)
 	$tahun = $row[0];
-  echo "<option value='$row[0]' " . IntIsSelected($tahun, $row[0]) . " > " . $row[0] . "</option>";
+  echo "<option value='".$row[0]."' " . IntIsSelected($tahun, $row[0]) . " > " . $row[0] . "</option>";
 } 
 echo "</select>";
 
@@ -83,9 +83,9 @@ $cnt=1;
   <td width='15%' align="center" class="header">Jadwal<br>Kembali</td>
   <td width='15%' align="center" class="header">Tanggal Kembali</td>
 </tr>
-<? if (@mysql_num_rows($result)>0)
+<?php if (@mysqli_num_rows($result)>0)
 {
-  while ($row = @mysql_fetch_row($result))
+  while ($row = @mysqli_fetch_row($result))
   { ?>
 	<tr>
 	  <td height="20" align="center"><?=$cnt?></td>
@@ -96,13 +96,13 @@ $cnt=1;
 	  <td height="20" align="center"><?=$row[1]?></td>
 	  <td height="20" align="center"><?=$row[3]?></td>
 	  <td align="center">
-<?	  if ($row[4]=='1')
+<?php   if ($row[4]=='1')
 	  	echo "-";
 	  elseif ($row[4]=='2')
 	  	echo $row[5]; ?>
 	  </td>
 	</tr>
-<? 	$cnt++;
+<?php 	$cnt++;
   }
 }
 else
@@ -110,11 +110,11 @@ else
   <tr>
     <td colspan="5" height="20" align="center">Belum ada data peminjaman</td>
   </tr>
-<?
+<?php
 }
 ?>
 </table>
-<?
+<?php
 CloseDb();
 ?>
 </form>

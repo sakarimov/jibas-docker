@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/common.php');
 require_once('include/config.php');
 require_once('include/db_functions.php');
@@ -35,7 +35,7 @@ $nis = $_REQUEST['nis'];
 $departemen = $_REQUEST['departemen'];
 $filter = "";
 if ($departemen <> -1) 
-	$filter = "AND t.departemen = '$departemen'";
+	$filter = "AND t.departemen = '".$departemen."'";
 
 $varbaris1=10;
 if (isset($_REQUEST['varbaris1']))
@@ -68,14 +68,14 @@ OpenDb();
     <td width="15%"><font color="#000000"><strong>Departemen</strong></font></td>
     <td><select name="depart1" id="depart1" onChange="change_departemen(1)" style="width:150px" onkeypress="return focusNext('nis', event)">
     	<option value=-1>(Semua Departemen)</option>
-	<?	$dep = getDepartemen(getAccess());    
+	<?php $dep = getDepartemen(getAccess());    
         foreach($dep as $value) {
             if ($departemen == "")
                 $departemen = $value; ?>
         <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
         <?=$value ?>
         </option>
-        <?	} ?>
+        <?php } ?>
   	</select>
     </td>
    	<td rowspan="2" width="15%" align="center">
@@ -93,29 +93,29 @@ OpenDb();
     <td align="center" colspan="3">
     <hr />
 	<div id="caritabel">
-<? 
+<?php 
 if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) { 
 	OpenDb();    
    	
-	if ((strlen($nama) > 0) && (strlen($nis) > 0)) {
+	if ((strlen((string) $nama) > 0) && (strlen((string) $nis) > 0)) {
 		$sql_tot = "SELECT s.nis, s.nama, k.kelas, t.departemen FROM jbsakad.siswa s,jbsakad.kelas k,jbsakad.tingkat t, jbsakad.departemen d WHERE s.nama LIKE '%$nama%' AND s.nis LIKE '%$nis%' AND k.replid=s.idkelas AND s.alumni=0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ORDER BY d.departemen, k.kelas, s.nama"; 	
 		$sql = "SELECT s.nis, s.nama, k.kelas, t.departemen, t.tingkat FROM jbsakad.siswa s,jbsakad.kelas k,jbsakad.tingkat t, jbsakad.departemen d WHERE s.nama LIKE '%$nama%' AND s.nis LIKE '%$nis%' AND k.replid=s.idkelas AND s.alumni=0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ORDER BY $urut1 $urutan1, k.kelas ASC LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1"; 	
 		//$sql = "SELECT s.nis, s.nama, k.kelas, t.departemen FROM jbsakad.siswa s,jbsakad.kelas k,jbsakad.tingkat t, jbsakad.departemen d WHERE s.nama LIKE '%$nama%' AND s.nis LIKE '%$nis%' AND k.replid=s.idkelas AND s.statusmutasi=0 AND s.alumni=0 AND s.aktif=1 AND k.idtingkat = t.replid AND t.departemen = d.departemen ORDER BY d.departemen, k.kelas, s.nama"; 	
 		
-	} else if (strlen($nama) > 0) {
+	} else if (strlen((string) $nama) > 0) {
 		$sql_tot = "SELECT s.nis, s.nama, k.kelas, t.departemen FROM jbsakad.siswa s,jbsakad.kelas k,jbsakad.tingkat t, jbsakad.departemen d WHERE s.nama LIKE '%$nama%' AND k.replid=s.idkelas AND s.alumni=0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ORDER BY d.departemen, k.kelas, s.nama"; 
 		$sql = "SELECT s.nis, s.nama, k.kelas, t.departemen, t.tingkat FROM jbsakad.siswa s,jbsakad.kelas k,jbsakad.tingkat t, jbsakad.departemen d WHERE s.nama LIKE '%$nama%' AND k.replid=s.idkelas AND s.alumni=0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ORDER BY $urut1 $urutan1, k.kelas ASC LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1"; 	
-	} else if (strlen($nis) > 0) {
+	} else if (strlen((string) $nis) > 0) {
 		$sql_tot = "SELECT s.nis, s.nama, k.kelas, t.departemen FROM jbsakad.siswa s,jbsakad.kelas k ,jbsakad.tingkat t, jbsakad.departemen d WHERE k.replid=s.idkelas AND s.nis LIKE '%$nis%' AND s.alumni = 0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ";
 		$sql = "SELECT s.nis, s.nama, k.kelas, t.departemen, t.tingkat FROM jbsakad.siswa s,jbsakad.kelas k ,jbsakad.tingkat t, jbsakad.departemen d WHERE k.replid=s.idkelas AND s.nis LIKE '%$nis%' AND s.alumni = 0 AND s.aktif=1 AND k.idtingkat = t.replid $filter GROUP BY s.nis ORDER BY $urut1 $urutan1, k.kelas ASC LIMIT ".(int)$page1*(int)$varbaris1.",$varbaris1"; 	
 	}
 	
 	$result_tot = QueryDb($sql_tot);
-	$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris1);
-	$jumlah = mysql_num_rows($result_tot);
+	$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris1);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	$result = QueryDb($sql); 
-	if (@mysql_num_rows($result)>0){
+	if (@mysqli_num_rows($result)>0){
 ?>   
 	
    	<table width="100%" id="table1" class="tab" align="center" border="1" bordercolor="#000000">
@@ -123,28 +123,28 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
         <td width="7%">No</td>
         <td width="15%" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('s.nis','<?=$urutan1?>','cari')">N I S <?=change_urut('s.nis',$urut1,$urutan1)?></td>
         <td widt="*" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('s.nama','<?=$urutan1?>','cari')">Nama <?=change_urut('s.nama',$urut1,$urutan1)?></td>
-        <? if ($departemen == -1)  { ?>
+        <?php if ($departemen == -1)  { ?>
         <td width="15%" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('t.departemen','<?=$urutan1?>','cari')">Dept. <?=change_urut('t.departemen',$urut1,$urutan1)?></td>
-        <? } ?>
+        <?php } ?>
         <td width="12%" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('k.kelas','<?=$urutan1?>','cari')">Kelas <?=change_urut('t.tingkat',$urut1,$urutan1)?></td>
         <td width="10%">&nbsp;</td>
     </tr>
-<?
+<?php
 	$cnt = 0;
-		while($row = mysql_fetch_row($result)) { ?>
+		while($row = mysqli_fetch_row($result)) { ?>
    	<tr height="25" onClick="pilih('<?=$row[0]?>','<?=$row[1]?>')" style="cursor:pointer">
         <td align="center" ><?=++$cnt ?></td>
         <td align="center" ><?=$row[0] ?></td>
         <td align="left"><?=$row[1] ?></td>
-        <? if ($departemen == -1)  { ?>
+        <?php if ($departemen == -1)  { ?>
         <td align="center"><?=$row[3] ?></td>
-        <? } ?>
+        <?php } ?>
         <td align="center"><?=$row[4].' - '.$row[2] ?></td>
         <td align="center"><input type="button" value="Pilih" onclick="pilih('<?=$row[0]?>','<?=$row[1]?>')" class="but"></td>
 	</tr>
-<? } CloseDb(); ?>
+<?php } CloseDb(); ?>
  	</table>
-    <?  if ($page1==0){ 
+    <?php  if ($page1==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 	}
@@ -166,19 +166,19 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
     <tr>
        	<td width="30%" align="left"><font color="#000000">Hal
         <select name="hal1" id="hal1" onChange="change_hal('cari')">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal1,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      	// Navigasi halaman berikutnya dan sebelumnya
         ?>
         </font></td>
     	<td align="center">
     	<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page1-1?>','cari')" >
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page1==$a){
 				echo  "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -192,14 +192,14 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
  		</td>
         <td width="30%" align="right"><font color="#000000">Jml baris per hal
       	<select name="varbaris1" id="varbaris1" onChange="change_baris('cari')">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris1,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></font></td>
     </tr>
     </table>
-<? } else { ?>    		
+<?php } else { ?>    		
 	<table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table1">
 	<tr height="200" align="center">
 		<td>   
@@ -210,7 +210,7 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
    		</td>
     </tr>
     </table>
-<? 	} 
+<?php 	} 
 } else { ?>
 
 <table width="100%" align="center" cellpadding="2" cellspacing="0" border="0" id="table1">
@@ -225,7 +225,7 @@ if (isset($_REQUEST['submit']) || $_REQUEST['submit'] == 1) {
 </table>
 
 
-<? }?>	
+<?php }?>	
     </div>
 	 </td>    
 </tr>

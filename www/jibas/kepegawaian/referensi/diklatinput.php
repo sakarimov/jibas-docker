@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
@@ -38,13 +38,13 @@ if (isset($_REQUEST['btSimpan']))
 	$diklat = $_REQUEST['txDiklat'];
 	$sql = "INSERT INTO diklat SET rootid=$rootid, tingkat=$tingkat, diklat='$diklat', jenis='$jenis'";
 	QueryDb($sql);
-	CloseDb($sql);
+	CloseDb();
 	?>
 	<script language="javascript">
 		opener.RefreshPage(<?=$rootid?>);
 		window.close();
     </script>    
-    <?
+    <?php
 	exit();
 }
 ?>
@@ -58,7 +58,7 @@ if (isset($_REQUEST['btSimpan']))
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff">
 
-<?
+<?php
 OpenDb();
 ?>
 <form name="main" method="post">
@@ -69,18 +69,18 @@ OpenDb();
 <tr>
 	<td class="header" colspan="2" align="center">Tambah Diklat</td>
 </tr>
-<? 
+<?php 
 if ($rootid != 0) { 
 	$sql = "SELECT diklat FROM diklat WHERE replid = $rootid";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$diklat = $row[0];
 ?>
 <tr>
 	<td align="right" width="120">Diklat :</td>
     <td align="left"><input type="text" name="txParentDiklat" id="txParentDiklat" readonly size="30" maxlength="255" value="<?=$diklat?>" /></td>
 </tr>
-<? } ?>
+<?php } ?>
 <tr>
 	<td align="right" width="120">Sub Diklat :</td>
     <td align="left"><input type="text" name="txDiklat" id="txDiklat" size="30" maxlength="255" /></td>
@@ -93,7 +93,7 @@ if ($rootid != 0) {
 </tr>
 </table>
 </form>
-<?
+<?php
 CloseDb();
 ?>
 </body>

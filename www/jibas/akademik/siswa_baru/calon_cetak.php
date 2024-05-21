@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,9 +38,9 @@ $page = $_REQUEST['page'];
 $total = $_REQUEST['total'];
 
 OpenDb();
-$sql = "SELECT p.proses, k.kelompok, k.keterangan FROM kelompokcalonsiswa k, prosespenerimaansiswa p WHERE k.idproses = '$proses' AND k.replid = '$kelompok'";
+$sql = "SELECT p.proses, k.kelompok, k.keterangan FROM kelompokcalonsiswa k, prosespenerimaansiswa p WHERE k.idproses = '$proses' AND k.replid = '".$kelompok."'";
 $result = QueryDb($sql);
-$row =@mysql_fetch_array($result);
+$row =@mysqli_fetch_array($result);
 $namaproses = $row['proses'];
 $namakelompok = $row['kelompok'];
 $keterangan = $row['keterangan'];
@@ -102,17 +102,17 @@ $keterangan = $row['keterangan'];
 	<td align="center" class="header" width="45">Uji#10</td>
     <td align="center" class="header" width="120" rowspan="2">Status</td>   
 </tr>
-<?		
-	$sqlset = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '$proses'";
+<?php 	
+	$sqlset = "SELECT COUNT(replid) FROM settingpsb WHERE idproses = '".$proses."'";
 	$resset = QueryDb($sqlset);
-	$rowset = mysql_fetch_row($resset);
+	$rowset = mysqli_fetch_row($resset);
 	$ndata = $rowset[0];
 	
 	if ($ndata > 0)
 	{
-		$sqlset = "SELECT * FROM settingpsb WHERE idproses = '$proses'";
+		$sqlset = "SELECT * FROM settingpsb WHERE idproses = '".$proses."'";
 		$resset = QueryDb($sqlset);
-		$rowset = mysql_fetch_array($resset);
+		$rowset = mysqli_fetch_array($resset);
 		
 		$kdsum1 = $rowset['kdsum1']; //$nmsum1 = $rowset['nmsum1'];
 		$kdsum2 = $rowset['kdsum2']; //$nmsum2 = $rowset['nmsum2'];
@@ -141,7 +141,7 @@ $keterangan = $row['keterangan'];
 	<td align="center" class="header"><?=$kdujian9?></td>
 	<td align="center" class="header"><?=$kdujian10?></td>
 </tr>    
-<? 	$sql = "SELECT nopendaftaran,nama,asalsekolah,sum1,sum2,ujian1,ujian2,ujian3,ujian4,ujian5,ujian6,ujian7,ujian8,ujian9,ujian10,". 
+<?php 	$sql = "SELECT nopendaftaran,nama,asalsekolah,sum1,sum2,ujian1,ujian2,ujian3,ujian4,ujian5,ujian6,ujian7,ujian8,ujian9,ujian10,". 
 		   "c.aktif,c.replid,replidsiswa,c.nisn FROM calonsiswa c, kelompokcalonsiswa k, prosespenerimaansiswa p ".
 		   "WHERE c.idproses = '$proses' AND c.idkelompok = '$kelompok' AND k.idproses = p.replid ".
 		   "AND c.idproses = p.replid AND c.idkelompok = k.replid ORDER BY $urut $urutan ";
@@ -150,12 +150,12 @@ $keterangan = $row['keterangan'];
 		$cnt = 0;
 	else
 		$cnt = (int)$page*(int)$varbaris;
-	while ($row = @mysql_fetch_array($result)) {
+	while ($row = @mysqli_fetch_array($result)) {
 		$siswa = "";
 		if ($row["replidsiswa"] <> 0) {
-			$sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = '$row[replidsiswa]'";
+			$sql3 = "SELECT nis FROM jbsakad.siswa WHERE replid = '".$row['replidsiswa']."'";
 			$result3 = QueryDb($sql3);
-			$row3 = @mysql_fetch_array($result3);
+			$row3 = @mysqli_fetch_array($result3);
 			$siswa = "<br>NIS Siswa:<br><b>".$row3['nis']."</b>";
 		}
 	?>	
@@ -178,19 +178,19 @@ $keterangan = $row['keterangan'];
 		<td height="25" align="center"><?=$row["ujian9"]?></td>
 		<td height="25" align="center"><?=$row["ujian10"]?></td>
         <td height="25" align="center">
-		<?	if ($row["aktif"] == 1) 
+		<?php if ($row["aktif"] == 1) 
            		echo 'Aktif'.$siswa; 
 			else
 			echo 'Tidak Aktif'.$siswa;			
 		?></td>
 	  </tr>
-	<?		}		?>			
+	<?php 	}		?>			
 	</table>
 	</td>
 </tr>
 </table>
 </body>
-<?
+<?php
 CloseDb();
 ?>
 <script language="javascript">

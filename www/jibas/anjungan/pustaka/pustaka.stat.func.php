@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ShowCbPustaka()
 {
     $sql = "SELECT replid, nama
@@ -29,9 +29,9 @@ function ShowCbPustaka()
     $res = QueryDb($sql);
     
     echo "<select id='ptkastat_perpus' name='ptkastat_perpus' class='inputbox' onchange='ptkastat_perpus_change()'>\r\n";
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        echo "<option value='$row[0]'>$row[1]</option>\r\n";
+        echo "<option value='".$row[0]."'>".$row[1]."</option>\r\n";
     }
     echo "<option value='-1'>(Semua Perpustakaan)</option>\r\n";
     echo "</select>\r\n";
@@ -45,7 +45,7 @@ function ShowCbBulan()
                    YEAR(DATE_SUB(NOW(), INTERVAL 30 DAY)),
                    MONTH(NOW()), YEAR(NOW())";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $bln1 = $row[0];
     $thn1 = $row[1];
     $bln2 = $row[2];
@@ -117,13 +117,13 @@ function ShowStatistics($perpus, $bln1, $thn1, $bln2, $thn2, $jum)
 			 LIMIT $jum";
     $res = QueryDb($sql);
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<br><br><center><i>Tidak ada data</i></center>";
         return;
     }
     
-    $rnd = rand(0, 1000);
+    $rnd = random_int(0, 1000);
     ?>
     <img src="<?= "pustaka/pustaka.stat.image.php?perpus=$perpus&bln1=$bln1&thn1=$thn1&bln2=$bln2&thn2=$thn2&jum=$jum&rnd=$rnd" ?>" />
     <table width="98%" border="1" cellspacing="0" cellpadding="5" class="tab">
@@ -133,9 +133,9 @@ function ShowStatistics($perpus, $bln1, $thn1, $bln2, $thn2, $jum)
 		<td width='*' align="center" class="header">Judul</td>
 		<td width='16%' align="center" class="header">Jumlah<br>Peminjaman</td>
 	</tr>
-<?
+<?php
     $cnt = 0;
-    while ($row = @mysql_fetch_array($res))
+    while ($row = @mysqli_fetch_array($res))
 	{
         $idpustaka = $row['replid'];
         
@@ -162,7 +162,7 @@ function ShowStatistics($perpus, $bln1, $thn1, $bln2, $thn2, $jum)
                 </font>
             </td>
 		</tr>
-<?	}
+<?php }
     echo "</table>";
 }
 
@@ -172,15 +172,15 @@ function ShowDetailPustaka($cnt, $idpustaka)
                    IF(LENGTH(TRIM(keteranganfisik)) = 0, '-', keteranganfisik) AS keteranganfisik,
                    IF(LENGTH(TRIM(keyword)) = 0, '-', keyword) AS keyword
               FROM jbsperpus.pustaka
-             WHERE replid = '$idpustaka'";
+             WHERE replid = '".$idpustaka."'";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "-";
         return;
     }
     
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
     echo "<font style='color: #444;'><strong>Kata Kunci:</strong></font><br>";
     echo $row['keyword'];
     echo "<br><br>";

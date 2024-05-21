@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -44,10 +44,10 @@ if (isset($_REQUEST['Simpan']))
 {
     OpenDb();
 
-    $sql = "SELECT replid FROM kelompokpelajaran WHERE kode = '$kode'";
+    $sql = "SELECT replid FROM kelompokpelajaran WHERE kode = '".$kode."'";
     $result = QueryDb($sql);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         CloseDb();
         $ERROR_MSG = "Kode $kode sudah digunakan!";
@@ -55,7 +55,7 @@ if (isset($_REQUEST['Simpan']))
     }
     else
     {
-        $sql = "INSERT INTO kelompokpelajaran SET kode = '$kode', kelompok = '$nama', urutan = '$urutan'";
+        $sql = "INSERT INTO kelompokpelajaran SET kode = '$kode', kelompok = '$nama', urutan = '".$urutan."'";
         $result = QueryDb($sql);
         CloseDb();
         if ($result)
@@ -64,7 +64,7 @@ if (isset($_REQUEST['Simpan']))
                 opener.refresh();
                 window.close();
             </script>
-        <?		}
+        <?php 	}
     }
 }
 ?>
@@ -75,7 +75,7 @@ if (isset($_REQUEST['Simpan']))
     <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>JIBAS SIMAKA [Tambah Kelompok Pelajaran]</title>
-    <script language="JavaScript" src="../script/tooltips.js"></script>
+    <script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
     <script language="javascript" src="../script/tables.js"></script>
     <script language="javascript" src="../script/tools.js"></script>
     <script language="javascript" src="../script/validasi.js"></script>
@@ -164,10 +164,10 @@ if (isset($_REQUEST['Simpan']))
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
     <script language="javascript">
         alert('<?=$ERROR_MSG?>');
     </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

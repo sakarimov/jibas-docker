@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -43,9 +43,9 @@ if (isset($_REQUEST['Simpan']))
 	$sql_simpan_cek = "SELECT replid
 								FROM jbsakad.kalenderakademik
 							  WHERE kalender = '$kalender'
-							    AND departemen = '$departemen'"; 
+							    AND departemen = '".$departemen."'"; 
 	$result_simpan_cek = QueryDb($sql_simpan_cek);	
-	if (mysql_num_rows($result_simpan_cek) > 0)
+	if (mysqli_num_rows($result_simpan_cek) > 0)
 	{
 		CloseDb();
 		$ERROR_MSG = $kalender . " sudah digunakan!";
@@ -54,9 +54,9 @@ if (isset($_REQUEST['Simpan']))
 	{
 		$sql = "SELECT COUNT(replid)
 				    FROM jbsakad.kalenderakademik
-				   WHERE departemen = '$departemen'";
+				   WHERE departemen = '".$departemen."'";
 		$res = QueryDb($sql);
-		$row = mysql_fetch_row($res);
+		$row = mysqli_fetch_row($res);
 		$aktif = (int)$row[0] == 0 ? 1 : 0;
 		
 		$sql_simpan = "INSERT INTO jbsakad.kalenderakademik
@@ -68,13 +68,13 @@ if (isset($_REQUEST['Simpan']))
 		{
 			$sql1 = "SELECT LAST_INSERT_ID()";
 			$result1 = QueryDb($sql1);
-			$row1 = mysql_fetch_row($result1); 
+			$row1 = mysqli_fetch_row($result1); 
 			?>
 			<script language="javascript">						
 				opener.refresh('<?=$row1[0]?>');				
 				window.close();
 			</script>
-			<?
+			<?php
 		}
 	}	
 	CloseDb();
@@ -87,10 +87,10 @@ $sql = "SELECT idtahunajaran
 			ORDER BY aktif DESC, replid DESC";
 $result = QueryDb($sql);
 CloseDb();
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
 	$filter = "";
-	while ($row = @mysql_fetch_array($result))
+	while ($row = @mysqli_fetch_array($result))
 	{
 		$filter .= " AND replid <> " . $row['idtahunajaran'];
 	}
@@ -105,7 +105,7 @@ if (mysql_num_rows($result) > 0)
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" language="JavaScript" src="../script/tables.js"></script>
+<script type="text/javascript" language="text/javascript" src="../script/tables.js"></script>
 <script type="text/javascript" language="javascript" src="../script/tools.js"></script>
 <script type="text/javascript" language="javascript" src="../script/validasi.js"></script>
 <script type="text/javascript" language="javascript">
@@ -158,7 +158,7 @@ function focusNext(elemName, evt)
         <td><strong>Tahun Ajaran</strong></td>
         <td>  
 			<select name="tahunajaran" id="tahunajaran" style="width:200px;" onKeyPress="return focusNext('kalender', event)">
-<?			OpenDb();
+<?php 		OpenDb();
 			$sql = "SELECT replid, tahunajaran, aktif
 						 FROM tahunajaran
 						WHERE departemen='$departemen'
@@ -166,7 +166,7 @@ function focusNext(elemName, evt)
 						ORDER BY aktif DESC, replid DESC";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = @mysql_fetch_array($result))
+			while ($row = @mysqli_fetch_array($result))
 			{
 				if ($tahunajaran == "") 
 					$tahunajaran = $row['replid'];
@@ -175,20 +175,20 @@ function focusNext(elemName, evt)
 					$ada = '(Aktif)';
 				else 
 					$ada = ''; ?>
-				<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
-<?			}	?>
+				<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $tahunajaran)?> ><?=$row['tahunajaran'].' '.$ada?></option>
+<?php 		}	?>
 			</select>
         </td>
     </tr>
     <tr>
       	<td><strong>Periode</strong></td>
         <td>
-        <? 	
+        <?php 	
 		if ($tahunajaran <> "" ) {
 			OpenDb();
 			$sql = "SELECT * FROM jbsakad.tahunajaran WHERE replid='$tahunajaran'";
 			$result = QueryDb($sql);
-			$row = mysql_fetch_array($result);
+			$row = mysqli_fetch_array($result);
 			$periode = TglTextLong($row['tglmulai']).' s/d '.TglTextLong($row['tglakhir']);
 			$aktif = $row['aktif'];
 		} 
@@ -221,11 +221,11 @@ function focusNext(elemName, evt)
 </tr>
 </table>
 <!-- Tamplikan error jika ada -->
-<? if (strlen($ERROR_MSG) > 0) { ?>
+<?php if (strlen($ERROR_MSG) > 0) { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');		
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>
 <script language="javascript">

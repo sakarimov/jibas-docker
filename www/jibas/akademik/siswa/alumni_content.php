@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -64,10 +64,10 @@ if (isset($_REQUEST['tahun']))
 
 if ($op == "xm8r389xemx23xb2378e23") {
 	OpenDb();
-	$sql="SELECT a.tktakhir, a.klsakhir, a.nis, k.idtahunajaran FROM alumni a, kelas k WHERE a.replid='$_REQUEST[replid]' AND a.klsakhir = k.replid AND k.idtingkat=a.tktakhir";
+	$sql="SELECT a.tktakhir, a.klsakhir, a.nis, k.idtahunajaran FROM alumni a, kelas k WHERE a.replid='".$_REQUEST['replid']."' AND a.klsakhir = k.replid AND k.idtingkat=a.tktakhir";
 	//echo $sql;
 	$result=QueryDb($sql);
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 	$nis = $row['nis'];
 	$idtingkat = $row['tktakhir'];
 	$idkelas = $row['klsakhir'];
@@ -93,7 +93,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 	}
 	
 	if ($success){
-		$sql1="DELETE FROM jbsakad.alumni WHERE replid='$_REQUEST[replid]'";
+		$sql1="DELETE FROM jbsakad.alumni WHERE replid='".$_REQUEST['replid']."'";
 		//echo $sql1."<br>";
 		$result1=QueryDbTrans($sql1, $success);
 	}
@@ -114,7 +114,7 @@ if ($op == "xm8r389xemx23xb2378e23") {
 				parent.alumni_pilih.location.href="alumni_pilih.php?kelas="+kelas+"&pilihan=2&jenis=combo&departemen=<?=$departemen?>&tahunajaran=<?=$tahunajaran?>&tingkat="+tingkat;
 			}
 	 	</script>
-        <?
+        <?php
 	} else {
 		RollbackTrans();
 	}
@@ -214,20 +214,20 @@ function change_baris() {
   	<td>  
     <strong>Tahun Lulus</strong>&nbsp;
     <select name="tahun" id="tahun" onChange="change_tahun()" style="width:60px">
-	<?  
+	<?php  
 	OpenDb();
     $sql="SELECT YEAR(tgllulus) AS tahun FROM alumni WHERE departemen='$departemen' GROUP BY tahun ORDER BY tahun DESC";
     //$sql="SELECT YEAR(tglmulai) AS tahunmulai, YEAR(tglakhir) AS tahunakhir FROM tahunajaran WHERE replid=$tahunajaran";
 	$result=QueryDb($sql);
-    while ($row=@mysql_fetch_array($result)){
+    while ($row=@mysqli_fetch_array($result)){
 		if ($tahun=="")
-			$tahun = $row[tahun];	
+			$tahun = $row['tahun'];	
 	?>
         <option value="<?=$row['tahun']?>" <?=IntIsSelected($row['tahun'], $tahun) ?>><?=$row['tahun']?>
         </option>
         <!--<option value="<?//=$row['tahunakhir']?>" <?//= IntIsSelected($row['tahunakhir'], $tahun) ?>><?//=$row['tahunakhir']?>
         </option>-->
-	<?
+	<?php
 	}  
     CloseDb();
     ?>
@@ -236,7 +236,7 @@ function change_baris() {
 </tr>
 <tr>
     <td>
-<?
+<?php
 if ($tahun <> "" ) {	
 	OpenDb();    
 	//$sql_tot = "SELECT s.replid,s.nis,s.nama FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = $kelas AND k.idtahunajaran = $tahunajaran AND k.idtingkat = $tingkat AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.aktif=1";
@@ -244,14 +244,14 @@ if ($tahun <> "" ) {
 	$sql_tot = "SELECT s.replid, s.nis, s.nama, k.kelas, al.tgllulus, al.klsakhir, al.tktakhir, al.replid, t.tingkat FROM alumni al, kelas k, tingkat t, siswa s WHERE al.departemen='$departemen' AND k.idtingkat=t.replid AND t.replid=al.tktakhir AND k.replid=al.klsakhir AND YEAR(al.tgllulus) = '$tahun' AND s.nis = al.nis AND s.alumni = 1";
 	//echo $sql_tot;
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
 	
 	$sql_siswa = "SELECT s.replid AS replidsiswa, s.nis, s.nama, k.kelas, al.tgllulus, al.klsakhir, al.tktakhir, al.replid, t.tingkat FROM alumni al, kelas k, tingkat t, siswa s WHERE al.departemen='$departemen' AND k.idtingkat=t.replid AND t.replid=al.tktakhir AND k.replid=al.klsakhir AND YEAR(al.tgllulus) = '$tahun' AND s.nis = al.nis AND s.alumni = 1 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		
 	$result_siswa = QueryDb($sql_siswa);
-	$jum = @mysql_num_rows($result_siswa);
+	$jum = @mysqli_num_rows($result_siswa);
 		
 	if ($jum > 0) { ?> 
     <table width="100%" border="1" cellspacing="0" class="tab" id="table" bordercolor="#000000">
@@ -266,13 +266,13 @@ if ($tahun <> "" ) {
         <!--<td width="10%" class="header" align="center">Keterangan</td>--->
         <td width="5%">&nbsp;</td>
     </tr>
-<? 	
+<?php 	
 	if ($page==0)
 		$cnt = 1;
 	else 
 		$cnt = (int)$page*(int)$varbaris+1;
 		
-	while ($row_siswa=@mysql_fetch_array($result_siswa)){
+	while ($row_siswa=@mysqli_fetch_array($result_siswa)){
 ?>
     <tr height="25">
     	<td align="center"><?=$cnt ?></td>
@@ -283,7 +283,7 @@ if ($tahun <> "" ) {
         <td align="center"><a href="JavaScript:hapus('<?=$row_siswa['nis'] ?>', <?=$row_siswa['replid']?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Batalkan sebagai alumnus!', this, event, '100px')"/></a>
 		</td>
    	</tr>
-	<?	$cnt++; 
+	<?php $cnt++; 
 	} 
 	CloseDb();
 	?>
@@ -292,7 +292,7 @@ if ($tahun <> "" ) {
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>
- <?	if ($page==0){ 
+ <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -317,19 +317,19 @@ if ($tahun <> "" ) {
     <tr>
        	<td width="50%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	 <!--td align="center">
    <input <?=$disback?> type="button" class="but" name="back" value="<<" onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		/*for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -343,14 +343,14 @@ if ($tahun <> "" ) {
  		</td-->
         <td width="50%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>	
-	<?							
+<?php 						
 		} else {
 	?>
 	<table width="100%" border="0" align="center">          
@@ -362,7 +362,7 @@ if ($tahun <> "" ) {
 		</td>
 	</tr>
 	</table>
-<?	} 
+<?php } 
 } else { ?>
 <table width="100%" border="0" align="center">          
 	<tr>
@@ -373,7 +373,7 @@ if ($tahun <> "" ) {
 		</td>
 	</tr>
 	</table>
-<?
+<?php
 }
 ?>
 	</td>

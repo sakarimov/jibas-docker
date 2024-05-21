@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,8 +38,8 @@ $sql = "SELECT s.replid, s.semester, p.nama FROM semester s, pelajaran p WHERE s
 $result = QueryDb($sql);
 
 $i = 0;
-while ($row = @mysql_fetch_row($result)) {
-	$sem[$i]= array($row[0],$row[1]);
+while ($row = @mysqli_fetch_row($result)) {
+	$sem[$i]= [$row[0], $row[1]];
 	$pel = $row[2];
 	$i++;
 }
@@ -62,9 +62,9 @@ while ($row = @mysql_fetch_row($result)) {
       	</td>
 	</tr>
     
-	<?	$sql = "SELECT j.replid, j.jenisujian FROM jenisujian j, ujian u WHERE j.idpelajaran = '$pelajaran' AND u.idjenis = j.replid GROUP BY j.jenisujian";
+	<?php $sql = "SELECT j.replid, j.jenisujian FROM jenisujian j, ujian u WHERE j.idpelajaran = '$pelajaran' AND u.idjenis = j.replid GROUP BY j.jenisujian";
 		$result = QueryDb($sql);
-		while($row = @mysql_fetch_array($result)){			
+		while($row = @mysqli_fetch_array($result)){			
 	?>
    	<tr>
         <td colspan="2">
@@ -77,23 +77,23 @@ while ($row = @mysql_fetch_row($result)) {
             <td width="10" height="30" align="center" class="header">Nilai</td>
 			<td width="400" class="header" align="center" height="30">Keterangan</td>
 		</tr>
-		<? 	OpenDb();		
-			$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[0][0]."' AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
+		<?php 	OpenDb();		
+			$sql1 = "SELECT u.tanggal, n.nilaiujian, n.keterangan FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[0][0]."' AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis' ORDER BY u.tanggal";
 			$result1 = QueryDb($sql1);
-			$sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[0][0]."' AND u.idjenis = '$row[replid]' AND u.replid = n.idujian AND n.nis = '$nis' ";
+			$sql2 = "SELECT AVG(n.nilaiujian) as rata FROM ujian u, pelajaran p, nilaiujian n WHERE u.idpelajaran = p.replid AND u.idkelas = '$kelas' AND u.idpelajaran = '$pelajaran' AND u.idsemester = '".$sem[0][0]."' AND u.idjenis = '".$row['replid']."' AND u.replid = n.idujian AND n.nis = '$nis' ";
 			$result2 = QueryDb($sql2);
-			$row2 = @mysql_fetch_array($result2);
-			$rata = $row2[rata];
+			$row2 = @mysqli_fetch_array($result2);
+			$rata = $row2['rata'];
 
 			/*
-			$sql3 = "SELECT nau.nilaiAU as nilaiAU,nau.keterangan as keterangan  FROM ujian u, pelajaran p, nilaiujian n, nau nau WHERE u.idpelajaran = p.replid AND u.idkelas = $kelas AND u.idpelajaran = $pelajaran AND u.idsemester = ".$sem[0][0]." AND u.idjenis = $row[replid] AND u.replid = n.idujian AND n.nis = '$nis' AND nau.idjenis=$row[replid] AND nau.idpelajaran = $pelajaran AND nau.idsemester = ".$sem[0][0];
+			$sql3 = "SELECT nau.nilaiAU as nilaiAU,nau.keterangan as keterangan  FROM ujian u, pelajaran p, nilaiujian n, nau nau WHERE u.idpelajaran = p.replid AND u.idkelas = $kelas AND u.idpelajaran = $pelajaran AND u.idsemester = ".$sem[0][0]." AND u.idjenis = ".$row['replid']." AND u.replid = n.idujian AND n.nis = '$nis' AND nau.idjenis=$row['replid'] AND nau.idpelajaran = $pelajaran AND nau.idsemester = ".$sem[0][0];
 			$result3 = QueryDb($sql3);
-			$row3 = @mysql_fetch_array($result3);
-			$nilaiAU = $row3[nilaiAU];			
+			$row3 = @mysqli_fetch_array($result3);
+			$nilaiAU = $row3['nilaiAU'];			
 			*/
 			$cnt = 1;
-			if (@mysql_num_rows($result1)>0){
-			while($row1 = @mysql_fetch_array($result1)){			
+			if (@mysqli_num_rows($result1)>0){
+			while($row1 = @mysqli_fetch_array($result1)){			
         ?>
         <tr>        			
 			<td width="5" height="25" align="center"><?=$cnt?></td>
@@ -101,7 +101,7 @@ while ($row = @mysql_fetch_row($result)) {
             <td width="10" height="25" align="center"><?=$row1[1]?></td>
             <td height="25"><?=$row1[2]?></td>            
 		</tr>	
-        <?	$cnt++;
+        <?php $cnt++;
 			} ?>
 		<tr>        			
 			<td colspan="2" height="25" align="center"><strong>Nilai rata rata</strong></td>
@@ -111,13 +111,13 @@ while ($row = @mysql_fetch_row($result)) {
 		<tr>        			
 			<td colspan="2" height="25" align="center"><strong>Nilai Akhir</strong></td>
 			<td width="8" height="25" align="center"><?=$nilaiAU?></td>
-            <td height="25"><?=$row3[keterangan]?></td>           
+            <td height="25"><?=$row3['keterangan']?></td>           
 		</tr>-->
-		<? } else { ?>
+		<?php } else { ?>
 		<tr>        			
 			<td colspan="4" height="25" align="center">Tidak ada nilai</td>
 		</tr>
-		<? }
+		<?php }
 			?>
 		</table>
 		<script language="javascript">
@@ -125,7 +125,7 @@ while ($row = @mysql_fetch_row($result)) {
 		</script>
 		</td>	
 	</tr>
-    <? } ?> 
+    <?php } ?> 
     
     <!-- END TABLE CONTENT -->
     </table>

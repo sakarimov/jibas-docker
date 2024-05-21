@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *  
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  *  
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../include/sessionchecker.php");
 require_once("../include/config.php");
 require_once("../include/db_functions.php");
 require_once("../include/common.php");
 require_once('../include/theme.php');
 
-$namabulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","Nopember","Desember");
+$namabulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"];
 
 $tgl = $_REQUEST['tgl'];
 $bln = $_REQUEST['bln'];
@@ -66,7 +66,7 @@ $thn = $_REQUEST['thn'];
 <body>
 <table border="0" cellpadding="10" cellpadding="5" width="780" align="left">
 <tr><td align="left" valign="top">
-  <? include("../include/headercetak.php") ?>
+  <?php include("../include/headercetak.php") ?>
   <div align="center">
   <br />
   <span class="style2"><span class="style1">DAFTAR AGENDA</span><br />
@@ -81,13 +81,13 @@ $thn = $_REQUEST['thn'];
     <td width="35%" class="header" align="center">Pegawai</td>
     <td width="35%" class="header" align="center">Keterangan</td>
 </tr>
-<?
+<?php
 $tanggal = "$thn-$bln-$tgl";
 OpenDb();
-$sql = "SELECT DISTINCT jenis FROM jadwal WHERE tanggal = '$tanggal'";
+$sql = "SELECT DISTINCT jenis FROM jadwal WHERE tanggal = '".$tanggal."'";
 $result = QueryDb($sql);
 $cnt = 0;
-while ($row = mysql_fetch_array($result)) { 
+while ($row = mysqli_fetch_array($result)) { 
 	$jenis = $row['jenis'];	
 	if ($jenis == "golongan")
 		$njenis = "Kenaikan Golongan";
@@ -103,16 +103,16 @@ while ($row = mysql_fetch_array($result)) {
 	    <font color="yellow"><strong><?=$njenis?></strong></font>
 	    </td>
 	</tr>	
-<?
+<?php
 	$sql = "SELECT j.replid, j.nip, p.nama, j.keterangan FROM jadwal j, pegawai p WHERE j.nip = p.nip AND j.jenis='$jenis' AND j.tanggal='$tanggal'";
 	$rs2 = QueryDb($sql);
-	while ($row2 = mysql_fetch_array($rs2)) { ?>
+	while ($row2 = mysqli_fetch_array($rs2)) { ?>
         <tr height="25">
             <td align="center" valign="top"><?=++$cnt?></td>
             <td align="left" valign="top"><?=$row2['nip'] . "<br>" . $row2['nama']?></td>
             <td align="left" valign="top"><?=$row2['keterangan']?></td>
         </tr>
-<?	
+<?php 
 	}	
 }
 CloseDb();

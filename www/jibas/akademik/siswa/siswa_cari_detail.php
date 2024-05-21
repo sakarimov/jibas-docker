@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -36,8 +36,8 @@ $sql_siswa="SELECT * FROM jbsakad.siswa WHERE nis='$nis'";
 $sql_siswa_tgl="SELECT YEAR(tgllahir),MONTH(tgllahir),DAY(tgllahir) FROM jbsakad.siswa WHERE nis='$nis'";
 $result=QueryDbTrans($sql_siswa, $success);
 $result_tgl=QueryDbTrans($sql_siswa_tgl, $success);
-$row_siswa=mysql_fetch_array($result);
-$row_siswa_tgl=mysql_fetch_row($result_tgl);
+$row_siswa=mysqli_fetch_array($result);
+$row_siswa_tgl=mysqli_fetch_row($result_tgl);
 $tglnya=$row_siswa_tgl[2];
 $blnnya=$row_siswa_tgl[1];
 $thnnya=$row_siswa_tgl[0];
@@ -48,9 +48,9 @@ if ($success){
 	RollbackTrans();
 }
 
-	$sql_kelas="SELECT kelas FROM jbsakad.kelas WHERE replid='$row_siswa[idkelas]'";
+	$sql_kelas="SELECT kelas FROM jbsakad.kelas WHERE replid='".$row_siswa['idkelas']."'";
 	$result_kelas=QueryDB($sql_kelas);
-	while ($row_kelas = mysql_fetch_array($result_kelas)) {
+	while ($row_kelas = mysqli_fetch_array($result_kelas)) {
 	$namakelas=$row_kelas['kelas'];
 	}
 	CloseDb();
@@ -66,7 +66,7 @@ function FormatRupiah($value) {
 	}
 		
 	$duit = (string)$value;
-	$value = trim(duit);
+	// $value = trim((string) \DUIT);
 	if (strlen($duit) == 0) return "";
 	$len = strlen($duit);
 	$nPoint = (int)($len / 3);
@@ -107,7 +107,7 @@ function FormatRupiah($value) {
 <title>Tampil Siswa</title>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" src="../script/rupiah.js"></script>
 <script language="javascript">
@@ -185,7 +185,7 @@ window.close();
     <td >2.</td>
     <td >Jenis Kelamin</td>
     <td colspan="2" >
-    <? if ($row_siswa['kelamin']=="l"){
+    <?php if ($row_siswa['kelamin']=="l"){
 	echo "Laki-laki"; }
 	if ($row_siswa['kelamin']=="p"){
 	echo "Perempuan"; }
@@ -201,7 +201,7 @@ window.close();
     <td >&nbsp;</td>
     <td >4.</td>
     <td >Tanggal Lahir</td>
-    <td colspan="2" ><?
+    <td colspan="2" ><?php
     switch ($blnnya){
 				case 1 : $namabulan="Januari";
 				break;
@@ -406,10 +406,10 @@ window.close();
     <td >25.</td>
     <td >Penghasilan</td>
     <td >
-    <?
+    <?php
 	$value=$row_siswa['penghasilanayah'];  
 	echo FormatRupiah($row_siswa['penghasilanayah']); ?>    </td>
-    <td ><?
+    <td ><?php
 	$value=$row_siswa['penghasilanibu'];  
 	echo FormatRupiah($row_siswa['penghasilanibu']); ?></td>
   </tr>

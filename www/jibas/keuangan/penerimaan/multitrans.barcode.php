@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/common.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -41,9 +41,9 @@ $sql = "SELECT s.nis, s.nama, k.kelas, t.departemen
            AND s.aktif = 1
            AND s.alumni = 0";
 $res = QueryDb($sql);
-if (mysql_num_rows($res) > 0)
+if (mysqli_num_rows($res) > 0)
 {
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $data = "siswa";
     $nis = $row[0];
     $nama = $row[1];
@@ -68,9 +68,9 @@ else
                AND c.nopendaftaran = '$kode'
                AND c.aktif = 1";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) > 0)
+    if (mysqli_num_rows($res) > 0)
     {
-        $row = mysql_fetch_row($res);
+        $row = mysqli_fetch_row($res);
         $data = "calon";
         $nic = $row[0];
         $nama = $row[1];

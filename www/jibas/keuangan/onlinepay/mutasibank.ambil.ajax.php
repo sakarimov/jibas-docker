@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ try
              WHERE departemen = '$departemen'
                AND aktif = 1";
     $res = QueryDbEx($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $idTahunBuku = $row[0];
         $awalan = $row[1];
@@ -78,9 +78,9 @@ try
     $rekPendapatan = "";
     $sql = "SELECT rekkas, rekpendapatan 
               FROM jbsfina.bank
-             WHERE bankno = '$bankNo'";
+             WHERE bankno = '".$bankNo."'";
     $res = QueryDbEx($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $rekKas = $row[0];
         $rekPendapatan = $row[1];
@@ -99,12 +99,12 @@ try
     $sql = "INSERT INTO jbsfina.bankmutasi
                SET departemen = '$departemen', bankno = '$bankNo', jenis = 2, tanggal = '$tglMutasi', 
                    waktu = NOW(), keterangan = '$keterangan', petugas = $idPetugas, berkas = '$buktiTransfer64',
-                   adaberkas = $adaBukti, nomormutasi = '$nomorTransfer'";
+                   adaberkas = $adaBukti, nomormutasi = '".$nomorTransfer."'";
     QueryDbEx($sql);
 
     $sql = "SELECT LAST_INSERT_ID()";
     $res = QueryDbEx($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $idMutasi = $row[0];
 
     $nJurnal = 0;
@@ -144,7 +144,7 @@ try
         {
             $sql = "INSERT INTO jbsfina.bankmutasidata
                        SET kategori = '$kate', idmutasi = $idMutasi, idpenerimaan = $idPen, idtabungan = 0, idtabunganp = 0,
-                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '$noKas'";
+                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '".$noKas."'";
             QueryDbEx($sql);
 
             $sql = "INSERT INTO jbsfina.banksaldo (departemen, bankno, kategori, idpenerimaan, idtabungan, idtabunganp, iddeposit, kelompok, saldo, lasttime) 
@@ -156,7 +156,7 @@ try
         {
             $sql = "INSERT INTO jbsfina.bankmutasidata
                        SET kategori = '$kate', idmutasi = $idMutasi, idpenerimaan = 0, idtabungan = $idPen, idtabunganp = 0,
-                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '$noKas'";
+                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '".$noKas."'";
             QueryDbEx($sql);
 
             $sql = "INSERT INTO jbsfina.banksaldo (departemen, bankno, kategori, idpenerimaan, idtabungan, idtabunganp, iddeposit, kelompok, saldo, lasttime) 
@@ -168,7 +168,7 @@ try
         {
             $sql = "INSERT INTO jbsfina.bankmutasidata
                        SET kategori = '$kate', idmutasi = $idMutasi, idpenerimaan = 0, idtabungan = 0, idtabunganp = $idPen,
-                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '$noKas'";
+                           iddeposit = 0, jumlah = $jumlah, keterangan = '$keterangan', nokas = '".$noKas."'";
             QueryDbEx($sql);
 
             $sql = "INSERT INTO jbsfina.banksaldo (departemen, bankno, kategori, idpenerimaan, idtabungan, idtabunganp, iddeposit, kelompok, saldo, lasttime) 
@@ -180,7 +180,7 @@ try
         {
             $sql = "INSERT INTO jbsfina.bankmutasidata
                        SET kategori = '$kate', idmutasi = $idMutasi, idpenerimaan = 0, idtabungan = 0, idtabunganp = 0,
-                           iddeposit = $idPen, jumlah = $jumlah, keterangan = '$keterangan', nokas = '$noKas'";
+                           iddeposit = $idPen, jumlah = $jumlah, keterangan = '$keterangan', nokas = '".$noKas."'";
             QueryDbEx($sql);
 
             $sql = "INSERT INTO jbsfina.banksaldo (departemen, bankno, kategori, idpenerimaan, idtabungan, idtabunganp, iddeposit, kelompok, saldo, lasttime) 

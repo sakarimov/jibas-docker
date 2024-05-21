@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
 require_once('include/rupiah.php');
@@ -128,7 +128,7 @@ function change_baris() {
 </head>
 
 <body topmargin="0" leftmargin="0">
-<?
+<?php
 OpenDb();
 
 // Dapatkan banyaknya pembayaran yang telah terjadi untuk pembayaran terpilih di kelas terpilih
@@ -177,7 +177,7 @@ if ($kelompok != -1)
 <!-- TABLE CENTER -->
 <tr>
 	<td>
-<? if ($max_n_cicilan > 0 || $statuslunas == 2) { ?>
+<?php if ($max_n_cicilan > 0 || $statuslunas == 2) { ?>
     
     <table width="100%" border="0" align="center">
     <tr>
@@ -195,10 +195,10 @@ if ($kelompok != -1)
         <td width="90" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nopendaftaran','<?=$urutan?>')">No. Reg <?=change_urut('nopendaftaran',$urut,$urutan)?></td>
         <td width="140" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nama','<?=$urutan?>')">Nama <?=change_urut('nama',$urut,$urutan)?></td>
         <td width="65" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('kelompok','<?=$urutan?>')">Kel <?=change_urut('kelompok',$urut,$urutan)?></td>
-        <? 	for($i = 0; $i < $max_n_cicilan; $i++) { 
+        <?php 	for($i = 0; $i < $max_n_cicilan; $i++) { 
                 $n = $i + 1; ?>
                 <td width="120" ><?="Bayaran-$n" ?></td>	
-        <?  } ?>
+        <?php  } ?>
         <td width="95" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('lunas','<?=$urutan?>')">Status <?=change_urut('lunas',$urut,$urutan)?></td>
         <td width="125" onMouseOver="background='style/formbg2agreen.gif';height=30;" onMouseOut="background='style/formbg2.gif';height=30;" background="style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('besar','<?=$urutan?>')"><?=$namapenerimaan ?> <?=change_urut('besar',$urut,$urutan)?></td>
         <td width="125">Total Besar Pembayaran</td>
@@ -207,7 +207,7 @@ if ($kelompok != -1)
         <td width="200">Keterangan</td>
 	</tr>
 
-<?
+<?php
 if ($statuslunas == -1) 
 {
 	if ($kelompok == -1) 
@@ -260,17 +260,17 @@ else
 		$sql_sum_biaya = "SELECT SUM(b.besar) AS TotalBiaya  
 							FROM besarjttcalon b, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 							WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-							AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'";
+							AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'";
 									
 		$sql_sum_bayar_diskon = "SELECT SUM(p.jumlah) AS TotalBayar, SUM(p.info1) AS TotalDiskon  
 									FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 									WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-									AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'";
+									AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'";
 						
 		$sql_tot = "SELECT DISTINCT c.nopendaftaran, c.nama, k.kelompok, b.replid AS id, b.besar, b.keterangan, b.lunas 
 					  FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 					 WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-					   AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'";
+					   AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'";
 	
 		$sql = "SELECT DISTINCT c.nopendaftaran, c.nama, k.kelompok, b.replid AS id, b.besar, b.keterangan, b.lunas 
 					 FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
@@ -282,17 +282,17 @@ else
 		$sql_sum_biaya = "SELECT SUM(b.besar) AS TotalBayar  
 							FROM besarjttcalon b, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 						   WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-							 AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'";
+							 AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'";
 								  
 		$sql_sum_bayar_diskon = "SELECT SUM(p.jumlah) AS TotalBayar, SUM(p.info1) AS TotalDiskon
 								FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 								 WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-								  AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'";
+								  AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'";
 						   
 		$sql_tot = "SELECT DISTINCT c.nopendaftaran, c.nama, k.kelompok, b.replid AS id, b.besar, b.keterangan, b.lunas
 		              FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
 						 WHERE c.replid = b.idcalon AND b.idpenerimaan = '$idpenerimaan' AND b.info2='$idtahunbuku'
-						   AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '$statuslunas'"; 
+						   AND c.idkelompok = '$kelompok' AND c.idkelompok = k.replid AND b.lunas = '".$statuslunas."'"; 
 		
 		$sql = "SELECT DISTINCT c.nopendaftaran, c.nama, k.kelompok, b.replid AS id, b.besar, b.keterangan, b.lunas 
 		          FROM penerimaanjttcalon p RIGHT JOIN besarjttcalon b ON p.idbesarjttcalon = b.replid, jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k
@@ -302,8 +302,8 @@ else
 }
 
 $result_tot = QueryDb($sql_tot);
-$total = ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-$jumlah = mysql_num_rows($result_tot);
+$total = ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+$jumlah = mysqli_num_rows($result_tot);
 $akhir = ceil($jumlah/5)*5;
 
 if ($page==0)
@@ -312,7 +312,7 @@ else
 	$cnt = (int)$page*(int)$varbaris;
 	
 $result = QueryDb($sql);	
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
 {
 	$idbesarjtt = $row['id'];
 	$besarjtt = $row['besar'];
@@ -330,10 +330,10 @@ while ($row = mysql_fetch_array($result))
         <td align="center"><?=$row['nopendaftaran'] ?></td>
         <td><?=$row['nama'] ?></td>
         <td align="center"><?=$row['kelompok'] ?></td>
-    <?
-	$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+    <?php
+	$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	$nbayar = $row2[0];
 	$nblank = $max_n_cicilan - $nbayar;
 	
@@ -343,7 +343,7 @@ while ($row = mysql_fetch_array($result))
 	{
 		$sql = "SELECT date_format(tanggal, '%d-%b-%y'), jumlah, info1 FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt 'ORDER BY tanggal";
 		$result2 = QueryDb($sql);
-		while ($row2 = mysql_fetch_row($result2))
+		while ($row2 = mysqli_fetch_row($result2))
 		{
 			$totalbayar += $row2[1] + $row2[2];
 			$totaldiskon += $row2[2];
@@ -354,7 +354,7 @@ while ($row = mysql_fetch_array($result))
                 <tr height="20"><td align="center"><?=$row2[0] ?></td></tr>
                 </table>
             </td>
- <?		}
+ <?php 	}
 	}	
 	for ($i = 0; $i < $nblank; $i++) { ?>
 	    <td>
@@ -364,7 +364,7 @@ while ($row = mysql_fetch_array($result))
             <tr height="20"><td align="center">&nbsp;</td></tr>
             </table>
         </td>
-    <? }?>
+    <?php }?>
         <td align="center"><?=$infojtt ?></td>
         <td align="right"><?=FormatRupiah($besarjtt) ?></td>
         <td align="right"><?=FormatRupiah($totalbayar) ?></td>
@@ -372,11 +372,11 @@ while ($row = mysql_fetch_array($result))
         <td align="right"><?=FormatRupiah($besarjtt - $totalbayar)?></td>
         <td><?=$ketjtt ?></td>
     </tr>
-<?
+<?php
 }
 ?>
     <input type="hidden" name="tes" id="tes" value="<?=$total?>"/>
-<?
+<?php
 if ($total-1 == $page)
 {
 	$totalBiayaAll = FetchSingle($sql_sum_biaya);
@@ -393,15 +393,15 @@ if ($total-1 == $page)
         <td align="right" bgcolor="#999900"><font color="#FFFFFF"><strong><?=FormatRupiah($totalBiayaAll - $totalBayarAll) ?></strong></font></td>
         <td bgcolor="#999900">&nbsp;</td>
     </tr>
-    <? 
+    <?php 
 	} 
 	?>
 	</table>
 	<script language='JavaScript'>
         Tables('table', 1, 0);
     </script>
-	<? CloseDb() ?>
-    <?	if ($page==0){ 
+	<?php CloseDb() ?>
+    <?php if ($page==0){ 
 		$disback="style='display:none;'";
 		$disnext="style=''";
 		}
@@ -427,38 +427,38 @@ if ($total-1 == $page)
        	<td width="30%" align="left" colspan="2">Halaman
 		<input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 		<input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
 	  	dari <?=$total?> halaman     
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<? } else { ?>
+<?php } else { ?>
 <table width="100%" border="0" align="center">          
 <tr>
 	<td align="center" valign="middle" height="200">
     	<font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-        <br />Tambah data pembayaran pada departemen <?=$departemen?> <? if ($namakelompok) echo  ", kelompok ".$namakelompok ?> dan kategori <?=$namapenerimaan?> di menu Penerimaan Pembayaran pada bagian Penerimaan.
+        <br />Tambah data pembayaran pada departemen <?=$departemen?> <?php if ($namakelompok) echo  ", kelompok ".$namakelompok ?> dan kategori <?=$namapenerimaan?> di menu Penerimaan Pembayaran pada bagian Penerimaan.
         
         </b></font>
 	</td>
 </tr>
 </table>  
-<? } ?>
+<?php } ?>
     </td>
 </tr>
 </table>
-<?
+<?php
 CloseDb();
 ?>
 </form>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
  * @version: 23.0 (November 12, 2020)
- * @notes: 
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/common.php');
 require_once('include/config.php');
 require_once('include/db_functions.php');
@@ -51,7 +51,7 @@ $minno = ($page - 1) * $nitem;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
 <script src="script/SpryTabbedPanels.js" type="text/javascript"></script>
-<script language="JavaScript" src="script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tables.js"></script>
 <script src="script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <script src="script/SpryValidationSelect.js" type="text/javascript"></script>
@@ -127,7 +127,7 @@ $( document ).ready(function() {
 <input type="hidden" id="idpenerimaan" value="<?=$idpenerimaan ?>" />
 <input type="hidden" id="departemen" value="<?=$departemen ?>" />
 <input type="hidden" id="status" value="<?=$status ?>" />
-<?
+<?php
 OpenDb();
 if ($idkategori == "JTT")
 {
@@ -155,7 +155,7 @@ if ($ndata == 0)
 	<font size = "2" color ="red"><b>Tidak ditemukan adanya data</b></font>	
 	<br /><br />
 	</td></tr></table>
-<?	
+<?php 
 }
 else
 {
@@ -184,7 +184,7 @@ else
     	<td width="15%" background="style/formbg2.gif">N I S</td>
     	<td background="style/formbg2.gif">Nama</td>
   	</tr>
-<? 
+<?php 
 	 if ($idkategori == "JTT")
 	 {
 			$sql = "SELECT DISTINCT b.nis, s.nama 
@@ -210,25 +210,25 @@ else
 	 $res = QueryDb($sql);
 	 
     $cnt = $minno + 1;
-	 while($row = mysql_fetch_row($res))
+	 while($row = mysqli_fetch_row($res))
 	 { ?>
     	<tr height="25" onClick="pilih('<?=$row[0]?>','<?=$row[1]?>')" style="cursor:pointer" id="siswapilih<?=$cnt?>">
 	 		<td align="center"><?=$cnt ?></td>
 			<td align="center"><?=$row[0] ?></td>
 			<td align="left"><?=$row[1] ?></td>
 	 	</tr>
-<?		$cnt++;
+<?php 	$cnt++;
 	} ?>
   	</table>
 	&nbsp;&nbsp;Halaman
   	<select name="page" id="page" onchange="change_page()">
-  	<? 
+  	<?php 
 	$npage = ceil($ndata / $nitem);
 	for ($i = 1; $i <= $npage; $i++) { ?>
   		<option value="<?=$i?>" <?=IntIsSelected($page, $i)?> ><?=$i?></option>
-<? } ?>		
+<?php } ?>		
   	</select>&nbsp;dari&nbsp;<?=$npage?>
-<?  
+<?php  
 }
 CloseDb();
 ?>

@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ function ShowTagihanSet()
              ORDER BY tanggalbuat DESC";
     $res = QueryDb($sql);
 
-    $nData = mysql_num_rows($res);
+    $nData = mysqli_num_rows($res);
     if ($nData == 0)
     {
         echo "<br><br>tidak ditemukan data tagihan";
@@ -85,7 +85,7 @@ function ShowTagihanSet()
 
     $no = 0;
     echo "<table id='tabTagihanSet' border='1' cellpadding='2' cellspacing='0' style='width: 390px; border: 1px solid #999; border-collapse: collapse; background-color: #ffffff;'>";
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
         $idTagihanSet = $row["replid"];
@@ -95,7 +95,7 @@ function ShowTagihanSet()
                  WHERE idtagihanset = $idTagihanSet
                    AND status = 0";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $nBelum = $row2[0];
 
         $sql = "SELECT COUNT(replid)
@@ -103,7 +103,7 @@ function ShowTagihanSet()
                  WHERE idtagihanset = $idTagihanSet
                    AND status = 1";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $nKonfirmasi = $row2[0];
 
         $sql = "SELECT COUNT(replid)
@@ -111,18 +111,18 @@ function ShowTagihanSet()
                  WHERE idtagihanset = $idTagihanSet
                    AND status = 2";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $nSelesai = $row2[0];
 
         echo "<tr>";
         echo "<td rowspan='2' align='center' valign='top' style='width: 30px; background-color: #efefef;'>$no</td>";
         echo "<td style='font-size: 12px; cursor: pointer;' onclick='showTagihanInfo($no)' colspan='4'>";
         echo "<b> " . $row['nama'] . "</b><br><span style='color: #0000FF;'><b>" . $row['stiuran'] . "</b></span><br>";
-        echo "<span style='color: #b50000; font-style: italic;'>$row[nomor]&nbsp;&nbsp;|&nbsp;&nbsp;$row[ftanggal]</span>";
+        echo "<span style='color: #b50000; font-style: italic;'>".$row['nomor']."&nbsp;&nbsp;|&nbsp;&nbsp;".$row['ftanggal']."</span>";
         echo "<input type='hidden' id='idtagihanset-$no' value='$idTagihanSet'>";
         $title = "<b>" . $row["nama"] . "</b><br><span style='color: #0000FF'><b>" . $row['stiuran'] . "</b></span>";
         echo "<input type='hidden' id='tagihanset-$no' value=\"$title\">";
-        $infots = "$row[nomor]&nbsp;&nbsp;|&nbsp;&nbsp;$row[ftanggal]";
+        $infots = $row['nomor']."&nbsp;&nbsp;|&nbsp;&nbsp;".$row['ftanggal'];
         echo "<input type='hidden' id='infotagihanset-$no' value='$infots'>";
         echo "</td>";
         echo "</tr>";
@@ -165,7 +165,7 @@ function DaftarTagihanInfo()
               FROM jbsfina.tagihansiswainfo
              WHERE idtagihanset = $idTagihanSet";
     $res = QueryDb($sql);
-    $row = mysql_fetch_row($res);
+    $row = mysqli_fetch_row($res);
     $nData = $row[0];
     if ($nData == 0)
     {
@@ -185,7 +185,7 @@ function DaftarTagihanInfo()
     $sql .= " ORDER BY s.nama
               LIMIT $limitStart, $rowPerPage";
     $res = QueryDb($sql);
-    $nTagihan = mysql_num_rows($res);
+    $nTagihan = mysqli_num_rows($res);
 
     echo "<input type='hidden' id='idtagihanset' value='$idTagihanSet'>";
     echo "<table border='0' cellpadding='2' cellspacing='0' width='98%'>";
@@ -228,13 +228,13 @@ function DaftarTagihanInfo()
 
     echo "<table id='tabTagihanInfo' border='1' cellpadding='2' cellspacing='0' style='width: 390px; border: 1px solid #efefef; border-collapse: collapse; background-color: #ffffff;'>";
     $nSiswa = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $nSiswa += 1;
 
         $idTagihanInfo = $row["replid"];
-        $nis = urlencode($row["nis"]);
-        $nama = urlencode($row["nama"]);
+        $nis = urlencode((string) $row["nis"]);
+        $nama = urlencode((string) $row["nama"]);
         $noTagihan = $row["notagihan"];
 
         $jumlah = $row["jumlah"];
@@ -274,7 +274,7 @@ function ShowPrepareBatchNotif()
              WHERE departemen = '$departemen'
                AND kelompok = 'TAGIHAN'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $pesanNotifikasiTagihan = $row[0];
     }
@@ -324,7 +324,7 @@ function SendBatchNotif()
     try
     {
         $stNis = $_REQUEST["stnis"];
-        $stNis = str_replace("`", "'", $stNis);
+        $stNis = str_replace("`", "'", (string) $stNis);
         $idTagihanSet = $_REQUEST["idtagihanset"];
         $dept = $_REQUEST["dept"];
         $pesanNotifikasiTagihan = $_REQUEST["pesan"];
@@ -343,7 +343,7 @@ function SendBatchNotif()
         $count = 0;
 
         $res = QueryDbEx($sql);
-        while($row = mysql_fetch_array($res))
+        while($row = mysqli_fetch_array($res))
         {
             $count += 1;
 
@@ -354,7 +354,7 @@ function SendBatchNotif()
             $bulan = $row["bulan"];
             $tahun = $row["tahun"];
 
-            $pesan = str_replace("{NAMA}", $nama, $pesanNotifikasiTagihan);
+            $pesan = str_replace("{NAMA}", $nama, (string) $pesanNotifikasiTagihan);
             $pesan = str_replace("{NIS}", $nis, $pesan);
             $pesan = str_replace("{JUMLAH}", FormatRupiah($totalTagihan), $pesan);
             $pesan = str_replace("{IURAN}", $stIuran, $pesan);
@@ -396,13 +396,13 @@ function DaftarTagihanData()
               LEFT JOIN jbssdm.pegawai p ON ts.petugas = p.nama
              WHERE t.replid = $idTagihanInfo";
     $res = QueryDb($sql);
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "Tidak ditemukan data tagihan";
         return;
     }
 
-    $row = mysql_fetch_array($res);
+    $row = mysqli_fetch_array($res);
     $departemen = $row["departemen"];
     $stIuran = $row["stiuran"];
     $bulan = $row["bulan"];
@@ -424,7 +424,7 @@ function DaftarTagihanData()
     echo "</tr>";
     echo "<tr>";
     echo "<td align='right' style='font-size: 12px'>Tagihan:</td>";
-    echo "<td align='left' style='font-size: 12px'>$row[info]<br><span style='color: darkred; font-style: italic; font-size: 12px'>$nomorTs</span></td>";
+    echo "<td align='left' style='font-size: 12px'>".$row['info']."<br><span style='color: darkred; font-style: italic; font-size: 12px'>$nomorTs</span></td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td align='right' style='font-size: 12px'>Jumlah:</td>";
@@ -434,11 +434,11 @@ function DaftarTagihanData()
     echo "</tr>";
     echo "<tr>";
     echo "<td align='right' style='font-size: 12px'>Tanggal Buat:</td>";
-    echo "<td align='left' style='font-size: 12px'>$row[ftanggalbuat]</td>";
+    echo "<td align='left' style='font-size: 12px'>".$row['ftanggalbuat']."</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td align='right' style='font-size: 12px'>Petugas:</td>";
-    echo "<td align='left' style='font-size: 12px'>$row[namapetugas]</td>";
+    echo "<td align='left' style='font-size: 12px'>".$row['namapetugas']."</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td align='right' valign='top' style='font-size: 12px'>Konfirmasi:</td>";
@@ -449,9 +449,9 @@ function DaftarTagihanData()
     }
     else
     {
-        echo "<td align='left' style='font-size: 12px;'><span style='font-weight: bold; color: #0000ff;'>SUDAH</span> <i>tanggal $row[fckdate]</i>";
-        if (strlen($row["ckdesc"]) > 0)
-            echo "<br><i>$row[ckdesc]</i>";
+        echo "<td align='left' style='font-size: 12px;'><span style='font-weight: bold; color: #0000ff;'>SUDAH</span> <i>tanggal '".$row['fckdate']."'</i>";
+        if (strlen((string) $row["ckdesc"]) > 0)
+            echo "<br><i>".$row['ckdesc']."</i>";
         echo "</td>";
     }
     echo "</tr>";
@@ -472,10 +472,10 @@ function DaftarTagihanData()
 
     $sql = "SELECT replid, IFNULL(idpenerimaan, 0) AS idpenerimaan, IFNULL(idbesarjtt, 0) AS idbesarjtt, penerimaan, jtagihan, jdiskon, status 
               FROM jbsfina.tagihansiswadata
-             WHERE notagihan = '$noTagihan'";
+             WHERE notagihan = '".$noTagihan."'";
     $res = QueryDb($sql);
     $no = 0;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         $no += 1;
 
@@ -493,15 +493,15 @@ function DaftarTagihanData()
 
         echo "<tr style='height: 25px;'>";
         echo "<td align='center' valign='top'>$no</td>";
-        echo "<td align='left' valign='top'>$row[penerimaan]</td>";
+        echo "<td align='left' valign='top'>".$row['penerimaan']."</td>";
         echo "<td align='right' valign='top'>" . FormatRupiah($jTagihan) . "</td>";
         echo "<td align='right' valign='top'>" . FormatRupiah($jDiskon) . "</td>";
         echo "<td align='right' valign='top'>" . FormatRupiah($jumlah) . "</td>";
         if ($status == 0 && $row["idpenerimaan"] != 0)
         {
             echo "<td align='center' valign='top'>";
-            echo "<a href='#' onclick='editTagihan($row[replid],\"$noTagihan\")'><img src='../images/ico/ubah.png'></a>&nbsp;";
-            echo "<a href='#' onclick='hapusTagihan($row[replid],\"$noTagihan\")'><img src='../images/ico/hapus.png'></a>";
+            echo "<a href='#' onclick='editTagihan({$row['replid']},\"$noTagihan\")'><img src='../images/ico/ubah.png'></a>&nbsp;";
+            echo "<a href='#' onclick='hapusTagihan({$row['replid']},\"$noTagihan\")'><img src='../images/ico/hapus.png'></a>";
             echo "</td>";
         }
         else
@@ -536,7 +536,7 @@ function DaftarTagihanData()
              WHERE departemen = '$departemen'
                AND kelompok = 'TAGIHAN'";
     $res = QueryDb($sql);
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res))
     {
         $pesanNotifikasiTagihan = $row[0];
     }
@@ -549,7 +549,7 @@ function DaftarTagihanData()
         QueryDb($sql);
     }
 
-    $pesan = str_replace("{NAMA}", $nama, $pesanNotifikasiTagihan);
+    $pesan = str_replace("{NAMA}", $nama, (string) $pesanNotifikasiTagihan);
     $pesan = str_replace("{NIS}", $nis, $pesan);
     $pesan = str_replace("{JUMLAH}", FormatRupiah($totJumlah), $pesan);
     $pesan = str_replace("{IURAN}", $stIuran, $pesan);
@@ -584,14 +584,14 @@ function HapusTagihanData()
         $jumlah = 0;
         $sql = "SELECT SUM(jtagihan - jdiskon) 
                   FROM jbsfina.tagihansiswadata 
-                 WHERE notagihan = '$noTagihan'";
+                 WHERE notagihan = '".$noTagihan."'";
         $res = QueryDbEx($sql);
-        if ($row = mysql_fetch_row($res))
+        if ($row = mysqli_fetch_row($res))
             $jumlah = $row[0];
 
         $sql = "UPDATE jbsfina.tagihansiswainfo
                    SET jumlah = $jumlah
-                 WHERE notagihan = '$noTagihan'";
+                 WHERE notagihan = '".$noTagihan."'";
         QueryDbEx($sql);
 
         CommitTrans();
@@ -614,11 +614,11 @@ function HapusTagihanSiswa()
     try
     {
         $sql = "DELETE FROM jbsfina.tagihansiswadata
-                 WHERE notagihan = '$noTagihan'";
+                 WHERE notagihan = '".$noTagihan."'";
         QueryDbEx($sql);
 
         $sql = "DELETE FROM jbsfina.tagihansiswainfo
-                 WHERE notagihan = '$noTagihan'";
+                 WHERE notagihan = '".$noTagihan."'";
         QueryDbEx($sql);
 
         echo "[1,\"OK\"]";
@@ -641,7 +641,7 @@ function HapusTagihanSet()
                  WHERE idtagihanset = $idTagihanSet
                    AND status = 1";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $nKonfirmasi = $row2[0];
 
         $sql = "SELECT COUNT(replid)
@@ -649,7 +649,7 @@ function HapusTagihanSet()
                  WHERE idtagihanset = $idTagihanSet
                    AND status = 2";
         $res2 = QueryDb($sql);
-        $row2 = mysql_fetch_row($res2);
+        $row2 = mysqli_fetch_row($res2);
         $nSelesai = $row2[0];
 
         if ($nKonfirmasi != 0 || $nSelesai != 0)

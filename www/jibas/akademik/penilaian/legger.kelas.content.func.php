@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
 <?php
-function GetDataSiswa()
+function GetDataSiswa(): void
 {
     global $kelas, $arrSiswa, $nisStr, $tahunajaran;
 
@@ -30,8 +30,9 @@ function GetDataSiswa()
              WHERE replid = $tahunajaran";
     $res = QueryDb($sql);
     $taAktif = 0;
-    if ($row = mysql_fetch_row($res))
+    if ($row = mysqli_fetch_row($res)) {
         $taAktif = $row[0];
+    }
 
     if ($taAktif == 1)
     {
@@ -51,11 +52,13 @@ function GetDataSiswa()
     }
 
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $arrSiswa[] = array($row[0], $row[1]);
+        $arrSiswa[] = [$row[0], $row[1]];
 
-        if ($nisStr != "") $nisStr .= ",";
+        if ($nisStr != "") {
+            $nisStr .= ",";
+        }
         $nisStr .= "'" . $row[0] . "'";
     }
 
@@ -67,7 +70,7 @@ function GetDataSiswa()
     }
 }
 
-function GetDataPelajaran()
+function GetDataPelajaran(): void
 {
     global $pelajaran, $semester, $kelas, $nisStr;
     global $arrPel, $idPelStr;
@@ -98,13 +101,15 @@ function GetDataPelajaran()
                  ORDER BY p.nama";
     }
 
-    $arrPel = array();
+    $arrPel = [];
     $res = QueryDb($sql);
-    while($row = mysql_fetch_row($res))
+    while($row = mysqli_fetch_row($res))
     {
-        $arrPel[] = array($row[0], $row[1]);
+        $arrPel[] = [$row[0], $row[1]];
 
-        if ($idPelStr != "") $idPelStr .= ",";
+        if ($idPelStr != "") {
+            $idPelStr .= ",";
+        }
         $idPelStr .= $row[0];
     }
 
@@ -116,11 +121,11 @@ function GetDataPelajaran()
     }
 }
 
-function GetAspekPelajaran()
+function GetAspekPelajaran(): void
 {
     global $arrAspekPel, $arrAspek, $arrPel, $nisStr, $arrPel;
 
-    $arrKodeAspek = array();
+    $arrKodeAspek = [];
     $kodeAspekStr = "";
 
     $nPel = count($arrPel);
@@ -135,9 +140,9 @@ function GetAspekPelajaran()
                    AND a.idpelajaran = $idPelajaran
                  ORDER BY dasarpenilaian";
 
-        $arrTemp = array();
+        $arrTemp = [];
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
             $kodeAspek = $row[0];
 
@@ -145,7 +150,9 @@ function GetAspekPelajaran()
             {
                 $arrKodeAspek[$kodeAspek] = 1;
 
-                if ($kodeAspekStr != "") $kodeAspekStr .= ",";
+                if ($kodeAspekStr != "") {
+                    $kodeAspekStr .= ",";
+                }
                 $kodeAspekStr .= "'$kodeAspek'";
             }
 
@@ -161,13 +168,13 @@ function GetAspekPelajaran()
                   FROM jbsakad.dasarpenilaian
                  WHERE dasarpenilaian IN ($kodeAspekStr)";
         $res = QueryDb($sql);
-        while ($row = mysql_fetch_row($res)) {
-            $arrAspek[] = array($row[0], $row[1]);
+        while ($row = mysqli_fetch_row($res)) {
+            $arrAspek[] = [$row[0], $row[1]];
         }
     }
 }
 
-function GetTableWidth()
+function GetTableWidth(): int
 {
     global $arrPel, $arrAspekPel, $arrAspek;
 
@@ -183,12 +190,11 @@ function GetTableWidth()
     }
 
     $nAspek = count($arrAspek);
-    $total += 60 + $nAspek;
 
-    return $total;
+    return $total + (60 + $nAspek);
 }
 
-function Pre($array)
+function Pre($array): void
 {
     echo "<pre>";
     print_r($array);

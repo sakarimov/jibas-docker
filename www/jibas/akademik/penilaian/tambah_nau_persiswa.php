@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -41,15 +41,15 @@ $query = "SELECT s.nama, s.nis, j.jenisujian FROM nau n, siswa s, jenisujian j, 
 //$query = "SELECT s.nama, s.nis, j.jenisujian, round(SUM(b.bobot*nu.nilaiujian)/SUM(b.bobot),2) as nilai FROM nau n, siswa s, jenisujian j, ujian u, nilaiujian nu, bobotnau b WHERE n.replid = $replid AND n.nis = s.nis AND n.idjenis = j.replid AND b.idujian = u.replid AND u.idkelas = n.idkelas AND u.idsemester = n.idsemester AND u.idaturan = n.idaturan AND nu.idujian = u.replid AND nu.nis = n.nis GROUP BY nu.nis";
 
 $result = QueryDb($query);
-$row = @mysql_fetch_array($result);
+$row = @mysqli_fetch_array($result);
 $nis = $row['nis'];
 $nama = $row['nama'];
 $jenis = $row['jenisujian'];
 
 if ($tipe == "otomatis") {
-	$sql  = "SELECT round(SUM(b.bobot*nu.nilaiujian)/SUM(b.bobot),2) as nilai FROM nau n, ujian u, bobotnau b, nilaiujian nu WHERE n.replid = '$replid' AND b.idujian = u.replid AND u.idkelas = n.idkelas AND u.idsemester = n.idsemester AND u.idaturan = n.idaturan AND nu.idujian = u.replid AND nu.nis = '$nis' AND n.nis = '$nis'";
+	$sql  = "SELECT round(SUM(b.bobot*nu.nilaiujian)/SUM(b.bobot),2) as nilai FROM nau n, ujian u, bobotnau b, nilaiujian nu WHERE n.replid = '$replid' AND b.idujian = u.replid AND u.idkelas = n.idkelas AND u.idsemester = n.idsemester AND u.idaturan = n.idaturan AND nu.idujian = u.replid AND nu.nis = '$nis' AND n.nis = '".$nis."'";
 	$result1 = QueryDb($sql);
-	$row1 = @mysql_fetch_array($result1);
+	$row1 = @mysqli_fetch_array($result1);
 	$nilai = 0;
 	if ($row1['nilai']) 
 		$nilai = $row1['nilai'];	
@@ -62,16 +62,16 @@ if ($tipe == "otomatis") {
 }	
 	
 if(isset($_REQUEST["simpan"])) {
-	$query = "UPDATE jbsakad.nau SET nilaiAU = '$_REQUEST[nilai]' $ket WHERE replid = '$replid' ";
+	$query = "UPDATE jbsakad.nau SET nilaiAU = '".$_REQUEST['nilai']."' $ket WHERE replid = '$replid' ";
    	$result=QueryDb($query);
 	
 	if ($result) {
 	?>
-		<script language="JavaScript">			
+		<script language = "javascript" type = "text/javascript">			
 			opener.refresh();
 			window.close();
 		</script>
-	<? 	
+	<?php 	
     }	
 }
 ?>
@@ -82,10 +82,10 @@ if(isset($_REQUEST["simpan"])) {
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/validasi.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script src="../script/SpryValidationTextField.js" type="text/javascript"></script>
 <link href="../script/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript">
 function ambil(tipe) {	
 	if (tipe == "manual") {
 		document.getElementById("nilai").value = "";
@@ -128,7 +128,7 @@ function focusNext(elemName, evt) {
 }
 </script>
 </head>
-<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="background-color:#dcdfc4" <? if ($tipe == 'manual') {?> onLoad="document.getElementById('nilai').focus()" <? } ?> >
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="background-color:#dcdfc4" <?php if ($tipe == 'manual') {?> onLoad="document.getElementById('nilai').focus()" <?php } ?> >
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr height="58">
 	<td width="28" background="../<?=GetThemeDir() ?>bgpop_01.jpg">&nbsp;</td>
@@ -166,7 +166,7 @@ function focusNext(elemName, evt) {
         <fieldset><legend><strong>Hitung Nilai Akhir <?=$jenis?> Berdasarkan </strong></legend>    
         <table width="100%" border="0">
         <tr>
-            <td width="5%"><input type="radio" name="tipe" id="tipe" value="otomatis" onClick="ambil('otomatis')" <? if ($tipe == 'otomatis') echo "checked"; ?> >
+            <td width="5%"><input type="radio" name="tipe" id="tipe" value="otomatis" onClick="ambil('otomatis')" <?php if ($tipe == 'otomatis') echo "checked"; ?> >
             </td>
             <td><strong>Perhitungan Otomatis</strong></td>
             <!--<td width="40%"><strong>B. Perhitungan Manual</strong></td>-->
@@ -179,12 +179,12 @@ function focusNext(elemName, evt) {
                 <td width="85%"><?=$jenis?></td>
 				<td width="15%">Bobot</td>
 			</tr>
-     	<?
+     	<?php
 			
 			$sql="SELECT b.replid, b.bobot, u.tanggal FROM bobotnau b, ujian u, nau n WHERE b.idujian=u.replid AND u.idkelas=n.idkelas AND u.idsemester=n.idsemester AND u.idaturan=n.idaturan AND n.replid = '$replid'  ORDER by u.tanggal ASC";								
 			$result=QueryDb($sql);
 			$cnt = 0;
-			while ($row=@mysql_fetch_array($result)){										
+			while ($row=@mysqli_fetch_array($result)){										
 		?>
     		<tr>
 				<td width="85%" height="25">
@@ -194,7 +194,7 @@ function focusNext(elemName, evt) {
                 <?=$row['bobot'];?>
                 </td>
             </tr>
-		<?	}	?>
+		<?php }	?>
             </table>
             <script language='JavaScript'>
                 Tables('table', 1, 0);
@@ -203,7 +203,7 @@ function focusNext(elemName, evt) {
     		
   		</tr>
         <tr>
-        	<td><input type="radio" name="tipe" id="tipe" value="manual" onClick="ambil('manual')" <? if ($tipe == 'manual') echo "checked"; ?>>
+        	<td><input type="radio" name="tipe" id="tipe" value="manual" onClick="ambil('manual')" <?php if ($tipe == 'manual') echo "checked"; ?>>
             </td>
             <td><strong>Perhitungan Manual</strong></td>
         </tr>

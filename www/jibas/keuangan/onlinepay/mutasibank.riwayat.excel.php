@@ -3,10 +3,10 @@
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ $sql = "SELECT bm.replid, bm.jenis, DATE_FORMAT(bm.waktu, '%d %b %Y<br>%H:%i') A
          ORDER BY replid DESC";
 $res = QueryDb($sql);
 
-if (mysql_num_rows($res) == 0)
+if (mysqli_num_rows($res) == 0)
 {
     echo "Tidak ada data mutasi";
     return;
@@ -75,7 +75,7 @@ echo "<td>Keterangan</td>";
 echo "</tr>";
 
 $no = 0;
-while ($row = mysql_fetch_array($res))
+while ($row = mysqli_fetch_array($res))
 {
     $no += 1;
 
@@ -88,18 +88,18 @@ while ($row = mysql_fetch_array($res))
               FROM jbsfina.bankmutasidata
              WHERE idmutasi = $idMutasi";
     $res2 = QueryDb($sql);
-    $row2 = mysql_fetch_row($res2);
+    $row2 = mysqli_fetch_row($res2);
     $jumlah = $row2[0];
 
     echo "<tr>";
     echo "<td>$no</td>";
-    echo "<td>$row[fwaktu]</td>";
+    echo "<td>".$row['fwaktu']."</td>";
     echo "<td>$namaJenis</td>";
     echo "<td>$jumlah</td>";
-    echo "<td>$row[nomormutasi]</td>";
-    echo "<td>$row[idpetugas]</td>";
-    echo "<td>$row[namapetugas]</td>";
-    echo "<td>$row[keterangan]</td>";
+    echo "<td>".$row['nomormutasi']."</td>";
+    echo "<td>".$row['idpetugas']."</td>";
+    echo "<td>".$row['namapetugas']."</td>";
+    echo "<td>".$row['keterangan']."</td>";
     echo "</tr>";
 }
 

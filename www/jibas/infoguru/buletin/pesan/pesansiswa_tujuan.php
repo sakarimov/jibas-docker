@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../../include/common.php');
 require_once('../../include/config.php');
 require_once('../../include/db_functions.php');
@@ -151,18 +151,18 @@ function ambil(){
     <td width="853" scope="row" >
       <div align="left">&nbsp;&nbsp;
         <select name="departemen" id="departemen" style="width:125px" onchange="chg_dep()">
-          <? 
+          <?php 
 			OpenDb();
 			$sql="SELECT * FROM jbsakad.departemen WHERE aktif=1 ORDER BY urutan";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 			if ($departemen=="")
 				$departemen=$row['departemen'];
 			?>
           <option value="<?=$row['departemen']?>" <?=StringIsSelected($departemen,$row['departemen'])?>>
             <?=$row['departemen']?>
             </option>
-          <?
+          <?php
 			}
 			CloseDb();
 			?>
@@ -174,18 +174,18 @@ function ambil(){
     <td scope="row" >
       <div align="left">&nbsp;&nbsp;
         <select name="tingkat" id="tingkat" onchange="chg_semting()" style="width:125px">
-          <? 
+          <?php 
 			OpenDb();
 			$sql="SELECT * FROM jbsakad.tingkat WHERE aktif=1 AND departemen='$departemen' ORDER BY tingkat";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 			if ($tingkat=="")
 				$tingkat=$row['replid'];
 			?>
           <option value="<?=$row['replid']?>" <?=StringIsSelected($tingkat,$row['replid'])?>>
             <?=$row['tingkat']?>
             </option>
-          <?
+          <?php
 			}
 			CloseDb();
 			?>
@@ -196,18 +196,18 @@ function ambil(){
     <td width="100" scope="row" ><div align="left">&nbsp;&nbsp;Tahun&nbsp;Ajaran</div></td>
     <td scope="row" ><div align="left">&nbsp;&nbsp;
       <select name="tahunajaran" id="tahunajaran" onchange="chg_semting()" style="width:125px">
-        <? 
+        <?php 
 			OpenDb();
 			$sql="SELECT * FROM jbsakad.tahunajaran WHERE aktif=1 AND departemen='$departemen' ORDER BY tahunajaran";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 			if ($tahunajaran=="")
 				$tahunajaran=$row['replid'];
 			?>
         <option value="<?=$row['replid']?>" <?=StringIsSelected($tahunajaran,$row['replid'])?>>
           <?=$row['tahunajaran']?>
           </option>
-        <?
+        <?php
 			}
 			CloseDb();
 			?>
@@ -218,18 +218,18 @@ function ambil(){
     <td width="100" scope="row" ><div align="left">&nbsp;&nbsp;Kelas</div></td>
     <td scope="row" ><div align="left">&nbsp;&nbsp;
       <select name="kelas" id="kelas" onchange="chg_kelas()" style="width:125px">
-        <? 
+        <?php 
 			OpenDb();
 			$sql="SELECT * FROM jbsakad.kelas WHERE aktif=1 AND idtahunajaran='$tahunajaran' AND idtingkat='$tingkat' ORDER BY kelas";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 			if ($kelas=="")
 				$kelas=$row['replid'];
 			?>
         <option value="<?=$row['replid']?>" <?=StringIsSelected($kelas,$row['replid'])?>>
           <?=$row['kelas']?>
           </option>
-        <?
+        <?php
 			}
 			CloseDb();
 			?>

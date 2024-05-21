@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -44,46 +44,46 @@ $i = 0;
 
 if ($iddasar!="12"){
 	if ($dasar == 'Golongan Darah') {
-		$row = array('','A','AB','B','O');
-		$judul = array(1=>'Tidak ada data','A','AB','B','O');	
+		$row = ['', 'A', 'AB', 'B', 'O'];
+		$judul = [1=>'Tidak ada data', 'A', 'AB', 'B', 'O'];	
 		$jum = count($row);	
 	} elseif ($dasar == 'Jenis Kelamin') {
-		$row = array('l','p');
-		$judul = array(1=>'Laki-laki','Perempuan');	
+		$row = ['l', 'p'];
+		$judul = [1=>'Laki-laki', 'Perempuan'];	
 		$jum = count($row);
 	} elseif ($dasar == 'Kewarganegaraan') {
-		$row = array('WNI','WNA');
-		$judul = array(1=>'WNI','WNA');	
+		$row = ['WNI', 'WNA'];
+		$judul = [1=>'WNI', 'WNA'];	
 		$jum = count($row);
 	} elseif ($dasar == 'Status Aktif') {
-		$row = array(1,0);
-		$judul = array(1 => 'Aktif','Tidak Aktif');
+		$row = [1, 0];
+		$judul = [1 => 'Aktif', 'Tidak Aktif'];
 		$jum = count($row);
 	} elseif ($dasar == 'Kondisi Siswa') {	
 		$query = "SELECT $tabel FROM jbsakad.kondisisiswa ORDER BY $tabel ";
 		$result = QueryDb($query);
-		$jum = @mysql_num_rows($result);
+		$jum = @mysqli_num_rows($result);
 	} elseif ($dasar == 'Status Siswa') {	
 		$query = "SELECT $tabel FROM jbsakad.statussiswa ORDER BY $tabel ";
 		$result = QueryDb($query);
-		$jum = @mysql_num_rows($result);
+		$jum = @mysqli_num_rows($result);
 	} elseif ($dasar == 'Pekerjaan Ayah' || $dasar == 'Pekerjaan Ibu') {	
 		$query = "SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan ";
 		$result = QueryDb($query);
-		$jum = @mysql_num_rows($result)+1;
+		$jum = @mysqli_num_rows($result)+1;
 	} elseif ($dasar == 'Pendidikan Ayah' || $dasar == 'Pendidikan Ibu') {	
 		$query = "SELECT pendidikan FROM jbsumum.tingkatpendidikan ORDER BY pendidikan ";
 		$result = QueryDb($query);
-		$jum = @mysql_num_rows($result)+1;
+		$jum = @mysqli_num_rows($result)+1;
 	/*} elseif ($dasar == 'Penghasilan Orang Tua') {		
 		$batas = array(0,1000000,2500000,5000000);
 		$judul = array(1 => '< Rp 1000000','Rp 1000000 - Rp 2500000','Rp 2500000 - Rp 5000000','> Rp 5000000');
 		$jum = count($judul);*/
 	} elseif ($dasar == 'Agama' || $dasar == 'Suku') {	
-		$str = strtolower($dasar);	
+		$str = strtolower((string) $dasar);	
 		$query = "SELECT $tabel FROM jbsumum.$tabel ORDER BY $str";
 		$result = QueryDb($query);
-		$jum = @mysql_num_rows($result);	
+		$jum = @mysqli_num_rows($result);	
 	} else {	
 		$jum = 1;
 	}
@@ -101,9 +101,9 @@ if ($iddasar!="12"){
 		} elseif ($dasar == 'Status Aktif') {
 			$filter = $row[$i-1];		
 		} elseif ($dasar=='Agama' || $dasar=='Suku' || $dasar=='Status Siswa' || $dasar=='Kondisi Siswa' || $dasar=='Pekerjaan Ayah' || $dasar=='Pekerjaan Ibu' || $dasar=='Pendidikan Ayah' || $dasar=='Pendidikan Ibu') {
-			$row = @mysql_fetch_row($result);
+			$row = @mysqli_fetch_row($result);
 			$judul[$i] = $row[0];
-			$filter = "1 AND s.$tabel = '$row[0]'";			
+			$filter = "1 AND s.$tabel = '".$row[0]."'";			
 			if ($dasar=='Pekerjaan Ayah' || $dasar=='Pekerjaan Ibu' || $dasar=='Pendidikan Ayah' || $dasar=='Pendidikan Ibu') {
 				if ($i == $jum) {
 					$judul[$i] = "Tidak ada data";
@@ -140,9 +140,9 @@ if ($iddasar!="12"){
 		OpenDb();
 		$res = QueryDb($query1);
 		
-		$total = mysql_num_rows($res);
+		$total = mysqli_num_rows($res);
 		
-		while ($row1 = @mysql_fetch_row($res)) {			
+		while ($row1 = @mysqli_fetch_row($res)) {			
 			if ($dasar=="Asal Sekolah" || $dasar=="Kode Pos Siswa" || $dasar=="Tahun Kelahiran" || $dasar=="Usia") { 
 				$jdl = $row1[1];
 				if ($row1[1] == "") {
@@ -181,24 +181,24 @@ if ($iddasar!="12"){
 	$query5 = "SELECT COUNT(*) As Jum FROM jbsakad.siswa s, jbsakad.angkatan a WHERE a.replid=s.idangkatan  AND s.aktif = '1' AND s.penghasilanayah+s.penghasilanibu = 0 $kondisi";
 
 	$result1 = QueryDb($query1);
-	$row1 = @mysql_fetch_array($result1);
-	$j1 = $row1[Jum];
+	$row1 = @mysqli_fetch_array($result1);
+	$j1 = $row1['Jum'];
 	
 	$result2 = QueryDb($query2);
-	$row2 = @mysql_fetch_array($result2);
-	$j2 = $row2[Jum];
+	$row2 = @mysqli_fetch_array($result2);
+	$j2 = $row2['Jum'];
 	
 	$result3 = QueryDb($query3);
-	$row3 = @mysql_fetch_array($result3);
-	$j3 = $row3[Jum];
+	$row3 = @mysqli_fetch_array($result3);
+	$j3 = $row3['Jum'];
 	
 	$result4 = QueryDb($query4);
-	$row4 = @mysql_fetch_array($result4);
-	$j4 = $row4[Jum];
+	$row4 = @mysqli_fetch_array($result4);
+	$j4 = $row4['Jum'];
 
 	$result5 = QueryDb($query5);
-	$row5 = @mysql_fetch_array($result5);
-	$j5 = $row5[Jum];
+	$row5 = @mysqli_fetch_array($result5);
+	$j5 = $row5['Jum'];
 	
 	//=====================================================
 	
@@ -244,11 +244,11 @@ if ($iddasar!="12"){
     	<td width="*" ><?=$dasar?> </td>
     	<td width="20%">Jumlah </td>
     	<td width="25%">Prosentase</td>
-    	<? if ($lup==""){ ?>
+    	<?php if ($lup==""){ ?>
         <td width="8%">&nbsp;</td>
-  		<? } ?>
+  		<?php } ?>
     </tr>
-<?
+<?php
 
 if ($iddasar!="12"){
 	for ($i=1;$i<=count($data);$i++) {
@@ -259,20 +259,20 @@ if ($iddasar!="12"){
    		<td height="25"><?=$judul[$i]?></td>
     	<td height="25" align="center"><?=$data[$i]?></td>
     	<td height="25" align="center"><?=round($prosentase,1)?> %</td>
-   	<?	if ($lup==""){ ?>
+   	<?php if ($lup==""){ ?>
 		<td height="25" align="center">
-	<?		if ($data[$i] != 0) { 
+	<?php 	if ($data[$i] != 0) { 
 				$judul1 = $judul[$i];
 				if ($judul[$i] == "Tidak ada data")
 					$judul1 = NULL;
 	?>
        <a href="statistik_tampil.php?departemen=<?=$departemen?>&idangkatan=<?=$idangkatan?>&dasar=<?=$dasar?>&tabel=<?=$tabel?>&judul=<?=$judul1?>" target="detail_statistik"><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Lihat Detail!', this, event, '80px')"></a>         		
-		<? 		}	?>
+		<?php 		}	?>
         </td>
-		<? 	} ?>
+		<?php 	} ?>
         
   </tr>
-<?  }
+<?php  }
 } else {
 	for ($i=1;$i<=5;$i++) {
 	?>
@@ -280,20 +280,20 @@ if ($iddasar!="12"){
    		<td height="25"><?=$jud[$i] ?></td>
     	<td height="25" align="center"><?=$j[$i]?></td>
     	<td height="25" align="center"><?=round($j[$i]/$sum*100,1)?> %</td>
-			<?
+			<?php
 		if ($lup==""){
 		?>
         <td height="25" align="center">
-        <?	if ($j[$i] != 0) { ?>
+        <?php if ($j[$i] != 0) { ?>
         <a href="statistik_tampil.php?dasar=<?=$dasar?>&departemen=<?=$departemen?>&idangkatan=<?=$idangkatan?>&iddasar=<?=$iddasar?>&keyword=<?=$i?>&judul=<?=$jud[$i]?>" target="detail_statistik"><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Lihat Detail!', this, event, '80px')">
         
         </a>    
-        <?	}?>
+        <?php }?>
         </td>
-		<? } ?>
+		<?php } ?>
       
 </tr>
-<? 
+<?php 
 		}
 	
 	}?>
@@ -303,7 +303,7 @@ if ($iddasar!="12"){
 	Tables('table', 1, 0);
 </script>
 
-<? 
+<?php 
 // } 
 ?> 
 </body>

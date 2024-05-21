@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -143,7 +143,7 @@ if (isset($_REQUEST['alumnikan']))
 					  WHERE s.nis = '$nis'
 					    AND s.idkelas = k.replid";
 			$result1 = QueryDb($sql1);
-			$row1 = @mysql_fetch_array($result1);
+			$row1 = @mysqli_fetch_array($result1);
 			$idtingkat = $row1['idtingkat'];
 			$idkelas = $row1['replid'];
 			
@@ -172,7 +172,7 @@ if (isset($_REQUEST['alumnikan']))
 			{
 				$sql_alumni = "INSERT INTO jbsakad.alumni
 								  SET nis='$nis', tgllulus='$tgllulus', tktakhir='$idtingkat',
-									  klsakhir='$idkelas', departemen = '$departemen'";
+									  klsakhir='$idkelas', departemen = '".$departemen."'";
 				QueryDbTrans($sql_alumni, $success);
 			}
 		} // if
@@ -184,7 +184,7 @@ if (isset($_REQUEST['alumnikan']))
 		<script language="javascript">
 			parent.alumni_content.location.href="alumni_content.php?departemen=<?=$departemen?>&tingkat=<?=$tingkat?>&tahunajaran=<?=$tahunajaran?>&tahun=<?=$th?>";
 		</script>	
-<? 	}
+<?php 	}
 	else
 	{
 		RollbackTrans();
@@ -199,7 +199,7 @@ if (isset($_REQUEST['alumnikan']))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Kelulusan Siswa[Pilih]</title>
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
@@ -368,7 +368,7 @@ function refresh_pilih() {
 <input type="hidden" name="tahunajaran" id="tahunajaran" value="<?=$tahunajaran?>" />
 <input type="hidden" name="jenis" id="jenis" value="<?=$jenis?>" />
 
-<?
+<?php
 if ($jenis <> "")
 { 
 	OpenDb();
@@ -378,10 +378,10 @@ if ($jenis <> "")
 				   AND k.idtahunajaran = '$tahunajaran'
 				   AND s.aktif=1
 				   AND k.idtingkat = t.replid
-				   AND t.replid = '$tingkat'"; 
+				   AND t.replid = '".$tingkat."'"; 
 	$result_tot = QueryDb($sql_tot);
-	$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-	$jumlah = mysql_num_rows($result_tot);
+	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;	
 	
 	$sql_siswa = "SELECT s.nis,s.nama,s.idkelas,k.kelas,s.replid,t.tingkat
@@ -394,7 +394,7 @@ if ($jenis <> "")
 				   LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	
 	$result_siswa = QueryDb($sql_siswa);
-	if (@mysql_num_rows($result_siswa)>0)
+	if (@mysqli_num_rows($result_siswa)>0)
 	{
 ?>	
 <input type="hidden" name="total" id="total" value="<?=$jumlah?>">
@@ -408,22 +408,22 @@ if ($jenis <> "")
             <div id = "InfoTgl" >
             <select name="tgl" id = "tgl" onChange="change_tgl()" onfocus = "panggil('tgl')" onKeyPress="focusNext('bln',event)">
             <option value="">[Tgl]</option>
-        <? 	for($i=1;$i<=$n;$i++){   ?>      
+        <?php 	for($i=1;$i<=$n;$i++){   ?>      
             <option value="<?=$i?>" <?=IntIsSelected($tgl, $i)?>><?=$i?></option>
-        <?	} ?>
+        <?php } ?>
             </select>
             </div>
             </td>
             <td>
             <select name="bln" id ="bln" onChange="change_tgl()" onfocus = "panggil('bln')" onKeyPress="focusNext('th',event)">
-        <? 	for ($i=1;$i<=12;$i++) { ?>
+        <?php 	for ($i=1;$i<=12;$i++) { ?>
             <option value="<?=$i?>" <?=IntIsSelected($bln, $i)?>><?=$bulan[$i]?></option>	
-        <?	}	?>	
+        <?php }	?>	
             </select>
             <select name="th" id = "th" onChange="change_tgl()" onfocus = "panggil('th')" style="width:60px">
-        <?  for ($i = $tahun1-5; $i <= $tahun1; $i++) { ?>
+        <?php  for ($i = $tahun1-5; $i <= $tahun1; $i++) { ?>
             <option value="<?=$i?>" <?=IntIsSelected($th, $i)?>><?=$i?></option>	   
-        <?	} ?>	
+        <?php } ?>	
             </select> 
             </td>
        	</tr>
@@ -445,14 +445,14 @@ if ($jenis <> "")
   		<input type="checkbox" name="cek" id="cek" onClick="cek_all()" onMouseOver="showhint('Pilih semua!', this, event, '80px')"/>
 		</td>
 	</tr>
-<?		if ($page==0)
+<?php 	if ($page==0)
 			$cnt = 1;
 		else 
 			$cnt = (int)$page*(int)$varbaris+1;
-		while ($row_siswa=@mysql_fetch_row($result_siswa)){
-            $sql_kelas="SELECT replid,kelas FROM jbsakad.kelas WHERE replid='$row_siswa[2]'";
+		while ($row_siswa=@mysqli_fetch_row($result_siswa)){
+            $sql_kelas="SELECT replid,kelas FROM jbsakad.kelas WHERE replid='".$row_siswa[2]."'";
             $result_kelas=QueryDb($sql_kelas);
-            $row_kelas=@mysql_fetch_row($result_kelas);
+            $row_kelas=@mysqli_fetch_row($result_kelas);
 ?>
 	<tr height="25">
         <td align="center"><?=$cnt?></td>
@@ -463,20 +463,20 @@ if ($jenis <> "")
             <input type="checkbox" name="ceknis<?=$cnt?>" id="ceknis<?=$cnt?>" value="1"/>
             <input type="hidden" name="nis<?=$cnt?>" id="nis<?=$cnt?>" value="<?=$row_siswa[0]?>" />
         </td>
-        <? if ($cnt==1){ ?>
+        <?php if ($cnt==1){ ?>
         <td rowspan="<?=$jumlah?>" align="center">
             <input name="alumnikan" id="alumnikan" type="submit" class="but" value=" > " onMouseOver="showhint('Alumnikan siswa ini', this, event, '120px')"/>
         </td>
-        <? } ?>
+        <?php } ?>
 	</tr>
-<?		$cnt++;
+<?php 	$cnt++;
 	}
 ?>
 </table>
     <script language='JavaScript'>
 		Tables('table', 1, 0);
  	</script>
-    <?	if ($page==0){ 
+    <?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -501,9 +501,9 @@ if ($jenis <> "")
     <tr>
        	<td width="45%" align="left">Hal
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> hal
         </td>
@@ -512,13 +512,13 @@ if ($jenis <> "")
  		</td>
         <td width="45%" align="right">Jml baris per hal
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
       	</select></td>
     </tr>
     </table>		
-<?			
+<?php 		
 		} else {
 ?>
 	<table width="100%" border="0" align="center">          
@@ -532,7 +532,7 @@ if ($jenis <> "")
 		</td>
 	</tr>
 	</table>
-<?		}
+<?php 	}
 	} else {
 ?>
 	<table width="100%" border="0" align="center">          
@@ -543,7 +543,7 @@ if ($jenis <> "")
  	</td>
 	</tr>
 	</table>
-<? 	} ?>
+<?php 	} ?>
 	</td>
 </tr>
 </table>

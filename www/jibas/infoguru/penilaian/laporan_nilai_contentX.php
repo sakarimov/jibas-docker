@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -56,7 +56,7 @@ if (isset($_REQUEST['harian']))
 
 $sql_ta="SELECT * FROM jbsakad.tahunajaran WHERE replid='$tahunajaran'";
 $result_ta=QueryDb($sql_ta);
-$row_ta=@mysql_fetch_array($result_ta);
+$row_ta=@mysqli_fetch_array($result_ta);
 $tglawal=$row_ta['tglmulai'];
 $tglakhir=$row_ta['tglakhir'];
 ?>
@@ -98,11 +98,11 @@ $tglakhir=$row_ta['tglakhir'];
       : <?=$nis?>
     </span><span class="style4"><br>
 	  <span class="style1">
-	  : <?
+	  : <?php
 	$sql_get_nama="SELECT nama FROM jbsakad.siswa WHERE nis='$nis'";
 	$result_get_nama=QueryDb($sql_get_nama);
-	$row_get_nama=@mysql_fetch_array($result_get_nama);
-	echo $row_get_nama[nama];
+	$row_get_nama=@mysqli_fetch_array($result_get_nama);
+	echo $row_get_nama['nama'];
     ?>
 	   </span></span></td>
     <td width="47%" align="right" valign="bottom"><div align="right"><a href="laporan_nilai_content.php?departemen=<?=$departemen?>&semester=<?=$semester?>&tingkat=<?=$tingkat?>&tahunajaran=<?=$tahunajaran?>&pelajaran=<?=$pelajaran?>&kelas=<?=$kelas?>&nis=<?=$nis?>&harian=<?=$harian?>&prespel=<?=$prespel?>">
@@ -136,7 +136,7 @@ $tglakhir=$row_ta['tglakhir'];
     <td class="header"><div align="center">Angka</div></td>
     <td class="header"><div align="center">Huruf</div></td>
     </tr>
-	<?
+	<?php
 	$sql_get_pelajaran_laporan=	"SELECT pel.replid as replid,pel.nama as nama FROM ujian uji, nilaiujian niluji, siswa sis, pelajaran pel ".
 								"WHERE uji.replid=niluji.idujian ".
 								"AND niluji.nis=sis.nis ".
@@ -147,11 +147,11 @@ $tglakhir=$row_ta['tglakhir'];
 								"GROUP BY pel.nama";
 	$result_get_pelajaran_laporan=QueryDb($sql_get_pelajaran_laporan);
 	$cntpel_laporan=1;
-	while ($row_get_pelajaran_laporan=@mysql_fetch_array($result_get_pelajaran_laporan)){
-		$sql_get_pred="SELECT k.predikat as predikat FROM jbsakad.komennap k, jbsakad.infonap i WHERE k.nis='$nis' AND i.idpelajaran='$row_get_pelajaran_laporan[replid]' AND i.replid=k.idinfo";
+	while ($row_get_pelajaran_laporan=@mysqli_fetch_array($result_get_pelajaran_laporan)){
+		$sql_get_pred="SELECT k.predikat as predikat FROM jbsakad.komennap k, jbsakad.infonap i WHERE k.nis='$nis' AND i.idpelajaran='".$row_get_pelajaran_laporan['replid']."' AND i.replid=k.idinfo";
 		$result_get_pred=QueryDb($sql_get_pred);
-		$row_get_pred=@mysql_fetch_array($result_get_pred);
-		switch ($row_get_pred[predikat]){
+		$row_get_pred=@mysqli_fetch_array($result_get_pred);
+		switch ($row_get_pred['predikat']){
 			case "":$predikat="";
 			break;
 			case "0":$predikat="Buruk";
@@ -166,53 +166,53 @@ $tglakhir=$row_ta['tglakhir'];
 			break;
 		}
 		//Get infonap id and min value
-		$sql_get_infonap="SELECT replid,nilaimin FROM jbsakad.infonap WHERE idpelajaran='$row_get_pelajaran_laporan[replid]' AND idsemester='$semester' AND idkelas='$kelas'";
+		$sql_get_infonap="SELECT replid,nilaimin FROM jbsakad.infonap WHERE idpelajaran='".$row_get_pelajaran_laporan['replid']."' AND idsemester='$semester' AND idkelas='$kelas'";
 		$result_get_infonap=QueryDb($sql_get_infonap);
-		$row_get_infonap=@mysql_fetch_array($result_get_infonap);
+		$row_get_infonap=@mysqli_fetch_array($result_get_infonap);
 		//get value from nap pemahaman konsep
-		$sql_get_nap_PK="SELECT n.nilaiangka as nilaiangka,n.nilaihuruf as nilaihuruf FROM jbsakad.nap n, jbsakad.aturannhb a WHERE n.idinfo='$row_get_infonap[replid]' AND n.idaturan=a.replid AND n.nis='$nis' AND a.dasarpenilaian='Pemahaman Konsep'";
+		$sql_get_nap_PK="SELECT n.nilaiangka as nilaiangka,n.nilaihuruf as nilaihuruf FROM jbsakad.nap n, jbsakad.aturannhb a WHERE n.idinfo='".$row_get_infonap['replid']."' AND n.idaturan=a.replid AND n.nis='$nis' AND a.dasarpenilaian='Pemahaman Konsep'";
 		$result_get_nap_PK=QueryDb($sql_get_nap_PK);
-		$row_get_nap_PK=@mysql_fetch_array($result_get_nap_PK);
+		$row_get_nap_PK=@mysqli_fetch_array($result_get_nap_PK);
 	
 		//get value from nap praktik
-		$sql_get_nap_P="SELECT n.nilaiangka as nilaiangka,n.nilaihuruf as nilaihuruf FROM jbsakad.nap n, jbsakad.aturannhb a WHERE n.idinfo='$row_get_infonap[replid]' AND n.idaturan=a.replid AND n.nis='$nis' AND a.dasarpenilaian='Praktik'";
+		$sql_get_nap_P="SELECT n.nilaiangka as nilaiangka,n.nilaihuruf as nilaihuruf FROM jbsakad.nap n, jbsakad.aturannhb a WHERE n.idinfo='".$row_get_infonap['replid']."' AND n.idaturan=a.replid AND n.nis='$nis' AND a.dasarpenilaian='Praktik'";
 		$result_get_nap_P=QueryDb($sql_get_nap_P);
-		$row_get_nap_P=@mysql_fetch_array($result_get_nap_P);
+		$row_get_nap_P=@mysqli_fetch_array($result_get_nap_P);
 	?>
   <tr>
-    <td height="25"><?=$row_get_pelajaran_laporan[nama]?>
-					<input type="hidden" name="replid_pel_laporan" id="replid_pel_laporan" value="<?=$row_get_pelajaran_laporan[replid]?>">
+    <td height="25"><?=$row_get_pelajaran_laporan['nama']?>
+					<input type="hidden" name="replid_pel_laporan" id="replid_pel_laporan" value="<?=$row_get_pelajaran_laporan['replid']?>">
 	</td>
-    <td height="25" align="center"><?=$row_get_infonap[nilaimin]?></td>
+    <td height="25" align="center"><?=$row_get_infonap['nilaimin']?></td>
     <!-- Biar ada merahnya -->
-	<?
-		if ($row_get_nap_PK[nilaiangka]<$row_get_infonap[nilaimin]){
+	<?php
+		if ($row_get_nap_PK['nilaiangka']<$row_get_infonap['nilaimin']){
 		?>
-	<td height="25" align="center"><font color="red"><?=$row_get_nap_PK[nilaiangka]?></font><br></td>
-    <?
+	<td height="25" align="center"><font color="red"><?=$row_get_nap_PK['nilaiangka']?></font><br></td>
+    <?php
 	} else {
 			?>
-	<td height="25" align="center"><?=$row_get_nap_PK[nilaiangka]?><br></td>
-	<?
+	<td height="25" align="center"><?=$row_get_nap_PK['nilaiangka']?><br></td>
+	<?php
 				}
 			?>
-	<td height="25" align="center"><?=$row_get_nap_PK[nilaihuruf]?></td>
+	<td height="25" align="center"><?=$row_get_nap_PK['nilaihuruf']?></td>
      <!-- Biar ada merahnya -->
-	<?
-		if ($row_get_nap_P[nilaiangka]<$row_get_infonap[nilaimin]){
+	<?php
+		if ($row_get_nap_P['nilaiangka']<$row_get_infonap['nilaimin']){
 		?>
-	<td height="25" align="center"><font color="red"><?=$row_get_nap_P[nilaiangka]?></font><br></td>
-    <?
+	<td height="25" align="center"><font color="red"><?=$row_get_nap_P['nilaiangka']?></font><br></td>
+    <?php
 	} else {
 			?>
-	<td height="25" align="center"><?=$row_get_nap_P[nilaiangka]?><br></td>
-	<?
+	<td height="25" align="center"><?=$row_get_nap_P['nilaiangka']?><br></td>
+	<?php
 				}
 			?>
-    <td height="25" align="center"><?=$row_get_nap_P[nilaihuruf]?></td>
+    <td height="25" align="center"><?=$row_get_nap_P['nilaihuruf']?></td>
     <td height="25" align="center"><?=$predikat?></td>
   </tr>
-	<?
+	<?php
 		$cntpel_laporan++;
 		}
 	?>
@@ -231,7 +231,7 @@ $tglakhir=$row_ta['tglakhir'];
 	<td width="73%" height="30" align="center" class="header">Komentar</td>
 	</tr>
 	<!-- Ambil pelajaran per departemen-->
-	<?
+	<?php
 	$sql_get_pelajaran_komentar="SELECT pel.replid as replid,pel.nama as nama FROM infonap info, komennap komen, siswa sis, pelajaran pel ".
 								"WHERE info.replid=komen.idinfo ".
 								"AND komen.nis=sis.nis ".
@@ -242,16 +242,16 @@ $tglakhir=$row_ta['tglakhir'];
 								"GROUP BY pel.nama";
 	$result_get_pelajaran_komentar=QueryDb($sql_get_pelajaran_komentar);
 	$cntpel_komentar=1;
-	while ($row_get_pelajaran_komentar=@mysql_fetch_array($result_get_pelajaran_komentar)){
-	$sql_get_komentar="SELECT k.komentar FROM jbsakad.komennap k, jbsakad.infonap i WHERE k.nis='$nis' AND i.idpelajaran='$row_get_pelajaran_komentar[replid]' AND i.replid=k.idinfo";
+	while ($row_get_pelajaran_komentar=@mysqli_fetch_array($result_get_pelajaran_komentar)){
+	$sql_get_komentar="SELECT k.komentar FROM jbsakad.komennap k, jbsakad.infonap i WHERE k.nis='$nis' AND i.idpelajaran='".$row_get_pelajaran_komentar['replid']."' AND i.replid=k.idinfo";
 	$result_get_komentar=QueryDb($sql_get_komentar);
-	$row_get_komentar=@mysql_fetch_row($result_get_komentar);
+	$row_get_komentar=@mysqli_fetch_row($result_get_komentar);
 	?>
 	<tr>
-	<td height="25"><?=$row_get_pelajaran_komentar[nama]?></td>
+	<td height="25"><?=$row_get_pelajaran_komentar['nama']?></td>
 	<td height="25"><?=$row_get_komentar[0]?></td>
 	</tr>
-	<?
+	<?php
 	$cntpel_komentar++;
 	}
 	?>
@@ -261,12 +261,12 @@ $tglakhir=$row_ta['tglakhir'];
 	</script>
 	</fieldset></td>
   </tr>
-  <?
+  <?php
   if ($harian!="false"){
   ?>
   <tr>
     <td><fieldset><legend><strong>Presensi Harian</strong></legend>
-	<?
+	<?php
 
 
 	 $sql_harian = "SELECT SUM(ph.hadir) as hadir, SUM(ph.ijin) as ijin, SUM(ph.sakit) as sakit, SUM(ph.cuti) as cuti, SUM(ph.alpa) as alpa, SUM(ph.hadir+ph.sakit+ph.ijin+ph.alpa+ph.cuti) as tot ".
@@ -303,9 +303,9 @@ $tglakhir=$row_ta['tglakhir'];
     <td width="6" background="../style/formbg2agreen.gif"><div align="center" class="style1">%</div></td>
   </tr>
   <!-- Ambil pelajaran per departemen-->
-	<?
+	<?php
 	$result_harian=QueryDb($sql_harian);
-	$row_harian=@mysql_fetch_array($result_harian);
+	$row_harian=@mysqli_fetch_array($result_harian);
 	$hadir=$row_harian['hadir'];
 	$sakit=$row_harian['sakit'];
 	$ijin=$row_harian['ijin'];
@@ -369,7 +369,7 @@ $tglakhir=$row_ta['tglakhir'];
   
   
   
- <?
+ <?php
  }
  if ($prespel!="false"){
  ?>
@@ -395,7 +395,7 @@ $tglakhir=$row_ta['tglakhir'];
     <td width="6" class="headerlong"><div align="center">%</div></td>
   </tr>
   <!-- Ambil pelajaran per departemen-->
-	<?
+	<?php
 	$sql_get_pelajaran_presensi="SELECT pel.replid as replid,pel.nama as nama FROM presensipelajaran ppel, ppsiswa pp, siswa sis, pelajaran pel ".
 								"WHERE pp.nis=sis.nis ".
 								"AND ppel.replid=pp.idpp ".
@@ -407,47 +407,47 @@ $tglakhir=$row_ta['tglakhir'];
 	$result_get_pelajaran_presensi=QueryDb($sql_get_pelajaran_presensi);
 	$cntpel_presensi=1;
 	
-	while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_presensi)){
+	while ($row_get_pelajaran_presensi=@mysqli_fetch_array($result_get_pelajaran_presensi)){
 	//ambil semua jumlah presensi per pelajaran 
 	$sql_get_all_presensi="select count(*) as jumlah FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
-						  "WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
+						  "WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
 		                  "AND pel.replid=pp.idpp AND pp.nis='$nis'";
 	$result_get_all_presensi=QueryDb($sql_get_all_presensi);
-	$row_get_all_presensi=@mysql_fetch_array($result_get_all_presensi);
+	$row_get_all_presensi=@mysqli_fetch_array($result_get_all_presensi);
 	//dapet nih jumlahnya
-	$jumlah_presensi=$row_get_all_presensi[jumlah];
+	$jumlah_presensi=$row_get_all_presensi['jumlah'];
 
 	//ambil yang hadir
 	$sql_get_hadir="select count(*) as hadir FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
-						  "WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
+						  "WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
 		                  "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=0";
 	$result_get_hadir=QueryDb($sql_get_hadir);
-	$row_get_hadir=@mysql_fetch_array($result_get_hadir);
-	$hadir=$row_get_hadir[hadir];
+	$row_get_hadir=@mysqli_fetch_array($result_get_hadir);
+	$hadir=$row_get_hadir['hadir'];
 
 	//ambil yang sakit
 	$sql_get_sakit="select count(*) as sakit FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
-						  "WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
+						  "WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
 		                  "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=1";
 	$result_get_sakit=QueryDb($sql_get_sakit);
-	$row_get_sakit=@mysql_fetch_array($result_get_sakit);
-	$sakit=$row_get_sakit[sakit];
+	$row_get_sakit=@mysqli_fetch_array($result_get_sakit);
+	$sakit=$row_get_sakit['sakit'];
 
 	//ambil yang ijin
 	$sql_get_ijin="select count(*) as ijin FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
-						  "WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
+						  "WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
 		                  "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=2";
 	$result_get_ijin=QueryDb($sql_get_ijin);
-	$row_get_ijin=@mysql_fetch_array($result_get_ijin);
-	$ijin=$row_get_ijin[ijin];
+	$row_get_ijin=@mysqli_fetch_array($result_get_ijin);
+	$ijin=$row_get_ijin['ijin'];
 
 	//ambil yang alpa
 	$sql_get_alpa="select count(*) as alpa FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
-						  "WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
+						  "WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' AND pel.idsemester='$semester' AND pel.idkelas='$kelas' ".
 		                  "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=3";
 	$result_get_alpa=QueryDb($sql_get_alpa);
-	$row_get_alpa=@mysql_fetch_array($result_get_alpa);
-	$alpa=$row_get_alpa[alpa];
+	$row_get_alpa=@mysqli_fetch_array($result_get_alpa);
+	$alpa=$row_get_alpa['alpa'];
 
 	//hitung prosentase kalo jumlahnya gak 0
 	if ($jumlah_presensi<>0){
@@ -463,7 +463,7 @@ $tglakhir=$row_ta['tglakhir'];
 	}
 	?>
 	<tr>
-    <td height="25"><?=$row_get_pelajaran_presensi[nama]?></td>
+    <td height="25"><?=$row_get_pelajaran_presensi['nama']?></td>
     <td height="25"><div align="center">
       <?=$hadir?>
     </div></td>
@@ -489,7 +489,7 @@ $tglakhir=$row_ta['tglakhir'];
       <?=$p_alpa?>
       &nbsp;%</div></td>
 	 </tr>
-	<?
+	<?php
 	$cntpel_presensi++;
 	}
 
@@ -498,32 +498,32 @@ $tglakhir=$row_ta['tglakhir'];
 	               "WHERE pel.idsemester='22' AND pel.idkelas='$kelas' ". 
                    "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=0";
     $result_all_hadir=QueryDb($sql_all_hadir);
-	$row_all_hadir=@mysql_fetch_array($result_all_hadir);
-	$all_hadir=$row_all_hadir[allhadir];
+	$row_all_hadir=@mysqli_fetch_array($result_all_hadir);
+	$all_hadir=$row_all_hadir['allhadir'];
 	
 	//sekarang hitung jumlah sakit semua pelajaran
 	$sql_all_sakit="select count(*) as allsakit FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
 	               "WHERE pel.idsemester='22' AND pel.idkelas='$kelas' ". 
                    "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=1";
     $result_all_sakit=QueryDb($sql_all_sakit);
-	$row_all_sakit=@mysql_fetch_array($result_all_sakit);
-	$all_sakit=$row_all_sakit[allsakit];
+	$row_all_sakit=@mysqli_fetch_array($result_all_sakit);
+	$all_sakit=$row_all_sakit['allsakit'];
 
 	//sekarang hitung jumlah ijin semua pelajaran
 	$sql_all_ijin="select count(*) as allijin FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
 	               "WHERE pel.idsemester='22' AND pel.idkelas='$kelas' ". 
                    "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=2";
     $result_all_ijin=QueryDb($sql_all_ijin);
-	$row_all_ijin=@mysql_fetch_array($result_all_ijin);
-	$all_ijin=$row_all_ijin[allijin];
+	$row_all_ijin=@mysqli_fetch_array($result_all_ijin);
+	$all_ijin=$row_all_ijin['allijin'];
 
 	//sekarang hitung jumlah alpa semua pelajaran
 	$sql_all_alpa="select count(*) as allalpa FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp ".
 	               "WHERE pel.idsemester='22' AND pel.idkelas='$kelas' ". 
                    "AND pel.replid=pp.idpp AND pp.nis='$nis' AND pp.statushadir=3";
     $result_all_alpa=QueryDb($sql_all_alpa);
-	$row_all_alpa=@mysql_fetch_array($result_all_alpa);
-	$all_alpa=$row_all_alpa[allalpa];
+	$row_all_alpa=@mysqli_fetch_array($result_all_alpa);
+	$all_alpa=$row_all_alpa['allalpa'];
 	?>
   <tr>
     <td height="25" bgcolor="#FFFFFF"><div align="center" class="style6">Total</div></td>
@@ -543,11 +543,11 @@ $tglakhir=$row_ta['tglakhir'];
 </script>
     </fieldset></td>
   </tr>
-  <? } ?>
+  <?php } ?>
 </table>
 
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

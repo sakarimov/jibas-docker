@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ require_once('../sessionchecker.php');
 <head>
 <title>Impor Nilai Pelajaran</title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
-<script language="JavaScript" src="../script/jquery-1.9.1.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
-<script language="JavaScript">
-<? require_once("impnilai.js.php"); ?>
+<script language = "javascript" type = "text/javascript" src="../script/jquery-1.9.1.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript">
+<?php require_once("impnilai.js.php"); ?>
 </script>
 </head>
 <body leftmargin="0" topmargin="0" onLoad="document.getElementById('departemen').focus()">

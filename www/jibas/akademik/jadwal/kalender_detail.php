@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/config.php');
@@ -39,7 +39,7 @@ $sql = "SELECT a.replid, a.kegiatan, a.idkalender, a.tanggalawal, a.tanggalakhir
 
 //echo $sql;
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $departemen =  $row['departemen'];
 $kalender = $row['kalender'];
 $periode =  LongDateFormat($row['tglmulai']).' s/d '. LongDateFormat($row['tglakhir']);
@@ -59,11 +59,11 @@ $blnakhir = $row['bulakhir'];
 $thnakhir = $row['thnakhir'];*/
 
 
-$jgk1 = explode('-',$row['tanggalawal']);
-$jgk2 = explode('-',$row['tanggalakhir']);
+$jgk1 = explode('-',(string) $row['tanggalawal']);
+$jgk2 = explode('-',(string) $row['tanggalakhir']);
 
-$jgk3 = explode('-',$row['tglmulai']);
-$jgk4 = explode('-',$row['tglakhir']);
+$jgk3 = explode('-',(string) $row['tglmulai']);
+$jgk4 = explode('-',(string) $row['tglakhir']);
 
 $jangka_waktu = '('.$jgk1[2].'/'.$jgk1[1].'/'.substr($jgk1[0],2,2).' - '.$jgk2[2].'/'.$jgk2[1].'/'.substr($jgk2[0],2,2).')';
 
@@ -114,7 +114,7 @@ if ($bulan == $blnawal && $tahun == $thnawal)
 $tmp = $tahun."-".$bulan."-1";
 $sql = "SELECT DAYOFWEEK('$tmp')";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $first_weekday_this_month = $row[0];
 
 if ($bulan == 12) {
@@ -140,13 +140,13 @@ if ($bulan == 1) {
 
 $sql = "SELECT DAY(LAST_DAY('$tmp'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_last_month = $row[0];
 
 $now = $tahun . "-" . $bulan . "-1";
 $sql = "SELECT DAY(LAST_DAY('$now'))";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $last_day_this_month = $row[0];
 
 $nweek = 0;
@@ -187,24 +187,24 @@ function loadKalender1($kalender, $id) {
 	$sql = "SELECT replid, kegiatan, tanggalawal, tanggalakhir, MONTH(tanggalawal), MONTH(tanggalakhir), DAY(tanggalawal), DAY(tanggalakhir), YEAR(tanggalawal), YEAR(tanggalakhir) FROM aktivitaskalender WHERE idkalender = '$kalender' ORDER BY tanggalawal";
 	$result = QueryDb($sql);
 	$i = 0;	
-	while($row = mysql_fetch_row($result)) {		
-		$tgl1 = explode('-',$row[2]);
-		$tgl2 = explode('-',$row[3]);
+	while($row = mysqli_fetch_row($result)) {		
+		$tgl1 = explode('-',(string) $row[2]);
+		$tgl2 = explode('-',(string) $row[3]);
 		$jangka = '('.$tgl1[2].'/'.$tgl1[1].'/'.substr($tgl1[0],2,2).' - '.$tgl2[2].'/'.$tgl2[1].'/'.substr($tgl2[0],2,2).')';
 		//$jangka = '('.$row[6].'/'.$row[4].'/'.substr($row[8],2,2).' - '.$row[7].'/'.$row[5].'/'.substr($row[9],2,2).')';
 		
-		$GLOBALS[keg][row][$i][id] = $row[0];				
-		$GLOBALS[keg][row][$i][judul] = $row[1];				
-		$GLOBALS[keg][row][$i][tanggal1] = $tgl1[2];
-		$GLOBALS[keg][row][$i][bulan1] = $tgl1[1];				
-		$GLOBALS[keg][row][$i][tahun1] = $tgl1[0];
-		$GLOBALS[keg][row][$i][tanggal2] = $tgl2[2];
-		$GLOBALS[keg][row][$i][bulan2] = $tgl2[1];
-		$GLOBALS[keg][row][$i][tahun2] = $tgl2[0];
-		$GLOBALS[keg][row][$i][jangka] = $jangka;
+		$GLOBALS['keg']['row'][$i]['id'] = $row[0];				
+		$GLOBALS['keg']['row'][$i]['judul'] = $row[1];				
+		$GLOBALS['keg']['row'][$i][\TANGGAL1] = $tgl1[2];
+		$GLOBALS['keg']['row'][$i][\BULAN1] = $tgl1[1];				
+		$GLOBALS['keg']['row'][$i][\TAHUN1] = $tgl1[0];
+		$GLOBALS['keg']['row'][$i][\TANGGAL2] = $tgl2[2];
+		$GLOBALS['keg']['row'][$i][\BULAN2] = $tgl2[1];
+		$GLOBALS['keg']['row'][$i][\TAHUN2] = $tgl2[0];
+		$GLOBALS['keg']['row'][$i]['jangka'] = $jangka;
 		
 		if ($id == $row[0]) {
-			$GLOBALS[urutan] = $i;
+			$GLOBALS['urutan'] = $i;
 		}
 			
 		++$i;
@@ -237,8 +237,8 @@ function loadKalender1($kalender, $id) {
 </style>
 
 <script language="javascript" src="../script/ajax.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
 <script language="javascript">
 function GoToLastMonth() {
 	var replid = document.getElementById('replid').value;
@@ -304,27 +304,27 @@ function tampil(replid) {
     <tr> 
         <td><strong>Bulan Kegiatan </strong></td> 
         <td>
-        <? if ($last == 0) { ?>
+        <?php if ($last == 0) { ?>
         <input type="button" class="but" onClick="GoToLastMonth()" value="  <  ">
-        <? }?>
+        <?php }?>
         <select name="bulan" id="bulan" onChange="ChangeCal()" <?=$disable?>>
-            <? 	for ($i=1;$i<=12;$i++) { ?>
+            <?php 	for ($i=1;$i<=12;$i++) { ?>
             <option value="<?=$i?>" <?=IntIsSelected($bulan, $i)?>><?=NamaBulan($i)?></option>	
-            <?	} ?>
+            <?php } ?>
         </select>
         <select id="tahun" name="tahun" onChange="ChangeCal()" <?=$disable?>>
-        <? $YNOW = date('Y');
+        <?php $YNOW = date('Y');
            //for ($i = $tahun1; $i <= $tahun2; $i++) { 
 			for ($i = $tahun1; $i <= $thnakhir; $i++) {   
 		?>
             <option value="<?=$i?>" <?=IntIsSelected($i, $tahun)?>><?=$i?></option>
-        <? } ?>
+        <?php } ?>
         </select> 
                
-        <? if ($next == 1) {		
+        <?php if ($next == 1) {		
         ?> 
         <input type="button" class="but" onClick="GoToNextMonth()" value="  >  ">
-        <? } ?>
+        <?php } ?>
         </td>    
     </tr>
     <tr height="250">
@@ -339,7 +339,7 @@ function tampil(replid) {
             <td width="55" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Jumat</b></td>
             <td width="55" align="center" style="background-color:#3366CC; color:#FFFFFF"><b>Sabtu</b></td>
         </tr>
-        <?
+        <?php
 		
 		
         for ($i = 0; $i < count($cal); $i++) { 
@@ -368,7 +368,7 @@ function tampil(replid) {
 				$sql1 = "SELECT * FROM aktivitaskalender WHERE '$tglnow' BETWEEN tanggalawal AND tanggalakhir ".
 						"AND replid = '$replid' ";
 				$result1 = QueryDb($sql1);
-				$jum1 = mysql_num_rows($result1);	
+				$jum1 = mysqli_num_rows($result1);	
 				if ($jum1 > 0)
 					echo "<td align='center' valign='middle' style='background-color: #FFFFAA'>";
 				else 
@@ -380,11 +380,11 @@ function tampil(replid) {
 					//if ($warna[$m] == 1) {
 						//$style_in[$m] = "style='background-color: {$color_in[$m]}'";
 						if (($bln == $bulan) && ($thn == $tahun)) {
-                    		if (($keg[row][$id][tanggal1]==$tgl && $bln==$keg[row][$id][bulan1] && $thn==$keg[row][$id][tahun1])){
+                    		if (($keg['row'][$id][\TANGGAL1]==$tgl && $bln==$keg['row'][$id][\BULAN1] && $thn==$keg['row'][$id][\TAHUN1])){
                         	    $style_in[$m] = "";    
 								//$style_in[$m] = "style='background-color: {$color_in[$m]}'";
                     		}
-                    		if (($keg[row][$id][tanggal2]<$tgl && $bln==$keg[row][$id][bulan2] && $thn==$keg[row][$id][tahun2])){
+                    		if (($keg['row'][$id][\TANGGAL2]<$tgl && $bln==$keg['row'][$id][\BULAN2] && $thn==$keg['row'][$id][\TAHUN2])){
                         		$style_in[$m] = "";
 							}
                 		}		
@@ -425,7 +425,7 @@ function tampil(replid) {
     </table>
     </td>
 	<td valign="top" height="150">
-    <fieldset><legend><b>Kegiatan <? ///NamaBulan($bulan).' '.$tahun?>  </b></legend>
+    <fieldset><legend><b>Kegiatan <?php ///NamaBulan($bulan).' '.$tahun?>  </b></legend>
     <!--<div style="overflow: auto">--->
     <div style="overflow:auto; height:450px">
     <table border="0" cellpadding="3" cellspacing="2" width="175" >
@@ -434,37 +434,37 @@ function tampil(replid) {
         	<b><font size="4"><?=$kegiatan?></font><br><?=$jangka_waktu?></b></td> 
     </tr>
    
-    <?	//foreach($acara as $k => $v) {
-        /*$GLOBALS[keg][row][$i][id] = $row[0];				
-        $GLOBALS[keg][row][$i][judul] = $row[1];				
-        $GLOBALS[keg][row][$i][tanggal1] = $tgl1[2];
-        $GLOBALS[keg][row][$i][bulan1] = $tgl1[1];
-        $GLOBALS[keg][row][$i][tahun1] = $tgl1[0];
-        $GLOBALS[keg][row][$i][tanggal2] = $tgl2[2];
-        $GLOBALS[keg][row][$i][bulan2] = $tgl2[1];
-        $GLOBALS[keg][row][$i][tahun2] = $tgl2[0];
+    <?php //foreach($acara as $k => $v) {
+        /*$GLOBALS['keg']['row'][$i]['id'] = $row[0];				
+        $GLOBALS['keg']['row'][$i]['judul'] = $row[1];				
+        $GLOBALS['keg']['row'][$i][tanggal1] = $tgl1[2];
+        $GLOBALS['keg']['row'][$i][bulan1] = $tgl1[1];
+        $GLOBALS['keg']['row'][$i][tahun1] = $tgl1[0];
+        $GLOBALS['keg']['row'][$i][tanggal2] = $tgl2[2];
+        $GLOBALS['keg']['row'][$i][bulan2] = $tgl2[1];
+        $GLOBALS['keg']['row'][$i][tahun2] = $tgl2[0];
         */
 		//$color_in = array("#FFCC33","#C7C6EA","#FF8e8e","#9DD7CB","#f2ade4","#C1E6AC");
-		$color_in = array("#C1E6AC","#f2ade4","#9DD7CB","#FF8e8e","#C7C6EA","#FFCC33");
-		loadKalender1($idkalender, $replid);
+		$color_in = ["#C1E6AC", "#f2ade4", "#9DD7CB", "#FF8e8e", "#C7C6EA", "#FFCC33"];
+		loadKalender1($idkalender);
 		$cnt = 0;
 		$clr = 0;
 		
 		
-        for ($i=0;$i<sizeof($keg[row]);$i++) { 
-			if ($keg[row][$i][id] <> $replid) {
+        for ($i=0;$i<sizeof($keg['row']);$i++) { 
+			if ($keg['row'][$i]['id'] <> $replid) {
 					
 		$style = "";
 			
-			if (($keg[row][$i][tahun1] == $tahun) && ($keg[row][$i][bulan1] <= $bulan)) {
+			if (($keg['row'][$i][\TAHUN1] == $tahun) && ($keg['row'][$i][\BULAN1] <= $bulan)) {
 				//$style =  'style="background-color: '.$color_in[$clr].'"';
 				$style = 'style = "color:#FF0000;font-weight: bold;"';			
 				$warna[$clr] = $i;
 				++$clr;			
 			}
 			
-			if ($keg[row][$i][tahun1] < $tahun) { 
-				if ($keg[row][$i][tahun2] == $tahun && $keg[row][$i][bulan2] >= $bulan){
+			if ($keg['row'][$i][\TAHUN1] < $tahun) { 
+				if ($keg['row'][$i][\TAHUN2] == $tahun && $keg['row'][$i][\BULAN2] >= $bulan){
 				//$style =  'style="background-color: '.$color_in[$clr].'"';
 				$style = 'style = "color:#FF0000;font-weight: bold;"';
 				$warna[$clr] = $i;
@@ -473,12 +473,12 @@ function tampil(replid) {
 		}
 		?>
     <tr height="20">
-    	<td <?=$style?> onclick="tampil(<?=$keg[row][$i][id]?>)" style="cursor:pointer">
-		<?=$keg[row][$i][judul].'<br>'.$keg[row][$i][jangka]?>
-		<? //echo '<br>'.$keg[row][$i][tahun1].' = '.$tahun.' dan '.$keg[row][$i][bulan1].' = '.$bulan?>     
+    	<td <?=$style?> onclick="tampil(<?=$keg['row'][$i]['id']?>)" style="cursor:pointer">
+		<?=$keg['row'][$i]['judul'].'<br>'.$keg['row'][$i]['jangka']?>
+		<?php //echo '<br>'.$keg['row'][$i][tahun1].' = '.$tahun.' dan '.$keg['row'][$i][bulan1].' = '.$bulan?>     
    		</td>
     </tr>   
-    <?   
+<?php   
 		}     
     }
 	?>

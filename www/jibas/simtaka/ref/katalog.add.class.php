@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,20 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 class CKatalogAdd{
 	function OnStart(){
-		if (isset($_REQUEST[simpan])){
-			$sql = "SELECT kode FROM katalog WHERE kode='$_REQUEST[kode]' ";
+		if (isset($_REQUEST['simpan'])){
+			$sql = "SELECT kode FROM katalog WHERE kode='".$_REQUEST['kode']."' ";
 			$result = QueryDb($sql);
-			$num = @mysql_num_rows($result);
+			$num = @mysqli_num_rows($result);
 			if ($num>0){
 				$this->exist();
 			} else {
-				$sql = "INSERT INTO katalog SET rak='$_REQUEST[rak]', kode='".CQ($_REQUEST['kode'])."', nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."'";
+				$sql = "INSERT INTO katalog SET rak='".$_REQUEST['rak']."', kode='".CQ($_REQUEST['kode'])."', nama='".CQ($_REQUEST['nama'])."', keterangan='".CQ($_REQUEST['keterangan'])."'";
 				$result = QueryDb($sql);
 				if ($result)
-					$this->success($_REQUEST[rak]);
+					$this->success($_REQUEST['rak']);
 			}
 		}
 	}
@@ -43,7 +43,7 @@ class CKatalogAdd{
 			alert('Kode sudah digunakan!');
 			document.location.href="katalog.add.php";
 		</script>
-        <?
+        <?php
 	}
 	function success($rak){
 		?>
@@ -51,25 +51,25 @@ class CKatalogAdd{
 			parent.opener.getfresh('<?=$rak?>');
 			window.close();
         </script>
-        <?
+        <?php
 	}
 	function GetRak(){
-		$this->rak = $_REQUEST[rak];
+		$this->rak = $_REQUEST['rak'];
 		$sql = "SELECT replid,rak FROM rak ORDER BY rak";
 		$result = QueryDb($sql);
 		?>
 		<select name="rak" id="rak" class="cmbfrm">
-		<?
-		while ($row = @mysql_fetch_row($result)){
+		<?php
+		while ($row = @mysqli_fetch_row($result)){
 		if ($this->rak=="")
 			$this->rak = $row[0];	
 		?>
 			<option value="<?=$row[0]?>" <?=IntIsSelected($row[0],$this->rak)?>><?=$row[1]?></option>
-		<?
+		<?php
 		}
 		?>
 		</select>
-		<?
+		<?php
 	}
 	function add(){
 		?>
@@ -101,7 +101,7 @@ class CKatalogAdd{
           </tr>
         </table>
 		</form>
-		<?
+		<?php
 	}
 }
 ?>

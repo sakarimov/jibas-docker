@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessionchecker.php');
 require_once('../include/common.php');
 require_once('../include/rupiah.php');
@@ -37,7 +37,7 @@ if (getLevel() == 2)
         alert('Maaf, anda tidak berhak mengakses halaman ini!');
         document.location.href = "../penerimaan.php";
     </script>
-    <? 	exit();
+    <?php 	exit();
 } // end if
 
 OpenDb();
@@ -91,7 +91,7 @@ OpenDb();
             <td width="100">&nbsp;</td>
             <td><strong>Departemen</strong></td>
             <td>
-<?              $departemen = "";
+<?php              $departemen = "";
                 ShowSelectDepartemen() ?>
             </td>
             <td width="100">&nbsp;</td>

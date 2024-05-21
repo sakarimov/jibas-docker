@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  *
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@
     <td width="6" class="headerlong"><div align="center">%</div></td>
 </tr>
 <!-- Ambil pelajaran per departemen-->
-<?
+<?php
 $sql_get_pelajaran_presensi =
     "SELECT pel.replid as replid,pel.nama as nama 
        FROM presensipelajaran ppel, ppsiswa pp, siswa sis, pelajaran pel 
@@ -56,28 +56,28 @@ $sql_get_pelajaran_presensi =
 $result_get_pelajaran_presensi=QueryDb($sql_get_pelajaran_presensi);
 $cntpel_presensi=1;
 
-while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_presensi))
+while ($row_get_pelajaran_presensi=@mysqli_fetch_array($result_get_pelajaran_presensi))
 {
     //ambil semua jumlah presensi per pelajaran
     $sql_get_all_presensi =
         "SELECT count(*) as jumlah 
            FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp 
-          WHERE pel.idpelajaran ='$row_get_pelajaran_presensi[replid]' 
+          WHERE pel.idpelajaran ='".$row_get_pelajaran_presensi['replid']."' 
             AND pel.idsemester ='$semester' 
             AND pel.idkelas ='$kelas' 
             AND pel.replid =pp.idpp 
             AND pel.tanggal BETWEEN '$tglawal' AND '$tglakhir'
             AND pp.nis='$nis'";
     $result_get_all_presensi=QueryDb($sql_get_all_presensi);
-    $row_get_all_presensi=@mysql_fetch_array($result_get_all_presensi);
+    $row_get_all_presensi=@mysqli_fetch_array($result_get_all_presensi);
     //dapet nih jumlahnya
-    $jumlah_presensi=$row_get_all_presensi[jumlah];
+    $jumlah_presensi=$row_get_all_presensi['jumlah'];
 
     //ambil yang hadir
     $sql_get_hadir=
         "SELECT count(*) as hadir 
            FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp 
-          WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' 
+          WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' 
             AND pel.idsemester='$semester' 
             AND pel.idkelas='$kelas' 
             AND pel.replid=pp.idpp 
@@ -85,15 +85,15 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
             AND pel.tanggal BETWEEN '$tglawal' AND '$tglakhir'
             AND pp.statushadir=0";
     $result_get_hadir=QueryDb($sql_get_hadir);
-    $row_get_hadir=@mysql_fetch_array($result_get_hadir);
-    $hadir=$row_get_hadir[hadir];
+    $row_get_hadir=@mysqli_fetch_array($result_get_hadir);
+    $hadir=$row_get_hadir['hadir'];
     $hh[$cntpel_presensi]=$hadir;
 
     //ambil yang sakit
     $sql_get_sakit =
         "SELECT count(*) as sakit 
            FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp 
-          WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' 
+          WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' 
             AND pel.idsemester='$semester' 
             AND pel.idkelas='$kelas' 
             AND pel.replid=pp.idpp 
@@ -101,15 +101,15 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
             AND pel.tanggal BETWEEN '$tglawal' AND '$tglakhir'
             AND pp.statushadir=1";
     $result_get_sakit=QueryDb($sql_get_sakit);
-    $row_get_sakit=@mysql_fetch_array($result_get_sakit);
-    $sakit=$row_get_sakit[sakit];
+    $row_get_sakit=@mysqli_fetch_array($result_get_sakit);
+    $sakit=$row_get_sakit['sakit'];
     $ss[$cntpel_presensi]=$sakit;
 
     //ambil yang ijin
     $sql_get_ijin=
         "SELECT count(*) as ijin 
            FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp 
-          WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' 
+          WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' 
             AND pel.idsemester='$semester' 
             AND pel.idkelas='$kelas' 
             AND pel.replid=pp.idpp 
@@ -117,15 +117,15 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
             AND pel.tanggal BETWEEN '$tglawal' AND '$tglakhir'
             AND pp.statushadir=2";
     $result_get_ijin=QueryDb($sql_get_ijin);
-    $row_get_ijin=@mysql_fetch_array($result_get_ijin);
-    $ijin=$row_get_ijin[ijin];
+    $row_get_ijin=@mysqli_fetch_array($result_get_ijin);
+    $ijin=$row_get_ijin['ijin'];
     $ii[$cntpel_presensi]=$ijin;
 
     //ambil yang alpa
     $sql_get_alpa=
         "SELECT count(*) as alpa 
            FROM jbsakad.presensipelajaran pel, jbsakad.ppsiswa pp 
-          WHERE pel.idpelajaran='$row_get_pelajaran_presensi[replid]' 
+          WHERE pel.idpelajaran='".$row_get_pelajaran_presensi['replid']."' 
             AND pel.idsemester='$semester' 
             AND pel.idkelas='$kelas' 
             AND pel.replid=pp.idpp 
@@ -133,8 +133,8 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
             AND pel.tanggal BETWEEN '$tglawal' AND '$tglakhir'
             AND pp.statushadir=3";
     $result_get_alpa=QueryDb($sql_get_alpa);
-    $row_get_alpa=@mysql_fetch_array($result_get_alpa);
-    $alpa=$row_get_alpa[alpa];
+    $row_get_alpa=@mysqli_fetch_array($result_get_alpa);
+    $alpa=$row_get_alpa['alpa'];
     $aa[$cntpel_presensi]=$alpa;
 
     //hitung prosentase kalo jumlahnya gak 0
@@ -151,7 +151,7 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
     }
     ?>
     <tr>
-        <td height="25"><?=$row_get_pelajaran_presensi[nama]?></td>
+        <td height="25"><?=$row_get_pelajaran_presensi['nama']?></td>
         <td height="25"><div align="center"><?=$hadir?></div></td>
         <td height="25"><div align="center"><?=$p_hadir?>%</div></td>
         <td height="25"><div align="center"><?=$sakit?></div></td>
@@ -161,7 +161,7 @@ while ($row_get_pelajaran_presensi=@mysql_fetch_array($result_get_pelajaran_pres
         <td height="25"><div align="center"><?=$alpa?></div></td>
         <td height="25"><div align="center"><?=$p_alpa?>%</div></td>
     </tr>
-<?
+<?php
     $cntpel_presensi++;
 }
 

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -42,7 +42,7 @@ if(isset($_REQUEST["kelas"]))
 if(isset($_REQUEST["nip"]))
 	$nip = $_REQUEST["nip"];
 
-$warna=array('fcf5ca','d5fcca','cafcf3','cae6fc','facafc');
+$warna=['fcf5ca', 'd5fcca', 'cafcf3', 'cae6fc', 'facafc'];
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -51,8 +51,8 @@ $warna=array('fcf5ca','d5fcca','cafcf3','cae6fc','facafc');
 <title>Menu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="../style/style.css">
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript">
 
 function klik(idpelajaran,aspek,aspekket,kelas,semester,nip,tingkat,departemen,tahun){
 
@@ -64,7 +64,7 @@ function klik(idpelajaran,aspek,aspekket,kelas,semester,nip,tingkat,departemen,t
 </script>
 </head>
 <body topmargin="5" leftmargin="5" style="background-color: #f5f5f5;">
-<?
+<?php
 OpenDb();
 $query_aturan = "SELECT DISTINCT aturannhb.idpelajaran, pelajaran.nama 
 				   FROM jbsakad.aturannhb aturannhb, jbsakad.pelajaran pelajaran 
@@ -82,7 +82,7 @@ $query_aturan = "SELECT DISTINCT g.idpelajaran, p.nama
 					   ORDER BY p.nama";					
 
 $result_aturan = QueryDb($query_aturan);
-if (!mysql_num_rows($result_aturan)==0){ ?>
+if (!mysqli_num_rows($result_aturan)==0){ ?>
 
 <strong>Pelajaran:</strong><br><br>
 <table class="tab" id="table" border="0"
@@ -93,8 +93,8 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
     <tr style="height: 2px">
         <td></td>
     </tr>
-<?  $cnt = 0;
-	while ($row_aturan=@mysql_fetch_array($result_aturan)) 
+<?php  $cnt = 0;
+	while ($row_aturan=@mysqli_fetch_array($result_aturan)) 
 	{
 		$idpelajaran = $row_aturan['idpelajaran'];
 		$sql = "SELECT DISTINCT a.dasarpenilaian, dp.keterangan
@@ -107,22 +107,22 @@ if (!mysql_num_rows($result_aturan)==0){ ?>
 <tr>   	
     <td align="left" height="25">
     <b><font style="font-size:14px; font-family:Arial;"><?=$row_aturan['nama']?></font>:</b><br />
-<?		while($row = mysql_fetch_array($res)) 
+<?php 	while($row = mysqli_fetch_array($res)) 
 		{ ?>
         &nbsp;&nbsp;&bull;
 		<a href="#" onclick="klik('<?=$row_aturan['idpelajaran']?>','<?=$row['dasarpenilaian']?>','<?=$row['keterangan']?>','<?=$kelas?>','<?=$semester?>','<?=$nip?>','<?=$tingkat?>','<?=$departemen?>','<?=$tahun?>')"><font color="#0000FF"><strong><?=$row['keterangan']?></strong></font></a><br />
-<?		} ?>	
+<?php 	} ?>	
     </td>
 </tr>
 <!-- END TABLE CONTENT -->
-<?
+<?php
  	} // while
 ?>	
 </table>
 <script language='JavaScript'>
 	Tables('table', 1, 0);
 </script>
-<? 
+<?php 
 } 
 else 
 { 
@@ -134,9 +134,9 @@ else
     </td>
 </tr>
 </table> 
-<? 
+<?php 
 } 
 ?> 
 </body>
-<? CloseDb(); ?>
+<?php CloseDb(); ?>
 </html>

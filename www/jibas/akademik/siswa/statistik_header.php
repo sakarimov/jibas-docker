@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -50,7 +50,7 @@ if (isset($_REQUEST['dasar']))
 <script src="../script/SpryValidationSelect.js" type="text/javascript"></script>
 <link href="../script/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript">
 
 function tampil_statistik() {
@@ -107,24 +107,24 @@ function panggil(elem){
  	<tr>
     	<td align="left" width = "35%"><strong>Departemen</strong>
       	<td width = "*">
-        <? 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {	?>
+        <?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {	?>
         <select name="departemen" id="departemen" onchange="change()" style="width:240px;" onKeyPress="return focusNext('dasar', event)" onfocus="panggil('departemen')">
         	<option value="-1" >(Semua Departemen)</option>    
-		<?
+		<?php
 			$sql = "SELECT * FROM jbsakad.departemen where aktif=1 ORDER BY urutan";
 			OpenDb();
 			$result = QueryDb($sql);
 			CloseDb();
-			while($row = mysql_fetch_array($result)) {
+			while($row = mysqli_fetch_array($result)) {
 			if ($departemen == "")
 				$departemen = -1;	
 		?>
-        	<option value="<?=urlencode($row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?>><?=$row['departemen']?></option>
-        <? 	} //while 	?>
+        	<option value="<?=urlencode((string) $row['departemen'])?>" <?=StringIsSelected($row['departemen'], $departemen) ?>><?=$row['departemen']?></option>
+        <?php 	} //while 	?>
      	</select>
-        <? 	} else { ?>
+<?php 	} else { ?>
         <select name="departemen" id="departemen" onchange="change()" style="width:240px;" onKeyPress="return focusNext('angkatan', event)" onfocus="panggil('departemen')">
-        <?
+        <?php
 			$dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value) {
 			if ($departemen == "")
@@ -132,9 +132,9 @@ function panggil(elem){
                 <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> > 
                   <?=$value ?> 
                   </option>
-              <? } ?>
+              <?php } ?>
               </select>
-        <?  }
+        <?php  }
 		
 		if ($departemen == -1)  {
 			$disable = 'disabled="disabled"';
@@ -142,7 +142,7 @@ function panggil(elem){
 			$dep = "";
 		} else	{
 			$disable = "";
-			$dep = "AND departemen = '$departemen'";
+			$dep = "AND departemen = '".$departemen."'";
 		}
 		
 		?>
@@ -153,15 +153,15 @@ function panggil(elem){
 	 	<td>
       	<select name="angkatan" id="angkatan" onchange="change()" <?=$disable?> style="width:240px;" onKeyPress="return focusNext('dasar', event)" onfocus="panggil('angkatan')">      	
 	 	<option value="-1" >(Semua Angkatan)</option>	
-		<?
+		<?php
       		OpenDb();
 			$sql = "SELECT replid,angkatan FROM jbsakad.angkatan WHERE aktif = 1 $dep ";
 			$result = QueryDb($sql);
 			CloseDb();
-			while ($row = mysql_fetch_array($result)) { 
+			while ($row = mysqli_fetch_array($result)) { 
 		?>            	
-    	<option value="<?=urlencode($row[replid])?>" <?=IntIsSelected($row['replid'], $angkatan) ?>><?=$row['angkatan']?></option>
-  		<?	} //while  	?>
+    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $angkatan) ?>><?=$row['angkatan']?></option>
+  		<?php } //while  	?>
 		</select>
      	</td>
     </tr>
@@ -170,9 +170,9 @@ function panggil(elem){
       	<td>
         <!--<div id="dasarInfo">-->
         <select name="dasar" id="dasar" onchange="change()" style="width:240px;" onKeyPress="return focusNext('tabel', event)" onfocus="panggil('dasar')">
-        <? for ($i=1;$i<=17;$i++) { ?>
+        <?php for ($i=1;$i<=17;$i++) { ?>
         <option value ="<?=$i?>" <?=IntIsSelected($i, $dasar) ?>><?=$kriteria[$i] ?></option>
-        <?  } ?>
+        <?php  } ?>
         </select>      
 		</td> 
 	</tr>

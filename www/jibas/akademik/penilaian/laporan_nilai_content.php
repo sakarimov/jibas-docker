@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -105,10 +105,10 @@ if (isset($_REQUEST['tglakhir']))
           <span class="style5">: <?=$nis?></span>
           <span class="style4"><br>
 	      <span class="style1">:
-<?          $sql_get_nama="SELECT nama FROM jbsakad.siswa WHERE nis='$nis'";
+<?php          $sql_get_nama="SELECT nama FROM jbsakad.siswa WHERE nis='$nis'";
 	        $result_get_nama=QueryDb($sql_get_nama);
-	        $row_get_nama=@mysql_fetch_array($result_get_nama);
-	        echo $row_get_nama[nama];?>
+	        $row_get_nama=@mysqli_fetch_array($result_get_nama);
+	        echo $row_get_nama['nama'];?>
 	      </span>
           </span>
       </td>
@@ -127,27 +127,31 @@ if (isset($_REQUEST['tglakhir']))
 </td></tr>
 
 <tr><td>
-<? require_once("rapor.content.komentar.php"); ?>
+<?php require_once("rapor.content.komentar.php"); ?>
 </td></tr>
 
 <tr><td>
-<? require_once("rapor.content.nilai.php"); ?>
+<?php require_once("rapor.content.nilai.php"); ?>
 </td></tr>
 
 <tr><td>
-<? require_once("rapor.content.nilai.deskripsi.php"); ?>
+<?php require_once("rapor.content.nilai.deskripsi.php"); ?>
 </td></tr>
 
 
 <tr><td>
 <?php
-if ($harian != "false") require_once("rapor.content.presensi.harian.php");
+if ($harian != "false") {
+    require_once(__DIR__ . "/rapor.content.presensi.harian.php");
+}
 ?>
 </td></tr>
 
 <tr><td>
 <?php
-if ($prespel != "false") require_once("rapor.content.presensi.pelajaran.php");
+if ($prespel != "false") {
+    require_once(__DIR__ . "/rapor.content.presensi.pelajaran.php");
+}
 ?>
 </td></tr>
 </table>
@@ -156,6 +160,6 @@ if ($prespel != "false") require_once("rapor.content.presensi.pelajaran.php");
 </script>
 </BODY>
 </HTML>
-<?
+<?php
 CloseDb();
 ?>

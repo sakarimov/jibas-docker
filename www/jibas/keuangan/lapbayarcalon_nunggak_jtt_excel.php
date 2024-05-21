@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/common.php');
@@ -71,7 +71,7 @@ $tgl = MySqlDateFormat($tanggal);
 </head>
 
 <body>
-<?
+<?php
 OpenDb();
 if ($kelompok == -1) 
 {
@@ -97,7 +97,7 @@ else
 //echo  "$sql<br>";
 $result = QueryDb($sql);
 $idstr = "";
-while($row = mysql_fetch_row($result)) {
+while($row = mysqli_fetch_row($result)) {
 	if (strlen($idstr) > 0)
 		$idstr = $idstr . ",";
 	$idstr = $idstr . $row[0];
@@ -112,14 +112,14 @@ if (strlen($idstr) == 0) {
 $sql = "SELECT MAX(jumlah) FROM (SELECT idbesarjttcalon, count(replid) AS jumlah FROM penerimaanjttcalon WHERE idbesarjttcalon IN ($idstr) GROUP BY idbesarjttcalon) AS X";
 //echo  "$sql<br>";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $max_n_cicilan = $row[0];
 $table_width = 810 + $max_n_cicilan * 90;
 
 //Dapatkan namapenerimaan
-$sql = "SELECT nama, departemen FROM datapenerimaan WHERE replid = '$idpenerimaan'";
+$sql = "SELECT nama, departemen FROM datapenerimaan WHERE replid = '".$idpenerimaan."'";
 $result = QueryDb($sql);
-$row = mysql_fetch_row($result);
+$row = mysqli_fetch_row($result);
 $namapenerimaan = $row[0];
 $departemen = $row[1];
 
@@ -127,18 +127,18 @@ $namakelompok = "Semua Kelompok";
 if ($kelompok <> -1) {
 	$sql = "SELECT proses, kelompok FROM jbsakad.kelompokcalonsiswa k, jbsakad.prosespenerimaansiswa p WHERE k.replid = '$kelompok' AND k.idproses = p.replid";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$namaproses = $row[0];
 	$namakelompok = $row[1];	
 } else  {
 	$sql = "SELECT proses FROM jbsakad.prosespenerimaansiswa p WHERE p.aktif = 1";
 	$result = QueryDb($sql);
-	$row = mysql_fetch_row($result);
+	$row = mysqli_fetch_row($result);
 	$namaproses = $row[0];
 }
 ?>
 
-<center><font size="4" face="Verdana"><strong>LAPORAN TUNGGAKAN <?=strtoupper($namapenerimaan) ?><br />
+<center><font size="4" face="Verdana"><strong>LAPORAN TUNGGAKAN <?=strtoupper((string) $namapenerimaan) ?><br />
 </strong></font><br /> 
 </center>
 <br />
@@ -178,12 +178,12 @@ if ($kelompok <> -1) {
     <td width="80" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">No. Reg</font></strong></td>
     <td width="140" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Nama</font></strong></td>
     <td width="50" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Kel</font></strong></td>
-<? 	for($i = 0; $i < $max_n_cicilan; $i++) { 
+<?php 	for($i = 0; $i < $max_n_cicilan; $i++) { 
 			$n = $i + 1; ?>
     		<td width="120" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">
    		    <?="Bayaran-$n" ?>
     		</font></strong></td>	
-    <?  } ?>
+    <?php  } ?>
     <td width="80" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Telat<br />
         <em>(hari)</em></font></strong></td>
     <td width="120" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">
@@ -194,7 +194,7 @@ if ($kelompok <> -1) {
     <td width="120" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Total Tunggakan</font></strong></td>
     <td width="200" align="center" bgcolor="#CCCCCC" class="header"><strong><font size="2" face="Arial">Keterangan</font></strong></td>
 </tr>
-<?
+<?php
 $sql_tot = "SELECT c.nopendaftaran, c.nama, k.kelompok, b.replid AS id, b.besar, b.keterangan, b.lunas 
               FROM jbsakad.calonsiswa c, jbsakad.kelompokcalonsiswa k, besarjttcalon b 
 				 WHERE c.replid = b.idcalon AND c.idkelompok = k.replid AND b.replid IN ($idstr) ORDER BY c.nama";
@@ -209,7 +209,7 @@ $totalbiayaall = 0;
 $totalbayarall = 0;
 $totaldiskonall = 0;
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysqli_fetch_array($result)) {
 	$bg1="#ffffff";
 	if ($cnt==0 || $cnt%2==0)
 		$bg1="#fcffd3";
@@ -236,10 +236,10 @@ while ($row = mysql_fetch_array($result)) {
     <td align="center"><font size="2" face="Arial">
       <?=$row['kelompok'] ?>
     </font></td>
-<?
-	$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+<?php
+	$sql = "SELECT count(*) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	$nbayar = $row2[0];
 	$nblank = $max_n_cicilan - $nbayar;
 	$totalbayar = 0;
@@ -249,7 +249,7 @@ while ($row = mysql_fetch_array($result)) {
 		$sql = "SELECT date_format(tanggal, '%d-%b-%y'), jumlah, info1 FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt' ORDER BY tanggal";
 		$result2 = QueryDb($sql);
 		$x=0;
-		while ($row2 = mysql_fetch_row($result2)) {
+		while ($row2 = mysqli_fetch_row($result2)) {
 			$bg2=$bg1;
 			if ($x%2==0 || $x==0)
 				$bg2="#d3fffd";
@@ -265,7 +265,7 @@ while ($row = mysql_fetch_array($result)) {
                 <?=$row2[0] ?>
                 </font></td></tr>
     </table>            </td>
-<?		$x++;
+<?php 	$x++;
 		}
  		$totalbayarall += $totalbayar;
 		$totaldiskonall += $totaldiskon;
@@ -276,12 +276,12 @@ while ($row = mysql_fetch_array($result)) {
             <tr height="20"><td align="center">&nbsp;</td></tr>
             <tr height="20"><td align="center">&nbsp;</td></tr>
     </table>        </td>
-    <? }?>
+    <?php }?>
     <td align="center">
       <font size="2" face="Arial">
-      <?	$sql = "SELECT max(datediff('$tgl', tanggal)) FROM penerimaanjttcalon WHERE idbesarjttcalon = '$idbesarjtt'";
+      <?php $sql = "SELECT max(datediff('$tgl', tanggal)) FROM penerimaanjttcalon WHERE idbesarjttcalon = '".$idbesarjtt."'";
 	$result2 = QueryDb($sql);
-	$row2 = mysql_fetch_row($result2);
+	$row2 = mysqli_fetch_row($result2);
 	echo  $row2[0]; ?>    
     </font></td>
     <td align="right"><font size="2" face="Arial">
@@ -300,7 +300,7 @@ while ($row = mysql_fetch_array($result)) {
       <?=$ketjtt ?>
     </font></td>
 </tr>
-<?
+<?php
 }
 ?>
 <tr height="40">
@@ -312,7 +312,7 @@ while ($row = mysql_fetch_array($result)) {
     <td bgcolor="#999900">&nbsp;</td>
 </tr>
 </table>
-<? CloseDb() ?>
+<?php CloseDb() ?>
 <!-- END TABLE CONTENT -->
     
 </td>

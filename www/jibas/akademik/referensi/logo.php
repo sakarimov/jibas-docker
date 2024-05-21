@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -39,7 +39,7 @@ if ($_REQUEST['ganti'] == 1)	{
 	///document.location.href = "logo.php?ganti=0";
 	
 </script>
-<? } ?>
+<?php } ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -51,7 +51,7 @@ if ($_REQUEST['ganti'] == 1)	{
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/validasi.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
 <script language="javascript" type="text/javascript">
@@ -60,7 +60,7 @@ function validate(send){
 	var logo=document.getElementById("logo").value;
 	var gambar=document.getElementById("gambar").value;
 	
-	var x = logo.split('.');
+	var x = logo.explode('.');
 	ext = x[(x.length-1)];
 	
 	
@@ -112,25 +112,25 @@ function showFoto(x) {
     	<td>
         	<img src="../library/gambar.php?replid=<?=$replid?>&table=jbsumum.identitas" border="0"/>
         	
-				<? if (isset($_REQUEST['gambar'])) { 
+				<?php if (isset($_REQUEST['gambar'])) { 
                         if ($replid != 0) {
                 ?>
                         &nbsp;<img src="../images/panah.png" border="0" width="100" height="100"/>&nbsp;&nbsp;
-                <?		} ?>
+                <?php 	} ?>
                     <img src="../library/gambar1.php" border="0"/>
                     <!--<img src="../images/logokecil.jpg" border="0" />-->
-                <? } ?>
-			<? 	if ($replid == 0 && !isset($_REQUEST['gambar']) ) { ?>
+                <?php } ?>
+			<?php 	if ($replid == 0 && !isset($_REQUEST['gambar']) ) { ?>
             	<font size = "2"  color="#757575"><b>Klik <i>Browse...</i> untuk memilih gambar.</b></font>
-            <? } ?>
+            <?php } ?>
         </td>
     </tr>
     <tr height="50" id="tr">
         <td align="center"><p>      
-        	 <? if (isset($_REQUEST['gambar'])) { ?>
+        	 <?php if (isset($_REQUEST['gambar'])) { ?>
             		<?=$_REQUEST['gambar']?>		   			
                     <!--<input size="20px" type="text" name="logo1" id="logo1" value="<?=$_REQUEST['gambar']?>"/>-->
-            <? } ?></p>
+            <?php } ?></p>
             <input size="75px" type="file" name="gambar" id="gambar" style="width:470px" onChange="ganti()"  /> 
            	<input type="hidden" name="logo" id="logo"  value="<?=$_REQUEST['gambar']?>"/>
         </td>

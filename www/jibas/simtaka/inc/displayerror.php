@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once("../../include/mainconfig.php");
 
 session_name("jbsperpus");
@@ -46,8 +46,8 @@ if ($_SESSION['errno'] != 0)
 	$html1 .= "<input type='hidden' name='errtime' value='" . date('Y-m-d H:i:s') ."'>\r\n";
 	$html1 .= "<input type='hidden' name='errtype' value='" . $_SESSION['errtype'] ."'>\r\n";
 	$html1 .= "<input type='hidden' name='errno' value='" . $_SESSION['errno'] ."'>\r\n";
-	$html1 .= "<input type='hidden' name='errmsg' value='" . urlencode($_SESSION['errmsg']) ."'>\r\n";
-	$html1 .= "<input type='hidden' name='errfile' value='" . urlencode($_SESSION['errfile']) ."'>\r\n";
+	$html1 .= "<input type='hidden' name='errmsg' value='" . urlencode((string) $_SESSION['errmsg']) ."'>\r\n";
+	$html1 .= "<input type='hidden' name='errfile' value='" . urlencode((string) $_SESSION['errfile']) ."'>\r\n";
 	$html1 .= "<table border='0' width='100%' height='100%'>\r\n";
 	$html1 .= "<tr height='400'><td align='center' valign='middle' background='". $rel ."img/ico/b_warning.png' style='margin:0;padding:0;background-repeat:no-repeat;'>\r\n";
 	$html1 .= "<table width='457' border='0' cellpadding='0' cellspacing='0'><tr><td><img src='". $rel ."img/bk_message_01.jpg' width='457' height='17'></td></tr><tr><td style='background-image:url(". $rel ."img/bk_message_02.jpg); padding-left:20px; padding-right:20px;'>\r\n";
@@ -66,7 +66,7 @@ if ($_SESSION['errno'] != 0)
       // errno 1146 : Table '%s.%s' doesn't exist 
 		// errno 1449 : The user specified as a definer ('root'@'%') does not exist
 		// errno 2006 : MySQL server has gone away
-		if (in_array($_SESSION['errno'], array(1146, 1449, 2006)))
+		if (in_array($_SESSION['errno'], [1146, 1449, 2006]))
 		{
 			$errstr .= "<center>
 							Ada kesalahan pada instalasi atau konfigurasi basis data. Silahkan periksa kembali instalasi dan konfigurasi basis data yang digunakan.

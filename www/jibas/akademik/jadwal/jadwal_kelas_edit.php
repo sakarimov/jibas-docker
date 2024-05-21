@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -38,7 +38,7 @@ $sql = "SELECT *, j.keterangan AS ket, k.kelas, p.nama, t.replid AS tahun, t.tah
           FROM jadwal j, jbssdm.pegawai p, jbsakad.tahunajaran t, kelas k 
 		 WHERE j.replid = '$replid' AND j.nipguru = p.nip AND k.replid = j.idkelas AND k.idtahunajaran = t.replid";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $pelajaran = $row['idpelajaran'];
 $departemen = $row['departemen'];
 $info = $row['infojadwal'];
@@ -83,11 +83,11 @@ if (isset($_REQUEST['nipguru']))
 if (isset($_REQUEST['status']))
 	$status = $_REQUEST['status'];	
 	
-if (strlen($nip) > 0)
+if (strlen((string) $nip) > 0)
 {
 	$sql = "SELECT nama FROM jbssdm.pegawai WHERE nip='$nip'";	
 	$res = QueryDb($sql);
-	$row = mysql_fetch_row($res);
+	$row = mysqli_fetch_row($res);
 	$namasel = $row[0];
 	$nipsel = $nip;
 }
@@ -104,14 +104,14 @@ if (isset($_REQUEST['Simpan']))
 	OpenDb();
 	$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 	$res = QueryDb($sql);
-	$num = mysql_num_rows($res);
+	$num = mysqli_num_rows($res);
 	if ($num>0){
-		$dayname = array("", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu");
+		$dayname = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"];
 		
 		$sql = "SELECT replid FROM infojadwal WHERE aktif=1";
 		$res = QueryDb($sql);
 		$idinfo_aktif = "";
-		while($row = mysql_fetch_row($res))
+		while($row = mysqli_fetch_row($res))
 		{
 			if (strlen($idinfo_aktif) > 0)
 				$idinfo_aktif .= "','";
@@ -141,10 +141,10 @@ if (isset($_REQUEST['Simpan']))
 				   AND ($sqljam)";
 		$res = QueryDb($sql);
 		
-		if (mysql_num_rows($res) > 0) 
+		if (mysqli_num_rows($res) > 0) 
 		{
 			$ket = "";
-			while ($row = mysql_fetch_array($res))
+			while ($row = mysqli_fetch_array($res))
 			{
 				if (strlen($ket) > 0)
 					$ket .= "\\r\\n";
@@ -177,9 +177,9 @@ if (isset($_REQUEST['Simpan']))
 			$res = QueryDb($sql);
 			$ket = "";
 			
-			if (mysql_num_rows($res) > 0)
+			if (mysqli_num_rows($res) > 0)
 			{
-				while ($row = mysql_fetch_array($res))
+				while ($row = mysqli_fetch_array($res))
 				{
 					if (strlen($ket) > 0)
 						$ket .= "\\r\\n";
@@ -192,15 +192,15 @@ if (isset($_REQUEST['Simpan']))
 		
 		if (strlen($ERROR_MSG) == 0)
 		{
-			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam'";	
+			$sql1 = "SELECT replid, TIME_FORMAT(jam1, '%H:%i') AS jam1 FROM jam WHERE departemen = '$departemen' AND jamke = '".$jam."'";	
 			$result1 = QueryDb($sql1);
-			$row1 = mysql_fetch_array($result1);
+			$row1 = mysqli_fetch_array($result1);
 			$rep1 = $row1['replid'];
 			$jm1 = $row1['jam1'];
 			
 			$sql2 = "SELECT replid, TIME_FORMAT(jam2, '%H:%i') AS jam2 FROM jam WHERE departemen = '$departemen' AND jamke = '$jam2'";	
 			$result2 = QueryDb($sql2);
-			$row2 = mysql_fetch_array($result2);
+			$row2 = mysqli_fetch_array($result2);
 			$rep2 = $row2['replid'];
 			$jm2 = $row2['jam2'];
 			
@@ -208,7 +208,7 @@ if (isset($_REQUEST['Simpan']))
 		
 			$sql = "UPDATE jadwal SET idkelas='$kelas', nipguru='$nip', idpelajaran = '$pelajaran', departemen = '$departemen', 
 					infojadwal = '$info', hari = '$hari', jamke = '$jam', njam = '$jum', sifat = 1, status = '$status', keterangan='$keterangan', 
-					jam1 = '$jm1', jam2 = '$jm2', idjam1 = '$rep1', idjam2 = '$rep2' WHERE replid = '$replid'";
+					jam1 = '$jm1', jam2 = '$jm2', idjam1 = '$rep1', idjam2 = '$rep2' WHERE replid = '".$replid."'";
 			$res = QueryDb($sql);
 			CloseDb();
 		
@@ -217,7 +217,7 @@ if (isset($_REQUEST['Simpan']))
 					opener.parent.footer.refresh();
 					window.close();
 				</script> 
-	<?		}
+	<?php 	}
 		}
 	} else {
 		$ERROR_MSG = "Tidak ada Info jadwal yang aktif, silakan aktifkan salah satu Info Jadwal\\r\\n";
@@ -231,7 +231,7 @@ if (isset($_REQUEST['Simpan']))
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS SIMAKA [Ubah Jadwal Kelas]</title>
-<script language="JavaScript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript" src="../script/ajax.js"></script>
@@ -364,18 +364,18 @@ function changepel()
 	<td align="left"><strong>Pelajaran</strong></td>
  	<td><div id ="InfoPelajaran">
       	<select name="pelajaran" id="pelajaran" onChange="changepel()" onKeyPress="return focusNext('jam2', event)" onFocus="panggil('pelajaran')">
-   	<?	OpenDb();
+   	<?php OpenDb();
 		$sql = "SELECT replid,nama FROM pelajaran WHERE departemen = '$departemen' AND aktif=1 ORDER BY nama";
 		$result = QueryDb($sql);
 		CloseDb();
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 			if ($pelajaran == "") 				
 				$pelajaran = $row['replid'];			
 		?>
         
-    	<option value="<?=urlencode($row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
+    	<option value="<?=urlencode((string) $row['replid'])?>" <?=IntIsSelected($row['replid'], $pelajaran)?> ><?=$row['nama']?></option>
                   
-    <?	} ?>
+    <?php } ?>
     	</select></div>		</td>  
 </tr>
 <tr>
@@ -434,13 +434,13 @@ function changepel()
 </table>
 
 <!-- Tamplikan error jika ada -->
-<? 
+<?php 
 if (strlen($ERROR_MSG) > 0) 
 { ?>
 <script language="javascript">
 	alert('<?=$ERROR_MSG?>');
 </script>
-<? } ?>
+<?php } ?>
 
 </body>
 </html>

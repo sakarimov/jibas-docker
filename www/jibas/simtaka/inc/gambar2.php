@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,21 +20,21 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../inc/config.php');
 require_once('../inc/db_functions.php');
 
 $replid = $_REQUEST['replid'];
 $table = $_REQUEST['table'];
 $field = 'cover';
-if (isset($_REQUEST[field]))
-	$field = $_REQUEST[field];
+if (isset($_REQUEST['field']))
+	$field = $_REQUEST['field'];
 OpenDb();
 header("Content-type: image/jpeg");
-$query = "SELECT $field FROM $table WHERE replid = '$replid'";
+$query = "SELECT $field FROM $table WHERE replid = '".$replid."'";
 $result = QueryDb($query);
-$num = @mysql_num_rows($result);
-if ($row = mysql_fetch_array($result)) {
+$num = @mysqli_num_rows($result);
+if ($row = mysqli_fetch_array($result)) {
     if($row[$field]) {
         echo $row[$field];
     }else {

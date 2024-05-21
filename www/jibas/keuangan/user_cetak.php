@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/errorhandler.php');
 require_once('include/sessionchecker.php');
 require_once('include/sessioninfo.php');
@@ -62,7 +62,7 @@ $urutan = $_REQUEST['urutan'];
         <td class="header" width="*" align="center">Keterangan</td>
         <td class="header" width="16%" align="center">Login Terakhir</td>
 	</tr>
-<?	//$sql = "SELECT p.nama,p.nip,h.tingkat,h.departemen,date_format(l.lastlogin, '%d-%b-%Y %h:%i:%s') AS lastlogin,h.keterangan,l.replid as replid FROM jbsuser.hakakses h, jbsuser.login l, jbssdm.pegawai p WHERE h.modul='KEUANGAN' AND h.login=p.nip AND p.nip=l.login AND l.login=h.login ORDER BY lastlogin"; 
+<?php //$sql = "SELECT p.nama,p.nip,h.tingkat,h.departemen,date_format(l.lastlogin, '%d-%b-%Y %h:%i:%s') AS lastlogin,h.keterangan,l.replid as replid FROM jbsuser.hakakses h, jbsuser.login l, jbssdm.pegawai p WHERE h.modul='KEUANGAN' AND h.login=p.nip AND p.nip=l.login AND l.login=h.login ORDER BY lastlogin"; 
 	OpenDb();
 	$sql="SELECT h.login, h.replid,  h.tingkat, h.departemen, h.keterangan, p.nama, p.aktif,  DATE_FORMAT(h.lastlogin,'%Y-%m-%d') AS tanggal, TIME(h.lastlogin) as jam FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='KEUANGAN' AND h.login = l.login AND l.login = p.nip ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	
@@ -73,27 +73,27 @@ $urutan = $_REQUEST['urutan'];
 	else
 		$cnt = (int)$page*(int)$varbaris;
 	
-	while ($row = mysql_fetch_array($result)) {
+	while ($row = mysqli_fetch_array($result)) {
 	?>
     <tr height="25">
     	<td align="center"><?=++$cnt ?></td>
         <td align="center"><?=$row['login'] ?></td>
         <td><?=$row['nama'] ?></td>
-        <td align="center"><? if ($row['tingkat'] == 1) {
+        <td align="center"><?php if ($row['tingkat'] == 1) {
 					echo  "Semua Departemen";
 				} else {
 					echo  $row['departemen'];
 				}
 		?></td>
-        <td align="center"><? if ($row['tingkat'] == 1)
+        <td align="center"><?php if ($row['tingkat'] == 1)
 					echo  "Manajer Keuangan";
 				else
 					echo  "Staf Keuangan"; ?>  </td>
-        <td align="center"><? if ($row['aktif'] == 1) echo  'Aktif'; else echo  'Tidak Aktif'; ?></td>
+        <td align="center"><?php if ($row['aktif'] == 1) echo  'Aktif'; else echo  'Tidak Aktif'; ?></td>
         <td><?=$row['keterangan'] ?></td>
         <td align="center"><?=LongDateFormat($row['tanggal'])?> <?=$row['jam']?></td>
     </tr>
-<?	} 
+<?php } 
 	CloseDb();
 ?>
     <!-- END TABLE CONTENT -->

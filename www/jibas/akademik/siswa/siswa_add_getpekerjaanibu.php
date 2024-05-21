@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
 require_once('../include/config.php');
@@ -30,17 +30,17 @@ $pekerjaan_kiriman=$_REQUEST['pekerjaan'];
 ?>
 	<select name="pekerjaanibu" id="Infopekerjaanibu" class="ukuran"  onKeyPress="return focusNext('penghasilanayah1', event)" onfocus="panggil('Infopekerjaanibu')" style="width:140px">
     <option value="">[Pilih Pekerjaan]</option>
-      <? 
+      <?php 
 	OpenDb();
 	
 	$sql_kerja_ibu="SELECT pekerjaan FROM jbsumum.jenispekerjaan ORDER BY pekerjaan";
 	$result_kerja_ibu=QueryDB($sql_kerja_ibu);
-	while ($row_kerja_ibu = mysql_fetch_array($result_kerja_ibu)) {
+	while ($row_kerja_ibu = mysqli_fetch_array($result_kerja_ibu)) {
 	//if ($pekerjaan_kiriman=="")
 	//$pekerjaan_kiriman=$row_kerja_ibu['pekerjaan'];
 	?>
       <option value="<?=$row_kerja_ibu['pekerjaan']?>"<?=StringIsSelected($row_kerja_ibu['pekerjaan'],$pekerjaan_kiriman)?>><?=$row_kerja_ibu['pekerjaan']?></option>
-      <?
+<?php
     } 
 	CloseDb();
 	// Akhir Olah Data sekolah

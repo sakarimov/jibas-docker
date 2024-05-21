@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 function ReadRequest()
 {
     global $departemen, $tgl1, $tgl2, $bln1, $bln2, $thn1, $thn2, $n1, $n2;
@@ -62,7 +62,7 @@ function InitTanggal()
     $sql = "SELECT day(now()), month(now()), year(now()), 
                    day(date_sub(now(), INTERVAL 30 DAY)), month(date_sub(now(), INTERVAL 30 DAY)), year(date_sub(now(), INTERVAL 30 DAY))";		
     $result = QueryDb($sql);
-    $row = mysql_fetch_row($result);
+    $row = mysqli_fetch_row($result);
     $tgl2 = $row[0];
     $bln2 = $row[1];
     $thn2 = $row[2];
@@ -72,42 +72,42 @@ function InitTanggal()
 }
 ?>
  
-<?
+<?php
 function SelectDepartemen()
 {
     global $dept;
 ?>
 <select id="departemen" name="departemen" style="width:188px" onchange="change_sel()">
-<?  $dep = getDepartemen(getAccess());
+<?php  $dep = getDepartemen(getAccess());
     foreach($dep as $value) 
     {
         $sel = $dept == $value ? "selected" : ""; ?>
         <option value="<?=$value ?>" <?=$sel?>><?=$value ?></option>
-<?  } ?>  
+<?php  } ?>  
 </select>
-<?
+<?php
 }
 ?>
 
-<?
+<?php
 function SelectPetugas()
 {
 ?>
     <select name="petugas" id="petugas" style="width:148px;" onchange="change_sel()" >
         <option value="ALL">(Semua Petugas)</option>
         <option value="landlord">Administrator JIBAS</option>
-<?		$sql = "SELECT p.nip, p.nama
+<?php 	$sql = "SELECT p.nip, p.nama
                   FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l
                  WHERE h.modul = 'KEUANGAN'
                    AND h.login = l.login
                    AND l.login = p.nip
                  ORDER BY p.nama";
         $res = QueryDb($sql);
-        while($row = mysql_fetch_row($res))
+        while($row = mysqli_fetch_row($res))
         {
-            echo "<option value='$row[0]'>$row[1]</option>";
+            echo "<option value='".$row[0]."'>".$row[1]."</option>";
         } ?>			
     </select>
-<?
+<?php
 }
 ?>

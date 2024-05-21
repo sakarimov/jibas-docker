@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('include/sessionchecker.php');
 require_once('include/sessioninfo.php');
 require_once('include/common.php');
@@ -33,7 +33,7 @@ $replid = $_REQUEST["replid"];
 OpenDb();
 $sql="SELECT h.login, h.tingkat, h.departemen, h.keterangan, p.nama FROM jbsuser.hakakses h, jbssdm.pegawai p, jbsuser.login l WHERE h.modul='KEUANGAN' AND h.login = l.login AND l.login = p.nip AND h.replid=$replid ";
 $result = QueryDb($sql);
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $nip = $row['login'];
 $nama = $row['nama'];
 $departemen = $row['departemen'];
@@ -54,29 +54,29 @@ if(isset($_REQUEST["status_user"]))
 if(isset($_REQUEST["keterangan"]))
 	$keterangan = $_REQUEST["keterangan"];
 
-$MYSQL_ERROR_MSG = "";
+$mysqli_ERROR_MSG = "";
 if (isset($_REQUEST['simpan'])) {
 	OpenDb();
 	$tingkat = (int)$_REQUEST['status_user'];
 	
-	$sql_dep = "AND departemen = '$_REQUEST[departemen]'";
+	$sql_dep = "AND departemen = '".$_REQUEST['departemen']."'";
 	if ($_REQUEST['status_user'] == "" || $_REQUEST['status_user'] == 1) {
 		$tingkat = 1;
 		$sql_dep = "";	
 	}	
 		
-	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '$_REQUEST[nip]' AND tingkat = '$tingkat' AND modul = 'KEUANGAN' $sql_dep AND replid <> '$replid'";
+	$sql = "SELECT * FROM jbsuser.hakakses WHERE login = '".$_REQUEST['nip']."' AND tingkat = '$tingkat' AND modul = 'KEUANGAN' $sql_dep AND replid <> '$replid'";
 	
 	$result=QueryDb($sql);
 	
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
 		CloseDb();
-		$MYSQL_ERROR_MSG = "Pengguna ".$_REQUEST['nip']." sudah mempunyai account untuk tingkat dan departemen ini!";
+		$mysqli_ERROR_MSG = "Pengguna ".$_REQUEST['nip']." sudah mempunyai account untuk tingkat dan departemen ini!";
 	} else {
 		if ($tingkat == 1) {
-			$sql_hakakses="UPDATE jbsuser.hakakses SET tingkat=1, keterangan ='".CQ($_REQUEST['keterangan'])."' WHERE replid = '$replid'";
+			$sql_hakakses="UPDATE jbsuser.hakakses SET tingkat=1, keterangan ='".CQ($_REQUEST['keterangan'])."' WHERE replid = '".$replid."'";
 		} else {
-			$sql_hakakses="UPDATE jbsuser.hakakses SET departemen='$departemen', tingkat=2, keterangan ='".CQ($_REQUEST['keterangan'])."' WHERE replid = '$replid'";
+			$sql_hakakses="UPDATE jbsuser.hakakses SET departemen='$departemen', tingkat=2, keterangan ='".CQ($_REQUEST['keterangan'])."' WHERE replid = '".$replid."'";
 		}
 		
 		$result = QueryDb($sql_hakakses);
@@ -87,7 +87,7 @@ if (isset($_REQUEST['simpan'])) {
 				parent.opener.refresh();
 				window.close();
 			</script> 
-<?		}
+<?php 	}
 	}
 }
 
@@ -113,7 +113,7 @@ if($status_user == 1 || $status_user == "") {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JIBAS KEU [Ubah Data Pengguna]</title>
 <link rel="stylesheet" type="text/css" href="style/tooltips.css">
-<script language="JavaScript" src="script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript" src="script/tooltips.js"></script>
 <script language="javascript" src="script/validasi.js"></script>
 <script language="javascript" src="script/tables.js"></script>
 <script language="javascript" src="script/tools.js"></script>
@@ -270,7 +270,7 @@ function panggil(elem){
     <tr>
         <td><strong>Departemen</strong></td>
         <td><select name="departemen" style="width:165px;" id="departemen" <?=$dd ?> onKeyPress="return focusNext('keterangan', event)" onFocus="panggil('departemen')">
-    <?  if ($status_user == 1 || $status_user == ""){	
+    <?php  if ($status_user == 1 || $status_user == ""){	
     		echo  "<option value='' selected='selected'>Semua</option>";
     	}
 		OpenDb();
@@ -278,14 +278,14 @@ function panggil(elem){
 		$result_pro = QueryDb($query_pro);
 	
 		$i = 0;
-		while($row_pro = @mysql_fetch_array($result_pro)) {
+		while($row_pro = @mysqli_fetch_array($result_pro)) {
 			if($departemen == "") {
-				$departemen = $row_pro[departemen];
+				$departemen = $row_pro['departemen'];
 				if ($status_user == 1 || $status_user == "")
 					$sel[$i] = "";
 				else
 					$sel[$i] = "selected";
-			} elseif ($departemen == $row_pro[departemen]) {
+			} elseif ($departemen == $row_pro['departemen']) {
 				if ($status_user == 1 || $status_user == "")
 					$sel[$i] = "";
 				else
@@ -293,21 +293,21 @@ function panggil(elem){
 			} else {
 				$sel[$i] = "";
 			}
-			echo  "<option value='$row_pro[departemen]' $sel[$i]>$row_pro[departemen]";
+			echo  "<option value='".$row_pro['departemen']."' $sel[$i]>".$row_pro['departemen'];
 			$i++;
 		}
 	?>
     	</option></select></td>
         <!--<td>-->
-        <? //$disabled = "";
+        <?php //$disabled = "";
 		   //if ($tingkat == 1)
 		   //		$disabled = "disabled"; ?> 
         <!--<select name="departemen" id="departemen" <?=$disabled ?> >-->
-        <?	//OpenDb();
+        <?php //OpenDb();
 			//$dep = getDepartemen("ALL");
             //foreach ($dep as $value) { ?>
                 <option value="<?=$value?>" <?=StringIsSelected($departemen, $value) ?> > <?=$value ?></option>
-        <?  //} 
+        <?php  //} 
 			//CloseDb();	?>     
         <!--</select>
         </td>-->
@@ -333,10 +333,10 @@ function panggil(elem){
     <td width="28" background="../<?=GetThemeDir() ?>bgpop_09.jpg">&nbsp;</td>
 </tr>
 </table>
-<? if (strlen($MYSQL_ERROR_MSG) > 0) { ?>
+<?php if (strlen($mysqli_ERROR_MSG) > 0) { ?>
 <script language="javascript">
-    alert('<?=$MYSQL_ERROR_MSG ?>');
+    alert('<?=$mysqli_ERROR_MSG ?>');
 </script>
-<? } ?>
+<?php } ?>
 </body>
 </html>

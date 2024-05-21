@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/sessioninfo.php');
 require_once('../include/db_functions.php');
 require_once('../include/sessioninfo.php');
@@ -30,7 +30,7 @@ require_once('../library/departemen.php');
 require_once('../cek.php');
 require_once('pengantar.func.php');
 
-$departemen = isset($_REQUEST['departemen']) ? $_REQUEST['departemen'] : "";
+$departemen = $_REQUEST['departemen'] ?? "";
 $status = isset($_REQUEST['status']) ? (int)$_REQUEST['status'] : 2;
 $op = $_REQUEST['op'];
 
@@ -106,14 +106,14 @@ elseif ($op == "mxd238mhde2")
 			Departemen:&nbsp;
 			<select class='inputbox' name="departemen" id="departemen" style="width:130px;"
 					onChange="changeSelect()">
-<?			$dep = getDepartemen(SI_USER_ACCESS());    
+<?php 		$dep = getDepartemen(SI_USER_ACCESS());    
 			foreach($dep as $value)
 			{
 				if ($departemen == "")
 					$departemen = $value;
 				$sel = $departemen == $value ? "selected" : "";	?>
 				<option value="<?=$value?>" <?=$sel?> ><?=$value ?></option>
-<?			} ?>
+<?php 		} ?>
 			</select>
 			&nbsp;&nbsp;
 			Status:
@@ -126,10 +126,10 @@ elseif ($op == "mxd238mhde2")
 		<td align="right" width='50%'>
     
 			<a href="#" onClick="refresh();"><img src="../images/ico/refresh.png" border="0"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-<?			if (SI_USER_LEVEL() != $SI_USER_STAFF) 
+<?php 		if (SI_USER_LEVEL() != $SI_USER_STAFF) 
 			{ ?>
 				<a href="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0"/>&nbsp;Tambah</a>
-<?			} ?>
+<?php 		} ?>
 
 		</td>
 	</tr>
@@ -148,7 +148,7 @@ elseif ($op == "mxd238mhde2")
 				<td class='header' align='center' width='50'>Aktif</td>
 				<td class='header' align='center' width='50'>&nbsp;</td>		
 			</tr>
-		<?	ShowList() ?>	
+		<?php ShowList() ?>	
 			</table>	
 			
 		</td>	
@@ -164,4 +164,4 @@ elseif ($op == "mxd238mhde2")
 
 </body>
 </html>
-<? CloseDb();?>
+<?php CloseDb();?>

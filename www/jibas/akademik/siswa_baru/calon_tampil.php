@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -35,7 +35,7 @@ OpenDb();
 $sql="SELECT c.nopendaftaran, c.nama, c.panggilan, c.tahunmasuk, c.idproses, c.idkelompok, c.suku, c.agama, c.status, c.kondisi, c.kelamin, c.tmplahir, DAY(c.tgllahir) AS tanggal, MONTH(c.tgllahir) AS bulan, YEAR(c.tgllahir) AS tahun, c.tgllahir, c.warga, c.anakke, c.jsaudara, c.bahasa, c.berat, c.tinggi, c.darah, c.foto, c.alamatsiswa, c.kodepossiswa, c.telponsiswa, c.hpsiswa, c.emailsiswa, c.kesehatan, c.asalsekolah, c.ketsekolah, c.namaayah, c.namaibu, c.almayah, c.almibu, c.pendidikanayah, c.pendidikanibu, c.pekerjaanayah, c.pekerjaanibu, c.wali, c.penghasilanayah, c.penghasilanibu, c.alamatortu, c.telponortu, c.hportu, c.emailortu, c.alamatsurat, c.keterangan, p.proses, p.departemen, p.kodeawalan, k.kelompok, k.keterangan AS ket FROM calonsiswa c, kelompokcalonsiswa k, prosespenerimaansiswa p WHERE c.replid='$replid' AND p.replid = c.idproses AND k.replid = c.idkelompok AND p.replid = k.idproses";
 
 $result=QueryDB($sql);
-$row_siswa = mysql_fetch_array($result); 
+$row_siswa = mysqli_fetch_array($result); 
 CloseDb();
 
 ?>
@@ -62,7 +62,7 @@ function cetak() {
 <tr>
 	<td align="left" valign="top" colspan="2">
 
-<? include("../library/headercetak.php") ?>
+<?php include("../library/headercetak.php") ?>
 
 <center>
   <font size="4"><strong>DATA CALON SISWA</strong></font><br />
@@ -112,7 +112,7 @@ function cetak() {
             <td >2.</td>
             <td>Jenis Kelamin</td>
             <td >:
-              <? 	if ($row_siswa['kelamin']=="l")
+              <?php 	if ($row_siswa['kelamin']=="l")
 				echo "Laki-laki"; 
 			if ($row_siswa['kelamin']=="p")
 				echo "Perempuan"; 
@@ -290,12 +290,12 @@ function cetak() {
             <td >Nama</td>
             <td >:
               <?=$row_siswa['namaayah']?>
-                <?
+                <?php
 		if ($row_siswa['almayah']==1)
 		echo "&nbsp;(alm)";
 		?></td>
             <td colspan="2"><?=$row_siswa['namaibu']?>
-                <?
+                <?php
 		if ($row_siswa['almibu']==1)
 		echo "&nbsp;(alm)";
         ?></td>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 //include('../cek.php');
 require_once('../include/config.php');
 require_once('../include/db_functions.php');
@@ -39,7 +39,7 @@ OpenDb();
 <head>
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
-<script language="JavaScript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
 <link rel="stylesheet" type="text/css" href="../script/ajaxtabs.css" />
 <script type="text/javascript" src="../script/ajaxtabs.js"></script>
 </head>
@@ -48,29 +48,29 @@ OpenDb();
   <tr>
     <td width="9%">Departemen</td>
     <td width="73%"><select name="departemen2" id="departemen2" onChange="departemen2()">
-            <?	$dep = getDepartemen(SI_USER_ACCESS());    
+            <?php $dep = getDepartemen(SI_USER_ACCESS());    
 				foreach($dep as $value) {
 					if ($departemen == "")
 						$departemen = $value; ?>
             <option value="<?=$value ?>" <?=StringIsSelected($value, $departemen) ?> >
             <?=$value ?>
             </option>
-            <?	} ?>
+            <?php } ?>
           </select></td>
     </tr>
   <tr>
     <td>Kelas</td>
     <td><div id="kelas_Info"><select name="kelas" id="kelas" onChange="kelas()" style="width:150px">
-            <?	$sql="SELECT k.replid,k.kelas FROM jbsakad.kelas k,jbsakad.tahunajaran ta,jbsakad.tingkat ti WHERE k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid AND ti.departemen='$departemen' AND ta.departemen='$departemen' AND k.aktif=1 ORDER BY k.kelas";
+            <?php $sql="SELECT k.replid,k.kelas FROM jbsakad.kelas k,jbsakad.tahunajaran ta,jbsakad.tingkat ti WHERE k.idtahunajaran=ta.replid AND k.idtingkat=ti.replid AND ti.departemen='$departemen' AND ta.departemen='$departemen' AND k.aktif=1 ORDER BY k.kelas";
 			$result=QueryDb($sql);
-			while ($row=@mysql_fetch_array($result)){
+			while ($row=@mysqli_fetch_array($result)){
 					if ($kelas == "")
-						$kelas = $row[replid]; 
+						$kelas = $row['replid']; 
 						?>
-            <option value="<?=$row[replid] ?>" <?=StringIsSelected($row[replid], $kelas) ?> >
-            <?=$row[kelas] ?>
+            <option value="<?=$row['replid'] ?>" <?=StringIsSelected($row['replid'], $kelas) ?> >
+            <?=$row['kelas'] ?>
             </option>
-            <?	} ?>
+            <?php } ?>
           </select></div></td>
     </tr>
   	<tr>
@@ -83,7 +83,7 @@ OpenDb();
     <td class="header" height="30">Nama</td>
 	<td class="header" height="30">Kelas</td>
 </tr>
-<?
+<?php
 
 OpenDb();
 //$nama = $_REQUEST['nama'];
@@ -93,7 +93,7 @@ $result = QueryDb($sql);
 $cnt = 1;
 
 
-while($row = mysql_fetch_row($result)) { 
+while($row = mysqli_fetch_row($result)) { 
 if ($cnt%2==0)
 	$bg="bgcolor='#e7e7cf'";
 if ($cnt%2==1)
@@ -104,13 +104,13 @@ if ($cnt%2==1)
     <td height="25" <?=$bg?> onClick="ambilpilih('<?=$row[0]?>','<?=$kelas?>')" style="cursor:pointer"><?=$row[1] ?></td>
 	<td height="25" <?=$bg?> onClick="ambilpilih('<?=$row[0]?>','<?=$kelas?>')" style="cursor:pointer"><?=$row[2] ?></td>
 </tr>
-<?
+<?php
 $cnt++;
 }
 CloseDb();	
-if (mysql_num_rows($result) == 0) { ?>
+if (mysqli_num_rows($result) == 0) { ?>
 <tr height="26"><td colspan="4" align="center"><em>Tidak ditemukan data</em></td></tr>
-<? } ?>
+<?php } ?>
 </table>
 	</div>
 	</td>

@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -61,10 +61,10 @@ if (isset($_REQUEST['urutan']))
 
 	
 OpenDb();
-$sql="SELECT t.tingkat, t.departemen, p.nama, s.semester FROM tingkat t, pelajaran p, semester s WHERE t.replid = '$tingkat' AND s.replid = '$semester' AND p.replid = '$pelajaran'";
+$sql="SELECT t.tingkat, t.departemen, p.nama, s.semester FROM tingkat t, pelajaran p, semester s WHERE t.replid = '$tingkat' AND s.replid = '$semester' AND p.replid = '".$pelajaran."'";
 
 $result=QueryDb($sql);
-$row=@mysql_fetch_array($result);
+$row=@mysqli_fetch_array($result);
 $departemen = $row['departemen'];
 $namatingkat = $row['tingkat'];
 $namasemester = $row['semester'];
@@ -73,7 +73,7 @@ $namapelajaran = $row['nama'];
 $op = $_REQUEST['op'];
 if ($op == "dw8dxn8w9ms8zs22") {
 	//OpenDb();
-	$sql_upd = "UPDATE jbsakad.rpp SET aktif = '$_REQUEST[newaktif]' WHERE replid = '$_REQUEST[replid]' ";
+	$sql_upd = "UPDATE jbsakad.rpp SET aktif = '".$_REQUEST['newaktif']."' WHERE replid = '".$_REQUEST['replid']."' ";
 	$result_upd = QueryDb($sql_upd);
 	if ($result_upd) { 
 		//CloseDb();
@@ -81,11 +81,11 @@ if ($op == "dw8dxn8w9ms8zs22") {
     	<script language="javascript">
     	document.location.href="rpp_tampil.php?departemen=<?=$departemen?>&tingkat=<?=$tingkat?>&semester=<?=$semester?>&pelajaran=<?=$pelajaran?>";
     	</script>
-	<?	}
+<?php }
 	//CloseDb();			
 } else if ($op == "xm8r389xemx23xb2378e23") {
 	//OpenDb();
-	$sql_del = "DELETE FROM jbsakad.rpp WHERE replid = '$_REQUEST[replid]'";
+	$sql_del = "DELETE FROM jbsakad.rpp WHERE replid = '".$_REQUEST['replid']."'";
 	$result_del = QueryDb($sql_del);
 	if ($result_del) { 
 		//CloseDb();
@@ -93,7 +93,7 @@ if ($op == "dw8dxn8w9ms8zs22") {
     	<script language="javascript">
     	document.location.href="rpp_tampil.php?departemen=<?=$departemen?>&tingkat=<?=$tingkat?>&semester=<?=$semester?>&pelajaran=<?=$pelajaran?>";
     	</script>
-	<?	}
+<?php }
 	
 }
 ?>
@@ -104,10 +104,10 @@ if ($op == "dw8dxn8w9ms8zs22") {
 <title>JIBAS SIMAKA [Rencana Program Pembelajaran]</title>
 <link rel="stylesheet" type="text/css" href="../style/style.css">
 <link rel="stylesheet" type="text/css" href="../style/tooltips.css">
-<script language="JavaScript" src="../script/tables.js"></script>
-<script language="JavaScript" src="../script/tools.js"></script>
-<script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="JavaScript">
+<script language = "javascript" type = "text/javascript" src="../script/tables.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tools.js"></script>
+<script language = "javascript" type = "text/javascript" src="../script/tooltips.js"></script>
+<script language = "javascript" type = "text/javascript">
 
 function tambah() {			
 	newWindow('../guru/rpp_add.php?tingkat=<?=$tingkat?>&semester=<?=$semester?>&pelajaran=<?=$pelajaran?>', 'TambahRPP1','700','540','resizable=1,scrollbars=1,status=0,toolbar=0');
@@ -289,18 +289,18 @@ function ByeWin() {
         <td><input type="text" readonly value="<?=$namatingkat?>" class="disabled" size="15" /></td>
         <td><strong>Pelajaran</strong></td>
         <td><input type="text" readonly value="<?=$namapelajaran?>" class="disabled"  size="27"/></td>
-    <? 	
+    <?php 	
 		OpenDb();
 		$sql_tot = "SELECT replid, koderpp, rpp, deskripsi, aktif FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran'";
 		
 		$result_tot = QueryDb($sql_tot);
-		$total=ceil(mysql_num_rows($result_tot)/(int)$varbaris);
-		$jumlah = mysql_num_rows($result_tot);
+		$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
+		$jumlah = mysqli_num_rows($result_tot);
 		$akhir = ceil($jumlah/5)*5;
 
 		$sql = "SELECT replid, koderpp, rpp, deskripsi, aktif FROM rpp WHERE idtingkat='$tingkat' AND idsemester='$semester' AND idpelajaran='$pelajaran' ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 		$result = QueryDb($sql);	
-		if (@mysql_num_rows($result) > 0){ 
+		if (@mysqli_num_rows($result) > 0){ 
 	?>	
                 
         <td align="right">
@@ -321,17 +321,17 @@ function ByeWin() {
 		<td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('rpp','<?=$urutan?>')">Materi <?=change_urut('rpp',$urut,$urutan)?></td>
     	<td width="*">Deskripsi</td>
     	<td width="10%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></td>	    
-		<? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+		<?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
         <td width="10%">&nbsp;</td>
-        <?	} ?>
+        <?php } ?>
   	</tr>
-	<? 
+	<?php 
         if ($page==0)
             $cnt = 0;
         else 
             $cnt = (int)$page*(int)$varbaris;
         
-        while ($row = @mysql_fetch_row($result)) {		
+        while ($row = @mysqli_fetch_row($result)) {		
     ?>
     <tr height="25">   	
         <td align="center"><?=++$cnt ?></td>
@@ -339,29 +339,29 @@ function ByeWin() {
         <td><?=$row[2]?></td>
         <td><?=$row[3]?></td>
         <td align="center">  
-    <?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
+    <?php 	if (SI_USER_LEVEL() == $SI_USER_STAFF) {  
                 if ($row[4] == 1) { ?> 
             <img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
-    <?			} else { ?>                
+    <?php 		} else { ?>                
             <img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
-    <?			}
+    <?php 		}
             } else { 
                 if ($row[4] == 1) { ?>
             <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/></a>
-    <?			} else { ?>
+    <?php 		} else { ?>
             <a href="JavaScript:setaktif(<?=$row[0] ?>, <?=$row[4] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/></a>
-    <?			} //end if
+    <?php 		} //end if
             } //end if ?>        
         </td>
         
-    <?		if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
+    <?php 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {  ?> 
         <td align="center">
             <a href="JavaScript:edit(<?=$row[0] ?>)"><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah RPP!', this, event, '50px')"/></a>&nbsp;
             <a href="JavaScript:hapus(<?=$row[0] ?>)"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus RPP!', this, event, '50px')"/></a>
         </td>
-    <?		} ?>  
+    <?php 	} ?>  
     </tr>
-	<?	} ?>
+<?php } ?>
     </table>
     <script language='JavaScript'>
 	    Tables('table', 1, 0);
@@ -369,7 +369,7 @@ function ByeWin() {
 	 <script language='JavaScript'>
 	    Tables('table', 1, 0);
     </script>	
-	<?	if ($page==0){ 
+	<?php if ($page==0){ 
 		$disback="style='visibility:hidden;'";
 		$disnext="style='visibility:visible;'";
 		}
@@ -394,19 +394,19 @@ function ByeWin() {
     <tr>
        	<td width="30%" align="left">Halaman
         <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
+        <?php for ($m=0; $m<$total; $m++) {?>
              <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
+        <?php } ?>
      	</select>
 	  	dari <?=$total?> halaman
 		
-		<? 
+		<?php 
      // Navigasi halaman berikutnya dan sebelumnya
         ?>
         </td>
     	<td align="center">
     <!--input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
-		<?
+		<?php
 		for($a=0;$a<$total;$a++){
 			if ($page==$a){
 				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
@@ -420,14 +420,14 @@ function ByeWin() {
  		</td>
         <td width="30%" align="right">Jumlah baris per halaman
       	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
+        <?php 	for ($m=5; $m <= $akhir; $m=$m+5) { ?>
         	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
+        <?php 	} ?>
        
       	</select></td>
     </tr>
     </table>
-<?	} else { ?>
+<?php } else { ?>
 </td><td>&nbsp;</td>
 </tr>
 <tr>
@@ -436,9 +436,9 @@ function ByeWin() {
     <tr>
         <td align="center" valign="middle" height="250">
             <font size = "2" color ="red"><b>Tidak ditemukan adanya data.
-           <? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+           <?php if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
             <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru.
-            <? } ?>
+            <?php } ?>
             </p></b></font>
         </td>
     </tr>
@@ -446,7 +446,7 @@ function ByeWin() {
     ></td>
 </tr>
 </table> 
-<? } ?> 
+<?php } ?> 
  	</td>
 </tr>
 <tr height="35">

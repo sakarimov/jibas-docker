@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 $selDept = "";
 $selProses = "";
 
@@ -35,7 +35,7 @@ function ShowDepartemenCombo()
     $res = QueryDB($sql);
     
     echo "<select name='psb_departemen' id='psb_departemen' class='inputbox' onchange='psb_StatusPsbChangeDepartemen()'>";
-	while ($row = mysql_fetch_row($res))
+	while ($row = mysqli_fetch_row($res))
     {
         if ($selDept == "")
             $selDept = $row[0];
@@ -55,7 +55,7 @@ function ShowPenerimaanCombo($selDept)
                AND departemen='$selDept'";
     $res = QueryDB($sql);
     
-    if (mysql_num_rows($res) == 0)
+    if (mysqli_num_rows($res) == 0)
     {
         echo "<input type='hidden' name='psb_proses' id='psb_proses' value='-1'>";
         echo "<em>Belum ada data proses penerimaan</em>";
@@ -63,7 +63,7 @@ function ShowPenerimaanCombo($selDept)
     else
     {
         echo "<select name='psb_proses' id='psb_proses' class='inputbox' onchange='psb_StatusPsbChangeProses()'>";
-        while ($row = mysql_fetch_row($res))
+        while ($row = mysqli_fetch_row($res))
         {
             if ($selProses == "")
                 $selProses = $row[0];
@@ -96,9 +96,9 @@ function ShowStatusPsb($idproses, $page)
         <input type="button" value=" < " class="but" style="height: 22px; width: 35px;" onclick="psb_StatusPsbGotoPage(<?=$idproses?>, <?=$page-1?>, <?=$nPage?>)" >
         <input type="button" value=" > " class="but" style="height: 22px; width: 35px;" onclick="psb_StatusPsbGotoPage(<?=$idproses?>, <?=$page+1?>, <?=$nPage?>)" >
         Halaman <select name="psb_StatusPsbPage" id="psb_StatusPsbPage" id="page" style="height: 22px; width: 40px;" onchange="psb_StatusPsbChangePage(<?=$idproses?>)">
-<?      for($i = 1; $i <= $nPage; $i++)  { ?>
+<?php      for($i = 1; $i <= $nPage; $i++)  { ?>
             <option value="<?= $i ?>" <?= ($i == $page) ? "selected" : "" ?> ><?= $i ?></option>
-<?      } ?>
+<?php      } ?>
         </select> dari <?= $nPage ?>
     </td>    
     </tr>    
@@ -111,7 +111,7 @@ function ShowStatusPsb($idproses, $page)
         <td width="20%" class="header">Tmp/Tgl Lahir</td>
         <td width="24%" class="header">Asal Sekolah</td>
     </tr>
-<?
+<?php
     $sql = "SELECT c.nopendaftaran, c.nama, c.tmplahir, DATE_FORMAT(c.tgllahir, '%d %b %Y') AS tgllahir, c.asalsekolah, s.nis
               FROM jbsakad.calonsiswa c, jbsakad.siswa s
              WHERE c.replidsiswa = s.replid
@@ -122,7 +122,7 @@ function ShowStatusPsb($idproses, $page)
     //echo $sql;         
     $res = QueryDb($sql);
     $cnt = $offset;
-    while($row = mysql_fetch_array($res))
+    while($row = mysqli_fetch_array($res))
     {
         ?>
         <tr height="24" style="background-color: #fff;">
@@ -132,7 +132,7 @@ function ShowStatusPsb($idproses, $page)
             <td align="left"><?= $row['tmplahir'] . ", " . $row['tgllahir'] ?></td>
             <td align="left"><?= $row['asalsekolah'] ?></td>
         </tr>
-        <?
+        <?php
     }
     echo "</table>";
 }

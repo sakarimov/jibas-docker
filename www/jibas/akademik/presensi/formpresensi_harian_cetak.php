@@ -1,12 +1,12 @@
-<?
+<?php
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
  * 
- * @version: 30.0 (Jan 24, 2024)
- * @notes: 
+ * @version: 29.0 (Sept 20, 2023)
+ * @notes: JIBAS Education Community will be managed by Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
- * Copyright (C) 2024 JIBAS (http://www.jibas.net)
+ * Copyright (C) 2009 Yayasan Indonesia Membaca (http://www.indonesiamembaca.net)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  **[N]**/ ?>
-<?
+<?php
 require_once('../include/errorhandler.php');
 require_once('../include/sessioninfo.php');
 require_once('../include/common.php');
@@ -37,7 +37,7 @@ $sql = "SELECT k.kelas, s.semester, a.tahunajaran, t.tingkat FROM kelas k, semes
 //echo $sql;
 $result = QueryDb($sql);
 CloseDb();
-$row = mysql_fetch_array($result);
+$row = mysqli_fetch_array($result);
 $namakelas = $row['kelas'];
 $namasemester = $row['semester'];
 $namatahunajaran = $row['tahunajaran'];
@@ -102,14 +102,14 @@ $namatingkat = $row['tingkat'];
             <td width="30%" height="30" align="center" class="header">Keterangan</td>
         </tr>
         
-        <?
+        <?php
         OpenDb();
         
         $sql = "SELECT nis, nama FROM siswa WHERE idkelas = '$kelas' AND alumni=0 AND aktif=1 ORDER BY nama";
         $result = QueryDb($sql);
         CloseDb();
         
-        while($row = @mysql_fetch_array($result)){
+        while($row = @mysqli_fetch_array($result)){
         
         ?>
         <tr>
@@ -123,7 +123,7 @@ $namatingkat = $row['tingkat'];
             <td height="25" class="tab"></td>
             <td height="25" class="tab"></td>
         </tr>
-        <? } ?>
+        <?php } ?>
     </table>
     </td>
   </tr>
